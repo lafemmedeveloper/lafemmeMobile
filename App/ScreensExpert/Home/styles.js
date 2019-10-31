@@ -5,6 +5,5 @@ export default styles = StyleSheet.create({
     flex: 1,
     width: Metrics.screenWidth,
     height: Metrics.screenHeight,
-    backgroundColor:'#F8F8F8'
   }
 });

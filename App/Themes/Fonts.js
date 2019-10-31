@@ -1,8 +1,11 @@
+import Colors from './Colors';
+import Metrics from './Metrics';
+
 const type = {
   light: 'OpenSans-Light',
   regular: 'OpenSans-Regular',
   bold: 'OpenSans-Bold',
-  semiBold: 'OpenSans-SemiBold',
+  semiBold: 'OpenSans-SemiBold'
 };
 
 const size = {
@@ -17,47 +20,47 @@ const size = {
   regular: 17,
   medium: 14,
   small: 12,
-  tiny: 8.5,
+  tiny: 8.5
 };
 
 const style = {
-  bold: (color, fSize, align, letterSpacing) => ({
+  bold: (color, size, align, letterSpacing) => ({
     fontFamily: type.bold,
     color: color,
-    fontSize: fSize,
+    fontSize: size,
     textAlign: align,
-    lineHeight: fSize * 1.5,
-    letterSpacing: letterSpacing,
+    lineHeight: size * 1.5,
+    letterSpacing: letterSpacing
   }),
-  semiBold: (color, fSize, align, letterSpacing) => ({
+  semiBold: (color, size, align, letterSpacing) => ({
     fontFamily: type.semiBold,
     color: color,
-    fontSize: fSize,
+    fontSize: size,
     textAlign: align,
-    lineHeight: fSize * 1.5,
-    letterSpacing: letterSpacing,
+    lineHeight: size * 1.5,
+    letterSpacing: letterSpacing
   }),
-  regular: (color, fSize, align, letterSpacing) => ({
+  regular: (color, size, align, letterSpacing) => ({
     fontFamily: type.regular,
     color: color,
-    fontSize: fSize,
+    fontSize: size,
     textAlign: align,
-    lineHeight: fSize * 1.5,
-    letterSpacing: letterSpacing,
+    lineHeight: size * 1.5,
+    letterSpacing: letterSpacing
   }),
 
-  light: (color, fSize, align, letterSpacing) => ({
+  light: (color, size, align, letterSpacing) => ({
     fontFamily: type.light,
     color: color,
-    fontSize: fSize,
+    fontSize: size,
     textAlign: align,
-    lineHeight: fSize * 1.5,
-    letterSpacing: letterSpacing,
-  }),
+    lineHeight: size * 1.5,
+    letterSpacing: letterSpacing
+  })
 };
 
 export default {
   type,
   size,
-  style,
+  style
 };

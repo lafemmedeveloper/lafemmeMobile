@@ -8,7 +8,6 @@
     "iosE": "react-native run-ios --scheme \"lafemmeExpert\" --simulator=\"iPhone 8\"",
     "iosCs": "react-native run-ios --scheme \"lafemmeStaging\"",
     "iosEs": "react-native run-ios --scheme \"lafemmeExpertStaging\" --simulator=\"iPhone 8\"",
-    "ios": "react-native run-ios --simulator=\"iPhone X\"",
     "both": "react-native run-android && react-native run-ios",
     "start": "react-native start",
     "test": "jest",

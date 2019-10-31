@@ -1,12 +1,15 @@
 import {Dimensions, Platform} from 'react-native';
+
 import {ifIphoneX} from 'react-native-iphone-x-helper';
 
 const {width, height} = Dimensions.get('window');
-const isXSeriesIphone = ifIphoneX; //DeviceTypeHelper.isXSeriesIphone();
+const isXSeriesIphone = ifIphoneX;
 
+console.log('isXSeriesIphone', isXSeriesIphone);
 const addFooter = Platform.OS === 'ios' && isXSeriesIphone ? 20 : 0;
 const addHeader = Platform.OS === 'ios' ? (isXSeriesIphone ? 40 : 20) : 0;
 
+console.log('addHeader', addHeader);
 const metrics = {
   videoExpanded: (1080 / 1942) * width,
   bigImage: (1200 / 1080) * width,
