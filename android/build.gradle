@@ -39,6 +39,7 @@ subprojects {
     }
 }
 
+
 allprojects {
     repositories {
         mavenLocal()
