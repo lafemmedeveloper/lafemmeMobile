@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "172150230750",
+    "firebase_url": "https://lafemme-5017a.firebaseio.com",
+    "project_id": "lafemme-5017a",
+    "storage_bucket": "lafemme-5017a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:172150230750:android:546a6b2f6ab5e96c5bbc4f",
+        "android_client_info": {
+          "package_name": "com.lafemme.client"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "172150230750-ba88eh0990vhchb4ncikoenf12r6f60i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBX9OXlxkA18EWnRrg6bzgWuQkHbTVx1aI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "172150230750-ba88eh0990vhchb4ncikoenf12r6f60i.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "172150230750-6ggso7lncckhd6vj81gd40ts4th7kcfe.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.lafemme.expertstaging"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
