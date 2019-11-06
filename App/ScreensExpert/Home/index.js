@@ -21,8 +21,6 @@ import {Colors, Fonts, Images, Metrics, ApplicationStyles} from '../../Themes';
 import {msToDate} from '../../Helpers/MomentHelper';
 import {getDistance, getCurrentLocation} from '../../Helpers/GeoHelper';
 
-
-
 import Header from '../../Components/Header';
 import ExpandHome from '../../Components/ExpandHome';
 import styles from './styles';
@@ -46,9 +44,6 @@ export default function Home({navigation}) {
 
     navigation.navigate('ProductDetail', {product: item});
   }
-  console.log('services', services);
-
-  console.log('deviceInfo', deviceInfo);
 
   console.log('getCurrentLocation', getCurrentLocation());
   return (

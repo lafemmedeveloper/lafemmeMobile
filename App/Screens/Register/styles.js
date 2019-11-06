@@ -4,7 +4,7 @@ export default {
   container: {
     flex: 1,
     width: Metrics.screenWidth,
-    height: Metrics.screenHeight,
+    // height: Metrics.screenHeight,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -111,7 +111,7 @@ export default {
 
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: Colors.accentColors[0],
+    backgroundColor: Colors.client.headerBackground,
     shadowColor: Colors.dark,
     shadowOffset: {
       width: 2,

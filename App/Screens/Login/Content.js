@@ -3,13 +3,14 @@ import {
   View,
   Text,
   Image,
+  Alert,
   TouchableOpacity,
   KeyboardAvoidingView,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import {Colors, Images, Fonts} from '../../Themes';
-
+import auth from '@react-native-firebase/auth';
 import MyTextInput from '../../Components/MyTextInput';
 
 import styles from './styles';
@@ -23,21 +24,51 @@ export default class Login extends Component {
     };
   }
 
-  async componentDidMount() {
-    const {getDeviceInfo, deviceInfo} = this.props;
-    await getDeviceInfo();
-    console.log('deviceInfo', deviceInfo);
+  async componentDidMount() {}
+
+  async handleLogin() {
+    const {userEmail, userPassword} = this.state;
+    // const {user, navigation} = this.props;
+
+    if (userEmail !== '' && userPassword !== '') {
+      try {
+        if (userEmail !== '' && userPassword !== '') {
+          this.setState({isLoading: true});
+          const user = await auth().signInWithEmailAndPassword(
+            userEmail,
+            userPassword,
+          );
+
+          console.log('handleLogin', user);
+          // console.log(user);
+
+          // await this.props.setAuth(auth);
+          // await this.props.setAccount();
+
+          // this.setState({isLoading: false});
+          // this.props.navigation.navigate('CompleteUserData');
+        }
+      } catch (error) {
+        console.log('error', error.message);
+
+        Alert.alert('Ups...', 'Verifica los datos ingresados');
+      }
+    } else {
+      Alert.alert('Ups...', 'Completa o verifica los datos para continuar');
+    }
   }
 
+  async setDefaultUser() {
+    this.setState({
+      userEmail: 'j@jb.com',
+      userPassword: 'qwerty',
+    });
+  }
   render() {
-    const {loading, navigation} = this.props;
+    const {loading, navigation, isLogin} = this.props;
     const {userEmail, userPassword} = this.state;
     return (
-      <LinearGradient
-        style={styles.container}
-        colors={Colors.backgroundGradient}
-        start={{x: 0, y: 0.0}}
-        end={{x: 0, y: 1.0}}>
+      <View style={styles.container}>
         <KeyboardAvoidingView
           style={styles.containerItems}
           behavior="padding"
@@ -65,13 +96,24 @@ export default class Login extends Component {
            */}
           <View style={styles.contentContainer}>
             <Text
-              style={Fonts.style.regular(
-                Colors.light,
-                Fonts.size.h6,
-                'center',
-              )}>
-              {'Sign In'}
+              style={Fonts.style.regular(Colors.dark, Fonts.size.h6, 'center')}>
+              {'Iniciar Sesion'}
             </Text>
+            {__DEV__ && (
+              <TouchableOpacity
+                onPress={() => {
+                  this.setDefaultUser();
+                }}>
+                <Text
+                  style={Fonts.style.regular(
+                    Colors.dark,
+                    Fonts.size.small,
+                    'center',
+                  )}>
+                  set Default User
+                </Text>
+              </TouchableOpacity>
+            )}
             <MyTextInput
               pHolder={'Email'}
               text={userEmail}
@@ -90,7 +132,8 @@ export default class Login extends Component {
             />
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate('Home', {});
+                // navigation.navigate('Home', {});
+                this.handleLogin();
               }}
               style={styles.btnContainer}>
               <Text
@@ -106,12 +149,13 @@ export default class Login extends Component {
           <View style={styles.footerContainer}>
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate('Register', {});
+                isLogin();
+                // navigation.navigate('Register', {});
               }}
               style={styles.btnRegisterLogin}>
               <Text
                 style={Fonts.style.bold(
-                  Colors.light,
+                  Colors.dark,
                   Fonts.size.medium,
                   'right',
                 )}>
@@ -122,7 +166,7 @@ export default class Login extends Component {
         </KeyboardAvoidingView>
 
         {loading && <View style={styles.loading} />}
-      </LinearGradient>
+      </View>
     );
   }
 }

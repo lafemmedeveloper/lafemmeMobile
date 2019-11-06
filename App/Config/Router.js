@@ -9,7 +9,7 @@ import LoadingScreen from '../Screens/Loading/';
 import HomeScreen from '../Screens/Home';
 // import HomeScreenExpert from '../ScreensExpert/Home';
 import LoginScreen from '../Screens/Login';
-// import ProductDetailScreen from '../Screens/ProductDetail';
+import ProductDetailScreen from '../Screens/ProductDetail';
 import RegisterScreen from '../Screens/Register';
 // import GalleryScreen from '../Screens/Gallery';
 // import ServicesScreen from '../Screens/Services';
@@ -161,9 +161,9 @@ const AppNavigator = createStackNavigator(
     Login: {
       screen: LoginScreen,
     },
-    // ProductDetail: {
-    //   screen: ProductDetailScreen,
-    // },
+    ProductDetail: {
+      screen: ProductDetailScreen,
+    },
     Register: {
       screen: RegisterScreen,
     },

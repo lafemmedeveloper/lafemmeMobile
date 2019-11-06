@@ -16,6 +16,7 @@ const colors = {
   background: '#e8e8e8',
   backgroundGradient: ['#393e46', '#363c44'],
   loader: 'rgba(10,3,8,0.8)',
+  pinkMask: opacity => `rgba(100,74, 87,${opacity})`,
 };
 
 export default colors;

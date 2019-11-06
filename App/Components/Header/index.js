@@ -5,15 +5,13 @@
  * @format
  * @flow
  */
-import React, { Component, useContext, useEffect } from 'react';
-import { View, Image, Text, TouchableOpacity } from 'react-native';
-
+import React, {Component, useContext, useEffect} from 'react';
+import {View, Image, Text, TouchableOpacity} from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import styles from './styles';
-import { Metrics, ApplicationStyles, Images, Fonts, Colors } from '../../Themes';
+import {Metrics, ApplicationStyles, Images, Fonts, Colors} from '../../Themes';
 
-export default (data) => {
-
-
+export default data => {
   return (
     <View style={styles.container}>
       <Image
@@ -24,13 +22,15 @@ export default (data) => {
             position: 'absolute',
             resizeMode: 'cover',
             backgroundColor: 'transparent',
-            tintColor: data.isExpert ? Colors.expert.headerBackground : Colors.client.headerBackground
+            tintColor: data.isExpert
+              ? Colors.expert.headerBackground
+              : Colors.client.headerBackground,
           },
 
-          ApplicationStyles.imageshadownClient
+          ApplicationStyles.imageshadownClient,
         ]}
         source={Images.headerSmall}
-      ></Image>
+      />
       <View style={styles.addHeader}>{/*  */}</View>
       <View style={[styles.content]}>
         <TouchableOpacity
@@ -40,20 +40,22 @@ export default (data) => {
               data.onActionL();
             }
           }}
-          style={[styles.contentL, ApplicationStyles.centerContent]}
-        >
+          style={[styles.contentL, ApplicationStyles.centerContent]}>
           <Image style={styles.icon} source={data.iconL}></Image>
         </TouchableOpacity>
         <View style={[styles.contentC, ApplicationStyles.centerContent]}>
-          {/* <Text style={Fonts.style.bold(Colors.light, Fonts.size.medium, 'center')}>{data.title.toUpperCase()}</Text> */}
+          <Text
+            style={Fonts.style.bold(Colors.light, Fonts.size.medium, 'center')}>
+            {data.title.toUpperCase()}{' '}
+            {<Icon name="sort-down" size={24} color={Colors.light} />}
+          </Text>
           {!data.isExpert && (
             <TouchableOpacity
               onPress={() => {
                 console.log('selectAddress');
                 data.selectAddress();
               }}
-              style={{ flexDirection: 'row' }}
-            >
+              style={{flexDirection: 'row'}}>
               {/* {user && user.selectedAddress ? (
                 <Text style={Fonts.style.regular(Colors.light, Fonts.size.small, 'center')}>
                   {'Calle 64 #50-40, Medellin-Colombia'}
@@ -73,8 +75,7 @@ export default (data) => {
               data.onActionR();
             }
           }}
-          style={[styles.contentR, ApplicationStyles.centerContent]}
-        >
+          style={[styles.contentR, ApplicationStyles.centerContent]}>
           <Image style={styles.icon} source={data.iconR}></Image>
         </TouchableOpacity>
       </View>

@@ -1,11 +1,12 @@
 import {combineReducers} from 'redux';
 
 import UI from './UI/Reducer';
-import Places from './Places/Reducer';
-import Cities from './Cities/Reducer';
+import Services from './Services/Reducer';
+import User from './User/Reducer';
+
 export default () =>
   combineReducers({
     ui: UI,
-    cities: Cities,
-    places: Places,
+    currentUser: User,
+    services: Services,
   });

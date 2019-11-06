@@ -1,27 +1,36 @@
 import {createReducer} from '../Config';
-import {HANDLE_ERROR, SET_ACCOUNT, LOGIN, CREATE_USER} from './Types';
+import {SET_AUTH, USER_ACCOUNT, LOG_OUT} from './Types';
 
 const initialState = {
-  error: null,
+  auth: null,
   user: null,
 };
 
-const handleError = (state = initialState, {payload}) => {
+const setAuth = (state = initialState, {payload}) => {
   return {
     ...state,
-    error: payload,
+    auth: payload._user,
   };
 };
 
 const setAccount = (state = initialState, {payload}) => {
   return {
     ...state,
-    error: payload,
+    user: payload,
   };
 };
+const logOut = (state = initialState, {payload}) => {
+  console.log('logout', payload);
+  return {
+    // ...state,
+    data: payload,
+  };
+};
+
 const descriptor = {
-  [HANDLE_ERROR]: handleError,
-  [SET_ACCOUNT]: setAccount,
+  [SET_AUTH]: setAuth,
+  [USER_ACCOUNT]: setAccount,
+  [LOG_OUT]: logOut,
 };
 
 export default createReducer(initialState, descriptor);

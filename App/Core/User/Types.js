@@ -1,6 +1,4 @@
-export const HANDLE_ERROR = 'HANDLE_ERROR';
-export const LOGIN = 'LOGIN';
-export const CREATE_USER = 'CREATE_USER';
-export const SET_ACCOUNT = 'SET_ACCOUNT';
-export const AUTHENTICATED = 'AUTHENTICATED';
-export const LOGOUT = 'LOGOUT';
+export const SET_AUTH = 'SET_AUTH';
+export const USER_ACCOUNT = 'USER_ACCOUNT';
+export const LOG_OUT = 'LOG_OUT';
+export const UPDATE_PROFILE = 'UPDATE_PROFILE';

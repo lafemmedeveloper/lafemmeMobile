@@ -26,14 +26,10 @@ export default class Register extends Component {
   }
 
   render() {
-    const {loading, navigation} = this.props;
+    const {loading, navigation, isLogin} = this.props;
     const {userEmail, userPassword, userFirstName, userLastName} = this.state;
     return (
-      <LinearGradient
-        style={styles.container}
-        colors={Colors.backgroundGradient}
-        start={{x: 0, y: 0.0}}
-        end={{x: 0, y: 1.0}}>
+      <View style={styles.container}>
         <KeyboardAvoidingView
           style={styles.containerItems}
           behavior="padding"
@@ -60,11 +56,7 @@ export default class Register extends Component {
           </View> */}
           <View style={styles.contentContainer}>
             <Text
-              style={Fonts.style.regular(
-                Colors.light,
-                Fonts.size.h6,
-                'center',
-              )}>
+              style={Fonts.style.regular(Colors.dark, Fonts.size.h6, 'center')}>
               {'Create an Accoun'}
             </Text>
             <MyTextInput
@@ -118,12 +110,13 @@ export default class Register extends Component {
           <View style={styles.footerContainer}>
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate('Login', {});
+                isLogin();
+                // navigation.navigate('Login', {});
               }}
               style={styles.btnRegisterLogin}>
               <Text
                 style={Fonts.style.bold(
-                  Colors.light,
+                  Colors.dark,
                   Fonts.size.medium,
                   'right',
                 )}>
@@ -134,7 +127,7 @@ export default class Register extends Component {
         </KeyboardAvoidingView>
 
         {loading && <View style={styles.loading} />}
-      </LinearGradient>
+      </View>
     );
   }
 }
