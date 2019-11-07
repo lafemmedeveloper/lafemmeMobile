@@ -18,6 +18,15 @@ const ApplicationStyles = {
     height: Metrics.screenHeight,
     width: Metrics.screenWidth,
   },
+
+  separatorLine: {
+    width: Metrics.screenWidth * 0.9,
+    alignSelf: 'center',
+    height: 0.5,
+    backgroundColor: Colors.dark,
+    marginBottom: 20,
+  },
+
   scrollHomeExpert: {
     marginTop: Metrics.screenWidth * 0.22,
     width: Metrics.screenWidth * 0.95,
