@@ -53,7 +53,7 @@ export default function Home({navigation}) {
         iconL={Images.menu}
         iconR={Images.alarm}
         isExpert={true}
-        // tintColor={Colors.expert.headerBackground}
+        // tintColor={Colors.expert.secondaryColor}
         selectAddress={() => selectAddress()}
         onActionL={() => actionL()}
         onActionR={() => actionR()}

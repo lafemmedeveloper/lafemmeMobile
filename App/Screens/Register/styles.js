@@ -111,7 +111,7 @@ export default {
 
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: Colors.client.headerBackground,
+    backgroundColor: Colors.client.secondaryColor,
     shadowColor: Colors.dark,
     shadowOffset: {
       width: 2,

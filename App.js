@@ -7,7 +7,7 @@ import Router from './App/Config/Router';
 import RouterExpert from './App/Config/RouterExpert';
 import DeviceInfo from 'react-native-device-info';
 import {ApplicationStyles} from './App/Themes';
-
+import Loading from './App/Components/Loading';
 let bundleId = DeviceInfo.getBundleId();
 
 export default class App extends Component {
@@ -49,7 +49,7 @@ export default class App extends Component {
                 this.navigator = nav;
               }}
             />
-            {loading && <View style={ApplicationStyles.loading} />}
+            <Loading type={'client'} loading={loading} />
           </PersistGate>
         </Provider>
       );
@@ -67,7 +67,7 @@ export default class App extends Component {
                 this.navigator = nav;
               }}
             />
-            {loading && <View style={ApplicationStyles.loading} />}
+            <Loading type={'expert'} loading={loading} />
           </PersistGate>
         </Provider>
       );

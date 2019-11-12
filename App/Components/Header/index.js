@@ -23,8 +23,8 @@ export default data => {
             resizeMode: 'cover',
             backgroundColor: 'transparent',
             tintColor: data.isExpert
-              ? Colors.expert.headerBackground
-              : Colors.client.headerBackground,
+              ? Colors.expert.secondaryColor
+              : Colors.client.secondaryColor,
           },
 
           ApplicationStyles.imageshadownClient,

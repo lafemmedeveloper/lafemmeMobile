@@ -191,7 +191,7 @@ export default class Home extends Component {
   }
 
   render() {
-    const {navigation, user} = this.props;
+    const {navigation, user, loading} = this.props;
     const {guest} = user;
     const {
       clients,
@@ -214,7 +214,7 @@ export default class Home extends Component {
       <View
         style={[
           styles.container,
-          {backgroundColor: Colors.client.headerBackground},
+          {backgroundColor: Colors.client.secondaryColor},
         ]}>
         <ScrollView style={[ApplicationStyles.scrollCart, {}]} bounces={true}>
           <View //image
@@ -224,7 +224,7 @@ export default class Home extends Component {
                 width: Metrics.screenWidth,
                 height: Metrics.screenWidth / 2,
                 resizeMode: 'cover',
-                backgroundColor: Colors.client.headerBackground,
+                backgroundColor: Colors.client.secondaryColor,
               },
               ApplicationStyles.shadownClient,
             ]}>
@@ -283,7 +283,7 @@ export default class Home extends Component {
                 // position: 'absolute',
                 height: 40 + Metrics.addHeader,
                 paddingTop: Metrics.addHeader,
-                // backgroundColor: Colors.client.headerBackground,
+                // backgroundColor: Colors.client.secondaryColor,
                 width: Metrics.screenWidth,
                 justifyContent: 'center',
               }}>
@@ -529,7 +529,7 @@ export default class Home extends Component {
                   width: Metrics.screenWidth * 0.85,
                   height: 30,
                   alignSelf: 'flex-end',
-                  backgroundColor: Colors.client.headerBackground,
+                  backgroundColor: Colors.client.secondaryColor,
                   borderRadius: 10,
                   marginVertical: 5,
                   alignItems: 'center',
@@ -972,7 +972,7 @@ export default class Home extends Component {
               position: 'absolute',
               height: 150,
               // backgroundColor: Colors.light,
-              backgroundColor: Colors.client.headerBackground,
+              backgroundColor: Colors.client.secondaryColor,
               width: Metrics.screenWidth,
               bottom: 0,
             },
@@ -1015,7 +1015,7 @@ export default class Home extends Component {
               {
                 // height: 90 + Metrics.addFooter,
                 flex: 1,
-                backgroundColor: Colors.client.headerBackground,
+                backgroundColor: Colors.client.secondaryColor,
                 width: Metrics.screenWidth,
                 justifyContent: 'center',
                 alignItems: 'center',
@@ -1135,7 +1135,7 @@ export default class Home extends Component {
                 marginVertical: 10,
                 alignSelf: 'center',
                 borderRadius: Metrics.borderRadius,
-                backgroundColor: Colors.client.headerBackground,
+                backgroundColor: Colors.client.secondaryColor,
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
@@ -1324,9 +1324,8 @@ export default class Home extends Component {
               // onSwipeValueChange={this.onSwipeValueChange}
             /> */}
           </KeyboardAvoidingView>
+          <Loading loading={loading} />
         </Modal>
-
-        <Loading/>
       </View>
     );
   }

@@ -7,10 +7,18 @@
  */
 import React from 'react';
 import {View} from 'react-native';
-
+import {WaveIndicator} from 'react-native-indicators';
 import styles from './styles';
-import {Metrics, ApplicationStyles, Images, Fonts, Colors} from '../../Themes';
+import {Colors} from '../../Themes';
 
 export default data => {
-  return <View style={styles.container}></View>;
+  if (data.loading) {
+    return (
+      <View style={styles.container}>
+        <WaveIndicator color={Colors[data.type].secondaryColor} />
+      </View>
+    );
+  } else {
+    return null;
+  }
 };
