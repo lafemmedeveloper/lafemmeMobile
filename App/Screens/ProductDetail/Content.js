@@ -27,6 +27,7 @@ import FastImage from 'react-native-fast-image';
 
 import Modal from 'react-native-modal';
 import MyTextInput from '../../Components/MyTextInput';
+import Loading from '../../Components/Loading';
 import {SwipeListView} from 'react-native-swipe-list-view';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -636,14 +637,9 @@ export default class Home extends Component {
                 addOns.length > 0 &&
                 addOns.map((data, index) => {
                   return (
-                    <TouchableOpacity
-                      key={index}
-                      onPress={() => {
-                        console.log(data);
-                        this.selectAddons(data);
-                      }}>
-                      {index == 0 && <View style={{height: 20}} />}
-                      {index != 0 && (
+                    <View key={index}>
+                      {index === 0 && <View style={{height: 20}} />}
+                      {index !== 0 && (
                         <View
                           opacity={0.25}
                           style={{
@@ -673,22 +669,28 @@ export default class Home extends Component {
                             // height: 50,
                             // backgroundColor: 'blue'
                           }}>
-                          <Text>
-                            {addonsList.findIndex(i => i.id === data.id) !==
-                            -1 ? (
-                              <Icon
-                                name="toggle-on"
-                                size={25}
-                                color={Colors.client.primartColor}
-                              />
-                            ) : (
-                              <Icon
-                                name="toggle-off"
-                                size={25}
-                                color={Colors.gray}
-                              />
-                            )}
-                          </Text>
+                          <TouchableOpacity
+                            onPress={() => {
+                              console.log(data);
+                              this.selectAddons(data);
+                            }}>
+                            <Text>
+                              {addonsList.findIndex(i => i.id === data.id) !==
+                              -1 ? (
+                                <Icon
+                                  name="toggle-on"
+                                  size={25}
+                                  color={Colors.client.primartColor}
+                                />
+                              ) : (
+                                <Icon
+                                  name="toggle-off"
+                                  size={25}
+                                  color={Colors.gray}
+                                />
+                              )}
+                            </Text>
+                          </TouchableOpacity>
                           {/* <View
                             opacity={0.25}
                             style={{
@@ -744,7 +746,16 @@ export default class Home extends Component {
                                   'center',
                                   1,
                                 )}>
-                                +{Utilities.formatCOP(data.price)}
+                                +{Utilities.formatCOP(data.price)}{' '}
+                                <Text
+                                  style={Fonts.style.regular(
+                                    Colors.gray,
+                                    Fonts.size.small,
+                                    'right',
+                                    1,
+                                  )}>
+                                  c/u
+                                </Text>
                               </Text>
                             </View>
                           </View>
@@ -928,7 +939,7 @@ export default class Home extends Component {
                         })}
 
                       <View style={{height: 20}} />
-                    </TouchableOpacity>
+                    </View>
                   );
                 })}
 
@@ -1314,6 +1325,8 @@ export default class Home extends Component {
             /> */}
           </KeyboardAvoidingView>
         </Modal>
+
+        <Loading/>
       </View>
     );
   }
