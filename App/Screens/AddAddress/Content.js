@@ -26,7 +26,9 @@ import {msToDate, msToDay, msToHour} from '../../Helpers/MomentHelper';
 export default class Address extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      googleAddress: null,
+    };
   }
 
   async componentDidMount() {}
@@ -37,12 +39,12 @@ export default class Address extends Component {
   }
 
   render() {
-    const {user} = this.props;
+    const {googleAddress} = this.state;
 
     return (
       <View style={styles.container}>
         <View style={styles.contentContainer}>
-          <View ref={'headerContainer'} style={styles.headerContainer}>
+          <View style={styles.headerContainer}>
             <View opacity={0.0} style={ApplicationStyles.separatorLine} />
             <Text
               style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
@@ -139,20 +141,36 @@ export default class Address extends Component {
               // renderRightButton={() => <Text>Custom text after the input</Text>}
             />
           </View>
-
+          <View style={styles.footerContainer}></View>
           <View
             style={{
               width: Metrics.screenWidth,
               flex: 1,
-              backgroundColor: 'purple',
-            }}>
-            <TouchableOpacity
-              onPress={() => {
-                this.checkCoverage();
-              }}>
-              <Text>getCoverage</Text>
-            </TouchableOpacity>
-          </View>
+            }}></View>
+          <TouchableOpacity
+            disabled={!googleAddress}
+            onPress={() => {
+              this.checkCoverage();
+            }}
+            style={[
+              styles.btnContainer,
+              {
+                position: 'absolute',
+                bottom: 0,
+                backgroundColor: googleAddress
+                  ? Colors.client.primartColor
+                  : Colors.gray,
+              },
+            ]}>
+            <Text
+              style={Fonts.style.bold(
+                Colors.light,
+                Fonts.size.medium,
+                'center',
+              )}>
+              {'Verificar Cobertura'}
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
     );
