@@ -1,42 +1,60 @@
-import { StyleSheet } from 'react-native';
-import { Metrics, Colors } from '../../Themes';
+import {StyleSheet} from 'react-native';
+import {Metrics, Colors} from '../../Themes';
 export default styles = StyleSheet.create({
   container: {
     width: Metrics.screenWidth,
     position: 'absolute',
-    height: Metrics.screenHeight * 0.2
+    height: Metrics.screenHeight * 0.2,
     // backgroundColor: 'red'
+  },
+
+  imageHeader: {
+    width: Metrics.screenWidth,
+    height: 200,
+    position: 'absolute',
+    resizeMode: 'cover',
+    backgroundColor: 'transparent',
+    tintColor: Colors.client.secondaryColor,
+  },
+
+  imageHeaderExpert: {
+    width: Metrics.screenWidth,
+    height: 200,
+    position: 'absolute',
+    resizeMode: 'cover',
+    backgroundColor: 'transparent',
+    tintColor: Colors.client.secondaryColor,
   },
   addHeader: {
     width: Metrics.screenWidth,
 
-    height: Metrics.addHeader
+    height: Metrics.addHeader,
     // backgroundColor: 'blue'
   },
   footerHeader: {
     width: Metrics.screenWidth,
 
-    height: Metrics.screenHeight * 0.1
+    height: Metrics.screenHeight * 0.1,
     // backgroundColor: 'green'
   },
   content: {
     width: Metrics.screenWidth,
     flex: 1,
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
-  icon: { width: 20, height: 20, resizeMode: 'contain' },
+  icon: {width: 20, height: 20, resizeMode: 'contain'},
   contentL: {
     width: Metrics.screenWidth * 0.15,
-    flex: 0
+    flex: 0,
     // backgroundColor: 'brown'
   },
   contentC: {
-    flex: 1
+    flex: 1,
     //  backgroundColor: 'purple'
   },
   contentR: {
     width: Metrics.screenWidth * 0.15,
-    flex: 0
+    flex: 0,
     // backgroundColor: 'red'
-  }
+  },
 });

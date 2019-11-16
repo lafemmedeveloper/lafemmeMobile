@@ -7,7 +7,8 @@
  */
 import React, {Component, useContext, useEffect} from 'react';
 import {View, Image, Text, TouchableOpacity} from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/FontAwesome5';
+
 import styles from './styles';
 import {Metrics, ApplicationStyles, Images, Fonts, Colors} from '../../Themes';
 
@@ -16,17 +17,7 @@ export default data => {
     <View style={styles.container}>
       <Image
         style={[
-          {
-            width: Metrics.screenWidth,
-            height: 200,
-            position: 'absolute',
-            resizeMode: 'cover',
-            backgroundColor: 'transparent',
-            tintColor: data.isExpert
-              ? Colors.expert.secondaryColor
-              : Colors.client.secondaryColor,
-          },
-
+          data.isExpert ? styles.imageHeader : styles.imageHeaderExpert,
           ApplicationStyles.imageshadownClient,
         ]}
         source={Images.headerSmall}
@@ -41,13 +32,13 @@ export default data => {
             }
           }}
           style={[styles.contentL, ApplicationStyles.centerContent]}>
-          <Image style={styles.icon} source={data.iconL}></Image>
+          <Image style={styles.icon} source={data.iconL} />
         </TouchableOpacity>
         <View style={[styles.contentC, ApplicationStyles.centerContent]}>
           <Text
             style={Fonts.style.bold(Colors.light, Fonts.size.medium, 'center')}>
             {data.title.toUpperCase()}{' '}
-            {<Icon name="sort-down" size={24} color={Colors.light} />}
+            {<Icon name='sort-down' size={24} color={Colors.light} />}
           </Text>
           {!data.isExpert && (
             <TouchableOpacity
@@ -76,7 +67,7 @@ export default data => {
             }
           }}
           style={[styles.contentR, ApplicationStyles.centerContent]}>
-          <Image style={styles.icon} source={data.iconR}></Image>
+          {<Icon name={'calendar'} size={24} color={Colors.light} />}
         </TouchableOpacity>
       </View>
       <View style={styles.footerHeader}>{/*  */}</View>

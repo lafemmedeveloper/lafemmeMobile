@@ -28,8 +28,9 @@ import FastImage from 'react-native-fast-image';
 import Modal from 'react-native-modal';
 import MyTextInput from '../../Components/MyTextInput';
 import Loading from '../../Components/Loading';
-import {SwipeListView} from 'react-native-swipe-list-view';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import TitleValue from '../../Components/TitleValue';
+import {minToHours} from '../../Helpers/MomentHelper';
 
 export default class Home extends Component {
   constructor(props) {
@@ -49,13 +50,25 @@ export default class Home extends Component {
       guestList: [],
       addonsList: [],
       addonsGuest: [],
-      addonsSum: 0,
+      showModalService: false,
     };
   }
 
   goBack() {
     const {navigation} = this.props;
     navigation.goBack();
+  }
+
+  async sendItemCart(item) {
+    const {user, updateProfile, setLoading} = this.props;
+
+    let services = [...user.cart.services, item];
+
+    console.log('services', services);
+
+    setLoading(true);
+    await updateProfile({...user.cart, services}, 'cart');
+    setLoading(false);
   }
 
   async addGuest(guestList) {
@@ -103,17 +116,43 @@ export default class Home extends Component {
 
   async selectGuest(item) {
     console.log('You touched me', item.id);
-    const {guestList} = this.state;
+    const {guestList, experts} = this.state;
     let data = guestList;
     const index = guestList ? guestList.findIndex(i => i.id === item.id) : -1;
 
     if (index !== -1) {
+      console.log('this.state.addonsGuest', this.state.addonsGuest);
+      let addonsGuest = _.filter(
+        this.state.addonsGuest,
+        ({guestId}) => guestId !== item.id,
+      );
+      console.log('addonsGuest', addonsGuest);
+      this.setState(
+        {
+          addonsGuest,
+        },
+        () => {
+          console.log('=> addonsGuest', this.state.addonsGuest);
+        },
+      );
+      console.log(
+        'experts > guestList.length',
+        experts,
+        guestList.length,
+        experts > guestList.length,
+      );
+      if (experts > guestList.length) {
+        this.setState({experts: guestList.length});
+      }
+
       data = [...guestList.slice(0, index), ...guestList.slice(index + 1)];
     } else {
       data = guestList && guestList ? [...guestList, item] : [item];
     }
 
-    this.setState({guestList: data});
+    this.setState({guestList: data}, () => {
+      console.log('addonsGuest', this.state.addonsGuest);
+    });
   }
 
   async selectAddons(item) {
@@ -121,8 +160,23 @@ export default class Home extends Component {
     const {addonsList} = this.state;
     let data = addonsList;
     const index = addonsList ? addonsList.findIndex(i => i.id === item.id) : -1;
-
+    console.log('index', index);
     if (index !== -1) {
+      console.log('this.state.addonsGuest', this.state.addonsGuest);
+      let addonsGuest = _.filter(
+        this.state.addonsGuest,
+        ({addonId}) => addonId !== item.id,
+      );
+      console.log('addonsGuest', addonsGuest);
+      this.setState(
+        {
+          addonsGuest,
+        },
+        () => {
+          console.log('=> addonsGuest', this.state.addonsGuest);
+        },
+      );
+
       data = [...addonsList.slice(0, index), ...addonsList.slice(index + 1)];
     } else {
       data = addonsList && addonsList ? [...addonsList, item] : [item];
@@ -143,35 +197,32 @@ export default class Home extends Component {
       addonId: addonSelected.id,
       addOnPrice: addonSelected.price,
       guestId: guest.id,
+      addonName: addonSelected.name,
+      addonsDuration: addonSelected.duration,
     };
 
     let data = addonsGuest;
     console.log('=> 3 pre:item', item);
 
     const indexAddonId = addonsGuest
-      ? addonsGuest.findIndex(i => i.addonId === addonSelected.id)
+      ? addonsGuest.findIndex(
+          i => i.addonId === addonSelected.id && i.guestId === guest.id,
+        )
       : -1;
 
-    const indexGuestId = addonsGuest
-      ? addonsGuest.findIndex(i => i.guestId === guest.id)
-      : -1;
+    console.log('indexAddonId', indexAddonId);
 
-    console.log('indexAddonId', indexAddonId, 'indexGuestId', indexGuestId);
-    if (indexAddonId !== -1 && indexGuestId !== -1) {
+    if (indexAddonId !== -1) {
       data = [
-        ...addonsGuest.slice(0, indexItem),
-        ...addonsGuest.slice(indexItem + 1),
+        ...addonsGuest.slice(0, indexAddonId),
+        ...addonsGuest.slice(indexAddonId + 1),
       ];
     } else {
       data = addonsGuest ? [...addonsGuest, item] : [item];
     }
     console.log('=> 4 post:data', data);
 
-    var addonsSum = _.sumBy(data, 'addOnPrice');
-
-    console.log('addonsSum', addonsSum);
-
-    this.setState({addonsGuest: data, addonsSum}, () => {
+    this.setState({addonsGuest: data}, () => {
       console.log('=> addonsGuest', this.state.addonsGuest);
     });
   }
@@ -204,12 +255,19 @@ export default class Home extends Component {
       guestList,
       addonsList,
       addonsGuest,
-      addonsSum,
+      showModalService,
     } = this.state;
 
     const {product} = navigation.state.params;
 
     const {addOns} = product;
+
+    let addOnPrice = _.sumBy(addonsGuest, 'addOnPrice');
+    let addOnDuration = _.sumBy(addonsGuest, 'addonsDuration');
+
+    let timeTotal =
+      (product.duration * (guestList.length + 1) + addOnDuration) / experts;
+
     return (
       <View
         style={[
@@ -355,11 +413,11 @@ export default class Home extends Component {
                   Colors.gray,
                   Fonts.size.small,
                   'left',
-                  1,
+                  0,
                 )}>
                 {product.shortDescription}
               </Text>
-              <View style={{height: 20}} />
+              {/* <View style={{height: 20}} /> */}
 
               <View opacity={0.25} style={ApplicationStyles.separatorLine} />
 
@@ -382,13 +440,7 @@ export default class Home extends Component {
                     {'Numero de Clientes'} ({guestList.length + 1})
                   </Text>
                 </View>
-                <TouchableOpacity
-                  // onPress={() => {
-                  //   subClient(clients);
-                  // }}
-                  style={{flex: 0, alignItems: 'center'}}>
-                  {/* <Icon name="minus-circle" size={20} color={Colors.client.primartColor} /> */}
-                </TouchableOpacity>
+
                 <View style={{flex: 0, alignItems: 'center'}}>
                   <Text
                     style={Fonts.style.bold(
@@ -417,8 +469,8 @@ export default class Home extends Component {
                 }}>
                 <Text>
                   <Icon
-                    name="toggle-on"
-                    size={25}
+                    name='toggle-on'
+                    size={20}
                     color={Colors.client.primartColor}
                   />
                 </Text>
@@ -433,7 +485,7 @@ export default class Home extends Component {
                       Colors.dark,
                       Fonts.size.medium,
                       'left',
-                      1,
+                      0,
                     )}>
                     {user.firstName} {user.lastName} (yo)
                   </Text>
@@ -469,12 +521,12 @@ export default class Home extends Component {
                     <Text>
                       {guestList.findIndex(i => i.id === data.id) !== -1 ? (
                         <Icon
-                          name="toggle-on"
+                          name='toggle-on'
                           size={20}
                           color={Colors.client.primartColor}
                         />
                       ) : (
-                        <Icon name="toggle-off" size={20} color={Colors.gray} />
+                        <Icon name='toggle-off' size={20} color={Colors.gray} />
                       )}
                     </Text>
                     <View
@@ -488,7 +540,7 @@ export default class Home extends Component {
                           Colors.dark,
                           Fonts.size.medium,
                           'left',
-                          1,
+                          0,
                         )}>
                         {data.firstName} {data.lastName}
                       </Text>
@@ -515,7 +567,7 @@ export default class Home extends Component {
                           {cancelable: true},
                         );
                       }}>
-                      <Icon name="minus-circle" size={20} color={Colors.gray} />
+                      <Icon name='minus-circle' size={20} color={Colors.gray} />
                     </TouchableOpacity>
                   </TouchableOpacity>
                 );
@@ -548,7 +600,7 @@ export default class Home extends Component {
 
               {/* {guestList.length >= 1 && ( */}
               <>
-                <View style={{height: 20}} />
+                {/* <View style={{height: 20}} /> */}
                 <View opacity={0.25} style={ApplicationStyles.separatorLine} />
 
                 <View
@@ -576,7 +628,7 @@ export default class Home extends Component {
                     }}
                     style={{flex: 0, alignItems: 'center'}}>
                     <Icon
-                      name="minus-circle"
+                      name='minus-circle'
                       size={20}
                       color={Colors.client.primartColor}
                     />
@@ -603,7 +655,7 @@ export default class Home extends Component {
                     }}
                     style={{flex: 0, alignItems: 'center'}}>
                     <Icon
-                      name="plus-circle"
+                      name='plus-circle'
                       size={20}
                       color={Colors.client.primartColor}
                     />
@@ -611,7 +663,7 @@ export default class Home extends Component {
                 </View>
               </>
               {/* )} */}
-              <View style={{height: 20}} />
+              {/* <View style={{height: 20}} /> */}
 
               <View opacity={0.25} style={ApplicationStyles.separatorLine} />
 
@@ -647,7 +699,7 @@ export default class Home extends Component {
                             alignSelf: 'center',
                             height: 0.5,
                             backgroundColor: Colors.dark,
-                            marginBottom: 20,
+                            marginVertical: 20,
                           }}
                         />
                       )}
@@ -678,14 +730,14 @@ export default class Home extends Component {
                               {addonsList.findIndex(i => i.id === data.id) !==
                               -1 ? (
                                 <Icon
-                                  name="toggle-on"
-                                  size={25}
+                                  name='toggle-on'
+                                  size={20}
                                   color={Colors.client.primartColor}
                                 />
                               ) : (
                                 <Icon
-                                  name="toggle-off"
-                                  size={25}
+                                  name='toggle-off'
+                                  size={20}
                                   color={Colors.gray}
                                 />
                               )}
@@ -769,7 +821,7 @@ export default class Home extends Component {
                                 Colors.gray,
                                 Fonts.size.small,
                                 'left',
-                                1,
+                                0,
                               )}>
                               {data.description}
                             </Text>
@@ -791,18 +843,16 @@ export default class Home extends Component {
                           }}>
                           <Text>
                             {addonsGuest.findIndex(
-                              i => i.addonId === data.id,
-                            ) !== -1 &&
-                            addonsGuest.findIndex(i => i.guestId === 'yo') !==
-                              -1 ? (
+                              i => i.addonId === data.id && i.guestId === 'yo',
+                            ) !== -1 ? (
                               <Icon
-                                name="toggle-on"
+                                name='toggle-on'
                                 size={20}
                                 color={Colors.client.primartColor}
                               />
                             ) : (
                               <Icon
-                                name="toggle-off"
+                                name='toggle-off'
                                 size={20}
                                 color={Colors.gray}
                               />
@@ -819,17 +869,15 @@ export default class Home extends Component {
                                 Colors.dark,
                                 Fonts.size.medium,
                                 'left',
-                                1,
+                                0,
                               )}>
                               {user.firstName} {user.lastName} (yo)
                             </Text>
                           </View>
                           <View>
                             {addonsGuest.findIndex(
-                              i => i.addonId === data.id,
-                            ) !== -1 &&
-                            addonsGuest.findIndex(i => i.guestId === 'yo') !==
-                              -1 ? (
+                              i => i.addonId === data.id && i.guestId === 'yo',
+                            ) !== -1 ? (
                               <Text
                                 style={Fonts.style.regular(
                                   Colors.dark,
@@ -871,19 +919,18 @@ export default class Home extends Component {
                               }}>
                               <Text>
                                 {addonsGuest.findIndex(
-                                  i => i.addonId === data.id,
-                                ) !== -1 &&
-                                addonsGuest.findIndex(
-                                  i => i.guestId === item.id,
+                                  i =>
+                                    i.addonId === data.id &&
+                                    i.guestId === item.id,
                                 ) !== -1 ? (
                                   <Icon
-                                    name="toggle-on"
+                                    name='toggle-on'
                                     size={20}
                                     color={Colors.client.primartColor}
                                   />
                                 ) : (
                                   <Icon
-                                    name="toggle-off"
+                                    name='toggle-off'
                                     size={20}
                                     color={Colors.gray}
                                   />
@@ -898,9 +945,9 @@ export default class Home extends Component {
                                 <Text
                                   style={Fonts.style.regular(
                                     Colors.dark,
-                                    Fonts.size.small,
+                                    Fonts.size.medium,
                                     'left',
-                                    1,
+                                    0,
                                   )}>
                                   {item.firstName} {item.lastName} (+
                                   {data.duration} min)
@@ -908,10 +955,9 @@ export default class Home extends Component {
                               </View>
                               <View>
                                 {addonsGuest.findIndex(
-                                  i => i.addonId === data.id,
-                                ) !== -1 &&
-                                addonsGuest.findIndex(
-                                  i => i.guestId === item.id,
+                                  i =>
+                                    i.addonId === data.id &&
+                                    i.guestId === item.id,
                                 ) !== -1 ? (
                                   <Text
                                     style={Fonts.style.regular(
@@ -938,12 +984,12 @@ export default class Home extends Component {
                           );
                         })}
 
-                      <View style={{height: 20}} />
+                      {/* <View style={{height: 20}} /> */}
                     </View>
                   );
                 })}
 
-              <View style={{height: 20}} />
+              {/* <View style={{height: 20}} /> */}
               {/* <View style={{ marginHorizontal: 20, alignSelf: 'center' }}> */}
               <View opacity={0.25} style={ApplicationStyles.separatorLine} />
               <Text
@@ -953,9 +999,9 @@ export default class Home extends Component {
               <Text
                 style={Fonts.style.regular(
                   Colors.gray,
-                  Fonts.size.medium,
+                  Fonts.size.small,
                   'left',
-                  1,
+                  0,
                 )}>
                 {product.description}
               </Text>
@@ -997,7 +1043,7 @@ export default class Home extends Component {
               )}>
               {'SUBTOTAL'}{' '}
               {Utilities.formatCOP(
-                product.price * (guestList.length + 1) + addonsSum,
+                product.price * (guestList.length + 1) + addOnPrice,
               )}
             </Text>
             <Text
@@ -1005,12 +1051,16 @@ export default class Home extends Component {
                 Colors.gray,
                 Fonts.size.medium,
                 'center',
-                1,
+                0,
               )}>
-              {(product.duration * (guestList.length + 1)) / experts} min
+              {minToHours(timeTotal)} - {experts}{' '}
+              {experts === 1 ? 'Experto' : 'Expertos'}
             </Text>
           </View>
-          <View
+          <TouchableOpacity
+            onPress={() => {
+              this.setState({showModalService: true});
+            }}
             style={[
               {
                 // height: 90 + Metrics.addFooter,
@@ -1019,7 +1069,7 @@ export default class Home extends Component {
                 width: Metrics.screenWidth,
                 justifyContent: 'center',
                 alignItems: 'center',
-                marginBottom: Metrics.addFooter,
+                paddingBottom: Metrics.addFooter,
               },
               ApplicationStyles.shadownClientTop,
             ]}>
@@ -1032,8 +1082,439 @@ export default class Home extends Component {
               )}>
               {'AGREGAR SERVICIO'}
             </Text>
-          </View>
+          </TouchableOpacity>
         </View>
+
+        <Modal
+          isVisible={showModalService}
+          style={{
+            justifyContent: 'flex-end',
+            margin: 0,
+
+            // ,height: Metrics.screenHeight * 0.7
+            // top:100,
+          }}
+          backdropColor={Colors.pinkMask(0.75)}>
+          <KeyboardAvoidingView
+            behavior='padding'
+            enabled
+            style={{
+              flex: 0,
+              // paddingTop: Metrics.addHeader,
+              maxHeight: Metrics.screenHeight * 0.8,
+              width: Metrics.screenWidth,
+              paddingHorizontal: 20,
+              // height: Metrics.screenHeight * 0.85,
+              backgroundColor: Colors.light,
+              borderTopRightRadius: 10,
+              borderTopLeftRadius: 10,
+            }}>
+            <View opacity={0.0} style={ApplicationStyles.separatorLine} />
+            <Text
+              style={Fonts.style.bold(
+                Colors.dark,
+                Fonts.size.medium,
+                'center',
+                1,
+              )}>
+              Resumen del servicio
+            </Text>
+
+            <Text
+              style={Fonts.style.bold(Colors.dark, Fonts.size.h4, 'center', 1)}>
+              {product.name}
+            </Text>
+            <View opacity={0.0} style={ApplicationStyles.separatorLine} />
+
+            <ScrollView>
+              <Text
+                style={Fonts.style.regular(
+                  Colors.dark,
+                  Fonts.size.medium,
+                  'center',
+                  1,
+                )}>
+                {'Clientes'}
+              </Text>
+              <View
+                style={{
+                  width: Metrics.screenWidth * 0.85,
+                }}>
+                <View
+                  style={{
+                    flex: 1,
+                    marginHorizontal: 5,
+                  }}>
+                  <TitleValue
+                    title={`${user.firstName} ${user.lastName} (yo)`}
+                    value={null}
+                    letterSpacingTittle={0}
+                    letterSpacingValue={0}
+                    titleType={'bold'}
+                    valueType={'regular'}
+                    width={'100%'}
+                  />
+                  <TitleValue
+                    title={'Servicio'}
+                    value={Utilities.formatCOP(product.price)}
+                    titleType={'regular'}
+                    valueType={'regular'}
+                    width={Metrics.screenWidth * 0.8}
+                  />
+                </View>
+
+                {_.filter(
+                  this.state.addonsGuest,
+                  ({guestId}) => guestId === 'yo',
+                ).map((item, index) => (
+                  <View
+                    key={index}
+                    style={{
+                      flex: 1,
+                      marginHorizontal: 5,
+                    }}>
+                    <TitleValue
+                      title={item.addonName}
+                      value={Utilities.formatCOP(item.addOnPrice)}
+                      titleType={'regular'}
+                      valueType={'regular'}
+                      width={Metrics.screenWidth * 0.8}
+                    />
+                  </View>
+                ))}
+              </View>
+              {guestList.map((data, index) => {
+                return (
+                  <View
+                    key={data.id}
+                    style={{
+                      flex: 1,
+                      marginHorizontal: 5,
+                      // width: Metrics.screenWidth * 0.85,
+                      // // alignSelf: 'flex-end',
+                      // // marginVertical: 5,
+                      // // flexDirection: 'row',
+                      // // justifyContent: 'space-between',
+                    }}>
+                    <TitleValue
+                      title={`${data.firstName} ${data.lastName}`}
+                      value={null}
+                      letterSpacingTittle={0}
+                      letterSpacingValue={0}
+                      titleType={'bold'}
+                      valueType={'regular'}
+                      width={'100%'}
+                    />
+
+                    {/* <View
+                      style={{
+                        flex: 1,
+
+                        marginHorizontal: 5,
+                      }}>
+                      <Text
+                        style={Fonts.style.bold(
+                          Colors.dark,
+                          Fonts.size.medium,
+                          'left',
+                          1,
+                        )}>
+                        {data.firstName} {data.lastName}
+                      </Text>
+                    </View> */}
+
+                    <View
+                      key={index}
+                      style={{
+                        flex: 1,
+                        marginHorizontal: 5,
+                      }}>
+                      <TitleValue
+                        title={'Servicio'}
+                        value={Utilities.formatCOP(product.price)}
+                        titleType={'regular'}
+                        valueType={'regular'}
+                        width={Metrics.screenWidth * 0.8}
+                      />
+                    </View>
+
+                    {/* <View
+                      style={{
+                        // flex: 1,
+                        width: Metrics.screenWidth * 0.8,
+                        alignSelf: 'flex-end',
+
+                        marginHorizontal: 5,
+                      }}>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          justifyContent: 'space-between',
+                          marginHorizontal: 5,
+                        }}>
+                        <Text
+                          style={Fonts.style.regular(
+                            Colors.dark,
+                            Fonts.size.medium,
+                            'left',
+                            1,
+                          )}>
+                          Servicio
+                        </Text>
+                        <Text
+                          style={Fonts.style.regular(
+                            Colors.dark,
+                            Fonts.size.medium,
+                            'left',
+                            1,
+                          )}>
+                          {Utilities.formatCOP(product.price)}
+                        </Text>
+                      </View>
+                    </View> */}
+
+                    <View
+                      style={{
+                        width: Metrics.screenWidth * 0.8,
+                        flex: 0,
+                        // marginVertical: 5,
+                        flexDirection: 'column',
+                      }}>
+                      {_.filter(
+                        this.state.addonsGuest,
+                        ({guestId}) => guestId === data.id,
+                      ).map((item, index) => (
+                        <View
+                          key={index}
+                          style={{
+                            flex: 1,
+
+                            marginHorizontal: 5,
+                          }}>
+                          <View
+                            style={{
+                              flex: 1,
+                              flexDirection: 'row',
+                              // alignSelf: 'flex-end',
+                              justifyContent: 'space-between',
+                              marginHorizontal: 5,
+                            }}>
+                            <Text
+                              style={Fonts.style.regular(
+                                Colors.dark,
+                                Fonts.size.medium,
+                                'left',
+                                1,
+                              )}>
+                              {item.addonName}
+                            </Text>
+                            <Text
+                              style={Fonts.style.regular(
+                                Colors.dark,
+                                Fonts.size.medium,
+                                'left',
+                                1,
+                              )}>
+                              {Utilities.formatCOP(item.addOnPrice)}
+                            </Text>
+                          </View>
+                        </View>
+                      ))}
+                    </View>
+                  </View>
+                );
+              })}
+
+              <View opacity={0.25} style={ApplicationStyles.separatorLine} />
+
+              <Text
+                style={Fonts.style.regular(
+                  Colors.dark,
+                  Fonts.size.medium,
+                  'center',
+                  1,
+                )}>
+                {'Duracion - Expertos'}
+              </Text>
+              <Text
+                style={Fonts.style.regular(
+                  Colors.dark,
+                  Fonts.size.medium,
+                  'center',
+                  1,
+                )}>
+                {minToHours(timeTotal)} - {experts}{' '}
+                {experts === 1 ? 'Experto' : 'Expertos'}
+              </Text>
+              <View opacity={0.25} style={ApplicationStyles.separatorLine} />
+              <View
+                style={{
+                  flex: 1,
+
+                  marginHorizontal: 5,
+                }}>
+                <View
+                  style={{
+                    flex: 1,
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    marginHorizontal: 5,
+                  }}>
+                  <Text
+                    style={Fonts.style.regular(
+                      Colors.dark,
+                      Fonts.size.small,
+                      'left',
+                      1,
+                    )}>
+                    TOTAL SERVICIOS
+                  </Text>
+                  <Text
+                    style={Fonts.style.regular(
+                      Colors.dark,
+                      Fonts.size.medium,
+                      'left',
+                      1,
+                    )}>
+                    {Utilities.formatCOP(
+                      product.price * (guestList.length + 1),
+                    )}
+                  </Text>
+                </View>
+
+                <View
+                  style={{
+                    flex: 1,
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    marginHorizontal: 5,
+                  }}>
+                  <Text
+                    style={Fonts.style.regular(
+                      Colors.dark,
+                      Fonts.size.small,
+                      'left',
+                      1,
+                    )}>
+                    TOTAL ADICIONES
+                  </Text>
+                  <Text
+                    style={Fonts.style.regular(
+                      Colors.dark,
+                      Fonts.size.medium,
+                      'left',
+                      1,
+                    )}>
+                    {Utilities.formatCOP(addOnPrice)}
+                  </Text>
+                </View>
+
+                <View
+                  style={{
+                    flex: 1,
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    marginHorizontal: 5,
+                  }}>
+                  <Text
+                    style={Fonts.style.bold(
+                      Colors.dark,
+                      Fonts.size.medium,
+                      'left',
+                      1,
+                    )}>
+                    TOTAL
+                  </Text>
+                  <Text
+                    style={Fonts.style.bold(
+                      Colors.dark,
+                      Fonts.size.medium,
+                      'left',
+                      1,
+                    )}>
+                    {Utilities.formatCOP(
+                      product.price * (guestList.length + 1) + addOnPrice,
+                    )}
+                  </Text>
+                </View>
+              </View>
+
+              <TouchableOpacity
+                onPress={() => {
+                  let gList = [
+                    {
+                      email: user.email,
+                      firstName: user.firstName,
+                      id: 'yo',
+                      lastName: user.lastName,
+                      phone: user.phone,
+                    },
+                    ...guestList,
+                  ];
+
+                  let data = {
+                    name: product.name,
+                    clients: gList,
+                    addons: addonsGuest,
+                    duration: timeTotal,
+                    totalServices: product.price * (guestList.length + 1),
+                    totalAddons: addOnPrice,
+                    total: product.price * (guestList.length + 1) + addOnPrice,
+                    experts,
+                  };
+
+                  console.log(('=> data', data));
+                  this.sendItemCart(data);
+                }}
+                style={{
+                  width: Metrics.screenWidth * 0.5,
+                  height: 40,
+                  marginVertical: 10,
+                  alignSelf: 'center',
+                  borderRadius: Metrics.borderRadius,
+                  backgroundColor: Colors.client.secondaryColor,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Text
+                  style={Fonts.style.bold(
+                    Colors.light,
+                    Fonts.size.medium,
+                    'center',
+                    1,
+                  )}>
+                  Confirmar servicio
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => {
+                  console.log('cancelar');
+                  this.setState({showModalService: false});
+                }}
+                style={{
+                  width: Metrics.screenWidth * 0.5,
+                  // height: 40,
+                  marginVertical: 10,
+                  alignSelf: 'center',
+                  borderRadius: Metrics.borderRadius,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Text
+                  style={Fonts.style.regular(
+                    Colors.dark,
+                    Fonts.size.medium,
+                    'center',
+                    1,
+                  )}>
+                  Cancelar
+                </Text>
+              </TouchableOpacity>
+              <View style={{height: Metrics.addFooter + 10}} />
+            </ScrollView>
+          </KeyboardAvoidingView>
+        </Modal>
 
         <Modal
           isVisible={showModalGuest}
@@ -1044,9 +1525,9 @@ export default class Home extends Component {
             // ,height: Metrics.screenHeight * 0.7
             // top:100,
           }}
-          backdropColor={'rgba(100,74, 87, 0.75)'}>
+          backdropColor={Colors.pinkMask(0.75)}>
           <KeyboardAvoidingView
-            behavior="padding"
+            behavior='padding'
             enabled
             style={{
               flex: 0,

@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 
 import LinearGradient from 'react-native-linear-gradient';
-
+import _ from 'lodash';
 import {
   Colors,
   Fonts,
@@ -25,11 +25,14 @@ import styles from './styles';
 
 import AutoHeightImage from 'react-native-auto-height-image';
 import Header from '../../Components/Header';
+import CartFooter from '../../Components/CartFooter';
 import GalleryItem from '../../Components/GalleryItem';
 import ExpandHome from '../../Components/ExpandHome';
 import BannerScroll from '../../Components/BannerScroll';
 
 import Login from '../../Screens/Login';
+import Cart from '../../Screens/Cart';
+import Address from '../../Screens/Address';
 import Register from '../../Screens/Register';
 
 import StarRating from 'react-native-star-rating';
@@ -37,6 +40,7 @@ import Modal from 'react-native-modal';
 import auth from '@react-native-firebase/auth';
 
 import FastImage from 'react-native-fast-image';
+import Loading from '../../Components/Loading';
 
 export default class Home extends Component {
   constructor(props) {
@@ -48,6 +52,8 @@ export default class Home extends Component {
       long: '',
       openModal: false,
       modalAuth: false,
+      modalAddress: false,
+      modalCart: false,
       isLogin: true,
       user: null,
     };
@@ -135,8 +141,8 @@ export default class Home extends Component {
   }
 
   render() {
-    const {services, imgs, user, deviceInfo, logOut} = this.props;
-    const {openModal, modalAuth, isLogin} = this.state;
+    const {services, imgs, user, deviceInfo, logOut, loading} = this.props;
+    const {openModal, modalAuth, modalCart, modalAddress, isLogin} = this.state;
 
     return (
       <View style={styles.container}>
@@ -160,6 +166,7 @@ export default class Home extends Component {
               />
             );
           })}
+
           {services && (
             <BannerScroll
               key={'banner'}
@@ -226,16 +233,126 @@ export default class Home extends Component {
           <View style={{height: 20}}></View>
         </ScrollView>
 
-        <Modal
+        {user && user.cart && (
+          <CartFooter
+            title={'Servicios'}
+            servicesNumber={user.cart.services.length}
+            servicesTotal={
+              user.cart.services.length > 0
+                ? _.sumBy(user.cart.services, 'total')
+                : 0
+            }
+            onAction={() => this.setState({modalCart: true})}
+          />
+        )}
+
+        <Modal // Cart
+          isVisible={modalCart}
+          animationInTiming={500}
+          animationOutTiming={500}
+          style={{
+            justifyContent: 'flex-end',
+            margin: 0,
+          }}
+          backdropColor={Colors.pinkMask(0.8)}
+          onBackdropPress={() => {
+            this.setState({modalCart: false});
+          }}>
+          <>
+            <TouchableOpacity
+              style={{
+                alignSelf: 'center',
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: 30,
+                marginVertical: 8,
+                backgroundColor: Colors.light,
+                height: 4,
+                borderRadius: 2.5,
+              }}
+              onPress={() => {
+                this.setState({modalCart: false});
+              }}
+            />
+            <View
+              style={{
+                // paddingTop: Metrics.addHeader,
+                alignSelf: 'center',
+                width: Metrics.screenWidth,
+                height: Metrics.screenHeight * 0.85,
+                backgroundColor: Colors.light,
+
+                borderTopRightRadius: 10,
+                borderTopLeftRadius: 10,
+              }}>
+              <Cart
+                closeModal={() => {
+                  this.setState({modalCart: false});
+                }}
+                modalAddress={() => {
+                  this.setState({modalAddress: true});
+                }}
+              />
+            </View>
+
+            <Modal // address
+              isVisible={modalAddress}
+              style={{
+                justifyContent: 'flex-end',
+                margin: 0,
+              }}
+              backdropColor={Colors.pinkMask(0.8)}
+              onBackdropPress={() => {
+                this.setState({modalAddress: false});
+              }}>
+              <>
+                <TouchableOpacity
+                  style={{
+                    alignSelf: 'center',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    width: 30,
+                    marginVertical: 8,
+                    backgroundColor: Colors.light,
+                    height: 4,
+                    borderRadius: 2.5,
+                  }}
+                  onPress={() => {
+                    this.setState({modalAddress: false});
+                  }}
+                />
+                <View
+                  style={{
+                    // paddingTop: Metrics.addHeader,
+                    alignSelf: 'center',
+                    width: Metrics.screenWidth,
+                    height: Metrics.screenHeight * 0.85,
+                    backgroundColor: Colors.light,
+                    backdropColor: 'red',
+                    borderTopRightRadius: 10,
+                    borderTopLeftRadius: 10,
+                  }}>
+                  <Address />
+                </View>
+
+                <Loading type={'client'} loading={loading} />
+              </>
+            </Modal>
+
+            <Loading type={'client'} loading={loading} />
+          </>
+        </Modal>
+
+        <Modal //gallery
           isVisible={openModal}
           style={{
             justifyContent: 'flex-end',
             margin: 0,
-
-            // ,height: Metrics.screenHeight * 0.7
-            // top:100,
           }}
-          backdropColor={'rgba(100,74, 87, 0.75)'}>
+          backdropColor={Colors.pinkMask(0.8)}
+          onBackdropPress={() => {
+            this.setState({openModal: false});
+          }}>
           <View
             style={{
               // flex: 1,
@@ -318,7 +435,7 @@ export default class Home extends Component {
           </View>
         </Modal>
 
-        <Modal
+        <Modal //auth
           isVisible={modalAuth}
           onBackdropPress={() => {
             this.setState({modalAuth: false});

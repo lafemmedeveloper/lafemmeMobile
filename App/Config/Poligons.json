@@ -1,0 +1,49 @@
+[
+  {
+    "city": "Medellin",
+    "departament": "ANT",
+    "isActive": true,
+    "location": "Sabaneta",
+    "id": "34567yuhgfdew345",
+    "coordinates": [
+      {"longitude": -75.6226972, "latitude": 6.1263684},
+      {"longitude": -75.6122527, "latitude": 6.1241696},
+      {"longitude": -75.5808118, "latitude": 6.1424122},
+      {"longitude": -75.5976346, "latitude": 6.1639169},
+      {"longitude": -75.6323102, "latitude": 6.1779116},
+      {"longitude": -75.651193, "latitude": 6.1738157},
+      {"longitude": -75.6601194, "latitude": 6.1321716},
+      {"longitude": -75.6226972, "latitude": 6.1263684}
+    ]
+  },
+  {
+    "city": "Medellin",
+    "departament": "ANT",
+    "isActive": true,
+    "location": "Poblado",
+    "id": "tyuy4t3efdfbgnfyj65u4y3",
+    "coordinates": [
+      {"longitude": -775.5843989, "latitude": 6.1865278},
+      {"longitude": -775.582854, "latitude": 6.1823465},
+      {"longitude": -775.5809657, "latitude": 6.1779093},
+      {"longitude": -775.580279, "latitude": 6.1704853},
+      {"longitude": -775.5799357, "latitude": 6.1648533},
+      {"longitude": -775.5747001, "latitude": 6.1642559},
+      {"longitude": -775.5680053, "latitude": 6.1607572},
+      {"longitude": -775.5647058, "latitude": 6.1532507},
+      {"longitude": -775.5616263, "latitude": 6.144768},
+      {"longitude": -775.5456618, "latitude": 6.1520217},
+      {"longitude": -775.5454043, "latitude": 6.1603846},
+      {"longitude": -775.5461768, "latitude": 6.1695153},
+      {"longitude": -775.5458334, "latitude": 6.175318},
+      {"longitude": -775.543001, "latitude": 6.1810352},
+      {"longitude": -775.5448712, "latitude": 6.1898057},
+      {"longitude": -775.5472839, "latitude": 6.2143169},
+      {"longitude": -775.5633372, "latitude": 6.2205167},
+      {"longitude": -775.5752033, "latitude": 6.2315832},
+      {"longitude": -775.5780357, "latitude": 6.208972},
+      {"longitude": -775.5814689, "latitude": 6.1931009},
+      {"longitude": -775.5843989, "latitude": 6.1865278}
+    ]
+  }
+]

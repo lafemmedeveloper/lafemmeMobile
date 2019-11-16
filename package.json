@@ -16,7 +16,8 @@
     "reset1": "git clean -f -x -d",
     "reset2": "git checkout -- .",
     "reset3": "watchman watch-del-all && rm -rf node_modules/ && yarn cache clean && yarn install",
-    "android:devices": "$ANDROID_HOME/platform-tools/adb devices"
+    "android:devices": "$ANDROID_HOME/platform-tools/adb devices",
+    "xcode": "cd ios/ && open laFemmeMobile.xcworkspace"
   },
   "dependencies": {
     "@react-native-community/async-storage": "^1.6.2",

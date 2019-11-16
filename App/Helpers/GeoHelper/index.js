@@ -24,3 +24,19 @@ export const getDistance = (user, place) => {
   const distance = geolib.getDistance(user, place);
   return distance;
 };
+
+export const validateCoverage = (latitude, longitude, coverageZones) => {
+  let isCoverage = false;
+  for (let index = 0; index < coverageZones.length; index++) {
+    if (isCoverage === false) {
+      isCoverage = geolib.isPointInPolygon(
+        {latitude, longitude},
+        coverageZones[index].coordinates,
+      );
+    }
+  }
+
+  console.log('=>isCoverage', isCoverage);
+
+  return isCoverage;
+};

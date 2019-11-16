@@ -24,7 +24,7 @@ const ApplicationStyles = {
     alignSelf: 'center',
     height: 0.5,
     backgroundColor: Colors.dark,
-    marginBottom: 20,
+    marginVertical: 10,
   },
 
   scrollHomeExpert: {
