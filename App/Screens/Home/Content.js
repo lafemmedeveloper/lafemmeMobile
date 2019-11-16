@@ -33,6 +33,7 @@ import BannerScroll from '../../Components/BannerScroll';
 import Login from '../../Screens/Login';
 import Cart from '../../Screens/Cart';
 import Address from '../../Screens/Address';
+import AddAddress from '../../Screens/AddAddress';
 import Register from '../../Screens/Register';
 
 import StarRating from 'react-native-star-rating';
@@ -53,6 +54,7 @@ export default class Home extends Component {
       openModal: false,
       modalAuth: false,
       modalAddress: false,
+      modalAddAddress: false,
       modalCart: false,
       isLogin: true,
       user: null,
@@ -142,7 +144,14 @@ export default class Home extends Component {
 
   render() {
     const {services, imgs, user, deviceInfo, logOut, loading} = this.props;
-    const {openModal, modalAuth, modalCart, modalAddress, isLogin} = this.state;
+    const {
+      openModal,
+      modalAuth,
+      modalCart,
+      modalAddress,
+      modalAddAddress,
+      isLogin,
+    } = this.state;
 
     return (
       <View style={styles.container}>
@@ -301,6 +310,8 @@ export default class Home extends Component {
                 justifyContent: 'flex-end',
                 margin: 0,
               }}
+              animationIn={'slideInRight'}
+              animationOut={'slideOutRight'}
               backdropColor={Colors.pinkMask(0.8)}
               onBackdropPress={() => {
                 this.setState({modalAddress: false});
@@ -332,10 +343,66 @@ export default class Home extends Component {
                     borderTopRightRadius: 10,
                     borderTopLeftRadius: 10,
                   }}>
-                  <Address />
+                  <Address
+                    addAddress={() => {
+                      this.setState({
+                        modalAddAddress: true,
+                      });
+                    }}
+                  />
                 </View>
 
                 <Loading type={'client'} loading={loading} />
+
+                <Modal // modalAddAddress
+                  isVisible={modalAddAddress}
+                  style={{
+                    justifyContent: 'flex-end',
+                    margin: 0,
+                  }}
+                  animationIn={'slideInRight'}
+                  animationOut={'slideOutRight'}
+                  backdropColor={Colors.pinkMask(0.8)}
+                  onBackdropPress={() => {
+                    this.setState({modalAddAddress: false});
+                  }}>
+                  <>
+                    <TouchableOpacity
+                      style={{
+                        alignSelf: 'center',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        width: 30,
+                        marginVertical: 8,
+                        backgroundColor: Colors.light,
+                        height: 4,
+                        borderRadius: 2.5,
+                      }}
+                      onPress={() => {
+                        this.setState({modalAddress: false});
+                      }}
+                    />
+                    <View
+                      style={{
+                        // paddingTop: Metrics.addHeader,
+                        alignSelf: 'center',
+                        width: Metrics.screenWidth,
+                        height: Metrics.screenHeight * 0.85,
+                        backgroundColor: Colors.light,
+                        backdropColor: 'red',
+                        borderTopRightRadius: 10,
+                        borderTopLeftRadius: 10,
+                      }}>
+                      <AddAddress
+                        addAddress={() => {
+                          this.setState({
+                            modalAddAddress: true,
+                          });
+                        }}
+                      />
+                    </View>
+                  </>
+                </Modal>
               </>
             </Modal>
 

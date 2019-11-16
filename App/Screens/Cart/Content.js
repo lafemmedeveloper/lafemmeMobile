@@ -78,7 +78,6 @@ export default class Cart extends Component {
             user.cart &&
             user.cart.services &&
             user.cart.services.map((item, index) => {
-              console.log('item:card', item);
               return <CardItemCart key={index} data={item} />;
             })}
           <TouchableOpacity
@@ -116,7 +115,7 @@ export default class Cart extends Component {
                   key={'address'}
                   value={user.cart.address ? user.cart.address : false}
                   textActive={`${user.cart.address.name}, ${user.cart.address.city}-${user.cart.address.departament}`}
-                  textInactive={'+ Agregar una direccion'}
+                  textInactive={'+ Agregar una dirección'}
                   icon={'map-marker-alt'}
                 />
               </TouchableOpacity>
