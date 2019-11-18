@@ -29,13 +29,8 @@ export default class Cart extends Component {
   async componentDidMount() {
     const {getCoverage, setLoading} = this.props;
     setLoading(true);
-    getCoverage('Medellín');
+    await getCoverage('Medellín');
     setLoading(false);
-  }
-
-  checkCoverage() {
-    const {coverageZones} = this.props;
-    validateCoverage(6.1367078, -75.6324356, coverageZones);
   }
 
   async uploadCoverageZone() {
@@ -61,7 +56,7 @@ export default class Cart extends Component {
 
   render() {
     const {user} = this.props;
-    console.log('user:', user);
+
     return (
       <View style={styles.container}>
         <ScrollView style={styles.contentContainer}>
@@ -114,7 +109,14 @@ export default class Cart extends Component {
                 <FieldCartConfig
                   key={'address'}
                   value={user.cart.address ? user.cart.address : false}
-                  textActive={`${user.cart.address.name}, ${user.cart.address.city}-${user.cart.address.departament}`}
+                  textActive={
+                    user.cart.address && `${user.cart.address.formattedAddress}`
+                  }
+                  textSecondary={
+                    user.cart.address && user.cart.address.addressDetail
+                      ? `${user.cart.address.addressDetail}`
+                      : ''
+                  }
                   textInactive={'+ Agregar una dirección'}
                   icon={'map-marker-alt'}
                 />
@@ -139,6 +141,7 @@ export default class Cart extends Component {
               </View>
               <FieldCartConfig
                 key={'date'}
+                textSecondary={''}
                 value={user.cart.date ? user.cart.date : false}
                 textActive={`${msToDay(
                   user.cart.date.startDate.seconds,
@@ -160,6 +163,7 @@ export default class Cart extends Component {
               </View>
               <FieldCartConfig
                 key={'comments'}
+                textSecondary={''}
                 value={user.cart.notes ? user.cart.notes : false}
                 textActive={user.cart.notes}
                 textInactive={'+ Agregar notas o fotografias'}
@@ -168,13 +172,6 @@ export default class Cart extends Component {
             </>
           )}
           <View opacity={0.0} style={ApplicationStyles.separatorLine} />
-
-          <TouchableOpacity
-            onPress={() => {
-              this.checkCoverage();
-            }}>
-            <Text>getCoverage</Text>
-          </TouchableOpacity>
 
           <TouchableOpacity
             onPress={() => {

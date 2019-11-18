@@ -10,6 +10,7 @@
 #import <React/RCTBridge.h>
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
+#import <GoogleMaps/GoogleMaps.h>
 
 @import Firebase;
 
@@ -22,6 +23,7 @@
    [FIRApp configure];
  }
 
+[GMSServices provideAPIKey:@"AIzaSyBX9OXlxkA18EWnRrg6bzgWuQkHbTVx1aI"];
  
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
   RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge

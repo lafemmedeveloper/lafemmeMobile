@@ -349,6 +349,11 @@ export default class Home extends Component {
                         modalAddAddress: true,
                       });
                     }}
+                    closeModal={() => {
+                      this.setState({
+                        modalAddress: false,
+                      });
+                    }}
                   />
                 </View>
 
@@ -397,6 +402,11 @@ export default class Home extends Component {
                         addAddress={() => {
                           this.setState({
                             modalAddAddress: true,
+                          });
+                        }}
+                        closeAddAddress={() => {
+                          this.setState({
+                            modalAddAddress: false,
                           });
                         }}
                       />

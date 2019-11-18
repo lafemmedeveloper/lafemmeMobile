@@ -16,6 +16,21 @@ export default StyleSheet.create({
     width: Metrics.screenWidth * 0.9,
     alignSelf: 'center',
   },
+  itemAddressContainer: {
+    width: '90%',
+    alignSelf: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  itemAddress: {
+    flex: 1,
+
+    borderRadius: Metrics.borderRadius,
+    marginHorizontal: 2.5,
+    alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   productContainer: {
     flex: 0,
     marginVertical: 2.5,
@@ -32,10 +47,10 @@ export default StyleSheet.create({
   containerAddress: {
     width: Metrics.screenWidth,
     flex: 0,
-    marginTop: 70,
+    marginTop: 60,
     zIndex: 1000,
     position: 'absolute',
-    backgroundColor: Colors.light,
+    // backgroundColor: Colors.light,
   },
   headerContainer: {
     flex: 0,

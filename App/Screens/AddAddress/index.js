@@ -3,6 +3,7 @@ import Content from './Content';
 
 import {setLoading} from '../../Core/UI/Actions';
 import {getCoverage} from '../../Core/Services/Actions';
+import {updateProfile} from '../../Core/User/Actions';
 
 const mapStateToProps = ({ui, currentUser, services}) => {
   const {loading} = ui;
@@ -19,6 +20,8 @@ const mapDispatchToProps = dispatch => {
   return {
     setLoading: state => dispatch(setLoading(state)),
     getCoverage: city => dispatch(getCoverage(city)),
+    updateProfile: (data, typeData) => dispatch(updateProfile(data, typeData)),
+
   };
 };
 

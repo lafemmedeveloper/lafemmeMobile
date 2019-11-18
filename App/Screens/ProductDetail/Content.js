@@ -28,7 +28,7 @@ import FastImage from 'react-native-fast-image';
 import Modal from 'react-native-modal';
 import MyTextInput from '../../Components/MyTextInput';
 import Loading from '../../Components/Loading';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 import TitleValue from '../../Components/TitleValue';
 import {minToHours} from '../../Helpers/MomentHelper';
 

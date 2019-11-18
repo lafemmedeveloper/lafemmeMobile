@@ -14,9 +14,8 @@ import styles from './styles';
 import {Fonts, Colors, Images} from '../../Themes';
 
 export default data => {
-  const {value, textActive, textInactive} = data;
+  const {value, textActive, textInactive, textSecondary} = data;
 
-  console.log('FieldCartConfig:value', value);
   return (
     <View style={styles.container}>
       <View style={styles.deleteContainer}>
@@ -24,10 +23,26 @@ export default data => {
       </View>
       <View style={styles.productContainer}>
         {value ? (
-          <Text
-            style={Fonts.style.regular(Colors.dark, Fonts.size.small, 'left')}>
-            {textActive}
-          </Text>
+          <>
+            <Text
+              style={Fonts.style.regular(
+                Colors.dark,
+                Fonts.size.small,
+                'left',
+              )}>
+              {textActive}
+            </Text>
+            {textSecondary !== '' ? (
+              <Text
+                style={Fonts.style.regular(
+                  Colors.gray,
+                  Fonts.size.small,
+                  'left',
+                )}>
+                {textSecondary}
+              </Text>
+            ) : null}
+          </>
         ) : (
           <Text
             style={Fonts.style.regular(Colors.dark, Fonts.size.small, 'left')}>
