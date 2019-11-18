@@ -344,6 +344,20 @@
 			attributes = {
 				LastUpgradeCheck = 1110;
 				ORGANIZATIONNAME = Facebook;
+				TargetAttributes = {
+					13B07F861A680F5B00A75B9A = {
+						DevelopmentTeam = 7P59ZNH6U6;
+					};
+					9F95808D236B530000D6C5BA = {
+						DevelopmentTeam = 7P59ZNH6U6;
+					};
+					9F9580A6236B530900D6C5BA = {
+						DevelopmentTeam = 7P59ZNH6U6;
+					};
+					9F9580BF236B531E00D6C5BA = {
+						DevelopmentTeam = 7P59ZNH6U6;
+					};
+				};
 			};
 			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "laFemmeMobile" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -1028,6 +1042,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconClient;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
+				DEVELOPMENT_TEAM = 7P59ZNH6U6;
 				INFOPLIST_FILE = laFemmeMobile/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
@@ -1047,6 +1062,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconClient;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 7P59ZNH6U6;
 				INFOPLIST_FILE = laFemmeMobile/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
@@ -1168,8 +1184,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconClientStaging;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
+				DEVELOPMENT_TEAM = 7P59ZNH6U6;
 				INFOPLIST_FILE = "lafemme copy-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 1.0.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1187,8 +1205,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconClientStaging;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 7P59ZNH6U6;
 				INFOPLIST_FILE = "lafemme copy-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 1.0.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1207,6 +1227,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconExpert;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
+				DEVELOPMENT_TEAM = 7P59ZNH6U6;
 				INFOPLIST_FILE = "lafemmeStaging copy-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
@@ -1226,6 +1247,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconExpert;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 7P59ZNH6U6;
 				INFOPLIST_FILE = "lafemmeStaging copy-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
@@ -1246,6 +1268,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconExpertStaging;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
+				DEVELOPMENT_TEAM = 7P59ZNH6U6;
 				INFOPLIST_FILE = "lafemmeExpert copy-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
@@ -1265,6 +1288,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconExpertStaging;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 7P59ZNH6U6;
 				INFOPLIST_FILE = "lafemmeExpert copy-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
