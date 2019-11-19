@@ -14,9 +14,10 @@ import styles from './styles';
 import {Fonts, Colors, Images} from '../../Themes';
 import Utilities from '../../Utilities';
 import {minToHours} from '../../Helpers/MomentHelper';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 
 export default data => {
-  const {name, total, duration, clients, experts} = data.data;
+  const {name, id, total, duration, clients, experts} = data.data;
 
   return (
     <View style={styles.container}>
@@ -55,16 +56,18 @@ export default data => {
         </Text>
       </View>
 
-      <View style={styles.deleteContainer}>
-        {
-          <Icon
-            name={'minus-square'}
-            size={20}
-            color={Colors.client.primartColor}
-            solid
-          />
-        }
-      </View>
+      <TouchableOpacity
+        onPress={() => {
+          data.removeItem(id);
+        }}
+        style={styles.deleteContainer}>
+        <Icon
+          name={'minus-square'}
+          size={20}
+          color={Colors.client.primartColor}
+          solid
+        />
+      </TouchableOpacity>
     </View>
   );
 };

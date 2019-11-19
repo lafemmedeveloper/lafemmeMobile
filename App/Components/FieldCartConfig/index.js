@@ -13,8 +13,10 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import styles from './styles';
 import {Fonts, Colors, Images} from '../../Themes';
 
+
+
 export default data => {
-  const {value, textActive, textInactive, textSecondary} = data;
+  const {value, textActive, textInactive, textSecondary, key} = data;
 
   return (
     <View style={styles.container}>

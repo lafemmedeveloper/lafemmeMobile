@@ -36,6 +36,5 @@ export const getCoverage = city => async dispatch => {
     };
   });
 
-  console.log('getCoverage', data);
   return dispatch({type: GET_COVERAGE, payload: data});
 };

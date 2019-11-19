@@ -1455,6 +1455,7 @@ export default class Home extends Component {
                   let data = {
                     name: product.name,
                     clients: gList,
+                    id: Utilities.create_UUID(),
                     addons: addonsGuest,
                     duration: timeTotal,
                     totalServices: product.price * (guestList.length + 1),

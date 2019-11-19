@@ -55,7 +55,6 @@ export default data => {
             name={locationIcon[type]}
             size={20}
             color={Colors.client.primartColor}
-            solid
           />
         }
       </TouchableOpacity>

@@ -20,6 +20,14 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {validateCoverage} from '../../Helpers/GeoHelper';
 
 import {msToDate, msToDay, msToHour} from '../../Helpers/MomentHelper';
+
+var locationIcon = {
+  0: 'home',
+  1: 'building',
+  2: 'concierge-bell',
+  3: 'map-pin',
+};
+
 export default class Cart extends Component {
   constructor(props) {
     super(props);
@@ -33,6 +41,23 @@ export default class Cart extends Component {
     setLoading(false);
   }
 
+  async removeCartItem(id) {
+    const {user, updateProfile, setLoading} = this.props;
+
+    let services = user.cart.services;
+
+    const index = services ? services.findIndex(i => i.id === id) : -1;
+
+    if (index !== -1) {
+      services = [...services.slice(0, index), ...services.slice(index + 1)];
+
+      setLoading(true);
+
+      await updateProfile({...user.cart, services}, 'cart');
+
+      setLoading(false);
+    }
+  }
   async uploadCoverageZone() {
     console.log('uploadCoverageZones');
     var coverage = require('../../Config/Poligons.json');
@@ -73,7 +98,33 @@ export default class Cart extends Component {
             user.cart &&
             user.cart.services &&
             user.cart.services.map((item, index) => {
-              return <CardItemCart key={index} data={item} />;
+              return (
+                <CardItemCart
+                  key={index}
+                  data={item}
+                  removeItem={id => {
+                    Alert.alert(
+                      'Alerta',
+                      'Realmente desea eliminar este item de tu lista.',
+                      [
+                        {
+                          text: 'Eliminar',
+                          onPress: () => {
+                            console.log('removeItem', id);
+                            this.removeCartItem(id);
+                          },
+                        },
+                        {
+                          text: 'Cancelar',
+                          onPress: () => console.log('Cancel Pressed'),
+                          style: 'cancel',
+                        },
+                      ],
+                      {cancelable: true},
+                    );
+                  }}
+                />
+              );
             })}
           <TouchableOpacity
             onPress={() => {
@@ -118,7 +169,11 @@ export default class Cart extends Component {
                       : ''
                   }
                   textInactive={'+ Agregar una dirección'}
-                  icon={'map-marker-alt'}
+                  icon={
+                    user.cart.address
+                      ? locationIcon[user.cart.address.type]
+                      : 'map-marker-alt'
+                  }
                 />
               </TouchableOpacity>
               <View style={styles.itemTitleContainer}>

@@ -27,7 +27,7 @@ export default StyleSheet.create({
     alignItems: 'center',
   },
   deleteContainer: {
-    flex: 0,
+    flex: 1,
     paddingHorizontal: 5,
     justifyContent: 'center',
     alignItems: 'center',

@@ -30,7 +30,7 @@ export default class Address extends Component {
   }
 
   async componentDidMount() {
-    console.log('this.props', this.props);
+    // console.log('this.props', this.props);
   }
 
   async removeAddress(id) {
