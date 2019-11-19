@@ -25,3 +25,17 @@ export const minToHours = value => {
 
   return hours;
 };
+
+export const formatDate = (date, format) => {
+  let formated = moment(date).format(format);
+
+  return formated;
+};
+
+export const getDate = addValue => {
+  let now = moment(new Date())
+    .add(addValue, 'hours')
+    .format('YYYY-MM-DD');
+
+  return now;
+};

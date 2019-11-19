@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import firestore from '@react-native-firebase/firestore';
-import {Colors, Images, Fonts, ApplicationStyles} from '../../Themes';
+import {Colors, Images, Fonts, ApplicationStyles, Metrics} from '../../Themes';
 import auth from '@react-native-firebase/auth';
 import MyTextInput from '../../Components/MyTextInput';
 import CardItemCart from '../../Components/CardItemCart';
@@ -17,9 +17,12 @@ import FieldCartConfig from '../../Components/FieldCartConfig';
 import styles from './styles';
 import {ScrollView} from 'react-native-gesture-handler';
 
-import {validateCoverage} from '../../Helpers/GeoHelper';
-
+import {getDate, formatDate} from '../../Helpers/MomentHelper';
+import DatePicker from 'react-native-datepicker';
+import _ from 'lodash';
+import Utilities from '../../Utilities';
 import {msToDate, msToDay, msToHour} from '../../Helpers/MomentHelper';
+import moment from 'moment';
 
 var locationIcon = {
   0: 'home',
@@ -28,10 +31,20 @@ var locationIcon = {
   3: 'map-pin',
 };
 
+const config = {
+  minHour: moment('08:00').format('HH:mm'),
+  maxHour: moment('20:00').format('HH:mm'),
+};
 export default class Cart extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      date: getDate(1),
+      day: getDate(1),
+      hour: moment(new Date())
+        .add(1.5, 'hour')
+        .format('HH:mm'),
+    };
   }
 
   async componentDidMount() {
@@ -58,6 +71,33 @@ export default class Cart extends Component {
       setLoading(false);
     }
   }
+
+  async updateDay(day) {
+    const {user, updateProfile, setLoading} = this.props;
+    setLoading(true);
+    try {
+      await updateProfile({...user.cart, day}, 'cart');
+      this.setState({day});
+    } catch (err) {
+      console.log('updateDay:error', err);
+    }
+
+    setLoading(false);
+  }
+
+  async updateHour(hour) {
+    const {user, updateProfile, setLoading} = this.props;
+    setLoading(true);
+    try {
+      await updateProfile({...user.cart, hour}, 'cart');
+      this.setState({hour});
+    } catch (err) {
+      console.log('updateHour:error', err);
+    }
+
+    setLoading(false);
+  }
+
   async uploadCoverageZone() {
     console.log('uploadCoverageZones');
     var coverage = require('../../Config/Poligons.json');
@@ -82,6 +122,12 @@ export default class Cart extends Component {
   render() {
     const {user} = this.props;
 
+    let isCompleted =
+      user.cart.address &&
+      user.cart.day &&
+      user.cart.hour &&
+      user.cart.services.length > 0 &&
+      user.cart.notes;
     return (
       <View style={styles.container}>
         <ScrollView style={styles.contentContainer}>
@@ -130,16 +176,76 @@ export default class Cart extends Component {
             onPress={() => {
               this.props.closeModal();
             }}
-            style={styles.productContainer}>
+            style={[
+              styles.productContainer,
+              {backgroundColor: Colors.client.primartColor},
+            ]}>
+            <Text
+              style={Fonts.style.bold(
+                Colors.light,
+                Fonts.size.medium,
+                'center',
+              )}>
+              {'+ Agregar servicios'}
+            </Text>
+          </TouchableOpacity>
+
+          <View opacity={0.0} style={ApplicationStyles.separatorLine} />
+
+          <View style={styles.totalContainer}>
+            <Text
+              style={Fonts.style.regular(
+                Colors.client.primartColor,
+                Fonts.size.medium,
+                'left',
+              )}>
+              {'Total Servicios:'}
+            </Text>
+            <Text
+              style={Fonts.style.regular(
+                Colors.gray,
+                Fonts.size.medium,
+                'left',
+              )}>
+              {Utilities.formatCOP(
+                _.sumBy(user.cart.services, 'totalServices'),
+              )}
+            </Text>
+          </View>
+          <View style={styles.totalContainer}>
+            <Text
+              style={Fonts.style.regular(
+                Colors.client.primartColor,
+                Fonts.size.medium,
+                'left',
+              )}>
+              {'Total Adicionales:'}
+            </Text>
+            <Text
+              style={Fonts.style.regular(
+                Colors.gray,
+                Fonts.size.medium,
+                'left',
+              )}>
+              {Utilities.formatCOP(_.sumBy(user.cart.services, 'totalAddons'))}
+            </Text>
+          </View>
+
+          <View style={styles.totalContainer}>
             <Text
               style={Fonts.style.bold(
                 Colors.client.primartColor,
                 Fonts.size.medium,
-                'center',
+                'left',
               )}>
-              {'+ Agregar mas servicios'}
+              {'Total:'}
             </Text>
-          </TouchableOpacity>
+            <Text
+              style={Fonts.style.bold(Colors.dark, Fonts.size.medium, 'left')}>
+              {Utilities.formatCOP(_.sumBy(user.cart.services, 'total'))}
+            </Text>
+          </View>
+
           <View opacity={0.0} style={ApplicationStyles.separatorLine} />
           {user && user.cart && (
             <>
@@ -176,6 +282,7 @@ export default class Cart extends Component {
                   }
                 />
               </TouchableOpacity>
+              {/* date */}
               <View style={styles.itemTitleContainer}>
                 <Text
                   style={Fonts.style.regular(
@@ -183,29 +290,94 @@ export default class Cart extends Component {
                     Fonts.size.medium,
                     'left',
                   )}>
-                  {'Fecha y hora del servicio'}
-                </Text>
-                <Text
-                  style={Fonts.style.regular(
-                    Colors.gray,
-                    Fonts.size.small,
-                    'left',
-                  )}>
-                  {'Selecciona un rango de horas para iniciar el servicio'}
+                  {'Fecha del servicio'}
+                  {'\n'}
+                  <Text
+                    style={Fonts.style.regular(
+                      Colors.gray,
+                      Fonts.size.small,
+                      'left',
+                    )}>
+                    {'Selecciona el dia que deseas el servicio.'}
+                  </Text>
                 </Text>
               </View>
-              <FieldCartConfig
-                key={'date'}
-                textSecondary={''}
-                value={user.cart.date ? user.cart.date : false}
-                textActive={`${msToDay(
-                  user.cart.date.startDate.seconds,
-                )}\nHora de inicio entre ${msToHour(
-                  user.cart.date.startDate.seconds,
-                )} y ${msToHour(user.cart.date.endDate.seconds)}`}
-                textInactive={'+ Selecciona la fecha del servicio'}
-                icon={'calendar'}
-              />
+              <View>
+                <FieldCartConfig
+                  key={'date'}
+                  textSecondary={''}
+                  value={user.cart.day ? user.cart.day : false}
+                  textActive={`${formatDate(user.cart.day, 'dddd, LL')}`}
+                  textInactive={'+ Selecciona la fecha del servicio'}
+                  icon={'calendar'}
+                />
+
+                <View
+                  opacity={0.0}
+                  style={{
+                    position: 'absolute',
+                    width: '100%',
+                    height: '100%',
+                    flex: 1,
+                    backgroundColor: 'red',
+                  }}>
+                  <DatePicker
+                    date={this.state.day}
+                    locale={'es'}
+                    showIcon={false}
+                    confirmBtnText={'Confirmar'}
+                    cancelBtnText={'Cancelar'}
+                    minDate={moment(new Date()).format('YYYY-MM-DD')}
+                    maxDate={moment(new Date())
+                      .add(30, 'days')
+                      .format('YYYY-MM-DD')}
+                    placeholder={'text'}
+                    mode={'date'}
+                    format={'YYYY-MM-DD'}
+                    // style={{width: 200, height: 100, backgroundColor: 'green'}}
+                    customStyles={{
+                      dateInput: {
+                        borderWidth: 0,
+                        right: 30,
+                      },
+                      dateText: {
+                        marginTop: 10,
+                        color: 'red',
+                        fontSize: 16,
+                        fontFamily: Fonts.type.regular,
+                      },
+                      placeholderText: {
+                        color: 'blue',
+                        fontSize: 16,
+                        width: '100%',
+                        fontFamily: Fonts.type.regular,
+                        justifyContent: 'center',
+                        flex: 1,
+                        textAlign: 'center',
+                        flexDirection: 'row',
+                        marginTop: 9,
+                        left: 20,
+                      },
+                    }}
+                    onDateChange={day => {
+                      this.updateDay(day);
+                      // this.setState({day});
+                      // this.setDateTime(event, date);
+                    }}
+                    placeholderTextColor={'purple'}
+                    underlineColorAndroid={'rgba(0,0,0,0)'}
+                    is24Hour={true}
+                    androidMode='spinner'
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                    }}
+                  />
+                </View>
+              </View>
+              {/* endDate */}
+
+              {/* time */}
               <View style={styles.itemTitleContainer}>
                 <Text
                   style={Fonts.style.regular(
@@ -213,17 +385,114 @@ export default class Cart extends Component {
                     Fonts.size.medium,
                     'left',
                   )}>
-                  {'Notas y fotografias'}
+                  {'Hora del servicio'}
+                  {'\n'}
+                  <Text
+                    style={Fonts.style.regular(
+                      Colors.gray,
+                      Fonts.size.small,
+                      'left',
+                    )}>
+                    {'Selecciona la hora estimada para el servicio.'}
+                  </Text>
                 </Text>
               </View>
-              <FieldCartConfig
-                key={'comments'}
-                textSecondary={''}
-                value={user.cart.notes ? user.cart.notes : false}
-                textActive={user.cart.notes}
-                textInactive={'+ Agregar notas o fotografias'}
-                icon={'comment-alt'}
-              />
+              <View>
+                <FieldCartConfig
+                  key={'hour'}
+                  textSecondary={''}
+                  value={user.cart.hour ? user.cart.hour : false}
+                  textActive={`${formatDate(
+                    moment(user.cart.hour, 'HH:mm'),
+                    'h:mm a',
+                  )}`}
+                  textInactive={'+ Selecciona la hora del servicio'}
+                  icon={'clock'}
+                />
+
+                <View
+                  opacity={0.0}
+                  style={{
+                    position: 'absolute',
+                    width: '100%',
+                    height: '100%',
+                    flex: 1,
+                    backgroundColor: 'red',
+                  }}>
+                  <DatePicker
+                    date={this.state.hour}
+                    locale={'es'}
+                    showIcon={false}
+                    confirmBtnText={'Confirmar'}
+                    cancelBtnText={'Cancelar'}
+                    minTime={moment(new Date())
+                      .add(1, 'hour')
+                      .format('HH:mm')}
+                    maxTime={'00:00'}
+                    placeholder={'text'}
+                    mode={'time'}
+                    format={'HH:mm'}
+                    // style={{width: 200, height: 100, backgroundColor: 'green'}}
+                    customStyles={{
+                      dateInput: {
+                        borderWidth: 0,
+                        right: 30,
+                      },
+                      dateText: {
+                        marginTop: 10,
+                        color: 'red',
+                        fontSize: 16,
+                        fontFamily: Fonts.type.regular,
+                      },
+                      placeholderText: {
+                        color: 'blue',
+                        fontSize: 16,
+                        width: '100%',
+                        fontFamily: Fonts.type.regular,
+                        justifyContent: 'center',
+                        flex: 1,
+                        textAlign: 'center',
+                        flexDirection: 'row',
+                        marginTop: 9,
+                        left: 20,
+                      },
+                    }}
+                    onDateChange={hour => {
+                      this.updateHour(hour);
+                      // this.setDateTime(event, date);
+                    }}
+                    placeholderTextColor={'purple'}
+                    underlineColorAndroid={'rgba(0,0,0,0)'}
+                    is24Hour={false}
+                    androidMode='spinner'
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                    }}
+                  />
+                </View>
+              </View>
+              {/* endTime */}
+              <View style={styles.itemTitleContainer}>
+                <Text
+                  style={Fonts.style.regular(
+                    Colors.client.primartColor,
+                    Fonts.size.medium,
+                    'left',
+                  )}>
+                  {'Comentarios'}
+                </Text>
+              </View>
+              <TouchableOpacity>
+                <FieldCartConfig
+                  key={'comments'}
+                  textSecondary={''}
+                  value={user.cart.notes ? user.cart.notes : false}
+                  textActive={user.cart.notes}
+                  textInactive={'+ Agregar notas o comentarios'}
+                  icon={'comment-alt'}
+                />
+              </TouchableOpacity>
             </>
           )}
           <View opacity={0.0} style={ApplicationStyles.separatorLine} />
@@ -237,7 +506,33 @@ export default class Cart extends Component {
         </ScrollView>
 
         <View style={styles.footerContainer}>
-          <TouchableOpacity onPress={() => {}} style={styles.btnContainer}>
+          <TouchableOpacity
+            onPress={() => {
+              if (isCompleted) {
+                console.log('isCompleted');
+
+                let data = {
+                  id: Utilities.create_UUID(),
+                  status: 0,
+                  ...user.cart,
+                };
+
+                console.log('data', data);
+              } else {
+                Alert.alert(
+                  'Ups...',
+                  'Completa todos los items de tu orden para continuar.',
+                );
+              }
+            }}
+            style={[
+              styles.btnContainer,
+              {
+                backgroundColor: isCompleted
+                  ? Colors.client.primartColor
+                  : Colors.gray,
+              },
+            ]}>
             <Text
               style={Fonts.style.bold(
                 Colors.light,

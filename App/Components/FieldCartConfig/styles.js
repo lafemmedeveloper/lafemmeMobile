@@ -12,7 +12,6 @@ export default StyleSheet.create({
     backgroundColor: Colors.textInputBg,
     paddingHorizontal: 10,
     paddingVertical: 10,
-
   },
   imageContainer: {flex: 0},
   image: {width: 80, height: 80, borderRadius: Metrics.borderRadius},

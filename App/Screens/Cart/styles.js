@@ -16,6 +16,15 @@ export default StyleSheet.create({
     width: Metrics.screenWidth * 0.9,
     alignSelf: 'center',
   },
+
+  totalContainer: {
+    marginVertical: 0,
+    alignSelf: 'center',
+    width: Metrics.screenWidth * 0.9,
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+  },
+
   productContainer: {
     flex: 0,
     marginVertical: 2.5,

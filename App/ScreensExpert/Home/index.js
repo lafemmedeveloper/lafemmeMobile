@@ -82,7 +82,7 @@ export default function Home({navigation}) {
                       Fonts.size.small,
                       'center',
                     )}>
-                    {msToDate(data.dateService.startDate._seconds)}
+                    msToDate(data.dateService.startDate._seconds)
                   </Text>
                   <Text
                     style={Fonts.style.regular(
@@ -90,7 +90,7 @@ export default function Home({navigation}) {
                       Fonts.size.small,
                       'center',
                     )}>
-                    {msToDate(data.dateService.endDate._seconds)}
+                    msToDate(data.dateService.endDate._seconds)
                   </Text>
                   <Text
                     style={Fonts.style.regular(
