@@ -54,6 +54,47 @@ export default class Cart extends Component {
     setLoading(false);
   }
 
+  async sendOrder(data) {
+    const {user, updateProfile, setLoading} = this.props;
+    setLoading(true);
+    try {
+      firestore()
+        .collection('orders')
+        .doc()
+        .set(data)
+        .then(function() {
+          console.log('order:Created');
+
+          try {
+            updateProfile(
+              {
+                ...user.cart,
+                day: null,
+                address: null,
+                hour: null,
+                notes: null,
+                services: [],
+                coupon: null,
+              },
+              'cart',
+            );
+          } catch (error) {}
+        })
+        .catch(function(error) {
+          console.error('Error saving order : ', error);
+        });
+
+      // await firestore()
+      //   .collection('orders')
+      //   .set(data);
+      // setLoading(false);
+    } catch (error) {
+      console.log('sendOrder:error', error);
+    }
+    this.props.closeModal();
+    setLoading(false);
+  }
+
   async removeCartItem(id) {
     const {user, updateProfile, setLoading} = this.props;
 
@@ -130,16 +171,23 @@ export default class Cart extends Component {
       user.cart.notes;
     return (
       <View style={styles.container}>
-        <ScrollView style={styles.contentContainer}>
-          <View style={styles.headerContainer}>
-            <View opacity={0.0} style={ApplicationStyles.separatorLine} />
-            <Text
-              style={Fonts.style.regular(Colors.dark, Fonts.size.h6, 'center')}>
-              {'Detalles de la Orden'}
-            </Text>
-            <View opacity={0.0} style={ApplicationStyles.separatorLine} />
-          </View>
+        <View style={styles.headerContainer}>
+          <View opacity={0.0} style={ApplicationStyles.separatorLine} />
+          <Text style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
+            {'Resumen del Servicio'}
+          </Text>
 
+          <Text
+            style={Fonts.style.regular(
+              Colors.gray,
+              Fonts.size.small,
+              'center',
+            )}>
+            {'Agrega los servicios segun el orden que deseas recibirlos.'}
+          </Text>
+          <View opacity={0.0} style={ApplicationStyles.separatorLine} />
+        </View>
+        <ScrollView style={styles.contentContainer}>
           {user &&
             user.cart &&
             user.cart.services &&
@@ -147,6 +195,8 @@ export default class Cart extends Component {
               return (
                 <CardItemCart
                   key={index}
+                  isCart={true}
+                  showExperts={false}
                   data={item}
                   removeItem={id => {
                     Alert.alert(
@@ -510,13 +560,21 @@ export default class Cart extends Component {
             onPress={() => {
               if (isCompleted) {
                 console.log('isCompleted');
-
                 let data = {
-                  id: Utilities.create_UUID(),
+                  client: {
+                    uid: user.uid,
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    email: user.email,
+                    phone: user.phone,
+                    rating: user.rating,
+                  },
+                  createDate: firestore.FieldValue.serverTimestamp(),
+                  cartId: Utilities.create_CARTID(),
                   status: 0,
                   ...user.cart,
                 };
-
+                this.sendOrder(data);
                 console.log('data', data);
               } else {
                 Alert.alert(
@@ -539,7 +597,7 @@ export default class Cart extends Component {
                 Fonts.size.medium,
                 'center',
               )}>
-              {'Finalizar Orden'}
+              {'Reservar'}
             </Text>
           </TouchableOpacity>
         </View>

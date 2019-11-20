@@ -2,7 +2,7 @@ import {connect} from 'react-redux';
 import Content from './Content';
 
 import {setLoading, getDeviceInfo} from '../../Core/UI/Actions';
-import {getServices} from '../../Core/Services/Actions';
+import {getServices, getOrders} from '../../Core/Services/Actions';
 import {setAuth, setAccount, logOut} from '../../Core/User/Actions';
 
 const mapStateToProps = ({ui, currentUser, services}) => {
@@ -14,6 +14,7 @@ const mapStateToProps = ({ui, currentUser, services}) => {
     user,
     auth,
     services: services.services,
+    orders: services.orders,
     deviceInfo,
     imgs: [
       {
@@ -94,6 +95,8 @@ const mapDispatchToProps = dispatch => {
   return {
     setLoading: state => dispatch(setLoading(state)),
     getServices: () => dispatch(getServices()),
+    getOrders: () => dispatch(getOrders()),
+
     getDeviceInfo: () => dispatch(getDeviceInfo()),
     setAuth: user => dispatch(setAuth(user)),
     setAccount: () => dispatch(setAccount()),
@@ -101,7 +104,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Content);
+export default connect(mapStateToProps, mapDispatchToProps)(Content);

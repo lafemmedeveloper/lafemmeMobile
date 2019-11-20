@@ -6,15 +6,15 @@
  * @flow
  */
 import React from 'react';
-import { View, Image, Text, TouchableOpacity } from 'react-native';
+import {View, Image, Text, TouchableOpacity} from 'react-native';
 
 import styles from './styles';
-import { ApplicationStyles, Colors, Fonts, Images, Metrics } from '../../Themes';
+import {ApplicationStyles, Colors, Fonts, Images, Metrics} from '../../Themes';
 import FastImage from 'react-native-fast-image';
 
 import _ from 'lodash';
 
-export default (data) => {
+export default data => {
   return (
     <View style={[styles.container]}>
       <TouchableOpacity
@@ -22,15 +22,22 @@ export default (data) => {
           data.selectBanner();
         }}
         activeOpacity={0.8}
-        style={[ApplicationStyles.itemService, ApplicationStyles.shadownClient]}
-      >
-        <Image style={ApplicationStyles.itemImage} source={data.image} resizeMode={FastImage.resizeMode.cover} />
+        style={[
+          ApplicationStyles.itemService,
+          ApplicationStyles.shadownClient,
+        ]}>
+        <Image
+          style={ApplicationStyles.itemImage}
+          source={data.image}
+          resizeMode={FastImage.resizeMode.cover}
+        />
         <View //Item Service
-          style={[ApplicationStyles.itemTextContainer]}
-        >
+          style={[ApplicationStyles.itemTextContainer]}>
           <Text
-            style={[Fonts.style.bold(Colors.light, Fonts.size.bigTitle, 'center'), ApplicationStyles.shadownClient]}
-          >
+            style={[
+              Fonts.style.bold(Colors.light, Fonts.size.bigTitle, 'center'),
+              ApplicationStyles.shadownClient,
+            ]}>
             {data.name.toUpperCase()}
           </Text>
         </View>

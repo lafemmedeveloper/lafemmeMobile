@@ -32,6 +32,18 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import TitleValue from '../../Components/TitleValue';
 import {minToHours} from '../../Helpers/MomentHelper';
 
+const modelExpert = {
+  id: null,
+  firstName: null,
+  lastName: null,
+  image: null,
+  ranking: null,
+  thumbnail: null,
+  coordinates: {
+    latitude: null,
+    longitude: null,
+  },
+};
 export default class Home extends Component {
   constructor(props) {
     super(props);
@@ -42,7 +54,7 @@ export default class Home extends Component {
       long: '',
       showModalGuest: false,
       clients: 1,
-      experts: 1,
+      experts: [modelExpert],
       guestEmail: '',
       guestFirstName: '',
       guestLastName: '',
@@ -141,8 +153,8 @@ export default class Home extends Component {
         guestList.length,
         experts > guestList.length,
       );
-      if (experts > guestList.length) {
-        this.setState({experts: guestList.length});
+      if (experts.length > guestList.length) {
+        // this.setState({experts: guestList.length});
       }
 
       data = [...guestList.slice(0, index), ...guestList.slice(index + 1)];
@@ -227,17 +239,24 @@ export default class Home extends Component {
     });
   }
 
-  addExperts(value) {
+  addExperts() {
     const {experts, guestList} = this.state;
-    if (experts <= guestList.length) {
-      this.setState({experts: value + 1});
+    if (experts.length <= guestList.length) {
+      this.setState({experts: [...experts, modelExpert]}, () => {
+        console.log('experts', this.state.experts);
+      });
     }
   }
 
-  subExperts(value) {
-    const {experts} = this.state;
-    if (experts > 1) {
-      this.setState({experts: value - 1});
+  subExperts() {
+    if (this.state.experts.length > 1) {
+      let data = [
+        ...this.state.experts.slice(0, 0),
+        ...this.state.experts.slice(0 + 1),
+      ];
+      this.setState({experts: data}, () => {
+        console.log('experts', this.state.experts);
+      });
     }
   }
 
@@ -624,7 +643,7 @@ export default class Home extends Component {
                   </View>
                   <TouchableOpacity
                     onPress={() => {
-                      this.subExperts(experts);
+                      this.subExperts();
                     }}
                     style={{flex: 0, alignItems: 'center'}}>
                     <Icon
@@ -646,16 +665,16 @@ export default class Home extends Component {
                         'center',
                         1,
                       )}>
-                      {experts}{' '}
+                      {experts.length}{' '}
                     </Text>
                   </View>
                   <TouchableOpacity
                     onPress={() => {
-                      this.addExperts(experts);
+                      this.addExperts();
                     }}
                     style={{flex: 0, alignItems: 'center'}}>
                     <Icon
-                      name='plus-circle'
+                      name={'plus-circle'}
                       size={20}
                       color={Colors.client.primartColor}
                     />
@@ -1053,8 +1072,8 @@ export default class Home extends Component {
                 'center',
                 0,
               )}>
-              {minToHours(timeTotal)} - {experts}{' '}
-              {experts === 1 ? 'Experto' : 'Expertos'}
+              {minToHours(timeTotal)} - {experts.length}{' '}
+              {experts.length === 1 ? 'Experto' : 'Expertos'}
             </Text>
           </View>
           <TouchableOpacity
@@ -1343,8 +1362,8 @@ export default class Home extends Component {
                   'center',
                   1,
                 )}>
-                {minToHours(timeTotal)} - {experts}{' '}
-                {experts === 1 ? 'Experto' : 'Expertos'}
+                {minToHours(timeTotal)} - {experts.length}{' '}
+                {experts.length === 1 ? 'Experto' : 'Expertos'}
               </Text>
               <View opacity={0.25} style={ApplicationStyles.separatorLine} />
               <View

@@ -9,12 +9,14 @@ import React from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
 
 import styles from './styles';
-import {Fonts, Colors} from '../../Themes';
+import {Fonts, Colors, ApplicationStyles} from '../../Themes';
 import Utilities from '../../Utilities';
 
 export default data => {
   return (
-    <TouchableOpacity onPress={() => data.onAction()} style={styles.container}>
+    <TouchableOpacity
+      onPress={() => data.onAction()}
+      style={[styles.container, ApplicationStyles.shadownClient]}>
       <View style={styles.counter}>
         <Text
           style={Fonts.style.bold(

@@ -2,11 +2,11 @@ import {StyleSheet} from 'react-native';
 import {Metrics, Colors} from '../../Themes';
 export default StyleSheet.create({
   container: {
-    width: Metrics.screenWidth * 0.95,
+    width: Metrics.screenWidth * 0.9,
     alignSelf: 'center',
     borderRadius: Metrics.borderRadius,
-    marginTop: 10,
-    marginBottom: 10,
+    marginTop: 5,
+    marginBottom: 5,
     justifyContent: 'space-between',
     flexDirection: 'row',
     alignItems: 'center',

@@ -3,7 +3,7 @@ import {Metrics, Colors} from '../../Themes';
 export default StyleSheet.create({
   container: {
     flex: 0,
-    marginVertical: 2.5,
+    marginVertical: 5,
     borderRadius: Metrics.textInBr,
     alignSelf: 'center',
     flexDirection: 'row',
@@ -12,6 +12,12 @@ export default StyleSheet.create({
     backgroundColor: Colors.textInputBg,
     paddingHorizontal: 10,
     paddingVertical: 10,
+  },
+
+  containerBottom: {
+    width: '80%',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
   },
   imageContainer: {flex: 0},
   image: {width: 80, height: 80, borderRadius: Metrics.borderRadius},

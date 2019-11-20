@@ -10,6 +10,8 @@ const images = {
   nails: require('../Images/services/nails.png'),
   banner: require('../Images/services/banner.png'),
 
+  moto: require('../Images/moto.png'),
+
   itemMenu: require('../Images/navigation/itemMenu.png'),
   menuUser: require('../Images/navigation/menuUser.png'),
   menuAppoiment: require('../Images/navigation/menuAppoiment.png'),
@@ -20,7 +22,7 @@ const images = {
   close: require('../Images/close.png'),
   menu: require('../Images/menu.png'),
   alarm: require('../Images/alarm.png'),
-  pin: require('../Images/pin.png')
+  pin: require('../Images/pin.png'),
 };
 
 export default images;

@@ -9,7 +9,7 @@ import {
   Keyboard,
   ScrollView,
 } from 'react-native';
-
+import moment from 'moment';
 import LinearGradient from 'react-native-linear-gradient';
 import _ from 'lodash';
 import {
@@ -22,7 +22,7 @@ import {
 } from '../../Themes';
 
 import styles from './styles';
-
+import Icon from 'react-native-vector-icons/FontAwesome5';
 import AutoHeightImage from 'react-native-auto-height-image';
 import Header from '../../Components/Header';
 import CartFooter from '../../Components/CartFooter';
@@ -32,6 +32,7 @@ import BannerScroll from '../../Components/BannerScroll';
 
 import Login from '../../Screens/Login';
 import Cart from '../../Screens/Cart';
+import Orders from '../../Screens/Orders';
 import Address from '../../Screens/Address';
 import AddAddress from '../../Screens/AddAddress';
 import Register from '../../Screens/Register';
@@ -42,6 +43,25 @@ import auth from '@react-native-firebase/auth';
 
 import FastImage from 'react-native-fast-image';
 import Loading from '../../Components/Loading';
+import {green} from 'ansi-colors';
+import {formatDate} from '../../Helpers/MomentHelper';
+
+var orderStatusStr = {
+  0: 'Buscando Expertos',
+  1: 'En Calendario',
+  2: 'En Ruta',
+  3: 'En servicio',
+  4: 'Esperando Calificacion',
+  5: 'Finalizado',
+  6: 'Cancelado',
+};
+
+var locationIcon = {
+  0: 'home',
+  1: 'building',
+  2: 'concierge-bell',
+  3: 'map-pin',
+};
 
 export default class Home extends Component {
   constructor(props) {
@@ -54,6 +74,7 @@ export default class Home extends Component {
       openModal: false,
       modalAuth: false,
       modalAddress: false,
+      modalOrders: false,
       modalAddAddress: false,
       modalCart: false,
       isLogin: true,
@@ -65,6 +86,7 @@ export default class Home extends Component {
   async componentDidMount() {
     const {
       getServices,
+      getOrders,
       getDeviceInfo,
       setAuth,
       setAccount,
@@ -85,12 +107,12 @@ export default class Home extends Component {
     });
 
     if (auth().currentUser && auth().currentUser.uid) {
-      console.log(auth().currentUser);
+      // console.log(auth().currentUser);
       await setAccount(auth().currentUser.uid);
     }
 
     await getServices();
-
+    await getOrders();
     setLoading(false);
   }
 
@@ -143,7 +165,16 @@ export default class Home extends Component {
   }
 
   render() {
-    const {services, imgs, user, deviceInfo, logOut, loading} = this.props;
+    const {
+      services,
+      imgs,
+      user,
+      orders,
+      deviceInfo,
+      logOut,
+      modalOrders,
+      loading,
+    } = this.props;
     const {
       openModal,
       modalAuth,
@@ -156,15 +187,120 @@ export default class Home extends Component {
     return (
       <View style={styles.container}>
         <Header
-          title={'Inicio'}
+          title={'Agrega una dirección'}
           iconL={Images.menu}
           iconR={Images.alarm}
           user={user}
+          ordersActive={orders.length}
           selectAddress={() => this.selectAddress()}
           onActionL={() => this.actionL()}
           onActionR={() => this.actionR()}
         />
-        <ScrollView style={ApplicationStyles.scrollHome} bounces={false}>
+
+        <ScrollView style={ApplicationStyles.scrollHome} bounces={true}>
+          {orders.length > 0 && (
+            <TouchableOpacity
+              onPress={() => {
+                this.setState({modalOrders: true}, () => {
+                  console.log('modalOrders', this.state.modalOrders);
+                });
+              }}>
+              <LinearGradient
+                style={[
+                  ApplicationStyles.bannerOrders,
+                  ApplicationStyles.shadownClient,
+                ]}
+                colors={[
+                  Colors.client.primartColor,
+                  Colors.client.secondaryColor,
+                ]}
+                start={{x: 0, y: 1}}
+                end={{x: 1, y: 0}}>
+                <View
+                  style={{
+                    flex: 1,
+                    marginHorizontal: 15,
+                    justifyContent: 'center',
+                  }}>
+                  <Text
+                    style={Fonts.style.bold(
+                      Colors.light,
+                      Fonts.size.small,
+                      'left',
+                    )}>
+                    Mi Proximo Servicio:
+                  </Text>
+                  <Text
+                    style={Fonts.style.regular(
+                      Colors.light,
+                      Fonts.size.small,
+                      'left',
+                    )}>
+                    <Icon
+                      name={'map-marker-alt'}
+                      size={12}
+                      color={Colors.light}
+                    />{' '}
+                    {orders[0].address.name}
+                  </Text>
+                  <Text
+                    style={Fonts.style.regular(
+                      Colors.light,
+                      Fonts.size.small,
+                      'left',
+                    )}>
+                    <Icon name={'calendar'} size={12} color={Colors.light} />{' '}
+                    {formatDate(orders[0].day, 'ddd, LL')}
+                  </Text>
+                  <Text
+                    style={Fonts.style.regular(
+                      Colors.light,
+                      Fonts.size.small,
+                      'left',
+                    )}>
+                    <Icon name={'clock'} size={12} color={Colors.light} />{' '}
+                    {formatDate(moment(orders[0].hour, 'HH:mm'), 'h:mm a')}
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    // flex: 0,
+                    width: 140,
+
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <Image
+                    source={Images.moto}
+                    style={{
+                      height: 55,
+                      width: 140,
+                      resizeMode: 'contain',
+                    }}
+                  />
+                  <View
+                    style={{
+                      backgroundColor: Colors.status[orders[0].status],
+                      marginTop: 5,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      borderRadius: 10,
+                      paddingHorizontal: 10,
+                    }}>
+                    <Text
+                      numberOfLines={1}
+                      style={Fonts.style.bold(
+                        Colors.light,
+                        Fonts.size.tiny,
+                        'left',
+                      )}>
+                      {orderStatusStr[orders[0].status]}
+                    </Text>
+                  </View>
+                </View>
+              </LinearGradient>
+            </TouchableOpacity>
+          )}
           {services.map(data => {
             return (
               <ExpandHome
@@ -175,7 +311,6 @@ export default class Home extends Component {
               />
             );
           })}
-
           {services && (
             <BannerScroll
               key={'banner'}
@@ -194,27 +329,7 @@ export default class Home extends Component {
               {'email:'} {user.email}
             </Text>
           )}
-          {/* <Text
-          style={Fonts.style.regular(Colors.dark, Fonts.size.small, 'center')}>
-          {'Home View'}
-        </Text>
-        <Text
-          style={Fonts.style.regular(Colors.dark, Fonts.size.small, 'center')}>
-          {' name:'} {user.fullName}
-        </Text>
-        <Text
-          style={Fonts.style.regular(Colors.dark, Fonts.size.small, 'center')}>
-          {'email:'} {user.email}
-        </Text>
-        <Text
-          style={Fonts.style.regular(Colors.dark, Fonts.size.small, 'center')}>
-          {'bundleId:'} {deviceInfo.bundleId}
-        </Text>
-        <Text
-          style={Fonts.style.regular(Colors.dark, Fonts.size.small, 'center')}>
-          {'V:'}
-          {deviceInfo.readableVersion}
-        </Text> */}
+
           <TouchableOpacity
             onPress={() => {
               console.log('signOut');
@@ -238,21 +353,30 @@ export default class Home extends Component {
             )}>
             {'bundleId:'} {deviceInfo.readableVersion}
           </Text>
-
-          <View style={{height: 20}}></View>
+          <View style={{height: 70}}></View>
         </ScrollView>
 
         {user && user.cart && (
-          <CartFooter
-            title={'Servicios'}
-            servicesNumber={user.cart.services.length}
-            servicesTotal={
-              user.cart.services.length > 0
-                ? _.sumBy(user.cart.services, 'total')
-                : 0
-            }
-            onAction={() => this.setState({modalCart: true})}
-          />
+          <View
+            style={{
+              width: Metrics.screenWidth,
+              height: 50,
+              bottom: 0,
+              backgroundColor: 'transparet',
+              position: 'absolute',
+              // marginBottom: 0,
+            }}>
+            <CartFooter
+              title={'Servicios'}
+              servicesNumber={user.cart.services.length}
+              servicesTotal={
+                user.cart.services.length > 0
+                  ? _.sumBy(user.cart.services, 'total')
+                  : 0
+              }
+              onAction={() => this.setState({modalCart: true})}
+            />
+          </View>
         )}
 
         <Modal // Cart
@@ -415,6 +539,56 @@ export default class Home extends Component {
                 </Modal>
               </>
             </Modal>
+
+            <Loading type={'client'} loading={loading} />
+          </>
+        </Modal>
+
+        <Modal // orders
+          isVisible={this.state.modalOrders}
+          animationInTiming={500}
+          animationOutTiming={500}
+          style={{
+            justifyContent: 'flex-end',
+            margin: 0,
+          }}
+          backdropColor={Colors.pinkMask(0.8)}
+          onBackdropPress={() => {
+            this.setState({modalOrders: false});
+          }}>
+          <>
+            <TouchableOpacity
+              style={{
+                alignSelf: 'center',
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: 30,
+                marginVertical: 8,
+                backgroundColor: Colors.light,
+                height: 4,
+                borderRadius: 2.5,
+              }}
+              onPress={() => {
+                this.setState({modalOrders: false});
+              }}
+            />
+            <View
+              style={{
+                // paddingTop: Metrics.addHeader,
+                alignSelf: 'center',
+                width: Metrics.screenWidth,
+                height: Metrics.screenHeight * 0.85,
+                backgroundColor: Colors.light,
+
+                borderTopRightRadius: 10,
+                borderTopLeftRadius: 10,
+              }}>
+              <Orders
+                closeModal={() => {
+                  this.setState({modalOrders: false});
+                }}
+              />
+            </View>
 
             <Loading type={'client'} loading={loading} />
           </>

@@ -1,13 +1,14 @@
-import Fonts from './Fonts';
+// import Fonts from './Fonts';
 import Metrics from './Metrics';
 import Colors from './Colors';
 
 const ApplicationStyles = {
   scrollHome: {
-    marginTop: Metrics.screenWidth * 0.22,
     width: Metrics.screenWidth,
-    height: Metrics.screenHeight,
-    // backgroundColor: 'red'
+    // marginTop: 60 + Metrics.addHeader,
+    flex: 1,
+
+    // height: Metrics.screenHeight,
   },
   loading: {
     backgroundColor: Colors.pinkMask(0.9),
@@ -18,7 +19,19 @@ const ApplicationStyles = {
     height: Metrics.screenHeight,
     width: Metrics.screenWidth,
   },
-
+  bannerOrders: {
+    alignSelf: 'center',
+    marginTop: 60 + Metrics.addHeader + 10,
+    marginBottom: 5,
+    flexDirection: 'row',
+    width: Metrics.screenWidth * 0.9,
+    paddingVertical: 10,
+    flex: 0,
+    marginVertical: 5,
+    overflow: 'hidden',
+    backgroundColor: Colors.textInputBg,
+    borderRadius: Metrics.borderRadius,
+  },
   separatorLine: {
     width: Metrics.screenWidth * 0.9,
     alignSelf: 'center',
@@ -43,9 +56,9 @@ const ApplicationStyles = {
   },
   itemService: {
     borderRadius: Metrics.borderRadius,
-    width: Metrics.screenWidth * 0.95,
-    height: Metrics.screenWidth * 0.4,
-    marginVertical: 2.5,
+    width: Metrics.screenWidth * 0.9,
+    height: Metrics.screenWidth * 0.8,
+    marginVertical: 5,
     alignSelf: 'center',
     backgroundColor: Colors.light,
   },
@@ -77,10 +90,10 @@ const ApplicationStyles = {
       width: 0,
       height: 2,
     },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    shadowOpacity: 0.2,
+    shadowRadius: 2.84,
 
-    elevation: 5,
+    elevation: 2,
   },
 
   shadownExpert: {
