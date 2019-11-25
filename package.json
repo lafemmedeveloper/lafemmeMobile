@@ -68,3 +68,6 @@
     "preset": "react-native"
   }
 }
+
+
+yarn add jest jest-enzyme enzyme    --dev

@@ -11,8 +11,17 @@ const colors = {
   gray: '#adadad',
   light: '#fff',
   textInputBg: '#f7f7f8',
+
   accentColors: ['#ff7d6c', '#f24c88', '#00acb3', '#3ebfb4', '#16d8d8'],
-  status: ['#adadad', '#00acb3', '#7bdaa9', '#e58f18', '#a1e518'],
+  status: [
+    '#adadad',
+    '#00acb3',
+    '#7bdaa9',
+    '#e58f18',
+    '#a1e518',
+    '#FF0000',
+    '#FF0000',
+  ],
   snow: 'rgb(255,255,255)',
   background: '#e8e8e8',
   backgroundGradient: ['#393e46', '#363c44'],

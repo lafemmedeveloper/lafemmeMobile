@@ -51,6 +51,18 @@ export default StyleSheet.create({
     paddingVertical: 10,
   },
 
+  cancelBtn: {
+    flex: 1,
+
+    borderRadius: Metrics.textInBr,
+    alignSelf: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginHorizontal: 0,
+    backgroundColor: Colors.textInputBg,
+    paddingHorizontal: 10,
+  },
+
   headerContainer: {
     flex: 0,
     zIndex: 1000,
@@ -60,7 +72,7 @@ export default StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
-    width: Metrics.screenWidth,
+    width: Metrics.screenWidth * 0.9,
     paddingBottom: Metrics.addFooter + 10,
     // marginVertical: 20,
     zIndex: 500,

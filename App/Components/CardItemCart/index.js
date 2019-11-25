@@ -80,7 +80,7 @@ export default data => {
       </View>
       {data.showExperts && (
         <Text
-          style={Fonts.style.regular(
+          style={Fonts.style.bold(
             Colors.client.primartColor,
             Fonts.size.small,
             'center',

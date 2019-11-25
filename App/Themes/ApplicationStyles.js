@@ -32,6 +32,21 @@ const ApplicationStyles = {
     backgroundColor: Colors.textInputBg,
     borderRadius: Metrics.borderRadius,
   },
+
+  bannerHistory: {
+    alignSelf: 'center',
+    // marginTop: 60 + Metrics.addHeader + 10,
+    // marginBottom: 5,
+    flexDirection: 'row',
+    width: Metrics.screenWidth * 0.9,
+    paddingVertical: 10,
+    flex: 0,
+    marginVertical: 5,
+    overflow: 'hidden',
+    backgroundColor: Colors.textInputBg,
+    borderRadius: Metrics.borderRadius,
+  },
+
   separatorLine: {
     width: Metrics.screenWidth * 0.9,
     alignSelf: 'center',
@@ -85,6 +100,7 @@ const ApplicationStyles = {
 
   shadownClient: {
     // shadown
+
     shadowColor: Colors.client.primartColor,
     shadowOffset: {
       width: 0,

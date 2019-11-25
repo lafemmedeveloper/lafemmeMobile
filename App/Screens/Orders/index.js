@@ -14,6 +14,7 @@ const mapStateToProps = ({ui, currentUser, services}) => {
     auth,
     coverageZones: services.coverageZones,
     orders: services.orders,
+    history: services.history,
   };
 };
 

@@ -1,10 +1,12 @@
 import {createReducer} from '../Config';
 import {GET_SERVICES, GET_COVERAGE, GET_ORDERS} from './Types';
+import _ from 'lodash';
 
 const initialState = {
   services: [],
   coverageZones: [],
   orders: [],
+  history: [],
 };
 
 const getServices = (state = initialState, {payload}) => {
@@ -22,9 +24,17 @@ const getCoverage = (state = initialState, {payload}) => {
 };
 
 const getOrders = (state = initialState, {payload}) => {
+  let orders = _.filter(payload, o => o.status <= 3);
+  let history = _.filter(payload, o => o.status > 3);
+
+  orders = _.orderBy(orders, 'date', 'des');
+  history = _.orderBy(history, 'date', 'asc');
+
+  console.log('orders', orders, 'history', history);
   return {
     ...state,
-    orders: payload,
+    orders,
+    history,
   };
 };
 

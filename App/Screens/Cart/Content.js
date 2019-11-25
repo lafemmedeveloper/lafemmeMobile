@@ -417,7 +417,7 @@ export default class Cart extends Component {
                     placeholderTextColor={'purple'}
                     underlineColorAndroid={'rgba(0,0,0,0)'}
                     is24Hour={true}
-                    androidMode='spinner'
+                    androidMode="spinner"
                     style={{
                       width: '100%',
                       height: '100%',
@@ -514,7 +514,7 @@ export default class Cart extends Component {
                     placeholderTextColor={'purple'}
                     underlineColorAndroid={'rgba(0,0,0,0)'}
                     is24Hour={false}
-                    androidMode='spinner'
+                    androidMode="spinner"
                     style={{
                       width: '100%',
                       height: '100%',
@@ -572,6 +572,7 @@ export default class Cart extends Component {
                   createDate: firestore.FieldValue.serverTimestamp(),
                   cartId: Utilities.create_CARTID(),
                   status: 0,
+                  date: `${user.cart.day} ${user.cart.hour}`,
                   ...user.cart,
                 };
                 this.sendOrder(data);

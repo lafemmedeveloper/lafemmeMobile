@@ -20,6 +20,9 @@ import styles from './styles';
 import {ScrollView} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
+import ExpandOrderData from '../../Components/ExpandOrderData';
+import ExpandHistoryData from '../../Components/ExpandHistoryData';
+
 import {getDate, formatDate} from '../../Helpers/MomentHelper';
 import DatePicker from 'react-native-datepicker';
 import _ from 'lodash';
@@ -52,7 +55,7 @@ const mapStyle = require('../../Config/mapStyle.json');
 
 var orderStatusStr = {
   0: 'Buscando Expertos',
-  1: 'En Calendario',
+  1: 'Preparando Servicio',
   2: 'En Ruta',
   3: 'En servicio',
   4: 'Esperando Calificacion',
@@ -155,7 +158,7 @@ export default class Cart extends Component {
   }
 
   render() {
-    const {user, orders} = this.props;
+    const {user, orders, history} = this.props;
     const {toggleType} = this.state;
 
     return (
@@ -191,7 +194,7 @@ export default class Cart extends Component {
                 Fonts.size.medium,
                 'center',
               )}>
-              {'Ordenes Activas'}
+              {'Mi Próximos Servicios'}
             </Text>
           </TouchableOpacity>
           <View style={{width: 5}}></View>
@@ -216,296 +219,32 @@ export default class Cart extends Component {
             </Text>
           </TouchableOpacity>
         </View>
-
         <ScrollView style={styles.contentContainer}>
-          <Image
-            source={Images.moto}
-            style={{
-              alignSelf: 'center',
-              resizeMode: 'contain',
-              marginTop: 30,
-              width: Metrics.screenWidth / 1.2,
-              // heigth: Metrics.screenWidth / 1.2,
-            }}
-          />
-          <View
-            style={{
-              backgroundColor: Colors.status[orders[0].status],
-              width: '50%',
-              alignSelf: 'center',
-              // smarginTop: 5,
-              // justifyContent: 'center',
-              // alignItems: 'center',
-              borderRadius: 10,
-              paddingHorizontal: 10,
-              marginVertical: 20,
-            }}>
-            <Text
-              numberOfLines={1}
-              style={Fonts.style.bold(
-                Colors.light,
-                Fonts.size.medium,
-                'center',
-              )}>
-              {orderStatusStr[orders[0].status]}
-            </Text>
-          </View>
-
-          {user &&
-            orders[0].services.map((item, index) => {
+          {toggleType === 0 &&
+            orders.map((item, index) => {
               return (
-                <CardItemCart
-                  isCart={false}
-                  showExperts={true}
-                  startHour={orders[0].hour}
-                  key={index}
-                  data={item}
-                  removeItem={id => {
-                    Alert.alert(
-                      'Alerta',
-                      'Realmente desea eliminar este item de tu lista.',
-                      [
-                        {
-                          text: 'Eliminar',
-                          onPress: () => {
-                            console.log('removeItem', id);
-                            this.removeCartItem(id);
-                          },
-                        },
-                        {
-                          text: 'Cancelar',
-                          onPress: () => console.log('Cancel Pressed'),
-                          style: 'cancel',
-                        },
-                      ],
-                      {cancelable: true},
-                    );
-                  }}
-                />
+                <>
+                  <ExpandOrderData key={index} user={user} order={item} />
+
+                  {index < orders.length - 1 && (
+                    <View
+                      opacity={0.0}
+                      style={ApplicationStyles.separatorLine}
+                    />
+                  )}
+                </>
+              );
+            })}
+          {toggleType === 1 &&
+            history.map((item, index) => {
+              return (
+                <>
+                  <ExpandHistoryData key={index} user={user} order={item} />
+                </>
               );
             })}
 
-          <View opacity={0.0} style={ApplicationStyles.separatorLine} />
-
-          <View style={styles.totalContainer}>
-            <Text
-              style={Fonts.style.regular(
-                Colors.client.primartColor,
-                Fonts.size.medium,
-                'left',
-              )}>
-              {'Total Servicios:'}
-            </Text>
-            <Text
-              style={Fonts.style.regular(
-                Colors.gray,
-                Fonts.size.medium,
-                'left',
-              )}>
-              {Utilities.formatCOP(
-                _.sumBy(orders[0].services, 'totalServices'),
-              )}
-            </Text>
-          </View>
-          <View style={styles.totalContainer}>
-            <Text
-              style={Fonts.style.regular(
-                Colors.client.primartColor,
-                Fonts.size.medium,
-                'left',
-              )}>
-              {'Total Adicionales:'}
-            </Text>
-            <Text
-              style={Fonts.style.regular(
-                Colors.gray,
-                Fonts.size.medium,
-                'left',
-              )}>
-              {Utilities.formatCOP(_.sumBy(orders[0].services, 'totalAddons'))}
-            </Text>
-          </View>
-
-          <View style={styles.totalContainer}>
-            <Text
-              style={Fonts.style.bold(
-                Colors.client.primartColor,
-                Fonts.size.medium,
-                'left',
-              )}>
-              {'Total:'}
-            </Text>
-            <Text
-              style={Fonts.style.bold(Colors.dark, Fonts.size.medium, 'left')}>
-              {Utilities.formatCOP(_.sumBy(orders[0].services, 'total'))}
-            </Text>
-          </View>
-
-          <View opacity={0.0} style={ApplicationStyles.separatorLine} />
-          {user && orders[0] && (
-            <>
-              <View style={styles.itemTitleContainer}>
-                <Text
-                  style={Fonts.style.regular(
-                    Colors.client.primartColor,
-                    Fonts.size.medium,
-                    'left',
-                  )}>
-                  {'Ubicacion del servicio'}
-                </Text>
-              </View>
-              <View>
-                <FieldCartConfig
-                  key={'address'}
-                  value={orders[0].address ? orders[0].address : false}
-                  textActive={
-                    orders[0].address && `${orders[0].address.formattedAddress}`
-                  }
-                  textSecondary={
-                    orders[0].address && orders[0].address.addressDetail
-                      ? `${orders[0].address.addressDetail}`
-                      : ''
-                  }
-                  textInactive={'+ Agregar una dirección'}
-                  icon={
-                    orders[0].address
-                      ? locationIcon[orders[0].address.type]
-                      : 'map-marker-alt'
-                  }
-                />
-
-                <View
-                  pointerEvents={'none'}
-                  style={{
-                    // flex: 1,
-                    // marginBottom: 60 + Metrics.addFooter - 10,
-                    width: Metrics.screenWidth * 0.9,
-                    height: 200,
-                    marginTop: 5,
-                    borderRadius: 10,
-                    overflow: 'hidden',
-                    marginBottom: 10,
-                    alignSelf: 'center',
-                    justifyContent: 'flex-end',
-                    alignItems: 'center',
-                  }}>
-                  <MapView
-                    provider={PROVIDER_GOOGLE} // remove if not using Google Maps
-                    style={{
-                      ...StyleSheet.absoluteFillObject,
-                    }}
-                    customMapStyle={mapStyle}
-                    region={{
-                      latitude: orders[0].address.coordinates.latitude,
-                      longitude: orders[0].address.coordinates.longitude,
-                      latitudeDelta: 0.00001,
-                      longitudeDelta: 0.00001 * ASPECT_RATIO,
-                    }}>
-                    <Marker.Animated
-                      coordinate={{
-                        latitude: orders[0].address.coordinates.latitude,
-                        longitude: orders[0].address.coordinates.longitude,
-                      }}
-                      // identifier={`coordinate_${index}`}
-                      // heading={coordinate.heading ? coordinate.heading : 0}
-                    >
-                      <Icon
-                        name={'map-marker-alt'}
-                        size={30}
-                        color={Colors.client.primartColor}
-                      />
-                    </Marker.Animated>
-                  </MapView>
-                </View>
-              </View>
-              {/* date */}
-              <View style={styles.itemTitleContainer}>
-                <Text
-                  style={Fonts.style.regular(
-                    Colors.client.primartColor,
-                    Fonts.size.medium,
-                    'left',
-                  )}>
-                  {'Fecha del servicio'}
-                  {'\n'}
-                  <Text
-                    style={Fonts.style.regular(
-                      Colors.gray,
-                      Fonts.size.small,
-                      'left',
-                    )}>
-                    {'Selecciona el dia que deseas el servicio.'}
-                  </Text>
-                </Text>
-              </View>
-              <View>
-                <FieldCartConfig
-                  key={'date'}
-                  textSecondary={''}
-                  value={orders[0].day ? orders[0].day : false}
-                  textActive={`${formatDate(orders[0].day, 'dddd, LL')}`}
-                  textInactive={'+ Selecciona la fecha del servicio'}
-                  icon={'calendar'}
-                />
-              </View>
-              {/* endDate */}
-
-              {/* time */}
-              <View style={styles.itemTitleContainer}>
-                <Text
-                  style={Fonts.style.regular(
-                    Colors.client.primartColor,
-                    Fonts.size.medium,
-                    'left',
-                  )}>
-                  {'Hora del servicio'}
-                  {'\n'}
-                  <Text
-                    style={Fonts.style.regular(
-                      Colors.gray,
-                      Fonts.size.small,
-                      'left',
-                    )}>
-                    {'Selecciona la hora estimada para el servicio.'}
-                  </Text>
-                </Text>
-              </View>
-              <View>
-                <FieldCartConfig
-                  key={'hour'}
-                  textSecondary={''}
-                  value={orders[0].hour ? orders[0].hour : false}
-                  textActive={`${formatDate(
-                    moment(orders[0].hour, 'HH:mm'),
-                    'h:mm a',
-                  )}`}
-                  textInactive={'+ Selecciona la hora del servicio'}
-                  icon={'clock'}
-                />
-              </View>
-              {/* endTime */}
-              <View style={styles.itemTitleContainer}>
-                <Text
-                  style={Fonts.style.regular(
-                    Colors.client.primartColor,
-                    Fonts.size.medium,
-                    'left',
-                  )}>
-                  {'Comentarios'}
-                </Text>
-              </View>
-
-              <FieldCartConfig
-                key={'comments'}
-                textSecondary={''}
-                value={orders[0].notes ? orders[0].notes : false}
-                textActive={orders[0].notes}
-                textInactive={'+ Agregar notas o comentarios'}
-                icon={'comment-alt'}
-              />
-            </>
-          )}
-          <View opacity={0.0} style={ApplicationStyles.separatorLine} />
+          <View style={{height: Metrics.addFooter + 20}} />
         </ScrollView>
       </View>
     );

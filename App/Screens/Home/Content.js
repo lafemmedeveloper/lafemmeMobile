@@ -48,7 +48,7 @@ import {formatDate} from '../../Helpers/MomentHelper';
 
 var orderStatusStr = {
   0: 'Buscando Expertos',
-  1: 'En Calendario',
+  1: 'Preparando Servicio',
   2: 'En Ruta',
   3: 'En servicio',
   4: 'Esperando Calificacion',
@@ -198,7 +198,7 @@ export default class Home extends Component {
         />
 
         <ScrollView style={ApplicationStyles.scrollHome} bounces={true}>
-          {orders.length > 0 && (
+          {orders.length > 0 ? (
             <TouchableOpacity
               onPress={() => {
                 this.setState({modalOrders: true}, () => {
@@ -300,6 +300,8 @@ export default class Home extends Component {
                 </View>
               </LinearGradient>
             </TouchableOpacity>
+          ) : (
+            <View style={{marginTop: 60 + Metrics.addHeader + 10}}></View>
           )}
           {services.map(data => {
             return (
