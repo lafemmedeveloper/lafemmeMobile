@@ -65,8 +65,8 @@ export default dta => {
       {/* <View opacity={0.0} style={ApplicationStyles.separatorLine} /> */}
       <Text
         numberOfLines={1}
-        style={Fonts.style.regular(Colors.gray, Fonts.size.small, 'right')}>
-        identificador de la orden:{' '}
+        style={Fonts.style.regular(Colors.gray, Fonts.size.small, 'left')}>
+        Orden:{' '}
         <Text
           numberOfLines={1}
           style={Fonts.style.bold(
@@ -109,10 +109,11 @@ export default dta => {
         order.services.map((item, index) => {
           return (
             <CardItemCart
+              key={item.id}
               isCart={false}
               showExperts={true}
               startHour={order.hour}
-              key={index}
+
               data={item}
               removeItem={id => {
                 Alert.alert(

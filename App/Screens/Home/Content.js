@@ -189,12 +189,12 @@ export default class Home extends Component {
         <Header
           title={'Agrega una dirección'}
           iconL={Images.menu}
-          iconR={Images.alarm}
+          iconR={null}
           user={user}
           ordersActive={orders.length}
           selectAddress={() => this.selectAddress()}
           onActionL={() => this.actionL()}
-          onActionR={() => this.actionR()}
+          onActionR={() => {}}
         />
 
         <ScrollView style={ApplicationStyles.scrollHome} bounces={true}>
@@ -369,6 +369,7 @@ export default class Home extends Component {
               // marginBottom: 0,
             }}>
             <CartFooter
+              key={'CartFooter'}
               title={'Servicios'}
               servicesNumber={user.cart.services.length}
               servicesTotal={
@@ -421,6 +422,7 @@ export default class Home extends Component {
                 borderTopLeftRadius: 10,
               }}>
               <Cart
+                key={'cartHome'}
                 closeModal={() => {
                   this.setState({modalCart: false});
                 }}
@@ -586,6 +588,7 @@ export default class Home extends Component {
                 borderTopLeftRadius: 10,
               }}>
               <Orders
+                key={'orders'}
                 closeModal={() => {
                   this.setState({modalOrders: false});
                 }}

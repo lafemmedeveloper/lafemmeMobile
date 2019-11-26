@@ -55,7 +55,7 @@ export default data => {
           data.user.cart.address.name ? (
             <>
               <Icon
-                name='sort-down'
+                name="sort-down"
                 size={Fonts.size.medium}
                 color={Colors.client.primartColor}
               />
@@ -98,7 +98,7 @@ export default data => {
               {data.title}{' '}
               {
                 <Icon
-                  name='sort-down'
+                  name="sort-down"
                   size={Fonts.size.medium}
                   color={Colors.light}
                 />
@@ -132,25 +132,11 @@ export default data => {
             }
           }}
           style={[styles.contentR, ApplicationStyles.centerContent]}>
-          <>
-            <Icon
-              name={'calendar'}
-              size={24}
-              color={Colors.client.primartColor}
-            />
-
-            <Text
-              style={[
-                Fonts.style.bold(
-                  Colors.client.primartColor,
-                  Fonts.size.tiny,
-                  'center',
-                ),
-                {position: 'absolute', flex: 1, paddingTop: 2.5},
-              ]}>
-              1
-            </Text>
-          </>
+          <Icon
+            name={data.iconR}
+            size={24}
+            color={Colors.client.primartColor}
+          />
         </TouchableOpacity>
       </View>
     </View>

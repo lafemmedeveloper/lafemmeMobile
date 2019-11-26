@@ -23,4 +23,24 @@ export default StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 2,
   },
+
+  contentContainer: {
+    backgroundColor: Colors.light,
+    // backgroundColor: 'red',
+    marginHorizontal: 5,
+    padding: 10,
+    marginTop: 5,
+    borderRadius: 10,
+    flexDirection: 'row',
+
+    shadowColor: Colors.client.primartColor,
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 0.84,
+
+    elevation: 2,
+  },
 });

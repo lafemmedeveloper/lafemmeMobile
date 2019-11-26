@@ -91,6 +91,7 @@ export default dta => {
           products.map((product, index) => {
             return (
               <TouchableOpacity
+                key={index}
                 onPress={() => {
                   const result = _.filter(
                     addOns,
@@ -98,8 +99,7 @@ export default dta => {
                   );
 
                   dta.selectService({...product, addOns: result});
-                }}
-                key={index}>
+                }}>
                 {index != 0 && (
                   <Animated.View
                     opacity={opacity}

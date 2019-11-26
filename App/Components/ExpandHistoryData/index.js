@@ -44,34 +44,50 @@ export default dta => {
   const {order, user} = dta;
 
   return (
-    <LinearGradient
-      key={order.cartId}
-      style={[ApplicationStyles.bannerHistory, ApplicationStyles.shadownClient]}
-      colors={[Colors.client.primartColor, Colors.client.secondaryColor]}
-      start={{x: 0, y: 1}}
-      end={{x: 1, y: 0}}>
+    <View
+      // key={order.cartId}
+      style={styles.contentContainer}>
       <View
         style={{
           flex: 1,
-          marginHorizontal: 15,
+          marginHorizontal: 10,
           justifyContent: 'center',
         }}>
-        <Text style={Fonts.style.bold(Colors.light, Fonts.size.small, 'left')}>
-          Mi Proximo Servicio:
+        <Text
+          numberOfLines={1}
+          style={Fonts.style.regular(Colors.gray, Fonts.size.small, 'left')}>
+          Orden:{' '}
+          <Text
+            numberOfLines={1}
+            style={Fonts.style.bold(
+              Colors.client.primartColor,
+              Fonts.size.small,
+              'center',
+            )}>
+            {order.cartId}
+          </Text>
         </Text>
         <Text
-          style={Fonts.style.regular(Colors.light, Fonts.size.small, 'left')}>
-          <Icon name={'map-marker-alt'} size={12} color={Colors.light} />{' '}
+          style={Fonts.style.regular(Colors.dark, Fonts.size.small, 'left')}>
+          <Icon
+            name={'map-marker-alt'}
+            size={12}
+            color={Colors.client.primartColor}
+          />{' '}
           {order.address.name}
         </Text>
         <Text
-          style={Fonts.style.regular(Colors.light, Fonts.size.small, 'left')}>
-          <Icon name={'calendar'} size={12} color={Colors.light} />{' '}
+          style={Fonts.style.regular(Colors.dark, Fonts.size.small, 'left')}>
+          <Icon
+            name={'calendar'}
+            size={12}
+            color={Colors.client.primartColor}
+          />{' '}
           {formatDate(order.day, 'ddd, LL')}
         </Text>
         <Text
-          style={Fonts.style.regular(Colors.light, Fonts.size.small, 'left')}>
-          <Icon name={'clock'} size={12} color={Colors.light} />{' '}
+          style={Fonts.style.regular(Colors.dark, Fonts.size.small, 'left')}>
+          <Icon name={'clock'} size={12} color={Colors.client.primartColor} />{' '}
           {formatDate(moment(order.hour, 'HH:mm'), 'h:mm a')}
         </Text>
       </View>
@@ -107,6 +123,6 @@ export default dta => {
           </Text>
         </View>
       </View>
-    </LinearGradient>
+    </View>
   );
 };

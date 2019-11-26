@@ -63,7 +63,7 @@ var orderStatusStr = {
   6: 'Cancelado',
 };
 
-export default class Cart extends Component {
+export default class Orders extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -223,8 +223,8 @@ export default class Cart extends Component {
           {toggleType === 0 &&
             orders.map((item, index) => {
               return (
-                <>
-                  <ExpandOrderData key={index} user={user} order={item} />
+                <View key={item.id}>
+                  <ExpandOrderData user={user} order={item} />
 
                   {index < orders.length - 1 && (
                     <View
@@ -232,15 +232,15 @@ export default class Cart extends Component {
                       style={ApplicationStyles.separatorLine}
                     />
                   )}
-                </>
+                </View>
               );
             })}
           {toggleType === 1 &&
             history.map((item, index) => {
               return (
-                <>
-                  <ExpandHistoryData key={index} user={user} order={item} />
-                </>
+                <View key={item.id}>
+                  <ExpandHistoryData user={user} order={item} />
+                </View>
               );
             })}
 

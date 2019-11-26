@@ -43,7 +43,7 @@ const ApplicationStyles = {
     flex: 0,
     marginVertical: 5,
     overflow: 'hidden',
-    backgroundColor: Colors.textInputBg,
+    backgroundColor: Colors.light,
     borderRadius: Metrics.borderRadius,
   },
 
