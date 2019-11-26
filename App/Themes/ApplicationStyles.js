@@ -106,7 +106,7 @@ const ApplicationStyles = {
       width: 0,
       height: 2,
     },
-    shadowOpacity: 0.2,
+    shadowOpacity: 0.1,
     shadowRadius: 2.84,
 
     elevation: 2,
