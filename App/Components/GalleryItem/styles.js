@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { Metrics, Colors } from '../../Themes';
-export default styles = StyleSheet.create({
+export default StyleSheet.create({
   container: {
     width: Metrics.screenWidth,
     position: 'absolute',

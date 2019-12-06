@@ -72,7 +72,7 @@ const ApplicationStyles = {
   itemService: {
     borderRadius: Metrics.borderRadius,
     width: Metrics.screenWidth * 0.9,
-    height: Metrics.screenWidth * 0.8,
+    height: Metrics.screenWidth * 0.4,
     marginVertical: 5,
     alignSelf: 'center',
     backgroundColor: Colors.light,

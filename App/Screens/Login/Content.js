@@ -64,6 +64,13 @@ export default class Login extends Component {
       userPassword: 'qwerty',
     });
   }
+
+  async setDefaultExpert() {
+    this.setState({
+      userEmail: 'expert@jb.com',
+      userPassword: 'qwerty',
+    });
+  }
   render() {
     const {loading, navigation, isLogin} = this.props;
     const {userEmail, userPassword} = this.state;
@@ -100,19 +107,34 @@ export default class Login extends Component {
               {'Iniciar Sesion'}
             </Text>
             {__DEV__ && (
-              <TouchableOpacity
-                onPress={() => {
-                  this.setDefaultUser();
-                }}>
-                <Text
-                  style={Fonts.style.regular(
-                    Colors.dark,
-                    Fonts.size.small,
-                    'center',
-                  )}>
-                  set Default User
-                </Text>
-              </TouchableOpacity>
+              <>
+                <TouchableOpacity
+                  onPress={() => {
+                    this.setDefaultUser();
+                  }}>
+                  <Text
+                    style={Fonts.style.regular(
+                      Colors.dark,
+                      Fonts.size.small,
+                      'center',
+                    )}>
+                    set Default User
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    this.setDefaultExpert();
+                  }}>
+                  <Text
+                    style={Fonts.style.regular(
+                      Colors.dark,
+                      Fonts.size.small,
+                      'center',
+                    )}>
+                    set Default Expert
+                  </Text>
+                </TouchableOpacity>
+              </>
             )}
             <MyTextInput
               pHolder={'Email'}

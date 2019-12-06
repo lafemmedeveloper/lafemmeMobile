@@ -5,7 +5,9 @@ export default StyleSheet.create({
     flex: 1,
     width: Metrics.screenWidth,
     height: Metrics.screenHeight,
-    backgroundColor: '#F8F8F8',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    backgroundColor: Colors.expert.secondaryColor,
   },
   loading: {
     backgroundColor: Colors.loader,

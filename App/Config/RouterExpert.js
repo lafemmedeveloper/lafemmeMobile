@@ -5,7 +5,7 @@ import {createAppContainer} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
 import {createBottomTabNavigator} from 'react-navigation-tabs';
 
-import LoadingScreen from '../Screens/Loading/';
+import LoadingScreen from '../ScreensExpert/Loading';
 import HomeScreen from '../ScreensExpert/Home';
 import LoginScreen from '../Screens/Login';
 // import ProductDetailScreen from '../Screens/ProductDetail';
@@ -70,7 +70,7 @@ const AppNavigator = createStackNavigator(
       screen: LoginScreen,
     },
 
-    Tabs: {
+    Home: {
       screen: TabNavigator,
     },
   },

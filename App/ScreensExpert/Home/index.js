@@ -1,190 +1,110 @@
-/**
- * Sample React Native App with Firebase
- * https://github.com/invertase/react-native-firebase
- *
- * @format
- * @flow
- */
+import {connect} from 'react-redux';
+import Content from './Content';
 
-import React, {Component, useContext, useEffect} from 'react';
-import {
-  Platform,
-  Text,
-  View,
-  TouchableOpacity,
-  Alert,
-  Image,
-  ScrollView,
-} from 'react-native';
+import {setLoading, getDeviceInfo} from '../../Core/UI/Actions';
+import {getServices, getOrders} from '../../Core/Services/Actions';
+import {setAuth, setAccount, logOut} from '../../Core/User/Actions';
 
-import {Colors, Fonts, Images, Metrics, ApplicationStyles} from '../../Themes';
-import {msToDate} from '../../Helpers/MomentHelper';
-import {getDistance, getCurrentLocation} from '../../Helpers/GeoHelper';
+const mapStateToProps = ({ui, currentUser, services}) => {
+  const {loading, deviceInfo} = ui;
+  const {auth, user} = currentUser;
 
-import Header from '../../Components/Header';
-import ExpandHome from '../../Components/ExpandHome';
-import styles from './styles';
+  return {
+    loading,
+    user,
+    auth,
+    services: services.services,
+    orders: services.orders,
+    deviceInfo,
+    imgs: [
+      {
+        src: 'https://c1.staticflickr.com/9/8387/8638813125_3cac0dc01c_n.jpg',
+        width: 274,
+        height: 182,
+        rating: 4.2,
+        date: '09-10-2019',
+        expertName: 'Sofia Botero',
+        expertImage:
+          'https://firebasestorage.googleapis.com/v0/b/lafemme-5017a.appspot.com/o/experts%2F2345676543234576543.jpg?alt=media&token=a4152781-ac35-48d6-9698-63d745fa2d82',
+      },
+      {
+        src: 'https://c1.staticflickr.com/9/8388/8647725119_458d0c92a2_n.jpg',
+        width: 243,
+        height: 182,
+        rating: 4.8,
+        date: '09-10-2019',
+        expertName: 'Sofia Botero',
+        expertImage:
+          'https://firebasestorage.googleapis.com/v0/b/lafemme-5017a.appspot.com/o/experts%2F2345676543234576543.jpg?alt=media&token=a4152781-ac35-48d6-9698-63d745fa2d82',
+      },
+      {
+        src: 'https://c1.staticflickr.com/6/5162/5230435699_f1eec256fe_n.jpg',
+        width: 272,
+        height: 182,
+        rating: 4.0,
+        date: '09-10-2019',
+        expertName: 'Sofia Botero',
+        expertImage:
+          'https://firebasestorage.googleapis.com/v0/b/lafemme-5017a.appspot.com/o/experts%2F2345676543234576543.jpg?alt=media&token=a4152781-ac35-48d6-9698-63d745fa2d82',
+      },
+      {
+        src: 'https://c1.staticflickr.com/4/3644/3396273424_47b22fd76f_m.jpg',
+        width: 199,
+        height: 182,
+        rating: 3.5,
+        date: '09-10-2019',
+        expertName: 'Sofia Botero',
+        expertImage:
+          'https://firebasestorage.googleapis.com/v0/b/lafemme-5017a.appspot.com/o/experts%2F2345676543234576543.jpg?alt=media&token=a4152781-ac35-48d6-9698-63d745fa2d82',
+      },
+      {
+        src: 'https://c1.staticflickr.com/7/6007/5987700999_7dbff6cb6c_n.jpg',
+        width: 259,
+        height: 172,
+        rating: 5.0,
+        date: '09-10-2019',
+        expertName: 'Sofia Botero',
+        expertImage:
+          'https://firebasestorage.googleapis.com/v0/b/lafemme-5017a.appspot.com/o/experts%2F2345676543234576543.jpg?alt=media&token=a4152781-ac35-48d6-9698-63d745fa2d82',
+      },
+      {
+        src: 'https://c1.staticflickr.com/1/183/363751844_4fe568940a_m.jpg',
+        width: 240,
+        height: 172,
+        rating: 4.1,
+        date: '09-10-2019',
+        expertName: 'Sofia Botero',
+        expertImage:
+          'https://firebasestorage.googleapis.com/v0/b/lafemme-5017a.appspot.com/o/experts%2F2345676543234576543.jpg?alt=media&token=a4152781-ac35-48d6-9698-63d745fa2d82',
+      },
+      {
+        src: 'https://c1.staticflickr.com/4/3457/3945833048_49caa3fc57_n.jpg',
+        width: 260,
+        height: 172,
+        rating: 5.0,
+        date: '09-10-2019',
+        expertName: 'Sofia Botero',
+        expertImage:
+          'https://firebasestorage.googleapis.com/v0/b/lafemme-5017a.appspot.com/o/experts%2F2345676543234576543.jpg?alt=media&token=a4152781-ac35-48d6-9698-63d745fa2d82',
+      },
+    ],
+  };
+};
 
-export default function Home({navigation}) {
-  function logout() {}
+const mapDispatchToProps = dispatch => {
+  return {
+    setLoading: state => dispatch(setLoading(state)),
+    getServices: () => dispatch(getServices()),
+    getOrders: () => dispatch(getOrders()),
 
-  function actionL() {
-    console.log('actionL');
-  }
+    getDeviceInfo: () => dispatch(getDeviceInfo()),
+    setAuth: user => dispatch(setAuth(user)),
+    setAccount: () => dispatch(setAccount()),
+    logOut: uid => dispatch(logOut()),
+  };
+};
 
-  function actionR() {
-    console.log('actionR');
-  }
-  function selectAddress() {
-    console.log('selectAddress');
-  }
-  function selectService(item) {
-    console.log('selectService', item);
-    // StatusBar.setBarStyle('dark-content', false);
-
-    navigation.navigate('ProductDetail', {product: item});
-  }
-
-  console.log('getCurrentLocation', getCurrentLocation());
-  return (
-    <View style={styles.container}>
-      <Header
-        title={'Inicio'}
-        iconL={Images.menu}
-        iconR={Images.alarm}
-        isExpert={true}
-        // tintColor={Colors.expert.secondaryColor}
-        selectAddress={() => selectAddress()}
-        onActionL={() => actionL()}
-        onActionR={() => actionR()}
-      />
-      <View
-        style={[
-          ApplicationStyles.scrollHomeExpert,
-          ApplicationStyles.shadownExpert,
-        ]}>
-        <ScrollView style={{flex: 1}} bounces={false}>
-          {orders &&
-            orders.map(data => {
-              return (
-                <View key={data.id} style={{marginVertical: 10}}>
-                  <Text
-                    style={Fonts.style.regular(
-                      Colors.dark,
-                      Fonts.size.small,
-                      'center',
-                    )}>
-                    {data.userComments}
-                  </Text>
-                  <Text
-                    style={Fonts.style.regular(
-                      Colors.dark,
-                      Fonts.size.small,
-                      'center',
-                    )}>
-                    msToDate(data.dateService.startDate._seconds)
-                  </Text>
-                  <Text
-                    style={Fonts.style.regular(
-                      Colors.dark,
-                      Fonts.size.small,
-                      'center',
-                    )}>
-                    msToDate(data.dateService.endDate._seconds)
-                  </Text>
-                  <Text
-                    style={Fonts.style.regular(
-                      Colors.dark,
-                      Fonts.size.small,
-                      'center',
-                    )}>
-                    {data.location.address}
-                  </Text>
-
-                  <Text
-                    style={Fonts.style.regular(
-                      Colors.dark,
-                      Fonts.size.small,
-                      'center',
-                    )}>
-                    status: {data.status}
-                  </Text>
-
-                  <Text
-                    style={Fonts.style.regular(
-                      Colors.dark,
-                      Fonts.size.small,
-                      'center',
-                    )}>
-                    {getDistance(
-                      {
-                        latitude: data.location.coordinates.latitude,
-                        longitude: data.location.coordinates.longitude,
-                      },
-                      {latitude: "51° 31' N", longitude: "7° 28' E"},
-                    )}
-                  </Text>
-                </View>
-              );
-            })}
-
-          <Text
-            style={Fonts.style.regular(
-              Colors.dark,
-              Fonts.size.small,
-              'center',
-            )}>
-            {'Home View Expert'}
-          </Text>
-          <Text
-            style={Fonts.style.regular(
-              Colors.dark,
-              Fonts.size.small,
-              'center',
-            )}>
-            {' name:'} {user.fullName}
-          </Text>
-          <Text
-            style={Fonts.style.regular(
-              Colors.dark,
-              Fonts.size.small,
-              'center',
-            )}>
-            {'email'} {user.email}
-          </Text>
-          <Text
-            style={Fonts.style.regular(
-              Colors.dark,
-              Fonts.size.small,
-              'center',
-            )}>
-            {'bundleId:'} {deviceInfo.bundleId}
-          </Text>
-          <Text
-            style={Fonts.style.regular(
-              Colors.dark,
-              Fonts.size.small,
-              'center',
-            )}>
-            {'readableVersion:'} {deviceInfo.readableVersion}
-          </Text>
-          <Text
-            style={Fonts.style.regular(
-              Colors.dark,
-              Fonts.size.small,
-              'center',
-            )}>
-            {'uid:'} {user.uid}
-          </Text>
-          <TouchableOpacity onPress={logout}>
-            <Text
-              style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
-              logout
-            </Text>
-          </TouchableOpacity>
-          <View style={{height: 20}}></View>
-        </ScrollView>
-      </View>
-    </View>
-  );
-}
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Content);
