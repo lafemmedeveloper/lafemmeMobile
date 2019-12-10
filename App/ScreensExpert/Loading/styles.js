@@ -7,7 +7,7 @@ export default StyleSheet.create({
     height: Metrics.screenHeight,
     flexDirection: 'column',
     justifyContent: 'center',
-    backgroundColor: Colors.expert.secondaryColor,
+    backgroundColor: Colors.snow,
   },
   loading: {
     backgroundColor: Colors.loader,

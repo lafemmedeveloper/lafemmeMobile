@@ -70,19 +70,28 @@ export default class Home extends Component {
   }
 
   async componentDidMount() {
-    const {} = this.props;
+    const {getExpertOpenOrders, setLoading} = this.props;
 
+    await getExpertOpenOrders();
+    setLoading(false);
     console.log('componentDidMount');
   }
 
   render() {
-    const {} = this.props;
+    const {logOut} = this.props;
     const {} = this.state;
 
     return (
       <View style={styles.container}>
         <ScrollView style={ApplicationStyles.scrollHome} bounces={true}>
           <View style={{width: 200, height: 500, backgroundColor: 'red'}} />
+          <TouchableOpacity
+            onPress={() => {
+              console.log('logOut');
+              logOut();
+            }}>
+            <Text>logOut</Text>
+          </TouchableOpacity>
         </ScrollView>
       </View>
     );

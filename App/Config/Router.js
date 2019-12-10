@@ -12,7 +12,7 @@ import LoginScreen from '../Screens/Login';
 import ProductDetailScreen from '../Screens/ProductDetail';
 import RegisterScreen from '../Screens/Register';
 // import GalleryScreen from '../Screens/Gallery';
-// import ServicesScreen from '../Screens/Services';
+// import ServicesScreen from '../Screens/Services';,
 // import ProfileScreen from '../Screens/Profile';
 
 import {Colors, Images} from '../Themes';
@@ -46,20 +46,20 @@ const HomeStack = createStackNavigator(
 //   },
 // );
 
-// const ServicesStack = createStackNavigator(
-//   {
-//     Services: {
-//       screen: ServicesScreen,
-//     },
-//   },
-//   {
-//     headerMode: 'none',
-//     initialRouteName: 'Services',
-//     navigationOptions: {
-//       gesturesEnabled: false,
-//     },
-//   },
-// );
+const ServicesStack = createStackNavigator(
+  {
+    Services: {
+      screen: HomeScreen,
+    },
+  },
+  {
+    headerMode: 'none',
+    initialRouteName: 'Services',
+    navigationOptions: {
+      gesturesEnabled: false,
+    },
+  },
+);
 
 // const ProfileStack = createStackNavigator(
 //   {
@@ -107,41 +107,41 @@ const TabNavigator = createBottomTabNavigator(
     //   },
     // },
 
-    // Services: {
-    //   screen: ServicesStack,
-    //   navigationOptions: ({navigation}) => {
-    //     const tabBarVisible = navigation.state.index === 0;
-    //     return {
-    //       tabBarVisible,
-    //       tabBarLabel: 'Mis Servicios',
-    //       tabBarIcon: ({tintColor}) => (
-    //         <Image
-    //           style={[styles.icon, {tintColor}]}
-    //           source={Images.menuAppoiment}
-    //         />
-    //       ),
-    //     };
-    //   },
-    // },
-    // Profile: {
-    //   screen: ProfileStack,
-    //   navigationOptions: ({navigation}) => {
-    //     const tabBarVisible = navigation.state.index === 0;
-    //     return {
-    //       tabBarVisible,
-    //       tabBarLabel: 'Perfil',
-    //       tabBarIcon: ({tintColor}) => (
-    //         <Image
-    //           style={[styles.icon, {tintColor}]}
-    //           source={Images.menuUser}
-    //         />
-    //       ),
-    //     };
-    //   },
-    // },
+    Services: {
+      screen: HomeStack,
+      navigationOptions: ({navigation}) => {
+        const tabBarVisible = navigation.state.index === 0;
+        return {
+          tabBarVisible,
+          tabBarLabel: 'Mis Servicios',
+          tabBarIcon: ({tintColor}) => (
+            <Image
+              style={[styles.icon, {tintColor}]}
+              source={Images.menuAppoiment}
+            />
+          ),
+        };
+      },
+    },
+    Profile: {
+      screen: HomeStack,
+      navigationOptions: ({navigation}) => {
+        const tabBarVisible = navigation.state.index === 0;
+        return {
+          tabBarVisible,
+          tabBarLabel: 'Perfil',
+          tabBarIcon: ({tintColor}) => (
+            <Image
+              style={[styles.icon, {tintColor}]}
+              source={Images.menuUser}
+            />
+          ),
+        };
+      },
+    },
   },
   {
-    order: ['Home'],
+    order: ['Home', 'Services', 'Profile'],
     tabBarOptions: {
       activeTintColor: Colors.client.primartColor,
       style: {

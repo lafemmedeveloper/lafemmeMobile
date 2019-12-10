@@ -91,6 +91,7 @@ export default class Home extends Component {
       setAuth,
       setAccount,
       setLoading,
+      user,
     } = this.props;
 
     setLoading(true);
@@ -112,7 +113,9 @@ export default class Home extends Component {
     }
 
     await getServices();
-    await getOrders();
+    if (user) {
+      await getOrders();
+    }
     setLoading(false);
   }
 

@@ -21,13 +21,11 @@ import {
 } from '../../Themes';
 import auth from '@react-native-firebase/auth';
 import styles from './styles';
-import Login from '../../Screens/Login/Content';
-import Register from '../../Screens/Register/Content';
 
 export default class Loading extends Component {
   constructor(props) {
     super(props);
-    this.state = {isLogin: true};
+    this.state = {};
   }
 
   async componentDidMount() {
@@ -39,37 +37,44 @@ export default class Loading extends Component {
       setAuth,
       setAccount,
       setLoading,
+      user,
     } = this.props;
 
-    if (this.props.user) {
-      navigation.navigate('Home');
-    } else {
-      setLoading(true);
-      await getDeviceInfo();
+    console.log('props', this.props);
 
-      this.unsubscriber = auth().onAuthStateChanged(user => {
-        if (user) {
-          setAuth(user);
-          if (auth().currentUser && auth().currentUser.uid && user == null) {
-            this.callSetUser(auth().currentUser.uid);
-          }
-        }
-      });
+    setLoading(true);
+    await getDeviceInfo();
+
+    if (!auth().currentUser) {
+      navigation.navigate('Login');
+    }
+
+    this.unsubscriber = auth().onAuthStateChanged(async authUser => {
+      console.log('user:unsuscriber', authUser);
+      // console.log('user:auth().currentUser', auth().currentUser.uid);
 
       if (auth().currentUser && auth().currentUser.uid) {
-        // console.log(auth().currentUser);
-        await setAccount(auth().currentUser.uid);
+        console.log('user:loading', authUser);
+        await setAuth(authUser);
+
+        if (auth().currentUser && auth().currentUser.uid && user == null) {
+          await setAccount(auth().currentUser.uid);
+
+          navigation.navigate('Home');
+        }
+      } else {
+        navigation.navigate('Login');
       }
+    });
 
-      setLoading(false);
+    if (auth().currentUser && auth().currentUser.uid) {
+      // console.log(auth().currentUser);
+      await setAccount(auth().currentUser.uid);
     }
+
+    setLoading(false);
   }
 
-  async callSetUser(uid) {
-    const {setAccount} = this.props;
-
-    await setAccount(uid);
-  }
   componentWillUnmount() {
     if (this.unsubscriber) {
       this.unsubscriber();
@@ -77,14 +82,6 @@ export default class Loading extends Component {
   }
 
   render() {
-    const {isLogin} = this.state;
-    return (
-      <View style={styles.container}>
-        {isLogin && <Login isLogin={() => this.setState({isLogin: false})} />}
-        {!isLogin && (
-          <Register isLogin={() => this.setState({isLogin: true})} />
-        )}
-      </View>
-    );
+    return <View style={styles.container} />;
   }
 }

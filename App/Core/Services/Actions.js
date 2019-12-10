@@ -1,4 +1,9 @@
-import {GET_SERVICES, GET_COVERAGE, GET_ORDERS} from './Types';
+import {
+  GET_SERVICES,
+  GET_COVERAGE,
+  GET_ORDERS,
+  GET_EXPERT_OPEN_ORDERS,
+} from './Types';
 
 import firestore from '@react-native-firebase/firestore';
 
@@ -53,5 +58,38 @@ export const getOrders = () => (dispatch, getStore) => {
       };
     });
     return dispatch({type: GET_ORDERS, payload: listOrders});
+  });
+};
+
+export const getExpertOpenOrders = () => (dispatch, getStore) => {
+  let expertActivities = getStore().currentUser.user.expertActivities;
+
+  console.log('expertActivities', expertActivities);
+
+  let ordersRef = firestore()
+    .collection('orders')
+    .where('status', '==', 0)
+    .where('servicesType', 'array-contains-any', expertActivities);
+
+  // getStore().currentUser.user.expertActivities.forEach(val => {
+  //   console.log('=> val', val);
+  //   // ordersRef = ordersRef.where('servicesType', 'array-contains', val);
+  // });
+
+  ordersRef.orderBy('createDate', 'desc');
+
+  console.log('ordersRef', ordersRef);
+
+  let listOrders = [];
+
+  ordersRef.onSnapshot(orders => {
+    console.log('=> orders', orders);
+    listOrders = orders.docs.map(item => {
+      return {
+        id: item.id,
+        ...item.data(),
+      };
+    });
+    return dispatch({type: GET_EXPERT_OPEN_ORDERS, payload: listOrders});
   });
 };
