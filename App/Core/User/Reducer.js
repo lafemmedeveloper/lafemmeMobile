@@ -22,8 +22,8 @@ const setAccount = (state = initialState, {payload}) => {
 const logOut = (state = initialState, {payload}) => {
   console.log('logout', payload);
   return {
-    // ...state,
-    data: payload,
+    auth: null,
+    user: null,
   };
 };
 

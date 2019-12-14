@@ -49,7 +49,7 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 export default dta => {
   const {order} = dta;
-  console.log(order);
+
   return (
     <View style={styles.cellContainer}>
       <View style={styles.contentContainer}>

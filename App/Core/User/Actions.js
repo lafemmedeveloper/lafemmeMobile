@@ -3,15 +3,16 @@ import {store, persistor} from '../../Core';
 
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
+
 export const setAuth = state => dispatch => {
   dispatch({type: SET_AUTH, payload: state});
 };
 
-export const setAccount = () => (dispatch, getStore) => {
+export const setAccount = uid => (dispatch, getStore) => {
   return new Promise(resolve => {
     const userRef = firestore()
       .collection('users')
-      .doc(getStore().currentUser.auth.uid);
+      .doc(uid); //getStore().currentUser.auth.
 
     userRef.onSnapshot(_user => {
       return resolve(dispatch({type: USER_ACCOUNT, payload: _user.data()}));

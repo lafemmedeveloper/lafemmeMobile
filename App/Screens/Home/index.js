@@ -99,7 +99,7 @@ const mapDispatchToProps = dispatch => {
 
     getDeviceInfo: () => dispatch(getDeviceInfo()),
     setAuth: user => dispatch(setAuth(user)),
-    setAccount: () => dispatch(setAccount()),
+    setAccount: uid => dispatch(setAccount(uid)),
     logOut: uid => dispatch(logOut()),
   };
 };

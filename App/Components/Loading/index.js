@@ -14,7 +14,16 @@ import {Colors} from '../../Themes';
 export default data => {
   if (data.loading) {
     return (
-      <View style={styles.container}>
+      <View
+        style={[
+          styles.container,
+          {
+            backgroundColor:
+              [data.type] === 'client'
+                ? Colors.Colors.pinkMask(0.7)
+                : Colors.expertMask(0.7),
+          },
+        ]}>
         <WaveIndicator color={Colors[data.type].secondaryColor} />
       </View>
     );

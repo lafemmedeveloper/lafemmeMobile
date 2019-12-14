@@ -8,6 +8,8 @@ import {createBottomTabNavigator} from 'react-navigation-tabs';
 import LoadingScreen from '../ScreensExpert/Loading';
 import HomeScreen from '../ScreensExpert/Home';
 import LoginScreen from '../Screens/Login';
+import ClientOnExpert from '../ScreensExpert/ClientOnExpert';
+
 // import ProductDetailScreen from '../Screens/ProductDetail';
 // import RegisterScreen from '../Screens/Register';
 // import GalleryScreen from '../Screens/Gallery';
@@ -65,13 +67,14 @@ const AppNavigator = createStackNavigator(
     Loading: {
       screen: LoadingScreen,
     },
-
     Login: {
       screen: LoginScreen,
     },
-
     Home: {
       screen: TabNavigator,
+    },
+    ClientOnExpert: {
+      screen: ClientOnExpert,
     },
   },
   {

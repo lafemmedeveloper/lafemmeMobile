@@ -47,6 +47,7 @@ import {green} from 'ansi-colors';
 import {formatDate} from '../../Helpers/MomentHelper';
 
 import ExpertDealOffer from '../../Components/ExpertDealOffer';
+import ClientOnExpert from '../ClientOnExpert';
 
 export default class Home extends Component {
   constructor(props) {
@@ -66,27 +67,35 @@ export default class Home extends Component {
     const {logOut, user, expertOpenOrders} = this.props;
     const {} = this.state;
 
-    return (
-      <View style={styles.container}>
-        <View style={styles.bannerExpert}></View>
-        <ScrollView style={ApplicationStyles.scrollHomeExpert} bounces={true}>
-          {/* <View style={{height: Metrics.addHeader}}></View> */}
-          {expertOpenOrders.map((item, index) => {
-            return (
-              <View key={item.id}>
-                <ExpertDealOffer order={item} />
-              </View>
-            );
-          })}
-        </ScrollView>
-        <TouchableOpacity
-          onPress={() => {
-            console.log('logOut');
-            logOut();
-          }}>
-          <Text>logOut</Text>
-        </TouchableOpacity>
-      </View>
-    );
+    if (user && user.roles.indexOf('expert') === -1) {
+      return <ClientOnExpert />;
+    }
+
+    if (!user) {
+      return null;
+    } else {
+      return (
+        <View style={styles.container}>
+          <View style={styles.bannerExpert} />
+          <ScrollView style={ApplicationStyles.scrollHomeExpert} bounces={true}>
+            {/* <View style={{height: Metrics.addHeader}}></View> */}
+            {expertOpenOrders.map((item, index) => {
+              return (
+                <View key={item.id}>
+                  <ExpertDealOffer order={item} />
+                </View>
+              );
+            })}
+          </ScrollView>
+          <TouchableOpacity
+            onPress={() => {
+              console.log('logOut');
+              logOut();
+            }}>
+            <Text>logOut</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    }
   }
 }

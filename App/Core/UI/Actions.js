@@ -16,6 +16,16 @@ export const getDeviceInfo = () => async dispatch => {
       deviceInfo.version = DeviceInfo.getVersion();
       deviceInfo.readableVersion = DeviceInfo.getReadableVersion();
 
+      let bundleSplit = deviceInfo.bundleId.split('.');
+      let bundleType = bundleSplit[2];
+
+      if (bundleType === 'client' || bundleType === 'clientstaging') {
+        deviceInfo.appType = 'client';
+      } else if (bundleType === 'expert' || bundleType === 'expertstaging') {
+        deviceInfo.appType = 'expert';
+      }
+
+      // console.log('deviceInfo', deviceInfo);
       return resolve(dispatch({type: DEVICE_INFO, payload: deviceInfo}));
     } catch (e) {
       console.log('Trouble getting device info ', e);

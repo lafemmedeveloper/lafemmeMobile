@@ -1,7 +1,7 @@
 import {connect} from 'react-redux';
 import Content from './Content';
 
-import {setAuth, setAccount, logOut} from '../../Core/User/Actions';
+import {setAuth, logOut} from '../../Core/User/Actions';
 import {setLoading, getDeviceInfo} from '../../Core/UI/Actions';
 
 const mapStateToProps = ({ui, currentUser}) => {
@@ -22,7 +22,7 @@ const mapDispatchToProps = dispatch => {
     getDeviceInfo: () => dispatch(getDeviceInfo()),
 
     setAuth: user => dispatch(setAuth(user)),
-    setAccount: uid => dispatch(setAccount(uid)),
+
     logOut: () => dispatch(logOut()),
   };
 };

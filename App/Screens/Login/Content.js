@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
 } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
+
 
 import {Colors, Images, Fonts} from '../../Themes';
 import auth from '@react-native-firebase/auth';
@@ -24,16 +24,19 @@ export default class Login extends Component {
     };
   }
 
-  async componentDidMount() {}
+  async componentDidMount() {
+    const {deviceInfo} = this.props;
+
+    console.log('deviceInfo', deviceInfo);
+  }
 
   async handleLogin() {
     const {userEmail, userPassword} = this.state;
-    // const {user, navigation} = this.props;
-
+    const {setLoading} = this.props;
+    setLoading(true);
     if (userEmail !== '' && userPassword !== '') {
       try {
         if (userEmail !== '' && userPassword !== '') {
-          this.setState({isLoading: true});
           const user = await auth().signInWithEmailAndPassword(
             userEmail,
             userPassword,
@@ -43,17 +46,18 @@ export default class Login extends Component {
           // console.log(user);
 
           // await this.props.setAuth(auth);
-          // await this.props.setAccount();
+
 
           // this.setState({isLoading: false});
           // this.props.navigation.navigate('CompleteUserData');
         }
       } catch (error) {
         console.log('error', error.message);
-
+        setLoading(false);
         Alert.alert('Ups...', 'Verifica los datos ingresados');
       }
     } else {
+      setLoading(false);
       Alert.alert('Ups...', 'Completa o verifica los datos para continuar');
     }
   }
@@ -72,7 +76,8 @@ export default class Login extends Component {
     });
   }
   render() {
-    const {loading, navigation, isLogin} = this.props;
+    const {loading, navigation, isLogin, deviceInfo} = this.props;
+    const {appType} = deviceInfo;
     const {userEmail, userPassword} = this.state;
     return (
       <View style={styles.container}>
@@ -80,27 +85,7 @@ export default class Login extends Component {
           style={styles.containerItems}
           behavior="padding"
           enabled>
-          {/* <View style={styles.headerContainer}>
-            <Text
-              style={Fonts.style.bold(
-                Colors.light,
-                Fonts.size.medium,
-                'center',
-              )}>
-              {'WELCOME TO THE'}
-            </Text>
 
-            <Image source={Images.welcome} style={styles.logo} />
-            <Text
-              style={Fonts.style.regular(
-                Colors.light,
-                Fonts.size.small,
-                'center',
-              )}>
-              {'by Johnatan Botero'}
-            </Text>
-          </View>
-           */}
           <View style={styles.contentContainer}>
             <Text
               style={Fonts.style.regular(Colors.dark, Fonts.size.h6, 'center')}>
@@ -118,7 +103,7 @@ export default class Login extends Component {
                       Fonts.size.small,
                       'center',
                     )}>
-                    set Default User
+                    set Default Client
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -157,7 +142,15 @@ export default class Login extends Component {
                 // navigation.navigate('Home', {});
                 this.handleLogin();
               }}
-              style={styles.btnContainer}>
+              style={[
+                styles.btnContainer,
+                {
+                  backgroundColor:
+                    appType === 'client'
+                      ? Colors.client.secondaryColor
+                      : Colors.expert.secondaryColor,
+                },
+              ]}>
               <Text
                 style={Fonts.style.bold(
                   Colors.light,

@@ -47,9 +47,6 @@ import {green} from 'ansi-colors';
 import {formatDate} from '../../Helpers/MomentHelper';
 import AppConfig from '../../Config/AppConfig';
 
-
-
-
 export default class Home extends Component {
   constructor(props) {
     super(props);
@@ -82,7 +79,7 @@ export default class Home extends Component {
     } = this.props;
 
     setLoading(true);
-    await getDeviceInfo();
+    // await getDeviceInfo();
 
     this.unsubscriber = await auth().onAuthStateChanged(user => {
       if (user) {

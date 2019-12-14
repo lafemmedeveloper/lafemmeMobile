@@ -38,11 +38,6 @@ export default class App extends Component {
   render() {
     const {loading} = this.state;
 
-    // console.log('bundleId', bundleId, bundleId === 'com.lafemme.expertstaging');
-    // if (
-    //   bundleId === 'com.lafemme.client' ||
-    //   bundleId === 'com.lafemme.clientstaging'
-    // ) {
     return (
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
@@ -66,28 +61,8 @@ export default class App extends Component {
               <Loading type={'expert'} loading={loading} />
             </>
           )}
-          <Loading type={'client'} loading={loading} />
         </PersistGate>
       </Provider>
     );
-    // }
-
-    // if (
-    //   bundleId === 'com.lafemme.expert' ||
-    //   bundleId === 'com.lafemme.expertstaging'
-    // ) {
-    //   return (
-    //     <Provider store={store}>
-    //       <PersistGate loading={null} persistor={persistor}>
-    //         <RouterExpert
-    //           ref={nav => {
-    //             this.navigator = nav;
-    //           }}
-    //         />
-    //         <Loading type={'expert'} loading={loading} />
-    //       </PersistGate>
-    //     </Provider>
-    //   );
-    // }
   }
 }
