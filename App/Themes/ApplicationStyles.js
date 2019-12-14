@@ -10,6 +10,7 @@ const ApplicationStyles = {
 
     // height: Metrics.screenHeight,
   },
+
   loading: {
     backgroundColor: Colors.pinkMask(0.9),
     position: 'absolute',
@@ -52,18 +53,18 @@ const ApplicationStyles = {
     alignSelf: 'center',
     height: 0.5,
     backgroundColor: Colors.dark,
-    marginVertical: 10,
+    marginVertical: 5,
   },
 
   scrollHomeExpert: {
-    marginTop: Metrics.screenWidth * 0.22,
     width: Metrics.screenWidth * 0.95,
+    marginVertical: 10,
     alignSelf: 'center',
     marginBottom: 10,
     flex: 1,
     borderRadius: Metrics.borderRadius,
     // height: Metrics.screenHeight,
-    backgroundColor: Colors.light,
+    // backgroundColor: Colors.light,
   },
   scrollCart: {
     width: Metrics.screenWidth,

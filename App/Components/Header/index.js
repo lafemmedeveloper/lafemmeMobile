@@ -11,12 +11,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import LinearGradient from 'react-native-linear-gradient';
 import styles from './styles';
 import {Metrics, ApplicationStyles, Images, Fonts, Colors} from '../../Themes';
-
-var locationIcon = {
-  0: 'Casa',
-  1: 'Oficina',
-  2: 'Hotel',
-};
+import AppConfig from '../../Config/AppConfig';
 
 export default data => {
   return (
@@ -83,7 +78,7 @@ export default data => {
                       ),
                       {marginHorizontal: 20},
                     ]}>
-                    {locationIcon[data.user.cart.address.type]}
+                    {AppConfig.locationIcon[data.user.cart.address.type]}
                   </Text>
                 )}
               </Text>

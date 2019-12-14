@@ -7,6 +7,14 @@ export default StyleSheet.create({
     height: Metrics.screenHeight,
     backgroundColor: '#F8F8F8',
   },
+  bannerExpert: {
+    width: '95%',
+    height: 80,
+    marginTop: Metrics.addHeader,
+    borderRadius: Metrics.borderRadius,
+    backgroundColor: Colors.expert.primartColor,
+    alignSelf: 'center',
+  },
   loading: {
     backgroundColor: Colors.loader,
     position: 'absolute',

@@ -51,7 +51,7 @@ const TabNavigator = createBottomTabNavigator(
   {
     order: ['Home'],
     tabBarOptions: {
-      activeTintColor: Colors.client.primartColor,
+      activeTintColor: Colors.expert.primartColor,
       style: {
         backgroundColor: Colors.light,
         paddingTop: 10,

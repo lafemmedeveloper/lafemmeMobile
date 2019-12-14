@@ -14,27 +14,7 @@ import styles from './styles';
 import {Fonts, Colors, Images} from '../../Themes';
 import Utilities from '../../Utilities';
 import {minToHours} from '../../Helpers/MomentHelper';
-
-var locationType = {
-  0: 'Casa',
-  1: 'Oficina',
-  2: 'Hotel',
-  3: 'Otro',
-};
-
-var locationIcon = {
-  0: 'home',
-  1: 'building',
-  2: 'concierge-bell',
-  3: 'map-pin',
-};
-
-var petsType = {
-  0: 'nothing',
-  1: 'dog',
-  2: 'cat',
-  3: 'both',
-};
+import AppConfig from '../../Config/AppConfig';
 
 export default data => {
   const {formattedAddress, type, addressDetail, pets, id} = data.data;
@@ -52,7 +32,7 @@ export default data => {
         style={{width: 30, justifyContent: 'center', alignItems: 'center'}}>
         {
           <Icon
-            name={locationIcon[type]}
+            name={AppConfig.locationIcon[type]}
             size={20}
             color={Colors.client.primartColor}
           />
@@ -60,12 +40,12 @@ export default data => {
       </TouchableOpacity>
       <View style={styles.productContainer}>
         <Text style={Fonts.style.bold(Colors.dark, Fonts.size.medium, 'left')}>
-          {locationType[type]}{' '}
+          {AppConfig.locationType[type]}{' '}
           {pets === 0 || pets == null ? null : (
             <>
               {pets !== 0 && pets < 3 ? (
                 <Icon
-                  name={petsType[pets]}
+                  name={AppConfig.petsType[pets]}
                   size={12}
                   color={Colors.client.primartColor}
                 />

@@ -38,7 +38,7 @@ export default class App extends Component {
   render() {
     const {loading} = this.state;
 
-    console.log('bundleId', bundleId, bundleId === 'com.lafemme.expertstaging');
+    // console.log('bundleId', bundleId, bundleId === 'com.lafemme.expertstaging');
     // if (
     //   bundleId === 'com.lafemme.client' ||
     //   bundleId === 'com.lafemme.clientstaging'

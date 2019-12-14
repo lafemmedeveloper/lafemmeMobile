@@ -89,6 +89,7 @@ export default data => {
         </Text>
       )}
       {data.showExperts &&
+        experts.length > 0 &&
         experts.map((item, index) => {
           return (
             <View

@@ -12,6 +12,7 @@ import firestore from '@react-native-firebase/firestore';
 export const getServices = () => async dispatch => {
   const services = await firestore()
     .collection('services')
+    .where('isEnabled', '==', true)
     .get();
   const data = await services.docs.map(doc => {
     const item = doc.data();

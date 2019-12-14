@@ -34,12 +34,6 @@ import MapView, {
   Marker,
   AnimatedRegion,
 } from 'react-native-maps';
-var locationIcon = {
-  0: 'home',
-  1: 'building',
-  2: 'concierge-bell',
-  3: 'map-pin',
-};
 
 const config = {
   minHour: moment('08:00').format('HH:mm'),
@@ -52,16 +46,6 @@ const LATITUDE_DELTA = 0.0003;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 const mapStyle = require('../../Config/mapStyle.json');
-
-var orderStatusStr = {
-  0: 'Buscando Expertos',
-  1: 'Preparando Servicio',
-  2: 'En Ruta',
-  3: 'En servicio',
-  4: 'Esperando Calificacion',
-  5: 'Finalizado',
-  6: 'Cancelado',
-};
 
 export default class Orders extends Component {
   constructor(props) {

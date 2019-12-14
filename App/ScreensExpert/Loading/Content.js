@@ -58,6 +58,7 @@ export default class Loading extends Component {
         await setAuth(authUser);
 
         if (auth().currentUser && auth().currentUser.uid && user == null) {
+          console.log('=> auth().currentUser.uid', auth().currentUser.uid);
           await setAccount(auth().currentUser.uid);
 
           navigation.navigate('Home');

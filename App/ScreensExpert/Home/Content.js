@@ -46,22 +46,7 @@ import Loading from '../../Components/Loading';
 import {green} from 'ansi-colors';
 import {formatDate} from '../../Helpers/MomentHelper';
 
-var orderStatusStr = {
-  0: 'Buscando Expertos',
-  1: 'Preparando Servicio',
-  2: 'En Ruta',
-  3: 'En servicio',
-  4: 'Esperando Calificacion',
-  5: 'Finalizado',
-  6: 'Cancelado',
-};
-
-var locationIcon = {
-  0: 'home',
-  1: 'building',
-  2: 'concierge-bell',
-  3: 'map-pin',
-};
+import ExpertDealOffer from '../../Components/ExpertDealOffer';
 
 export default class Home extends Component {
   constructor(props) {
@@ -78,21 +63,29 @@ export default class Home extends Component {
   }
 
   render() {
-    const {logOut} = this.props;
+    const {logOut, user, expertOpenOrders} = this.props;
     const {} = this.state;
 
     return (
       <View style={styles.container}>
-        <ScrollView style={ApplicationStyles.scrollHome} bounces={true}>
-          <View style={{width: 200, height: 500, backgroundColor: 'red'}} />
-          <TouchableOpacity
-            onPress={() => {
-              console.log('logOut');
-              logOut();
-            }}>
-            <Text>logOut</Text>
-          </TouchableOpacity>
+        <View style={styles.bannerExpert}></View>
+        <ScrollView style={ApplicationStyles.scrollHomeExpert} bounces={true}>
+          {/* <View style={{height: Metrics.addHeader}}></View> */}
+          {expertOpenOrders.map((item, index) => {
+            return (
+              <View key={item.id}>
+                <ExpertDealOffer order={item} />
+              </View>
+            );
+          })}
         </ScrollView>
+        <TouchableOpacity
+          onPress={() => {
+            console.log('logOut');
+            logOut();
+          }}>
+          <Text>logOut</Text>
+        </TouchableOpacity>
       </View>
     );
   }

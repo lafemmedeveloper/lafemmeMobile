@@ -23,13 +23,7 @@ import _ from 'lodash';
 import Utilities from '../../Utilities';
 import {msToDate, msToDay, msToHour} from '../../Helpers/MomentHelper';
 import moment from 'moment';
-
-var locationIcon = {
-  0: 'home',
-  1: 'building',
-  2: 'concierge-bell',
-  3: 'map-pin',
-};
+import AppConfig from '../../Config/AppConfig';
 
 const config = {
   minHour: moment('08:00').format('HH:mm'),
@@ -327,7 +321,7 @@ export default class Cart extends Component {
                   textInactive={'+ Agregar una dirección'}
                   icon={
                     user.cart.address
-                      ? locationIcon[user.cart.address.type]
+                      ? AppConfig.locationIcon[user.cart.address.type]
                       : 'map-marker-alt'
                   }
                 />

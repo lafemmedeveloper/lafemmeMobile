@@ -32,6 +32,7 @@ import Utilities from '../../Utilities';
 import _ from 'lodash';
 import CardItemCart from '../../Components/CardItemCart';
 import FieldCartConfig from '../../Components/FieldCartConfig';
+import AppConfig from '../../Config/AppConfig';
 var orderStatusStr = {
   0: 'Buscando Expertos',
   1: 'Preparando Servicio',
@@ -102,7 +103,7 @@ export default dta => {
         <Text
           numberOfLines={1}
           style={Fonts.style.bold(Colors.light, Fonts.size.medium, 'center')}>
-          {orderStatusStr[order.status]}
+          {AppConfig.orderStatusStr[order.status]}
         </Text>
       </View>
       {user &&
@@ -113,7 +114,6 @@ export default dta => {
               isCart={false}
               showExperts={true}
               startHour={order.hour}
-
               data={item}
               removeItem={id => {
                 Alert.alert(

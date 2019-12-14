@@ -45,23 +45,10 @@ import FastImage from 'react-native-fast-image';
 import Loading from '../../Components/Loading';
 import {green} from 'ansi-colors';
 import {formatDate} from '../../Helpers/MomentHelper';
+import AppConfig from '../../Config/AppConfig';
 
-var orderStatusStr = {
-  0: 'Buscando Expertos',
-  1: 'Preparando Servicio',
-  2: 'En Ruta',
-  3: 'En servicio',
-  4: 'Esperando Calificacion',
-  5: 'Finalizado',
-  6: 'Cancelado',
-};
 
-var locationIcon = {
-  0: 'home',
-  1: 'building',
-  2: 'concierge-bell',
-  3: 'map-pin',
-};
+
 
 export default class Home extends Component {
   constructor(props) {
@@ -297,7 +284,7 @@ export default class Home extends Component {
                         Fonts.size.tiny,
                         'left',
                       )}>
-                      {orderStatusStr[orders[0].status]}
+                      {AppConfig.orderStatusStr[orders[0].status]}
                     </Text>
                   </View>
                 </View>

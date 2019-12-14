@@ -23,6 +23,7 @@ export default {
     });
     return uuid;
   },
+
   formatCOP: num => {
     var p = num.toFixed(2).split('.');
     return (
@@ -34,5 +35,17 @@ export default {
           return num === '-' ? acc : num + (i && !(i % 3) ? '.' : '') + acc;
         }, '')
     );
+  },
+
+  slugify: string => {
+    return string
+      .toString()
+      .trim()
+      .toLowerCase()
+      .replace(/\s+/g, '-')
+      .replace(/[^\w\-]+/g, '')
+      .replace(/\-\-+/g, '-')
+      .replace(/^-+/, '')
+      .replace(/-+$/, '');
   },
 };

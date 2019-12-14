@@ -29,16 +29,17 @@ import _ from 'lodash';
 import CardItemCart from '../../Components/CardItemCart';
 import FieldCartConfig from '../../Components/FieldCartConfig';
 import LinearGradient from 'react-native-linear-gradient';
+import AppConfig from '../../Config/AppConfig';
 
-var orderStatusStr = {
-  0: 'Buscando Expertos',
-  1: 'Preparando Servicio',
-  2: 'En Ruta',
-  3: 'En servicio',
-  4: 'Esperando Calificacion',
-  5: 'Finalizado',
-  6: 'Cancelado',
-};
+// var orderStatusStr = {
+//   0: 'Buscando Expertos',
+//   1: 'Preparando Servicio',
+//   2: 'En Ruta',
+//   3: 'En servicio',
+//   4: 'Esperando Calificacion',
+//   5: 'Finalizado',
+//   6: 'Cancelado',
+// };
 
 export default dta => {
   const {order, user} = dta;
@@ -119,7 +120,7 @@ export default dta => {
           <Text
             numberOfLines={1}
             style={Fonts.style.bold(Colors.light, Fonts.size.tiny, 'left')}>
-            {orderStatusStr[order.status]}
+            {AppConfig.orderStatusStr[order.status]}
           </Text>
         </View>
       </View>
