@@ -29,7 +29,7 @@ export default class Loading extends Component {
   }
 
   async componentDidMount() {
-    console.log('componentDidMount:Loading');
+
 
     const {
       navigation,
@@ -40,7 +40,7 @@ export default class Loading extends Component {
       user,
     } = this.props;
 
-    console.log('props', this.props);
+    // console.log('props', this.props);
 
     setLoading(true);
     await getDeviceInfo();
@@ -50,15 +50,15 @@ export default class Loading extends Component {
     }
 
     this.unsubscriber = auth().onAuthStateChanged(async authUser => {
-      console.log('user:unsuscriber', authUser);
+      // console.log('user:unsuscriber', authUser);
       // console.log('user:auth().currentUser', auth().currentUser.uid);
 
       if (auth().currentUser && auth().currentUser.uid) {
-        console.log('user:loading', authUser);
+        // console.log('user:loading', authUser);
         await setAuth(authUser);
 
         if (auth().currentUser && auth().currentUser.uid && user == null) {
-          console.log('=> auth().currentUser.uid', auth().currentUser.uid);
+          // console.log('=> auth().currentUser.uid', auth().currentUser.uid);
           await setAccount(auth().currentUser.uid);
 
           navigation.navigate('Home');

@@ -1,41 +1,31 @@
 import {connect} from 'react-redux';
 import Content from './Content';
 
+import {setAuth, setAccount, logOut} from '../../Core/User/Actions';
 import {setLoading, getDeviceInfo} from '../../Core/UI/Actions';
-import {
-  getServices,
-  getExpertOpenOrders,
-  getExpertActiveOrders,
-  getExpertHistoryOrders,
-} from '../../Core/Services/Actions';
-import {setAuth, logOut} from '../../Core/User/Actions';
 
 const mapStateToProps = ({ui, currentUser, services}) => {
   const {loading, deviceInfo} = ui;
   const {auth, user} = currentUser;
-
+  const {appType} = deviceInfo;
   return {
-    loading,
     user,
     auth,
-    services: services.services,
-    orders: services.orders,
-    expertOpenOrders: services.expertOpenOrders,
-    expertActiveOrders: services.expertActiveOrders,
+    loading,
     deviceInfo,
+    appType,
+    expertActiveOrders: services.expertActiveOrders,
+    expertHistoryOrders: services.expertHistoryOrders,
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     setLoading: state => dispatch(setLoading(state)),
-    getServices: () => dispatch(getServices()),
-
-    getExpertOpenOrders: () => dispatch(getExpertOpenOrders()),
-    getExpertActiveOrders: () => dispatch(getExpertActiveOrders()),
-    getExpertHistoryOrders: () => dispatch(getExpertHistoryOrders()),
     getDeviceInfo: () => dispatch(getDeviceInfo()),
+
     setAuth: user => dispatch(setAuth(user)),
+    setAccount: uid => dispatch(setAccount(uid)),
     logOut: () => dispatch(logOut()),
   };
 };

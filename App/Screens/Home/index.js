@@ -8,14 +8,14 @@ import {setAuth, setAccount, logOut} from '../../Core/User/Actions';
 const mapStateToProps = ({ui, currentUser, services}) => {
   const {loading, deviceInfo} = ui;
   const {auth, user} = currentUser;
-
+  const {appType} = deviceInfo;
   return {
     loading,
     user,
     auth,
     services: services.services,
     orders: services.orders,
-    deviceInfo,
+    deviceInfo,    appType,
     imgs: [
       {
         src: 'https://c1.staticflickr.com/9/8387/8638813125_3cac0dc01c_n.jpg',

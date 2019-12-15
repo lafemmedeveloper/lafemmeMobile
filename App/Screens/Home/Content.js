@@ -160,6 +160,7 @@ export default class Home extends Component {
       deviceInfo,
       logOut,
       modalOrders,
+      appType,
       loading,
     } = this.props;
     const {
@@ -174,6 +175,7 @@ export default class Home extends Component {
     return (
       <View style={styles.container}>
         <Header
+          appType={appType}
           title={'Agrega una dirección'}
           iconL={Images.menu}
           iconR={null}

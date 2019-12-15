@@ -56,11 +56,17 @@ export default class Home extends Component {
   }
 
   async componentDidMount() {
-    const {getExpertOpenOrders, setLoading} = this.props;
+    const {
+      getExpertOpenOrders,
+      getExpertActiveOrders,
+      getExpertHistoryOrders,
+      setLoading,
+    } = this.props;
 
     await getExpertOpenOrders();
+    await getExpertHistoryOrders();
+    await getExpertActiveOrders();
     setLoading(false);
-    console.log('componentDidMount');
   }
 
   render() {

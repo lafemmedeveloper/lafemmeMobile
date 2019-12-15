@@ -14,6 +14,7 @@ import {Metrics, ApplicationStyles, Images, Fonts, Colors} from '../../Themes';
 import AppConfig from '../../Config/AppConfig';
 
 export default data => {
+  const {appType} = data;
   return (
     <View style={[styles.container, ApplicationStyles.shadownClient]}>
       {/* <LinearGradient
@@ -23,7 +24,7 @@ export default data => {
           data.isExpert ? styles.imageHeaderExpert : styles.imageHeader,
           ApplicationStyles.imageshadownClient,
         ]}
-        colors={[Colors.client.primartColor, Colors.client.secondaryColor]}
+        colors={[Colors[appType].primartColor, Colors[appType].secondaryColor]}
         start={{x: 0, y: 0}}
         end={{x: 1, y: 0}} /> */}
       <View style={styles.addHeader}>{/*  */}</View>
@@ -52,13 +53,13 @@ export default data => {
               <Icon
                 name="sort-down"
                 size={Fonts.size.medium}
-                color={Colors.client.primartColor}
+                color={Colors[appType].primartColor}
               />
               <Text
                 numberOfLines={2}
                 style={[
                   Fonts.style.regular(
-                    Colors.client.primartColor,
+                    Colors[appType].primartColor,
                     Fonts.size.medium,
                     'center',
                   ),
@@ -67,12 +68,12 @@ export default data => {
                 {data.user.cart.address.name}
                 {'\n'}
 
-                {data.user.cart.address.type != 3 && (
+                {data.user.cart.address.type !== 3 && (
                   <Text
                     numberOfLines={2}
                     style={[
                       Fonts.style.bold(
-                        Colors.client.primartColor,
+                        Colors[appType].primartColor,
                         Fonts.size.medium,
                         'center',
                       ),
@@ -86,7 +87,7 @@ export default data => {
           ) : (
             <Text
               style={Fonts.style.regular(
-                Colors.client.primartColor,
+                Colors[appType].primartColor,
                 Fonts.size.medium,
                 'center',
               )}>
@@ -130,7 +131,7 @@ export default data => {
           <Icon
             name={data.iconR}
             size={24}
-            color={Colors.client.primartColor}
+            color={Colors[appType].primartColor}
           />
         </TouchableOpacity>
       </View>

@@ -3,6 +3,8 @@ import {
   GET_COVERAGE,
   GET_ORDERS,
   GET_EXPERT_OPEN_ORDERS,
+  GET_EXPERT_ACTIVE_ORDERS,
+  GET_EXPERT_HISTORY_ORDERS,
 } from './Types';
 
 import firestore from '@react-native-firebase/firestore';
@@ -65,7 +67,7 @@ export const getOrders = () => (dispatch, getStore) => {
 export const getExpertOpenOrders = () => (dispatch, getStore) => {
   let expertActivities = getStore().currentUser.user.expertActivities;
 
-  console.log('expertActivities', expertActivities);
+  // console.log('expertActivities', expertActivities);
 
   let ordersRef = firestore()
     .collection('orders')
@@ -79,12 +81,12 @@ export const getExpertOpenOrders = () => (dispatch, getStore) => {
 
   ordersRef.orderBy('createDate', 'desc');
 
-  console.log('ordersRef', ordersRef);
+  // console.log('ordersRef', ordersRef);
 
   let listOrders = [];
 
   ordersRef.onSnapshot(orders => {
-    console.log('=> orders', orders);
+    // console.log('=> orders', orders);
     listOrders = orders.docs.map(item => {
       return {
         id: item.id,
@@ -92,5 +94,60 @@ export const getExpertOpenOrders = () => (dispatch, getStore) => {
       };
     });
     return dispatch({type: GET_EXPERT_OPEN_ORDERS, payload: listOrders});
+  });
+};
+
+export const getExpertActiveOrders = () => (dispatch, getStore) => {
+  // let expertActivities = getStore().currentUser.user.expertActivities;
+  console.log('===> getExpertActiveOrders');
+  let uid = getStore().currentUser.auth.uid;
+  console.log(' getStore().currentUser.auth.uid', uid);
+
+  let ordersRef = firestore()
+    .collection('orders')
+    .where('status', '>=', 1)
+    .where('status', '<=', 4);
+
+  ordersRef.where('experts', 'array-contains', uid);
+
+  let listOrders = [];
+
+  ordersRef.onSnapshot(orders => {
+    console.log('=> orders', orders);
+
+    listOrders = orders.docs.map(item => {
+      return {
+        id: item.id,
+        ...item.data(),
+      };
+    });
+    return dispatch({type: GET_EXPERT_ACTIVE_ORDERS, payload: listOrders});
+  });
+};
+
+export const getExpertHistoryOrders = () => (dispatch, getStore) => {
+  // let expertActivities = getStore().currentUser.user.expertActivities;
+  console.log('===> getExpertHistoryOrders');
+  let uid = getStore().currentUser.auth.uid;
+  console.log(' getStore().currentUser.auth.uid', uid);
+
+  let ordersRef = firestore()
+    .collection('orders')
+    .where('status', '>', 4);
+
+  ordersRef.where('experts', 'array-contains', uid);
+
+  let listOrders = [];
+
+  ordersRef.onSnapshot(orders => {
+    console.log('=> orders', orders);
+
+    listOrders = orders.docs.map(item => {
+      return {
+        id: item.id,
+        ...item.data(),
+      };
+    });
+    return dispatch({type: GET_EXPERT_HISTORY_ORDERS, payload: listOrders});
   });
 };

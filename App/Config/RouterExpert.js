@@ -10,12 +10,7 @@ import HomeScreen from '../ScreensExpert/Home';
 import LoginScreen from '../Screens/Login';
 import ClientOnExpert from '../ScreensExpert/ClientOnExpert';
 
-// import ProductDetailScreen from '../Screens/ProductDetail';
-// import RegisterScreen from '../Screens/Register';
-// import GalleryScreen from '../Screens/Gallery';
-// import ServicesScreen from '../Screens/Services';
-// import ProfileScreen from '../Screens/Profile';
-// import DebugCViewScreen from '../../DebugView';
+import History from '../ScreensExpert/History';
 
 import {Colors, Images} from '../Themes';
 
@@ -28,6 +23,21 @@ const HomeStack = createStackNavigator(
   {
     headerMode: 'none',
     initialRouteName: 'Home',
+    navigationOptions: {
+      gesturesEnabled: false,
+    },
+  },
+);
+
+const HistoryStack = createStackNavigator(
+  {
+    History: {
+      screen: History,
+    },
+  },
+  {
+    headerMode: 'none',
+    initialRouteName: 'History',
     navigationOptions: {
       gesturesEnabled: false,
     },
@@ -49,9 +59,41 @@ const TabNavigator = createBottomTabNavigator(
         };
       },
     },
+    History: {
+      screen: HistoryStack,
+      navigationOptions: ({navigation}) => {
+        const tabBarVisible = navigation.state.index === 0;
+        return {
+          tabBarVisible,
+          tabBarLabel: 'Mi Agenda',
+          tabBarIcon: ({tintColor}) => (
+            <Image
+              style={[styles.icon, {tintColor}]}
+              source={Images.menuAppoiment}
+            />
+          ),
+        };
+      },
+    },
+    Profile: {
+      screen: HistoryStack,
+      navigationOptions: ({navigation}) => {
+        const tabBarVisible = navigation.state.index === 0;
+        return {
+          tabBarVisible,
+          tabBarLabel: 'Perfil',
+          tabBarIcon: ({tintColor}) => (
+            <Image
+              style={[styles.icon, {tintColor}]}
+              source={Images.menuUser}
+            />
+          ),
+        };
+      },
+    },
   },
   {
-    order: ['Home'],
+    order: ['Home', 'History', 'Profile'],
     tabBarOptions: {
       activeTintColor: Colors.expert.primartColor,
       style: {

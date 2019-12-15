@@ -4,6 +4,8 @@ import {
   GET_COVERAGE,
   GET_ORDERS,
   GET_EXPERT_OPEN_ORDERS,
+  GET_EXPERT_ACTIVE_ORDERS,
+  GET_EXPERT_HISTORY_ORDERS,
 } from './Types';
 import _ from 'lodash';
 
@@ -13,6 +15,8 @@ const initialState = {
   orders: [],
   history: [],
   expertOpenOrders: [],
+  expertActiveOrders: [],
+  expertHistoryOrders: [],
 };
 
 const getServices = (state = initialState, {payload}) => {
@@ -36,7 +40,7 @@ const getOrders = (state = initialState, {payload}) => {
   orders = _.orderBy(orders, 'date', 'des');
   history = _.orderBy(history, 'date', 'asc');
 
-  console.log('orders', orders, 'history', history);
+  // console.log('orders', orders, 'history', history);
   return {
     ...state,
     orders,
@@ -45,14 +49,29 @@ const getOrders = (state = initialState, {payload}) => {
 };
 
 const getExpertOpenOrders = (state = initialState, {payload}) => {
-  let expertOpenOrders = _.filter(payload, o => o.status <= 3);
+  let expertOpenOrders = _.orderBy(payload, 'date', 'des');
 
-  expertOpenOrders = _.orderBy(expertOpenOrders, 'date', 'des');
-
-  console.log('orders', expertOpenOrders);
   return {
     ...state,
     expertOpenOrders,
+  };
+};
+
+const getExpertActiveOrders = (state = initialState, {payload}) => {
+  let expertActiveOrders = _.orderBy(payload, 'date', 'des');
+
+  return {
+    ...state,
+    expertActiveOrders,
+  };
+};
+
+const getExpertHistoryOrders = (state = initialState, {payload}) => {
+  let expertHistoryOrders = _.orderBy(payload, 'date', 'des');
+
+  return {
+    ...state,
+    expertHistoryOrders,
   };
 };
 
@@ -61,6 +80,8 @@ const descriptor = {
   [GET_COVERAGE]: getCoverage,
   [GET_ORDERS]: getOrders,
   [GET_EXPERT_OPEN_ORDERS]: getExpertOpenOrders,
+  [GET_EXPERT_ACTIVE_ORDERS]: getExpertActiveOrders,
+  [GET_EXPERT_HISTORY_ORDERS]: getExpertHistoryOrders,
 };
 
 export default createReducer(initialState, descriptor);
