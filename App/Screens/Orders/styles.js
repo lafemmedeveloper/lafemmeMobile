@@ -161,7 +161,7 @@ export default StyleSheet.create({
 
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: Colors.client.primartColor,
+    backgroundColor: Colors.client.primaryColor,
     shadowColor: Colors.dark,
     shadowOffset: {
       width: 2,

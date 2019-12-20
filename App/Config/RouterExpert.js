@@ -95,7 +95,7 @@ const TabNavigator = createBottomTabNavigator(
   {
     order: ['Home', 'History', 'Profile'],
     tabBarOptions: {
-      activeTintColor: Colors.expert.primartColor,
+      activeTintColor: Colors.expert.primaryColor,
       style: {
         backgroundColor: Colors.light,
         paddingTop: 10,

@@ -17,7 +17,7 @@ export default StyleSheet.create({
   //   position: 'absolute',
   //   resizeMode: 'cover',
   //   backgroundColor: 'transparent',
-  //   tintColor: Colors.client.primartColor,
+  //   tintColor: Colors.client.primaryColor,
   // },
 
   imageHeaderExpert: {
@@ -26,7 +26,7 @@ export default StyleSheet.create({
     position: 'absolute',
     resizeMode: 'cover',
     backgroundColor: 'transparent',
-    // tintColor: Colors.expert.primartColor,
+    // tintColor: Colors.expert.primaryColor,
   },
   addHeader: {
     width: Metrics.screenWidth,
@@ -49,7 +49,7 @@ export default StyleSheet.create({
     width: 20,
     height: 20,
     resizeMode: 'contain',
-    tintColor: Colors.client.primartColor,
+    tintColor: Colors.client.primaryColor,
   },
   contentL: {
     width: Metrics.screenWidth * 0.15,

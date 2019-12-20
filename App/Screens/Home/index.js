@@ -15,7 +15,8 @@ const mapStateToProps = ({ui, currentUser, services}) => {
     auth,
     services: services.services,
     orders: services.orders,
-    deviceInfo,    appType,
+    deviceInfo,
+    appType,
     imgs: [
       {
         src: 'https://c1.staticflickr.com/9/8387/8638813125_3cac0dc01c_n.jpg',

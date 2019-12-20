@@ -309,7 +309,7 @@ export default class Address extends Component {
               //     <Icon
               //       name={'map-marker-alt'}
               //       size={25}
-              //       color={Colors.client.primartColor}
+              //       color={Colors.client.primaryColor}
               //     />
               //   </View>
               // )}
@@ -359,7 +359,7 @@ export default class Address extends Component {
                   <Icon
                     name={'map-marker-alt'}
                     size={30}
-                    color={Colors.client.primartColor}
+                    color={Colors.client.primaryColor}
                   />
                 </Marker.Animated>
               </MapView>
@@ -379,7 +379,7 @@ export default class Address extends Component {
                 position: 'absolute',
                 bottom: 0,
                 backgroundColor: googleAddress
-                  ? Colors.client.primartColor
+                  ? Colors.client.primaryColor
                   : Colors.gray,
               },
             ]}>
@@ -453,7 +453,7 @@ export default class Address extends Component {
                     <Icon
                       name={'toggle-on'}
                       size={25}
-                      color={Colors.client.primartColor}
+                      color={Colors.client.primaryColor}
                     />
                   ) : (
                     <Icon name={'toggle-off'} size={25} color={Colors.gray} />
@@ -488,7 +488,7 @@ export default class Address extends Component {
                 width: '100%',
                 paddingVertical: 10,
                 marginTop: 10,
-                backgroundColor: Colors.client.primartColor,
+                backgroundColor: Colors.client.primaryColor,
                 borderBottomLeftRadius: 10,
                 borderBottomRightRadius: 10,
                 // borderRadius: 10,
@@ -573,7 +573,7 @@ export default class Address extends Component {
                     <Icon
                       name={'map-marker-alt'}
                       size={30}
-                      color={Colors.client.primartColor}
+                      color={Colors.client.primaryColor}
                     />
                   </Marker.Animated>
                 </MapView>
@@ -589,7 +589,7 @@ export default class Address extends Component {
                   <Icon
                     name={'map-marker-alt'}
                     size={15}
-                    color={Colors.client.primartColor}
+                    color={Colors.client.primaryColor}
                   />{' '}
                   {this.state.googleAddress &&
                   this.state.googleAddress.formatted_address
@@ -607,7 +607,7 @@ export default class Address extends Component {
                       {
                         backgroundColor:
                           buildType === 0
-                            ? Colors.client.primartColor
+                            ? Colors.client.primaryColor
                             : Colors.gray,
                       },
                     ]}>
@@ -632,7 +632,7 @@ export default class Address extends Component {
                       {
                         backgroundColor:
                           buildType === 1
-                            ? Colors.client.primartColor
+                            ? Colors.client.primaryColor
                             : Colors.gray,
                       },
                     ]}>
@@ -657,7 +657,7 @@ export default class Address extends Component {
                       {
                         backgroundColor:
                           buildType === 2
-                            ? Colors.client.primartColor
+                            ? Colors.client.primaryColor
                             : Colors.gray,
                       },
                     ]}>
@@ -682,7 +682,7 @@ export default class Address extends Component {
                       {
                         backgroundColor:
                           buildType === 3
-                            ? Colors.client.primartColor
+                            ? Colors.client.primaryColor
                             : Colors.gray,
                       },
                     ]}>
@@ -737,7 +737,7 @@ export default class Address extends Component {
                     styles.itemAddress,
                     {
                       backgroundColor:
-                        pets === 0 ? Colors.client.primartColor : Colors.gray,
+                        pets === 0 ? Colors.client.primaryColor : Colors.gray,
                     },
                   ]}>
                   <Text
@@ -760,7 +760,7 @@ export default class Address extends Component {
                     styles.itemAddress,
                     {
                       backgroundColor:
-                        pets === 1 ? Colors.client.primartColor : Colors.gray,
+                        pets === 1 ? Colors.client.primaryColor : Colors.gray,
                     },
                   ]}>
                   <Text
@@ -783,7 +783,7 @@ export default class Address extends Component {
                     styles.itemAddress,
                     {
                       backgroundColor:
-                        pets === 2 ? Colors.client.primartColor : Colors.gray,
+                        pets === 2 ? Colors.client.primaryColor : Colors.gray,
                     },
                   ]}>
                   <Text
@@ -806,7 +806,7 @@ export default class Address extends Component {
                     styles.itemAddress,
                     {
                       backgroundColor:
-                        pets === 3 ? Colors.client.primartColor : Colors.gray,
+                        pets === 3 ? Colors.client.primaryColor : Colors.gray,
                     },
                   ]}>
                   <Text
@@ -854,7 +854,7 @@ export default class Address extends Component {
                   width: '100%',
                   paddingVertical: 10,
                   // marginTop: 10,
-                  backgroundColor: Colors.client.primartColor,
+                  backgroundColor: Colors.client.primaryColor,
                   borderBottomLeftRadius: 10,
                   borderBottomRightRadius: 10,
                   // borderRadius: 10,

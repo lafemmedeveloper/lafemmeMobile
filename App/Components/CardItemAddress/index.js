@@ -34,7 +34,7 @@ export default data => {
           <Icon
             name={AppConfig.locationIcon[type]}
             size={20}
-            color={Colors.client.primartColor}
+            color={Colors.client.primaryColor}
           />
         }
       </TouchableOpacity>
@@ -47,19 +47,19 @@ export default data => {
                 <Icon
                   name={AppConfig.petsType[pets]}
                   size={12}
-                  color={Colors.client.primartColor}
+                  color={Colors.client.primaryColor}
                 />
               ) : (
                 <>
                   <Icon
                     name={'dog'}
                     size={12}
-                    color={Colors.client.primartColor}
+                    color={Colors.client.primaryColor}
                   />{' '}
                   <Icon
                     name={'cat'}
                     size={12}
-                    color={Colors.client.primartColor}
+                    color={Colors.client.primaryColor}
                   />
                 </>
               )}
@@ -94,7 +94,7 @@ export default data => {
           <Icon
             name={'minus-square'}
             size={20}
-            color={Colors.client.primartColor}
+            color={Colors.client.primaryColor}
             solid
           />
         }

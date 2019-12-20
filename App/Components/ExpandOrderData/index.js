@@ -71,7 +71,7 @@ export default dta => {
         <Text
           numberOfLines={1}
           style={Fonts.style.bold(
-            Colors.client.primartColor,
+            Colors.client.primaryColor,
             Fonts.size.small,
             'center',
           )}>
@@ -143,7 +143,7 @@ export default dta => {
       <View style={styles.totalContainer}>
         <Text
           style={Fonts.style.regular(
-            Colors.client.primartColor,
+            Colors.client.primaryColor,
             Fonts.size.medium,
             'left',
           )}>
@@ -157,7 +157,7 @@ export default dta => {
       <View style={styles.totalContainer}>
         <Text
           style={Fonts.style.regular(
-            Colors.client.primartColor,
+            Colors.client.primaryColor,
             Fonts.size.medium,
             'left',
           )}>
@@ -171,7 +171,7 @@ export default dta => {
       <View style={styles.totalContainer}>
         <Text
           style={Fonts.style.bold(
-            Colors.client.primartColor,
+            Colors.client.primaryColor,
             Fonts.size.medium,
             'left',
           )}>
@@ -189,7 +189,7 @@ export default dta => {
               <View style={styles.itemTitleContainer}>
                 <Text
                   style={Fonts.style.regular(
-                    Colors.client.primartColor,
+                    Colors.client.primaryColor,
                     Fonts.size.medium,
                     'left',
                   )}>
@@ -254,7 +254,7 @@ export default dta => {
                       <Icon
                         name={'map-marker-alt'}
                         size={30}
-                        color={Colors.client.primartColor}
+                        color={Colors.client.primaryColor}
                       />
                     </Marker.Animated>
                   </MapView>
@@ -264,7 +264,7 @@ export default dta => {
               <View style={styles.itemTitleContainer}>
                 <Text
                   style={Fonts.style.regular(
-                    Colors.client.primartColor,
+                    Colors.client.primaryColor,
                     Fonts.size.medium,
                     'left',
                   )}>
@@ -294,7 +294,7 @@ export default dta => {
               <View style={styles.itemTitleContainer}>
                 <Text
                   style={Fonts.style.regular(
-                    Colors.client.primartColor,
+                    Colors.client.primaryColor,
                     Fonts.size.medium,
                     'left',
                   )}>
@@ -328,7 +328,7 @@ export default dta => {
               <View style={styles.itemTitleContainer}>
                 <Text
                   style={Fonts.style.regular(
-                    Colors.client.primartColor,
+                    Colors.client.primaryColor,
                     Fonts.size.medium,
                     'left',
                   )}>
@@ -355,7 +355,7 @@ export default dta => {
         }}>
         <Text
           style={Fonts.style.regular(
-            Colors.client.primartColor,
+            Colors.client.primaryColor,
             Fonts.size.medium,
             'center',
           )}>

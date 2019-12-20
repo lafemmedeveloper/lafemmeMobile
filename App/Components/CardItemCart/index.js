@@ -30,7 +30,7 @@ export default data => {
           </Text>
           <Text
             style={Fonts.style.regular(Colors.dark, Fonts.size.small, 'left')}>
-            <Icon name={'clock'} size={15} color={Colors.client.primartColor} />{' '}
+            <Icon name={'clock'} size={15} color={Colors.client.primaryColor} />{' '}
             {minToHours(duration)}
             {!data.isCart &&
               `, iniciando: ${formatDate(
@@ -43,7 +43,7 @@ export default data => {
             <Icon
               name={'user-friends'}
               size={12}
-              color={Colors.client.primartColor}
+              color={Colors.client.primaryColor}
             />{' '}
             {clients.length} Usuarios
           </Text>
@@ -52,7 +52,7 @@ export default data => {
             <Icon
               name={'id-badge'}
               size={18}
-              color={Colors.client.primartColor}
+              color={Colors.client.primaryColor}
             />{' '}
             {experts} Expertos
           </Text> */}
@@ -72,7 +72,7 @@ export default data => {
             <Icon
               name={'minus-square'}
               size={20}
-              color={Colors.client.primartColor}
+              color={Colors.client.primaryColor}
               solid
             />
           </TouchableOpacity>
@@ -81,7 +81,7 @@ export default data => {
       {data.showExperts && (
         <Text
           style={Fonts.style.bold(
-            Colors.client.primartColor,
+            Colors.client.primaryColor,
             Fonts.size.small,
             'center',
           )}>
@@ -150,7 +150,7 @@ export default data => {
                       rating={item.ranking ? item.ranking : 5}
                       starSize={15}
                       emptyStarColor={Colors.gray}
-                      fullStarColor={Colors.client.primartColor}
+                      fullStarColor={Colors.client.primaryColor}
                       halfStarColor={Colors.client.secondaryColor}
                       // selectedStar={(rating) => }
                     />

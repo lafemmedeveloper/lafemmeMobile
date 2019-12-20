@@ -12,19 +12,22 @@ import styles from './styles';
 import {Colors} from '../../Themes';
 
 export default data => {
-  if (data.loading) {
+  const {type, loading} = data;
+  if (loading) {
     return (
       <View
         style={[
           styles.container,
           {
             backgroundColor:
-              [data.type] === 'client'
-                ? Colors.Colors.pinkMask(0.7)
-                : Colors.expertMask(0.7),
+              type === 'client' ? Colors.pinkMask(0.7) : Colors.expertMask(0.7),
           },
         ]}>
-        <WaveIndicator color={Colors[data.type].secondaryColor} />
+        <WaveIndicator
+          color={
+            type ? Colors[type].secondaryColor : Colors.client.secondaryColor
+          }
+        />
       </View>
     );
   } else {

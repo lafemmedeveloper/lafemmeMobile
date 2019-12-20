@@ -8,25 +8,19 @@
 import React, {Component, useContext, useEffect} from 'react';
 import {View, Image, Text, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import LinearGradient from 'react-native-linear-gradient';
+
 import styles from './styles';
 import {Metrics, ApplicationStyles, Images, Fonts, Colors} from '../../Themes';
 import AppConfig from '../../Config/AppConfig';
 
 export default data => {
-  const {appType} = data;
+  const {appType, selectAddress} = data;
+
+  if (!appType) {
+    return null;
+  }
   return (
     <View style={[styles.container, ApplicationStyles.shadownClient]}>
-      {/* <LinearGradient
-        useAngle={true}
-        angle={45}
-        style={[
-          data.isExpert ? styles.imageHeaderExpert : styles.imageHeader,
-          ApplicationStyles.imageshadownClient,
-        ]}
-        colors={[Colors[appType].primartColor, Colors[appType].secondaryColor]}
-        start={{x: 0, y: 0}}
-        end={{x: 1, y: 0}} /> */}
       <View style={styles.addHeader}>{/*  */}</View>
       <View style={[styles.content]}>
         <TouchableOpacity
@@ -49,45 +43,45 @@ export default data => {
           data.user.cart &&
           data.user.cart.address &&
           data.user.cart.address.name ? (
-            <>
-              <Icon
-                name="sort-down"
-                size={Fonts.size.medium}
-                color={Colors[appType].primartColor}
-              />
+            <TouchableOpacity
+              onPress={() => {
+                selectAddress();
+              }}>
               <Text
                 numberOfLines={2}
                 style={[
                   Fonts.style.regular(
-                    Colors[appType].primartColor,
+                    Colors[appType].primaryColor,
                     Fonts.size.medium,
                     'center',
                   ),
                   {marginHorizontal: 20},
                 ]}>
-                {data.user.cart.address.name}
-                {'\n'}
-
+                <Icon
+                  name="sort-down"
+                  size={Fonts.size.medium}
+                  color={Colors[appType].primaryColor}
+                />{' '}
                 {data.user.cart.address.type !== 3 && (
                   <Text
                     numberOfLines={2}
                     style={[
                       Fonts.style.bold(
-                        Colors[appType].primartColor,
+                        Colors[appType].primaryColor,
                         Fonts.size.medium,
                         'center',
                       ),
                       {marginHorizontal: 20},
                     ]}>
-                    {AppConfig.locationIcon[data.user.cart.address.type]}
+                    {data.user.cart.address.formattedAddress}
                   </Text>
                 )}
               </Text>
-            </>
+            </TouchableOpacity>
           ) : (
             <Text
               style={Fonts.style.regular(
-                Colors[appType].primartColor,
+                Colors[appType].primaryColor,
                 Fonts.size.medium,
                 'center',
               )}>
@@ -131,7 +125,7 @@ export default data => {
           <Icon
             name={data.iconR}
             size={24}
-            color={Colors[appType].primartColor}
+            color={Colors[appType].primaryColor}
           />
         </TouchableOpacity>
       </View>

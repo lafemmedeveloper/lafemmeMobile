@@ -21,7 +21,7 @@ export default data => {
   return (
     <View style={styles.container}>
       <View style={styles.deleteContainer}>
-        {<Icon name={data.icon} size={20} color={Colors.client.primartColor} />}
+        {<Icon name={data.icon} size={20} color={Colors.client.primaryColor} />}
       </View>
       <View style={styles.productContainer}>
         {value ? (

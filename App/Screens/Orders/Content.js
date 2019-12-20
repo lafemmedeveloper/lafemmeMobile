@@ -169,7 +169,7 @@ export default class Orders extends Component {
               styles.headerBtn,
               {
                 backgroundColor:
-                  toggleType === 0 ? Colors.client.primartColor : Colors.gray,
+                  toggleType === 0 ? Colors.client.primaryColor : Colors.gray,
               },
             ]}>
             <Text
@@ -190,7 +190,7 @@ export default class Orders extends Component {
               styles.headerBtn,
               {
                 backgroundColor:
-                  toggleType === 1 ? Colors.client.primartColor : Colors.gray,
+                  toggleType === 1 ? Colors.client.primaryColor : Colors.gray,
               },
             ]}>
             <Text

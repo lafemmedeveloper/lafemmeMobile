@@ -6,6 +6,7 @@ import {
   Alert,
   TouchableOpacity,
   KeyboardAvoidingView,
+  TextInput,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import firestore from '@react-native-firebase/firestore';
@@ -24,6 +25,8 @@ import Utilities from '../../Utilities';
 import {msToDate, msToDay, msToHour} from '../../Helpers/MomentHelper';
 import moment from 'moment';
 import AppConfig from '../../Config/AppConfig';
+import Modal from 'react-native-modal';
+import Loading from '../Loading';
 
 const config = {
   minHour: moment('08:00').format('HH:mm'),
@@ -33,6 +36,8 @@ export default class Cart extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      modalNotes: false,
+      notes: '',
       date: getDate(1),
       day: getDate(1),
       hour: moment(new Date())
@@ -133,6 +138,18 @@ export default class Cart extends Component {
     setLoading(false);
   }
 
+  async updateNotes(notes) {
+    const {user, updateProfile, setLoading} = this.props;
+    setLoading(true);
+    try {
+      await updateProfile({...user.cart, notes}, 'cart');
+      this.setState({modalNotes: false});
+    } catch (err) {
+      console.log('updateNotes:error', err);
+    }
+    setLoading(false);
+  }
+
   async uploadCoverageZone() {
     console.log('uploadCoverageZones');
     var coverage = require('../../Config/Poligons.json');
@@ -156,7 +173,7 @@ export default class Cart extends Component {
 
   render() {
     const {user} = this.props;
-
+    const {modalNotes, notes} = this.state;
     let isCompleted =
       user.cart.address &&
       user.cart.day &&
@@ -222,7 +239,7 @@ export default class Cart extends Component {
             }}
             style={[
               styles.productContainer,
-              {backgroundColor: Colors.client.primartColor},
+              {backgroundColor: Colors.client.primaryColor},
             ]}>
             <Text
               style={Fonts.style.bold(
@@ -239,7 +256,7 @@ export default class Cart extends Component {
           <View style={styles.totalContainer}>
             <Text
               style={Fonts.style.regular(
-                Colors.client.primartColor,
+                Colors.client.primaryColor,
                 Fonts.size.medium,
                 'left',
               )}>
@@ -259,7 +276,7 @@ export default class Cart extends Component {
           <View style={styles.totalContainer}>
             <Text
               style={Fonts.style.regular(
-                Colors.client.primartColor,
+                Colors.client.primaryColor,
                 Fonts.size.medium,
                 'left',
               )}>
@@ -278,7 +295,7 @@ export default class Cart extends Component {
           <View style={styles.totalContainer}>
             <Text
               style={Fonts.style.bold(
-                Colors.client.primartColor,
+                Colors.client.primaryColor,
                 Fonts.size.medium,
                 'left',
               )}>
@@ -296,7 +313,7 @@ export default class Cart extends Component {
               <View style={styles.itemTitleContainer}>
                 <Text
                   style={Fonts.style.regular(
-                    Colors.client.primartColor,
+                    Colors.client.primaryColor,
                     Fonts.size.medium,
                     'left',
                   )}>
@@ -330,7 +347,7 @@ export default class Cart extends Component {
               <View style={styles.itemTitleContainer}>
                 <Text
                   style={Fonts.style.regular(
-                    Colors.client.primartColor,
+                    Colors.client.primaryColor,
                     Fonts.size.medium,
                     'left',
                   )}>
@@ -425,7 +442,7 @@ export default class Cart extends Component {
               <View style={styles.itemTitleContainer}>
                 <Text
                   style={Fonts.style.regular(
-                    Colors.client.primartColor,
+                    Colors.client.primaryColor,
                     Fonts.size.medium,
                     'left',
                   )}>
@@ -520,14 +537,20 @@ export default class Cart extends Component {
               <View style={styles.itemTitleContainer}>
                 <Text
                   style={Fonts.style.regular(
-                    Colors.client.primartColor,
+                    Colors.client.primaryColor,
                     Fonts.size.medium,
                     'left',
                   )}>
                   {'Comentarios'}
                 </Text>
               </View>
-              <TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  this.setState({
+                    notes: user.cart.notes ? user.cart.notes : '',
+                    modalNotes: true,
+                  });
+                }}>
                 <FieldCartConfig
                   key={'comments'}
                   textSecondary={''}
@@ -582,7 +605,7 @@ export default class Cart extends Component {
               styles.btnContainer,
               {
                 backgroundColor: isCompleted
-                  ? Colors.client.primartColor
+                  ? Colors.client.primaryColor
                   : Colors.gray,
               },
             ]}>
@@ -596,6 +619,97 @@ export default class Cart extends Component {
             </Text>
           </TouchableOpacity>
         </View>
+
+        <Modal // notes
+          isVisible={modalNotes}
+          style={{
+            justifyContent: 'flex-end',
+            margin: 0,
+          }}
+          backdropColor={Colors.pinkMask(0.8)}
+          onBackdropPress={() => {
+            this.setState({modalNotes: false});
+          }}>
+          <KeyboardAvoidingView behavior={'padding'} enabled style={{flex: 0}}>
+            <TouchableOpacity
+              style={{
+                alignSelf: 'center',
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: 30,
+                marginVertical: 8,
+                backgroundColor: Colors.light,
+                height: 4,
+                borderRadius: 2.5,
+              }}
+              onPress={() => {
+                this.setState({
+                  modalAddress: false,
+                });
+              }}
+            />
+            <View
+              style={{
+                // paddingTop: Metrics.addHeader,
+                alignSelf: 'center',
+                width: Metrics.screenWidth,
+
+                backgroundColor: Colors.light,
+                backdropColor: 'red',
+                borderTopRightRadius: 10,
+                borderTopLeftRadius: 10,
+              }}>
+              <TextInput
+                value={notes}
+                onChangeText={text => this.setState({notes: text})}
+                placeholder={'Agrega notas o comentarios'}
+                style={{
+                  width: '90%',
+                  padding: 20,
+                  marginVertical: 20,
+                  borderRadius: Metrics.borderRadius,
+                  height: 100,
+                  backgroundColor: Colors.textInputBg,
+                  alignSelf: 'center',
+                }}
+                multiline
+                numberOfLines={20}
+              />
+
+              <TouchableOpacity
+                onPress={() => {
+                  this.updateNotes(notes);
+                }}
+                style={[
+                  {
+                    flex: 0,
+                    // marginVertical: 2.5,
+                    borderRadius: Metrics.textInBr,
+                    alignSelf: 'center',
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    width: '90%',
+
+                    paddingHorizontal: 10,
+                    paddingVertical: 10,
+                    backgroundColor: Colors.client.primaryColor,
+                    marginBottom: Metrics.addFooter + 10,
+                  },
+                ]}>
+                <Text
+                  style={Fonts.style.bold(
+                    Colors.light,
+                    Fonts.size.medium,
+                    'center',
+                  )}>
+                  {'Agregar comentarios'}
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            {/* <Loading type={'client'} loading={loading} /> */}
+          </KeyboardAvoidingView>
+        </Modal>
       </View>
     );
   }

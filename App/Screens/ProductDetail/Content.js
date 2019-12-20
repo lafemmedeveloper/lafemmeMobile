@@ -72,15 +72,18 @@ export default class Home extends Component {
   }
 
   async sendItemCart(item) {
-    const {user, updateProfile, setLoading} = this.props;
+    const {user, updateProfile, setLoading, navigation} = this.props;
 
     let services = [...user.cart.services, item];
 
     console.log('services', services);
 
     setLoading(true);
+    this.setState({showModalService: false});
     await updateProfile({...user.cart, services}, 'cart');
+
     setLoading(false);
+    navigation.navigate('Home');
   }
 
   async addGuest(guestList) {
@@ -488,9 +491,9 @@ export default class Home extends Component {
                 }}>
                 <Text>
                   <Icon
-                    name='toggle-on'
+                    name="toggle-on"
                     size={20}
-                    color={Colors.client.primartColor}
+                    color={Colors.client.primaryColor}
                   />
                 </Text>
                 <View
@@ -540,12 +543,12 @@ export default class Home extends Component {
                     <Text>
                       {guestList.findIndex(i => i.id === data.id) !== -1 ? (
                         <Icon
-                          name='toggle-on'
+                          name="toggle-on"
                           size={20}
-                          color={Colors.client.primartColor}
+                          color={Colors.client.primaryColor}
                         />
                       ) : (
-                        <Icon name='toggle-off' size={20} color={Colors.gray} />
+                        <Icon name="toggle-off" size={20} color={Colors.gray} />
                       )}
                     </Text>
                     <View
@@ -586,7 +589,7 @@ export default class Home extends Component {
                           {cancelable: true},
                         );
                       }}>
-                      <Icon name='minus-circle' size={20} color={Colors.gray} />
+                      <Icon name="minus-circle" size={20} color={Colors.gray} />
                     </TouchableOpacity>
                   </TouchableOpacity>
                 );
@@ -647,9 +650,9 @@ export default class Home extends Component {
                     }}
                     style={{flex: 0, alignItems: 'center'}}>
                     <Icon
-                      name='minus-circle'
+                      name="minus-circle"
                       size={20}
-                      color={Colors.client.primartColor}
+                      color={Colors.client.primaryColor}
                     />
                   </TouchableOpacity>
                   <View
@@ -676,7 +679,7 @@ export default class Home extends Component {
                     <Icon
                       name={'plus-circle'}
                       size={20}
-                      color={Colors.client.primartColor}
+                      color={Colors.client.primaryColor}
                     />
                   </TouchableOpacity>
                 </View>
@@ -749,13 +752,13 @@ export default class Home extends Component {
                               {addonsList.findIndex(i => i.id === data.id) !==
                               -1 ? (
                                 <Icon
-                                  name='toggle-on'
+                                  name="toggle-on"
                                   size={20}
-                                  color={Colors.client.primartColor}
+                                  color={Colors.client.primaryColor}
                                 />
                               ) : (
                                 <Icon
-                                  name='toggle-off'
+                                  name="toggle-off"
                                   size={20}
                                   color={Colors.gray}
                                 />
@@ -865,13 +868,13 @@ export default class Home extends Component {
                               i => i.addonId === data.id && i.guestId === 'yo',
                             ) !== -1 ? (
                               <Icon
-                                name='toggle-on'
+                                name="toggle-on"
                                 size={20}
-                                color={Colors.client.primartColor}
+                                color={Colors.client.primaryColor}
                               />
                             ) : (
                               <Icon
-                                name='toggle-off'
+                                name="toggle-off"
                                 size={20}
                                 color={Colors.gray}
                               />
@@ -943,13 +946,13 @@ export default class Home extends Component {
                                     i.guestId === item.id,
                                 ) !== -1 ? (
                                   <Icon
-                                    name='toggle-on'
+                                    name="toggle-on"
                                     size={20}
-                                    color={Colors.client.primartColor}
+                                    color={Colors.client.primaryColor}
                                   />
                                 ) : (
                                   <Icon
-                                    name='toggle-off'
+                                    name="toggle-off"
                                     size={20}
                                     color={Colors.gray}
                                   />
@@ -1115,7 +1118,7 @@ export default class Home extends Component {
           }}
           backdropColor={Colors.pinkMask(0.75)}>
           <KeyboardAvoidingView
-            behavior='padding'
+            behavior="padding"
             enabled
             style={{
               flex: 0,
@@ -1547,7 +1550,7 @@ export default class Home extends Component {
           }}
           backdropColor={Colors.pinkMask(0.75)}>
           <KeyboardAvoidingView
-            behavior='padding'
+            behavior="padding"
             enabled
             style={{
               flex: 0,
@@ -1682,7 +1685,7 @@ export default class Home extends Component {
                           width: 50,
                           height: 50,
                           borderRadius: 50,
-                          backgroundColor: Colors.client.primartColor,
+                          backgroundColor: Colors.client.primaryColor,
                           alignItems: 'center',
                           justifyContent: 'center',
                         }}>
@@ -1740,7 +1743,7 @@ export default class Home extends Component {
                         height: 80,
                         flex: 0,
                         marginHorizontal: 10,
-                        // backgroundColor: Colors.client.primartColor,
+                        // backgroundColor: Colors.client.primaryColor,
                         alignItems: 'center',
                         justifyContent: 'center',
                       }}>
@@ -1749,7 +1752,7 @@ export default class Home extends Component {
                         <Icon
                           name="toggle-on"
                           size={25}
-                          color={Colors.client.primartColor}
+                          color={Colors.client.primaryColor}
                         />
                       ) : (
                         <Icon name="toggle-off" size={25} color={Colors.gray} />
@@ -1810,7 +1813,7 @@ export default class Home extends Component {
                       <Icon
                         name="trash-o"
                         size={25}
-                        color={Colors.client.primartColor}
+                        color={Colors.client.primaryColor}
                       />
                     </Animated.View>
                   </TouchableOpacity>
@@ -1825,7 +1828,7 @@ export default class Home extends Component {
               // onSwipeValueChange={this.onSwipeValueChange}
             /> */}
           </KeyboardAvoidingView>
-          <Loading loading={loading} />
+          <Loading type={'client'} loading={loading} />
         </Modal>
       </View>
     );

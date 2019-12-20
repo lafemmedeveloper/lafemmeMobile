@@ -61,7 +61,7 @@ export default dta => {
             <Text
               numberOfLines={1}
               style={Fonts.style.bold(
-                Colors.expert.primartColor,
+                Colors.expert.primaryColor,
                 Fonts.size.small,
                 'center',
               )}>
@@ -73,7 +73,7 @@ export default dta => {
             <Icon
               name={'map-marker-alt'}
               size={12}
-              color={Colors.expert.primartColor}
+              color={Colors.expert.primaryColor}
             />{' '}
             {order.address.name}
           </Text>
@@ -82,13 +82,13 @@ export default dta => {
             <Icon
               name={'calendar'}
               size={12}
-              color={Colors.expert.primartColor}
+              color={Colors.expert.primaryColor}
             />{' '}
             {formatDate(order.day, 'ddd, LL')}
           </Text>
           <Text
             style={Fonts.style.regular(Colors.dark, Fonts.size.small, 'left')}>
-            <Icon name={'clock'} size={12} color={Colors.expert.primartColor} />{' '}
+            <Icon name={'clock'} size={12} color={Colors.expert.primaryColor} />{' '}
             {formatDate(moment(order.hour, 'HH:mm'), 'h:mm a')}
           </Text>
         </View>
@@ -140,7 +140,7 @@ export default dta => {
               <Text
                 numberOfLines={1}
                 style={Fonts.style.bold(
-                  Colors.expert.primartColor,
+                  Colors.expert.primaryColor,
                   Fonts.size.small,
                   'center',
                 )}>
@@ -156,7 +156,7 @@ export default dta => {
                   <Text
                     numberOfLines={1}
                     style={Fonts.style.bold(
-                      Colors.expert.primartColor,
+                      Colors.expert.primaryColor,
                       Fonts.size.small,
                       'center',
                     )}>
@@ -176,7 +176,7 @@ export default dta => {
               <Text
                 numberOfLines={1}
                 style={Fonts.style.bold(
-                  Colors.expert.primartColor,
+                  Colors.expert.primaryColor,
                   Fonts.size.small,
                   'center',
                 )}>
@@ -192,7 +192,7 @@ export default dta => {
                   <Text
                     numberOfLines={1}
                     style={Fonts.style.bold(
-                      Colors.expert.primartColor,
+                      Colors.expert.primaryColor,
                       Fonts.size.small,
                       'center',
                     )}>
@@ -220,7 +220,7 @@ export default dta => {
                 disabled={true}
                 maxStars={5}
                 containerStyle={styles.starts}
-                fullStarColor={Colors.expert.primartColor}
+                fullStarColor={Colors.expert.primaryColor}
                 rating={order.client.rating ? order.client.rating : 5}
                 starSize={15}
                 // selectedStar={(rating) => }
@@ -238,7 +238,7 @@ export default dta => {
               <Text
                 numberOfLines={1}
                 style={Fonts.style.bold(
-                  Colors.expert.primartColor,
+                  Colors.expert.primaryColor,
                   Fonts.size.small,
                   'center',
                 )}>
@@ -257,7 +257,7 @@ export default dta => {
               <Text
                 numberOfLines={1}
                 style={Fonts.style.bold(
-                  Colors.expert.primartColor,
+                  Colors.expert.primaryColor,
                   Fonts.size.small,
                   'center',
                 )}>
@@ -276,7 +276,7 @@ export default dta => {
               <Text
                 numberOfLines={1}
                 style={Fonts.style.bold(
-                  Colors.expert.primartColor,
+                  Colors.expert.primaryColor,
                   Fonts.size.small,
                   'center',
                 )}>
@@ -348,7 +348,7 @@ export default dta => {
                             rating={expert.ranking ? expert.ranking : 5}
                             starSize={15}
                             emptyStarColor={Colors.gray}
-                            fullStarColor={Colors.expert.primartColor}
+                            fullStarColor={Colors.expert.primaryColor}
                             // halfStarColor={Colors.client.secondaryColor}
                             // selectedStar={(rating) => }
                           />
@@ -390,7 +390,7 @@ export default dta => {
           <Icon
             name={'map-marker-alt'}
             size={30}
-            color={Colors.expert.primartColor}
+            color={Colors.expert.primaryColor}
           />
         </Marker.Animated>
       </MapView>
@@ -408,7 +408,7 @@ export default dta => {
           shouldResetAfterSuccess={false}
           titleStyles={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}
           swipeSuccessThreshold={90}
-          thumbIconBackgroundColor={Colors.expert.primartColor}
+          thumbIconBackgroundColor={Colors.expert.primaryColor}
           thumbIconBorderColor={'transparent'}
           title={'Aceptar Servicio'}
         />

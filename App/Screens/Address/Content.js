@@ -23,6 +23,8 @@ import {validateCoverage} from '../../Helpers/GeoHelper';
 
 import Loading from '../Loading';
 import {msToDate, msToDay, msToHour} from '../../Helpers/MomentHelper';
+
+
 export default class Address extends Component {
   constructor(props) {
     super(props);
@@ -145,7 +147,7 @@ export default class Address extends Component {
             style={styles.productContainer}>
             <Text
               style={Fonts.style.bold(
-                Colors.client.primartColor,
+                Colors.client.primaryColor,
                 Fonts.size.medium,
                 'center',
               )}>
@@ -243,7 +245,7 @@ export default class Address extends Component {
                     <Icon
                       name={'map-marker-alt'}
                       size={25}
-                      color={Colors.client.primartColor}
+                      color={Colors.client.primaryColor}
                     />
                   </View>
                 )}

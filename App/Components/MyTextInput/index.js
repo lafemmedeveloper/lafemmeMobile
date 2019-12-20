@@ -12,7 +12,6 @@ import styles from './styles';
 
 export default data => {
   return (
-    // <View style={data.multiline ? styles.containerMultiline : styles.container}>
     <TextInput
       multiline={data.multiLine}
       autoCapitalize={data.autoCapitalize}
@@ -24,6 +23,6 @@ export default data => {
       onChangeText={text => data.onChangeText(text)}
       value={data.text}
     />
-    // </View>
+
   );
 };

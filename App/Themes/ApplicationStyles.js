@@ -102,7 +102,7 @@ const ApplicationStyles = {
   shadownClient: {
     // shadown
 
-    shadowColor: Colors.client.primartColor,
+    shadowColor: Colors.client.primaryColor,
     shadowOffset: {
       width: 0,
       height: 2,
@@ -115,7 +115,7 @@ const ApplicationStyles = {
 
   shadownExpert: {
     // shadown
-    shadowColor: Colors.expert.primartColor,
+    shadowColor: Colors.expert.primaryColor,
     shadowOffset: {
       width: 0,
       height: 2,
@@ -128,7 +128,7 @@ const ApplicationStyles = {
 
   shadownClientTop: {
     // shadown
-    shadowColor: Colors.client.primartColor,
+    shadowColor: Colors.client.primaryColor,
     shadowOffset: {
       width: 0,
       height: -2,
@@ -140,7 +140,7 @@ const ApplicationStyles = {
   },
   imageshadownClient: {
     // shadown
-    shadowColor: Colors.client.primartColor,
+    shadowColor: Colors.client.primaryColor,
     shadowOffset: {
       width: 0,
       height: 2,

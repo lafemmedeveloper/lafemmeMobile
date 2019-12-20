@@ -67,7 +67,7 @@ export default StyleSheet.create({
     borderRadius: 10,
     // flexDirection: 'row',
 
-    shadowColor: Colors.client.primartColor,
+    shadowColor: Colors.client.primaryColor,
     shadowOffset: {
       width: 0,
       height: 0,

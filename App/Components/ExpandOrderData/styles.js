@@ -31,7 +31,7 @@ export default StyleSheet.create({
     marginTop: 5,
     borderRadius: 10,
 
-    shadowColor: Colors.client.primartColor,
+    shadowColor: Colors.client.primaryColor,
     shadowOffset: {
       width: 0,
       height: 0,

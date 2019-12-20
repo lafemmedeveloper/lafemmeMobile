@@ -47,6 +47,8 @@ import {green} from 'ansi-colors';
 import {formatDate} from '../../Helpers/MomentHelper';
 import AppConfig from '../../Config/AppConfig';
 
+const TIME_SET = 500;
+
 export default class Home extends Component {
   constructor(props) {
     super(props);
@@ -58,6 +60,7 @@ export default class Home extends Component {
       openModal: false,
       modalAuth: false,
       modalAddress: false,
+      isModalCart: false,
       modalOrders: false,
       modalAddAddress: false,
       modalCart: false,
@@ -67,11 +70,17 @@ export default class Home extends Component {
     this.unsubscriber = null;
   }
 
+  // async componentWillMount() {
+  //   const {getDeviceInfo} = this.props;
+
+  //   await getDeviceInfo();
+  // }
   async componentDidMount() {
     const {
       getServices,
       getOrders,
       getDeviceInfo,
+
       setAuth,
       setAccount,
       setLoading,
@@ -79,8 +88,9 @@ export default class Home extends Component {
     } = this.props;
 
     setLoading(true);
-    // await getDeviceInfo();
+    await getDeviceInfo();
 
+    console.log('deviceInfo', this.props);
     this.unsubscriber = await auth().onAuthStateChanged(user => {
       if (user) {
         setAuth(user);
@@ -132,6 +142,7 @@ export default class Home extends Component {
   }
   selectAddress() {
     console.log('selectAddress');
+    this.setState({modalAddress: true});
   }
   selectService(product) {
     const {navigation, user} = this.props;
@@ -200,7 +211,7 @@ export default class Home extends Component {
                   ApplicationStyles.shadownClient,
                 ]}
                 colors={[
-                  Colors.client.primartColor,
+                  Colors.client.primaryColor,
                   Colors.client.secondaryColor,
                 ]}
                 start={{x: 0, y: 1}}
@@ -416,13 +427,92 @@ export default class Home extends Component {
                   this.setState({modalCart: false});
                 }}
                 modalAddress={() => {
-                  this.setState({modalAddress: true});
+                  const that = this;
+                  this.setState({modalCart: false, isModalCart: true}, () => {
+                    setTimeout(function() {
+                      that.setState({modalAddress: true});
+                    }, TIME_SET);
+                  });
                 }}
               />
             </View>
 
-            <Modal // address
-              isVisible={modalAddress}
+            <Loading type={'client'} loading={loading} />
+          </>
+        </Modal>
+
+        <Modal // address
+          isVisible={modalAddress}
+          style={{
+            justifyContent: 'flex-end',
+            margin: 0,
+          }}
+          animationIn={'slideInRight'}
+          animationOut={'slideOutRight'}
+          backdropColor={Colors.pinkMask(0.8)}
+          onBackdropPress={() => {
+            const that = this;
+            this.setState({modalAddress: false}, () => {
+              if (this.state.isModalCart) {
+                setTimeout(function() {
+                  that.setState({modalCart: true});
+                }, TIME_SET);
+              }
+            });
+          }}>
+          <>
+            <TouchableOpacity
+              style={{
+                alignSelf: 'center',
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: 30,
+                marginVertical: 8,
+                backgroundColor: Colors.light,
+                height: 4,
+                borderRadius: 2.5,
+              }}
+              onPress={() => {
+                this.setState({modalAddress: false});
+              }}
+            />
+            <View
+              style={{
+                // paddingTop: Metrics.addHeader,
+                alignSelf: 'center',
+                width: Metrics.screenWidth,
+                height: Metrics.screenHeight * 0.85,
+                backgroundColor: Colors.light,
+                backdropColor: 'red',
+                borderTopRightRadius: 10,
+                borderTopLeftRadius: 10,
+              }}>
+              <Address
+                addAddress={() => {
+                  this.setState({
+                    isModalCart: false,
+                    modalAddAddress: true,
+                  });
+                }}
+                closeModal={() => {
+                  const that = this;
+                  this.setState({
+                    modalAddress: false,
+                  });
+
+                  if (this.state.isModalCart) {
+                    setTimeout(function() {
+                      that.setState({modalCart: true});
+                    }, TIME_SET);
+                  }
+                }}
+              />
+            </View>
+
+            <Loading type={'client'} loading={loading} />
+
+            <Modal // modalAddAddress
+              isVisible={modalAddAddress}
               style={{
                 justifyContent: 'flex-end',
                 margin: 0,
@@ -431,7 +521,7 @@ export default class Home extends Component {
               animationOut={'slideOutRight'}
               backdropColor={Colors.pinkMask(0.8)}
               onBackdropPress={() => {
-                this.setState({modalAddress: false});
+                this.setState({modalAddAddress: false});
               }}>
               <>
                 <TouchableOpacity
@@ -460,80 +550,21 @@ export default class Home extends Component {
                     borderTopRightRadius: 10,
                     borderTopLeftRadius: 10,
                   }}>
-                  <Address
+                  <AddAddress
                     addAddress={() => {
                       this.setState({
                         modalAddAddress: true,
                       });
                     }}
-                    closeModal={() => {
+                    closeAddAddress={() => {
                       this.setState({
-                        modalAddress: false,
+                        modalAddAddress: false,
                       });
                     }}
                   />
                 </View>
-
-                <Loading type={'client'} loading={loading} />
-
-                <Modal // modalAddAddress
-                  isVisible={modalAddAddress}
-                  style={{
-                    justifyContent: 'flex-end',
-                    margin: 0,
-                  }}
-                  animationIn={'slideInRight'}
-                  animationOut={'slideOutRight'}
-                  backdropColor={Colors.pinkMask(0.8)}
-                  onBackdropPress={() => {
-                    this.setState({modalAddAddress: false});
-                  }}>
-                  <>
-                    <TouchableOpacity
-                      style={{
-                        alignSelf: 'center',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        width: 30,
-                        marginVertical: 8,
-                        backgroundColor: Colors.light,
-                        height: 4,
-                        borderRadius: 2.5,
-                      }}
-                      onPress={() => {
-                        this.setState({modalAddress: false});
-                      }}
-                    />
-                    <View
-                      style={{
-                        // paddingTop: Metrics.addHeader,
-                        alignSelf: 'center',
-                        width: Metrics.screenWidth,
-                        height: Metrics.screenHeight * 0.85,
-                        backgroundColor: Colors.light,
-                        backdropColor: 'red',
-                        borderTopRightRadius: 10,
-                        borderTopLeftRadius: 10,
-                      }}>
-                      <AddAddress
-                        addAddress={() => {
-                          this.setState({
-                            modalAddAddress: true,
-                          });
-                        }}
-                        closeAddAddress={() => {
-                          this.setState({
-                            modalAddAddress: false,
-                          });
-                        }}
-                      />
-                    </View>
-                  </>
-                </Modal>
               </>
             </Modal>
-
-            <Loading type={'client'} loading={loading} />
           </>
         </Modal>
 

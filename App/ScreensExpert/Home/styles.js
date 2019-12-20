@@ -12,7 +12,7 @@ export default StyleSheet.create({
     height: 80,
     marginTop: Metrics.addHeader,
     borderRadius: Metrics.borderRadius,
-    backgroundColor: Colors.expert.primartColor,
+    backgroundColor: Colors.expert.primaryColor,
     alignSelf: 'center',
   },
   loading: {

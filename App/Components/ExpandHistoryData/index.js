@@ -61,7 +61,7 @@ export default dta => {
           <Text
             numberOfLines={1}
             style={Fonts.style.bold(
-              Colors.client.primartColor,
+              Colors.client.primaryColor,
               Fonts.size.small,
               'center',
             )}>
@@ -73,7 +73,7 @@ export default dta => {
           <Icon
             name={'map-marker-alt'}
             size={12}
-            color={Colors.client.primartColor}
+            color={Colors.client.primaryColor}
           />{' '}
           {order.address.name}
         </Text>
@@ -82,13 +82,13 @@ export default dta => {
           <Icon
             name={'calendar'}
             size={12}
-            color={Colors.client.primartColor}
+            color={Colors.client.primaryColor}
           />{' '}
           {formatDate(order.day, 'ddd, LL')}
         </Text>
         <Text
           style={Fonts.style.regular(Colors.dark, Fonts.size.small, 'left')}>
-          <Icon name={'clock'} size={12} color={Colors.client.primartColor} />{' '}
+          <Icon name={'clock'} size={12} color={Colors.client.primaryColor} />{' '}
           {formatDate(moment(order.hour, 'HH:mm'), 'h:mm a')}
         </Text>
       </View>

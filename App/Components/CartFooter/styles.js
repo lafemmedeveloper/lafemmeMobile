@@ -12,7 +12,7 @@ export default StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 20,
     height: Metrics.screenWidth * 0.1,
-    backgroundColor: Colors.client.primartColor,
+    backgroundColor: Colors.client.primaryColor,
   },
   counter: {
     backgroundColor: Colors.lightMask(0.25),
