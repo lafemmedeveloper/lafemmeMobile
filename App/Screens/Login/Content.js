@@ -8,7 +8,6 @@ import {
   KeyboardAvoidingView,
 } from 'react-native';
 
-
 import {Colors, Images, Fonts} from '../../Themes';
 import auth from '@react-native-firebase/auth';
 import MyTextInput from '../../Components/MyTextInput';
@@ -32,7 +31,7 @@ export default class Login extends Component {
 
   async handleLogin() {
     const {userEmail, userPassword} = this.state;
-    const {setLoading} = this.props;
+    const {setLoading, setAccount} = this.props;
     setLoading(true);
     if (userEmail !== '' && userPassword !== '') {
       try {
@@ -43,10 +42,12 @@ export default class Login extends Component {
           );
 
           console.log('handleLogin', user);
+
+          await setAccount(auth().currentUser.uid);
+          setLoading(false);
           // console.log(user);
 
           // await this.props.setAuth(auth);
-
 
           // this.setState({isLoading: false});
           // this.props.navigation.navigate('CompleteUserData');
@@ -85,7 +86,6 @@ export default class Login extends Component {
           style={styles.containerItems}
           behavior="padding"
           enabled>
-
           <View style={styles.contentContainer}>
             <Text
               style={Fonts.style.regular(Colors.dark, Fonts.size.h6, 'center')}>

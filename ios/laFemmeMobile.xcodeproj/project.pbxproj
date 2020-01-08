@@ -1039,11 +1039,12 @@
 			baseConfigurationReference = A2F9DFCD48D647C155431DB7 /* Pods-lafemme.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconClient;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = 7P59ZNH6U6;
 				INFOPLIST_FILE = laFemmeMobile/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 1.0.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1060,10 +1061,11 @@
 			baseConfigurationReference = FA502A07DB8B6E201025680E /* Pods-lafemme.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconClient;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 7P59ZNH6U6;
 				INFOPLIST_FILE = laFemmeMobile/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 1.0.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1181,7 +1183,7 @@
 			baseConfigurationReference = 2807BB0AEDEA3AE7559A1FED /* Pods-lafemmeStaging.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconClientStaging;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = 7P59ZNH6U6;
 				INFOPLIST_FILE = "lafemme copy-Info.plist";
@@ -1203,7 +1205,7 @@
 			baseConfigurationReference = 7DAB79A4A233FBCC789D67DC /* Pods-lafemmeStaging.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconClientStaging;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = 7P59ZNH6U6;
 				INFOPLIST_FILE = "lafemme copy-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1224,11 +1226,12 @@
 			baseConfigurationReference = 246DC6033FBA4647DCBF4E15 /* Pods-lafemmeExpert.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconExpert;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = 7P59ZNH6U6;
 				INFOPLIST_FILE = "lafemmeStaging copy-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 1.0.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1245,10 +1248,11 @@
 			baseConfigurationReference = 401F7AAC95995B10048E1541 /* Pods-lafemmeExpert.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconExpert;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 7P59ZNH6U6;
 				INFOPLIST_FILE = "lafemmeStaging copy-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 1.0.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1270,6 +1274,7 @@
 				DEVELOPMENT_TEAM = 7P59ZNH6U6;
 				INFOPLIST_FILE = "lafemmeExpert copy-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 1.0.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1290,6 +1295,7 @@
 				DEVELOPMENT_TEAM = 7P59ZNH6U6;
 				INFOPLIST_FILE = "lafemmeExpert copy-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 1.0.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

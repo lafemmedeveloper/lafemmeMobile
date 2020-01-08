@@ -5,7 +5,7 @@ const type = {
   light: 'OpenSans-Light',
   regular: 'OpenSans-Regular',
   bold: 'OpenSans-Bold',
-  semiBold: 'OpenSans-SemiBold'
+  semiBold: 'OpenSans-SemiBold',
 };
 
 const size = {
@@ -20,7 +20,7 @@ const size = {
   regular: 17,
   medium: 14,
   small: 12,
-  tiny: 8.5
+  tiny: 8.5,
 };
 
 const style = {
@@ -30,7 +30,7 @@ const style = {
     fontSize: size,
     textAlign: align,
     lineHeight: size * 1.5,
-    letterSpacing: letterSpacing
+    letterSpacing: letterSpacing,
   }),
   semiBold: (color, size, align, letterSpacing) => ({
     fontFamily: type.semiBold,
@@ -38,7 +38,7 @@ const style = {
     fontSize: size,
     textAlign: align,
     lineHeight: size * 1.5,
-    letterSpacing: letterSpacing
+    letterSpacing: letterSpacing,
   }),
   regular: (color, size, align, letterSpacing) => ({
     fontFamily: type.regular,
@@ -46,7 +46,7 @@ const style = {
     fontSize: size,
     textAlign: align,
     lineHeight: size * 1.5,
-    letterSpacing: letterSpacing
+    letterSpacing: letterSpacing,
   }),
 
   light: (color, size, align, letterSpacing) => ({
@@ -55,12 +55,12 @@ const style = {
     fontSize: size,
     textAlign: align,
     lineHeight: size * 1.5,
-    letterSpacing: letterSpacing
-  })
+    letterSpacing: letterSpacing,
+  }),
 };
 
 export default {
   type,
   size,
-  style
+  style,
 };

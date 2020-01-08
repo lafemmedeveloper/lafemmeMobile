@@ -712,7 +712,7 @@ export default class Home extends Component {
         </Modal>
 
         <Modal //auth
-          isVisible={modalAuth}
+          isVisible={modalAuth && !user}
           onBackdropPress={() => {
             this.setState({modalAuth: false});
           }}

@@ -9,6 +9,8 @@ export default StyleSheet.create({
     paddingHorizontal: 10,
     backgroundColor: Colors.textInputBg,
     height: 40,
+
+    color: Colors.dark,
   },
 
   textInputMultiline: {

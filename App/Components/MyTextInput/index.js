@@ -9,10 +9,12 @@ import React from 'react';
 import {View, TextInput} from 'react-native';
 
 import styles from './styles';
+import {Colors} from '../../Themes';
 
 export default data => {
   return (
     <TextInput
+      placeholderTextColor={Colors.gray}
       multiline={data.multiLine}
       autoCapitalize={data.autoCapitalize}
       textContentType={data.textContent}
@@ -23,6 +25,5 @@ export default data => {
       onChangeText={text => data.onChangeText(text)}
       value={data.text}
     />
-
   );
 };
