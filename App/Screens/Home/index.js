@@ -3,7 +3,12 @@ import Content from './Content';
 
 import {setLoading, getDeviceInfo} from '../../Core/UI/Actions';
 import {getServices, getOrders} from '../../Core/Services/Actions';
-import {setAuth, setAccount, logOut} from '../../Core/User/Actions';
+import {
+  setAuth,
+  setAccount,
+  updateProfile,
+  logOut,
+} from '../../Core/User/Actions';
 
 const mapStateToProps = ({ui, currentUser, services}) => {
   const {loading, deviceInfo} = ui;
@@ -97,7 +102,7 @@ const mapDispatchToProps = dispatch => {
     setLoading: state => dispatch(setLoading(state)),
     getServices: () => dispatch(getServices()),
     getOrders: () => dispatch(getOrders()),
-
+    updateProfile: (data, typeData) => dispatch(updateProfile(data, typeData)),
     getDeviceInfo: () => dispatch(getDeviceInfo()),
     setAuth: user => dispatch(setAuth(user)),
     setAccount: uid => dispatch(setAccount(uid)),

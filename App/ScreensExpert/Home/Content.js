@@ -70,7 +70,13 @@ export default class Home extends Component {
   }
 
   render() {
-    const {logOut, user, expertOpenOrders} = this.props;
+    const {
+      logOut,
+      user,
+      expertOpenOrders,
+      expertActiveOrders,
+      assignExpert,
+    } = this.props;
     const {} = this.state;
 
     if (user && user.roles.indexOf('expert') === -1) {
@@ -82,24 +88,42 @@ export default class Home extends Component {
     } else {
       return (
         <View style={styles.container}>
-          <View style={styles.bannerExpert} />
+          {expertActiveOrders.length > 0 && (
+            <View style={styles.bannerExpert} />
+          )}
           <ScrollView style={ApplicationStyles.scrollHomeExpert} bounces={true}>
             {/* <View style={{height: Metrics.addHeader}}></View> */}
             {expertOpenOrders.map((item, index) => {
+              console.log(item);
               return (
                 <View key={item.id}>
-                  <ExpertDealOffer order={item} />
+                  <ExpertDealOffer
+                    order={item}
+                    onSwipe={() => {
+                      console.log('ExpertDealOffer:home');
+
+                      let expertData = {
+                        coordinates: {
+                          latitude: 6.2458007,
+                          longitude: -75.5680003,
+                        },
+                        id: user.id,
+                        ranking: user.ranking,
+                        lastName: user.lastName,
+                        firstName: user.firstName,
+                        image:
+                          'https://scontent-bog1-1.xx.fbcdn.net/v/t1.0-9/16196015_10154888128487744_6901111466535510271_n.png?_nc_cat=103&_nc_ohc=SBVtumyhgCQAQmiVN7qs7I5c_oa4T4vHAybSU-2fHMVlgtVIfm468rPBw&_nc_ht=scontent-bog1-1.xx&oh=ff0751caf080bf1c49c2a2dd83afcea6&oe=5EA7DCE9',
+                        thumbnail:
+                          'https://scontent-bog1-1.xx.fbcdn.net/v/t1.0-9/16196015_10154888128487744_6901111466535510271_n.png?_nc_cat=103&_nc_ohc=SBVtumyhgCQAQmiVN7qs7I5c_oa4T4vHAybSU-2fHMVlgtVIfm468rPBw&_nc_ht=scontent-bog1-1.xx&oh=ff0751caf080bf1c49c2a2dd83afcea6&oe=5EA7DCE9',
+                      };
+
+                      assignExpert(item.id, index, expertData);
+                    }}
+                  />
                 </View>
               );
             })}
           </ScrollView>
-          <TouchableOpacity
-            onPress={() => {
-              console.log('logOut');
-              logOut();
-            }}>
-            <Text>logOut</Text>
-          </TouchableOpacity>
         </View>
       );
     }

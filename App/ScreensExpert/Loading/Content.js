@@ -22,6 +22,9 @@ import {
 import auth from '@react-native-firebase/auth';
 import styles from './styles';
 
+import messaging from '@react-native-firebase/messaging';
+import Utilities from '../../Utilities';
+
 export default class Loading extends Component {
   constructor(props) {
     super(props);
@@ -29,8 +32,6 @@ export default class Loading extends Component {
   }
 
   async componentDidMount() {
-
-
     const {
       navigation,
       getDeviceInfo,
@@ -72,6 +73,51 @@ export default class Loading extends Component {
       // console.log(auth().currentUser);
       await setAccount(auth().currentUser.uid);
     }
+
+    // Notifications Module
+    console.log('startMessaging');
+    messaging()
+      .hasPermission()
+      .then(enabled => {
+        console.log('push permissions');
+        if (enabled) {
+          console.log('hasPermission', enabled);
+
+          messaging()
+            .getToken()
+            .then(token => {
+              if (token) {
+                console.log('token', token);
+                Utilities.log('token', token, 'green');
+                messaging().subscribeToTopic('expert');
+              } else {
+                console.log('token failed');
+              }
+            });
+          // user has permissions
+        } else {
+          // user doesn't have permission
+          console.log('user does not have permission');
+
+          messaging()
+            .requestPermission()
+            .then(() => {
+              // User has authorised
+              console.log('User has authorised');
+            })
+            .catch(error => {
+              // User has rejected permissions
+              console.log('User has rejected permissions', error);
+            });
+        }
+      });
+
+    this.messageListener = messaging().onMessage(message => {
+      // Process your message as required
+      console.log('Process your message as required: message', message);
+      // Alert.alert(message.data.title, message.data.body);
+    });
+    //END Notifications Module
 
     setLoading(false);
   }

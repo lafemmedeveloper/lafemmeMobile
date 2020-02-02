@@ -11,6 +11,7 @@ import LoginScreen from '../Screens/Login';
 import ClientOnExpert from '../ScreensExpert/ClientOnExpert';
 
 import History from '../ScreensExpert/History';
+import Profile from '../ScreensExpert/Profile';
 
 import {Colors, Images} from '../Themes';
 
@@ -38,6 +39,21 @@ const HistoryStack = createStackNavigator(
   {
     headerMode: 'none',
     initialRouteName: 'History',
+    navigationOptions: {
+      gesturesEnabled: false,
+    },
+  },
+);
+
+const ProfileStack = createStackNavigator(
+  {
+    Profile: {
+      screen: Profile,
+    },
+  },
+  {
+    headerMode: 'none',
+    initialRouteName: 'Profile',
     navigationOptions: {
       gesturesEnabled: false,
     },
@@ -76,7 +92,7 @@ const TabNavigator = createBottomTabNavigator(
       },
     },
     Profile: {
-      screen: HistoryStack,
+      screen: ProfileStack,
       navigationOptions: ({navigation}) => {
         const tabBarVisible = navigation.state.index === 0;
         return {

@@ -14,6 +14,10 @@ export default {
     return uuid;
   },
 
+  log: (title, value, color) => {
+    console.log(`%c${title}: ${value}`, `color: ${color};`);
+    return null;
+  },
   create_CARTID: () => {
     let date = new Date().getTime();
     const uuid = 'xxxxxx'.replace(/[xy]/g, function(c) {

@@ -9,6 +9,8 @@ export default {
     6: 'Cancelado',
   },
 
+  gender: ['Mujer', 'Hombre'],
+
   locationIcon: {
     0: 'home',
     1: 'building',

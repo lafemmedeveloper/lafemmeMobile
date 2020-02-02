@@ -7,6 +7,7 @@ import {
   getExpertOpenOrders,
   getExpertActiveOrders,
   getExpertHistoryOrders,
+  assignExpert,
 } from '../../Core/Services/Actions';
 import {setAuth, logOut} from '../../Core/User/Actions';
 
@@ -30,8 +31,9 @@ const mapDispatchToProps = dispatch => {
   return {
     setLoading: state => dispatch(setLoading(state)),
     getServices: () => dispatch(getServices()),
-
     getExpertOpenOrders: () => dispatch(getExpertOpenOrders()),
+    assignExpert: (orderId, orderIndex, expertData, clientToken) =>
+      dispatch(assignExpert(orderId, orderIndex, expertData, clientToken)),
     getExpertActiveOrders: () => dispatch(getExpertActiveOrders()),
     getExpertHistoryOrders: () => dispatch(getExpertHistoryOrders()),
     getDeviceInfo: () => dispatch(getDeviceInfo()),

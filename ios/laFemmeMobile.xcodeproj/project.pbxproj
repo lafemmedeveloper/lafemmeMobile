@@ -74,6 +74,10 @@
 		4F38B931CED6B964C41BCC61 /* Pods-laFemmeMobile-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-laFemmeMobile-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-laFemmeMobile-tvOS/Pods-laFemmeMobile-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		7DAB79A4A233FBCC789D67DC /* Pods-lafemmeStaging.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lafemmeStaging.release.xcconfig"; path = "Target Support Files/Pods-lafemmeStaging/Pods-lafemmeStaging.release.xcconfig"; sourceTree = "<group>"; };
 		84955C7BB7E539FA5A2DDCC3 /* Pods-laFemmeMobileTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-laFemmeMobileTests.debug.xcconfig"; path = "Target Support Files/Pods-laFemmeMobileTests/Pods-laFemmeMobileTests.debug.xcconfig"; sourceTree = "<group>"; };
+		9F3622E623C7B1D100E51A57 /* La Femme Expert Staging.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "La Femme Expert Staging.entitlements"; sourceTree = "<group>"; };
+		9F36230E23C7BFF700E51A57 /* La Femme Staging.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "La Femme Staging.entitlements"; sourceTree = "<group>"; };
+		9F7EA45023D35B44000E2769 /* La Femme.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "La Femme.entitlements"; sourceTree = "<group>"; };
+		9F7EA45123D35B4A000E2769 /* La Femme Expert.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "La Femme Expert.entitlements"; sourceTree = "<group>"; };
 		9F9580702369F56E00D6C5BA /* OpenSans-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "OpenSans-Bold.ttf"; path = "../assets/fonts/OpenSans-Bold.ttf"; sourceTree = "<group>"; };
 		9F9580712369F56E00D6C5BA /* OpenSans-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "OpenSans-Light.ttf"; path = "../assets/fonts/OpenSans-Light.ttf"; sourceTree = "<group>"; };
 		9F9580722369F56E00D6C5BA /* OpenSans-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "OpenSans-SemiBold.ttf"; path = "../assets/fonts/OpenSans-SemiBold.ttf"; sourceTree = "<group>"; };
@@ -177,6 +181,10 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				9F7EA45123D35B4A000E2769 /* La Femme Expert.entitlements */,
+				9F7EA45023D35B44000E2769 /* La Femme.entitlements */,
+				9F36230E23C7BFF700E51A57 /* La Femme Staging.entitlements */,
+				9F3622E623C7B1D100E51A57 /* La Femme Expert Staging.entitlements */,
 				9F958085236B41B300D6C5BA /* GoogleService-Info.com.lafemme.client.plist */,
 				9F958083236B41B300D6C5BA /* GoogleService-Info.com.lafemme.clientstaging.plist */,
 				9F958082236B41B300D6C5BA /* GoogleService-Info.com.lafemme.expert.plist */,
@@ -1039,6 +1047,7 @@
 			baseConfigurationReference = A2F9DFCD48D647C155431DB7 /* Pods-lafemme.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconClient;
+				CODE_SIGN_ENTITLEMENTS = "La Femme.entitlements";
 				CURRENT_PROJECT_VERSION = 2;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = 7P59ZNH6U6;
@@ -1061,6 +1070,7 @@
 			baseConfigurationReference = FA502A07DB8B6E201025680E /* Pods-lafemme.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconClient;
+				CODE_SIGN_ENTITLEMENTS = "La Femme.entitlements";
 				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 7P59ZNH6U6;
 				INFOPLIST_FILE = laFemmeMobile/Info.plist;
@@ -1183,6 +1193,7 @@
 			baseConfigurationReference = 2807BB0AEDEA3AE7559A1FED /* Pods-lafemmeStaging.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconClientStaging;
+				CODE_SIGN_ENTITLEMENTS = "La Femme Staging.entitlements";
 				CURRENT_PROJECT_VERSION = 3;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = 7P59ZNH6U6;
@@ -1205,6 +1216,7 @@
 			baseConfigurationReference = 7DAB79A4A233FBCC789D67DC /* Pods-lafemmeStaging.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconClientStaging;
+				CODE_SIGN_ENTITLEMENTS = "La Femme Staging.entitlements";
 				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = 7P59ZNH6U6;
 				INFOPLIST_FILE = "lafemme copy-Info.plist";
@@ -1226,6 +1238,7 @@
 			baseConfigurationReference = 246DC6033FBA4647DCBF4E15 /* Pods-lafemmeExpert.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconExpert;
+				CODE_SIGN_ENTITLEMENTS = "La Femme Expert.entitlements";
 				CURRENT_PROJECT_VERSION = 2;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = 7P59ZNH6U6;
@@ -1248,6 +1261,7 @@
 			baseConfigurationReference = 401F7AAC95995B10048E1541 /* Pods-lafemmeExpert.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconExpert;
+				CODE_SIGN_ENTITLEMENTS = "La Femme Expert.entitlements";
 				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 7P59ZNH6U6;
 				INFOPLIST_FILE = "lafemmeStaging copy-Info.plist";
@@ -1269,6 +1283,7 @@
 			baseConfigurationReference = CD9FCC0A1892F635302277B4 /* Pods-lafemmeExpertStaging.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconExpertStaging;
+				CODE_SIGN_ENTITLEMENTS = "La Femme Expert Staging.entitlements";
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = 7P59ZNH6U6;
@@ -1291,6 +1306,7 @@
 			baseConfigurationReference = 1FB12780BA93E7390518A92F /* Pods-lafemmeExpertStaging.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconExpertStaging;
+				CODE_SIGN_ENTITLEMENTS = "La Femme Expert Staging.entitlements";
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 7P59ZNH6U6;
 				INFOPLIST_FILE = "lafemmeExpert copy-Info.plist";

@@ -8,7 +8,12 @@ import {
   KeyboardAvoidingView,
   Keyboard,
   ScrollView,
+  Platform,
+  Alert,
 } from 'react-native';
+
+import {requestNotifications} from 'react-native-permissions';
+
 import moment from 'moment';
 import LinearGradient from 'react-native-linear-gradient';
 import _ from 'lodash';
@@ -40,6 +45,8 @@ import Register from '../../Screens/Register';
 import StarRating from 'react-native-star-rating';
 import Modal from 'react-native-modal';
 import auth from '@react-native-firebase/auth';
+
+import messaging from '@react-native-firebase/messaging';
 
 import FastImage from 'react-native-fast-image';
 import Loading from '../../Components/Loading';
@@ -90,6 +97,52 @@ export default class Home extends Component {
     setLoading(true);
     await getDeviceInfo();
 
+    // Notifications Module
+    console.log('startMessaging');
+    messaging()
+      .hasPermission()
+      .then(enabled => {
+        console.log('push permissions');
+        if (enabled) {
+          console.log('hasPermission', enabled);
+
+          messaging()
+            .getToken()
+            .then(token => {
+              if (token) {
+                console.log('token', token);
+                this.setFCM(token);
+              } else {
+                console.log('token failed');
+              }
+            });
+          // user has permissions
+        } else {
+          // user doesn't have permission
+          console.log('user does not have permission');
+
+          // messaging()
+          //   .requestPermission()
+          //   .then(() => {
+          //     // User has authorised
+          //     console.log('User has authorised');
+          //   })
+          //   .catch(error => {
+          //     // User has rejected permissions
+          //     console.log('User has rejected permissions', error);
+          //   });
+        }
+      });
+
+    this.messageListener = messaging().onMessage(message => {
+      // Process your message as required
+      console.log('Process your message as required: message', message);
+      // Alert.alert(message.data.title, message.data.body);
+    });
+
+    // await this._checkPermission();
+    //END Notifications Module
+
     console.log('deviceInfo', this.props);
     this.unsubscriber = await auth().onAuthStateChanged(user => {
       if (user) {
@@ -113,6 +166,13 @@ export default class Home extends Component {
     setLoading(false);
   }
 
+  async setFCM(token) {
+    const {user, updateProfile} = this.props;
+
+    console.log('setFCM:token', token);
+    // await updateProfile(address, 'address');
+    await updateProfile({...user.tokens, fcm: token}, 'tokens');
+  }
   async callSetUser(uid) {
     const {setAccount} = this.props;
 
@@ -130,11 +190,6 @@ export default class Home extends Component {
     setLoading(!loading);
   }
 
-  logout() {}
-
-  actionL() {
-    console.log('actionL');
-  }
 
   actionR() {
     console.log('actionR');
@@ -188,12 +243,12 @@ export default class Home extends Component {
         <Header
           appType={appType}
           title={'Agrega una dirección'}
-          iconL={Images.menu}
+          iconL={null}
           iconR={null}
           user={user}
           ordersActive={orders.length}
           selectAddress={() => this.selectAddress()}
-          onActionL={() => this.actionL()}
+          onActionL={() => {}}
           onActionR={() => {}}
         />
 

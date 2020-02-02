@@ -151,3 +151,43 @@ export const getExpertHistoryOrders = () => (dispatch, getStore) => {
     return dispatch({type: GET_EXPERT_HISTORY_ORDERS, payload: listOrders});
   });
 };
+
+export const topicPush = (topic, notification, data) => async dispatch => {
+  fetch('https://fcm.googleapis.com/fcm/send', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization:
+        'key=AAAAKBT0Dt4:APA91bEFw5WX5PdNrg-I7C3lWdc1P7lOno7V-jLarijN6jp5VZIFpzOyV-9e5XC2qkGEW5YFQ7M2oUUCpYihRIXZMclZIQHemle-hOWHvRinCWH5HT2hS_nXImJa92cUWBcciL-_G3cE',
+    },
+    body: JSON.stringify({
+      to: `/topics/${topic}`,
+      notification,
+      data,
+    }),
+  });
+};
+
+export const assignExpert = (
+  orderId,
+  orderIndex,
+  expertData,
+) => async dispatch => {
+  let assignExpertURL = __DEV__
+    ? 'http://localhost:5000/lafemme-5017a/us-central1/assignExpert'
+    : 'http://test/lafemme-5017a/us-central1/assignExpert';
+
+  fetch(assignExpertURL, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      orderId,
+      orderIndex,
+      expertData,
+    }),
+  });
+};

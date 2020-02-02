@@ -59,6 +59,7 @@ const ApplicationStyles = {
   scrollHomeExpert: {
     width: Metrics.screenWidth * 0.95,
     marginVertical: 10,
+    marginTop: Metrics.addHeader,
     alignSelf: 'center',
     marginBottom: 10,
     flex: 1,

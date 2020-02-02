@@ -2,7 +2,7 @@ import {connect} from 'react-redux';
 import Content from './Content';
 
 import {setLoading} from '../../Core/UI/Actions';
-import {getCoverage} from '../../Core/Services/Actions';
+import {getCoverage, topicPush} from '../../Core/Services/Actions';
 import {updateProfile} from '../../Core/User/Actions';
 
 const mapStateToProps = ({ui, currentUser, services}) => {
@@ -20,7 +20,8 @@ const mapDispatchToProps = dispatch => {
   return {
     setLoading: state => dispatch(setLoading(state)),
     getCoverage: city => dispatch(getCoverage(city)),
-
+    topicPush: (topic, notification, data) =>
+      dispatch(topicPush(topic, notification, data)),
     updateProfile: (data, typeData) => dispatch(updateProfile(data, typeData)),
   };
 };

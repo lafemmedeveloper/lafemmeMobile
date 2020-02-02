@@ -54,7 +54,7 @@ export default class Cart extends Component {
   }
 
   async sendOrder(data) {
-    const {user, updateProfile, setLoading} = this.props;
+    const {user, updateProfile, setLoading, topicPush} = this.props;
     setLoading(true);
     try {
       firestore()
@@ -63,6 +63,38 @@ export default class Cart extends Component {
         .set(data)
         .then(function() {
           console.log('order:Created');
+
+          let servicesPush = [];
+          for (var i = 0; i < data.services.length; i++) {
+            if (servicesPush.indexOf(data.services[i].name) === -1) {
+              if (i == data.services.length - 1) {
+                servicesPush = [
+                  ...servicesPush,
+                  ` y ${user.cart.services[i].name}`,
+                ];
+              } else {
+                servicesPush = [
+                  ...servicesPush,
+                  ` ${user.cart.services[i].name}`,
+                ];
+              }
+            }
+          }
+
+          let notification = {
+            title: 'Nueva orden de servicio La Femme',
+            body: `-Cuándo: ${moment(data.date, 'YYYY-MM-DD HH:mm:ss').format(
+              'LLL',
+            )}.\n-Dónde: ${data.address.locality}-${
+              data.address.neighborhood
+            }.\n-Servicios: ${servicesPush.toString()}.`,
+            content_available: true,
+            priority: 'high',
+          };
+
+          let dataPush = null;
+
+          topicPush('expert', notification, dataPush);
 
           try {
             updateProfile(
@@ -575,6 +607,18 @@ export default class Cart extends Component {
         <View style={styles.footerContainer}>
           <TouchableOpacity
             onPress={() => {
+              let servicesType = [];
+              for (var i = 0; i < user.cart.services.length; i++) {
+                if (
+                  servicesType.indexOf(user.cart.services[i].servicesType) ===
+                  -1
+                ) {
+                  servicesType = [
+                    ...servicesType,
+                    user.cart.services[i].servicesType,
+                  ];
+                }
+              }
               if (isCompleted) {
                 console.log('isCompleted');
                 let data = {
@@ -590,6 +634,7 @@ export default class Cart extends Component {
                   cartId: Utilities.create_CARTID(),
                   status: 0,
                   date: `${user.cart.day} ${user.cart.hour}`,
+                  servicesType,
                   ...user.cart,
                 };
                 this.sendOrder(data);

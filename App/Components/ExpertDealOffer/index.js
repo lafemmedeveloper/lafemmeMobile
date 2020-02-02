@@ -399,7 +399,7 @@ export default dta => {
           disabled={false}
           onSwipeStart={() => console.log('Swipe started!')}
           onSwipeFail={() => console.log('Incomplete swipe!')}
-          onSwipeSuccess={() => console.log('Submitted successfully!')}
+          onSwipeSuccess={() => dta.onSwipe()}
           railBackgroundColor={Colors.expertMask(0.4)}
           railBorderColor={'transparent'}
           titleColor={Colors.light}

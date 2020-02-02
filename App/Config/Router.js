@@ -11,6 +11,8 @@ import HomeScreen from '../Screens/Home';
 import LoginScreen from '../Screens/Login';
 import ProductDetailScreen from '../Screens/ProductDetail';
 import RegisterScreen from '../Screens/Register';
+
+import ProfileScreen from '../Screens/Profile';
 // import GalleryScreen from '../Screens/Gallery';
 // import ServicesScreen from '../Screens/Services';,
 // import ProfileScreen from '../Screens/Profile';
@@ -61,20 +63,20 @@ const ServicesStack = createStackNavigator(
   },
 );
 
-// const ProfileStack = createStackNavigator(
-//   {
-//     Services: {
-//       screen: ProfileScreen,
-//     },
-//   },
-//   {
-//     headerMode: 'none',
-//     initialRouteName: 'Services',
-//     navigationOptions: {
-//       gesturesEnabled: false,
-//     },
-//   },
-// );
+const ProfileStack = createStackNavigator(
+  {
+    Services: {
+      screen: ProfileScreen,
+    },
+  },
+  {
+    headerMode: 'none',
+    initialRouteName: 'Services',
+    navigationOptions: {
+      gesturesEnabled: false,
+    },
+  },
+);
 const TabNavigator = createBottomTabNavigator(
   {
     Home: {
@@ -124,7 +126,7 @@ const TabNavigator = createBottomTabNavigator(
       },
     },
     Profile: {
-      screen: HomeStack,
+      screen: ProfileStack,
       navigationOptions: ({navigation}) => {
         const tabBarVisible = navigation.state.index === 0;
         return {
@@ -188,6 +190,8 @@ const styles = {
     flex: 0,
     width: 25,
     height: 25,
+    marginBottom: 2.5,
+
     resizeMode: 'contain',
   },
 };

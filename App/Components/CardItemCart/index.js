@@ -147,12 +147,11 @@ export default data => {
                     <StarRating
                       disabled={true}
                       maxStars={5}
-                      rating={item.ranking ? item.ranking : 5}
+                      rating={item.ranking ? parseFloat(item.ranking) : 5}
                       starSize={15}
                       emptyStarColor={Colors.gray}
                       fullStarColor={Colors.client.primaryColor}
                       halfStarColor={Colors.client.secondaryColor}
-                      // selectedStar={(rating) => }
                     />
                     <Text
                       style={Fonts.style.regular(

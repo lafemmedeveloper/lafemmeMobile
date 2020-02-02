@@ -1476,6 +1476,7 @@ export default class Home extends Component {
 
                   let data = {
                     name: product.name,
+                    servicesType: product.slug,
                     clients: gList,
                     id: Utilities.create_UUID(),
                     addons: addonsGuest,
