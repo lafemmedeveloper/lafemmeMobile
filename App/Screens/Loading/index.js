@@ -24,13 +24,5 @@ import styles from './styles';
 import auth from '@react-native-firebase/auth';
 
 export default function Loading({navigation}) {
-  return (
-    <View style={styles.container}>
-      <ScrollView style={ApplicationStyles.scrollHome}>
-        <Text style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
-          {'Loading View'}
-        </Text>
-      </ScrollView>
-    </View>
-  );
+  return <View style={styles.container}></View>;
 }

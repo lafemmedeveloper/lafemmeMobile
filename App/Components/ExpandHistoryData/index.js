@@ -84,12 +84,7 @@ export default dta => {
             size={12}
             color={Colors.client.primaryColor}
           />{' '}
-          {formatDate(order.day, 'ddd, LL')}
-        </Text>
-        <Text
-          style={Fonts.style.regular(Colors.dark, Fonts.size.small, 'left')}>
-          <Icon name={'clock'} size={12} color={Colors.client.primaryColor} />{' '}
-          {formatDate(moment(order.hour, 'HH:mm'), 'h:mm a')}
+          {formatDate(order.day, 'ddd, LLL')}
         </Text>
       </View>
       <View

@@ -26,7 +26,7 @@ export default data => {
           ApplicationStyles.itemService,
           ApplicationStyles.shadownClient,
         ]}>
-        <Image
+        <FastImage
           style={ApplicationStyles.itemImage}
           source={data.image}
           resizeMode={FastImage.resizeMode.cover}

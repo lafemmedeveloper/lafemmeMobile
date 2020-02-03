@@ -7,11 +7,13 @@ import {setAuth, setAccount, logOut} from '../../Core/User/Actions';
 const mapStateToProps = ({ui, currentUser}) => {
   const {loading, deviceInfo} = ui;
   const {auth, user} = currentUser;
+  const {appType} = deviceInfo;
   return {
     loading,
     user,
     auth,
     deviceInfo,
+    appType,
   };
 };
 

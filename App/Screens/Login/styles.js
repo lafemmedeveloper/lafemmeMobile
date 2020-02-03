@@ -11,11 +11,21 @@ export default StyleSheet.create({
   },
   containerItems: {
     flex: 1,
-    marginTop: Metrics.header,
+    // marginTop: Metrics.header,
     paddingBottom: 10,
     alignItems: 'center',
   },
 
+  loading: {
+    position: 'absolute',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1,
+    // height: Metrics.screenHeight,
+    width: Metrics.screenWidth,
+    zIndex: 2000,
+  },
   headerContainer: {
     flex: 0,
     width: Metrics.screenWidth,

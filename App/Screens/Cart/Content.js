@@ -28,10 +28,6 @@ import AppConfig from '../../Config/AppConfig';
 import Modal from 'react-native-modal';
 import Loading from '../Loading';
 
-const config = {
-  minHour: moment('08:00').format('HH:mm'),
-  maxHour: moment('20:00').format('HH:mm'),
-};
 export default class Cart extends Component {
   constructor(props) {
     super(props);
@@ -39,10 +35,7 @@ export default class Cart extends Component {
       modalNotes: false,
       notes: '',
       date: getDate(1),
-      day: getDate(1),
-      hour: moment(new Date())
-        .add(1.5, 'hour')
-        .format('HH:mm'),
+      date: getDate(1),
     };
   }
 
@@ -100,9 +93,9 @@ export default class Cart extends Component {
             updateProfile(
               {
                 ...user.cart,
-                day: null,
+                date: null,
                 address: null,
-                hour: null,
+
                 notes: null,
                 services: [],
                 coupon: null,
@@ -144,27 +137,15 @@ export default class Cart extends Component {
     }
   }
 
-  async updateDay(day) {
+  async updateDate(date) {
+    console.log(date);
     const {user, updateProfile, setLoading} = this.props;
     setLoading(true);
     try {
-      await updateProfile({...user.cart, day}, 'cart');
-      this.setState({day});
+      await updateProfile({...user.cart, date}, 'cart');
+      this.setState({date});
     } catch (err) {
-      console.log('updateDay:error', err);
-    }
-
-    setLoading(false);
-  }
-
-  async updateHour(hour) {
-    const {user, updateProfile, setLoading} = this.props;
-    setLoading(true);
-    try {
-      await updateProfile({...user.cart, hour}, 'cart');
-      this.setState({hour});
-    } catch (err) {
-      console.log('updateHour:error', err);
+      console.log('updateDate:error', err);
     }
 
     setLoading(false);
@@ -208,8 +189,7 @@ export default class Cart extends Component {
     const {modalNotes, notes} = this.state;
     let isCompleted =
       user.cart.address &&
-      user.cart.day &&
-      user.cart.hour &&
+      user.cart.date &&
       user.cart.services.length > 0 &&
       user.cart.notes;
     return (
@@ -383,7 +363,7 @@ export default class Cart extends Component {
                     Fonts.size.medium,
                     'left',
                   )}>
-                  {'Fecha del servicio'}
+                  {'Fecha y hora del servicio'}
                   {'\n'}
                   <Text
                     style={Fonts.style.regular(
@@ -399,8 +379,8 @@ export default class Cart extends Component {
                 <FieldCartConfig
                   key={'date'}
                   textSecondary={''}
-                  value={user.cart.day ? user.cart.day : false}
-                  textActive={`${formatDate(user.cart.day, 'dddd, LL')}`}
+                  value={user.cart.date ? user.cart.date : false}
+                  textActive={`${formatDate(user.cart.date, 'dddd, LLL')}`}
                   textInactive={'+ Selecciona la fecha del servicio'}
                   icon={'calendar'}
                 />
@@ -415,18 +395,24 @@ export default class Cart extends Component {
                     backgroundColor: 'red',
                   }}>
                   <DatePicker
-                    date={this.state.day}
+                    date={user.cart.date}
                     locale={'es'}
                     showIcon={false}
                     confirmBtnText={'Confirmar'}
                     cancelBtnText={'Cancelar'}
-                    minDate={moment(new Date()).format('YYYY-MM-DD')}
+                    minDate={moment(new Date())
+                      .add(1, 'hour')
+                      .format('YYYY-MM-DD HH:mm')}
                     maxDate={moment(new Date())
                       .add(30, 'days')
-                      .format('YYYY-MM-DD')}
+                      .format('YYYY-MM-DD  HH:mm')}
+                    // minTime={moment(new Date())
+                    //   .add(2, 'hour')
+                    //   .format('HH:mm')}
+                    // maxTime={'00:00'}
                     placeholder={'text'}
-                    mode={'date'}
-                    format={'YYYY-MM-DD'}
+                    mode={'datetime'}
+                    format={'YYYY-MM-DD HH:mm'}
                     // style={{width: 200, height: 100, backgroundColor: 'green'}}
                     customStyles={{
                       dateInput: {
@@ -452,9 +438,11 @@ export default class Cart extends Component {
                         left: 20,
                       },
                     }}
-                    onDateChange={day => {
-                      this.updateDay(day);
-                      // this.setState({day});
+                    onDateChange={date => {
+                      // this.setState({date});
+                      console.log('send', date);
+                      this.updateDate(date);
+                      // this.setState({date});
                       // this.setDateTime(event, date);
                     }}
                     placeholderTextColor={'purple'}
@@ -470,102 +458,6 @@ export default class Cart extends Component {
               </View>
               {/* endDate */}
 
-              {/* time */}
-              <View style={styles.itemTitleContainer}>
-                <Text
-                  style={Fonts.style.regular(
-                    Colors.client.primaryColor,
-                    Fonts.size.medium,
-                    'left',
-                  )}>
-                  {'Hora del servicio'}
-                  {'\n'}
-                  <Text
-                    style={Fonts.style.regular(
-                      Colors.gray,
-                      Fonts.size.small,
-                      'left',
-                    )}>
-                    {'Selecciona la hora estimada para el servicio.'}
-                  </Text>
-                </Text>
-              </View>
-              <View>
-                <FieldCartConfig
-                  key={'hour'}
-                  textSecondary={''}
-                  value={user.cart.hour ? user.cart.hour : false}
-                  textActive={`${formatDate(
-                    moment(user.cart.hour, 'HH:mm'),
-                    'h:mm a',
-                  )}`}
-                  textInactive={'+ Selecciona la hora del servicio'}
-                  icon={'clock'}
-                />
-
-                <View
-                  opacity={0.0}
-                  style={{
-                    position: 'absolute',
-                    width: '100%',
-                    height: '100%',
-                    flex: 1,
-                    backgroundColor: 'red',
-                  }}>
-                  <DatePicker
-                    date={this.state.hour}
-                    locale={'es'}
-                    showIcon={false}
-                    confirmBtnText={'Confirmar'}
-                    cancelBtnText={'Cancelar'}
-                    minTime={moment(new Date())
-                      .add(1, 'hour')
-                      .format('HH:mm')}
-                    maxTime={'00:00'}
-                    placeholder={'text'}
-                    mode={'time'}
-                    format={'HH:mm'}
-                    // style={{width: 200, height: 100, backgroundColor: 'green'}}
-                    customStyles={{
-                      dateInput: {
-                        borderWidth: 0,
-                        right: 30,
-                      },
-                      dateText: {
-                        marginTop: 10,
-                        color: 'red',
-                        fontSize: 16,
-                        fontFamily: Fonts.type.regular,
-                      },
-                      placeholderText: {
-                        color: 'blue',
-                        fontSize: 16,
-                        width: '100%',
-                        fontFamily: Fonts.type.regular,
-                        justifyContent: 'center',
-                        flex: 1,
-                        textAlign: 'center',
-                        flexDirection: 'row',
-                        marginTop: 9,
-                        left: 20,
-                      },
-                    }}
-                    onDateChange={hour => {
-                      this.updateHour(hour);
-                      // this.setDateTime(event, date);
-                    }}
-                    placeholderTextColor={'purple'}
-                    underlineColorAndroid={'rgba(0,0,0,0)'}
-                    is24Hour={false}
-                    androidMode="spinner"
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                    }}
-                  />
-                </View>
-              </View>
-              {/* endTime */}
               <View style={styles.itemTitleContainer}>
                 <Text
                   style={Fonts.style.regular(
@@ -596,19 +488,21 @@ export default class Cart extends Component {
           )}
           <View opacity={0.0} style={ApplicationStyles.separatorLine} />
 
-          <TouchableOpacity
-            onPress={() => {
-              this.uploadCoverageZone();
-            }}>
-            <Text>uploadCoverageZone</Text>
-          </TouchableOpacity>
+          {/* {__DEV__ && (
+            <TouchableOpacity
+              onPress={() => {
+                this.uploadCoverageZone();
+              }}>
+              <Text>uploadCoverageZone</Text>
+            </TouchableOpacity>
+          )} */}
         </ScrollView>
 
         <View style={styles.footerContainer}>
           <TouchableOpacity
             onPress={() => {
               let servicesType = [];
-              for (var i = 0; i < user.cart.services.length; i++) {
+              for (let i = 0; i < user.cart.services.length; i++) {
                 if (
                   servicesType.indexOf(user.cart.services[i].servicesType) ===
                   -1
@@ -619,6 +513,24 @@ export default class Cart extends Component {
                   ];
                 }
               }
+
+              let hoursServices = [];
+
+              // for (user.cart.services)
+              for (let i = 0; i < user.cart.services.length; i++) {
+                if (i === 0) {
+                  hoursServices = [...hoursServices, user.cart.date];
+                } else {
+                  hoursServices = [
+                    ...hoursServices,
+                    moment(user.cart.date, 'YYYY-MM-DD HH:mm')
+                      .add(user.cart.services[i - 1].duration, 'minutes')
+                      .format('YYYY-MM-DD HH:mm'),
+                  ];
+                }
+              }
+
+              console.log('hoursServices', hoursServices);
               if (isCompleted) {
                 console.log('isCompleted');
                 let data = {
@@ -633,7 +545,8 @@ export default class Cart extends Component {
                   createDate: firestore.FieldValue.serverTimestamp(),
                   cartId: Utilities.create_CARTID(),
                   status: 0,
-                  date: `${user.cart.day} ${user.cart.hour}`,
+                  hoursServices,
+                  date: `${user.cart.date}`,
                   servicesType,
                   ...user.cart,
                 };

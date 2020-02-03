@@ -11,12 +11,14 @@ import {View, Text, TouchableOpacity} from 'react-native';
 import styles from './styles';
 import {Fonts, Colors, ApplicationStyles} from '../../Themes';
 import Utilities from '../../Utilities';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
 export default data => {
   return (
     <TouchableOpacity
       onPress={() => data.onAction()}
       style={[styles.container, ApplicationStyles.shadownClient]}>
+
       <View style={styles.counter}>
         <Text
           style={Fonts.style.bold(

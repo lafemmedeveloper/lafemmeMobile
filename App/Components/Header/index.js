@@ -23,7 +23,7 @@ export default data => {
     <View style={[styles.container, ApplicationStyles.shadownClient]}>
       <View style={styles.addHeader}>{/*  */}</View>
       <View style={[styles.content]}>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={() => {
             if (data.iconL) {
               console.log('onActionL');
@@ -32,7 +32,7 @@ export default data => {
           }}
           style={[styles.contentL, ApplicationStyles.centerContent]}>
           <Image style={styles.icon} source={data.iconL} />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <View
           style={[
             styles.contentC,
@@ -44,6 +44,7 @@ export default data => {
           data.user.cart.address &&
           data.user.cart.address.name ? (
             <TouchableOpacity
+              style={{alignItems: 'center', justifyContent: 'center'}}
               onPress={() => {
                 selectAddress();
               }}>
@@ -66,7 +67,7 @@ export default data => {
                   <Text
                     numberOfLines={2}
                     style={[
-                      Fonts.style.bold(
+                      Fonts.style.regular(
                         Colors[appType].primaryColor,
                         Fonts.size.medium,
                         'center',
@@ -79,21 +80,27 @@ export default data => {
               </Text>
             </TouchableOpacity>
           ) : (
-            <Text
-              style={Fonts.style.regular(
-                Colors[appType].primaryColor,
-                Fonts.size.medium,
-                'center',
-              )}>
-              {data.title}{' '}
-              {
-                <Icon
-                  name="sort-down"
-                  size={Fonts.size.medium}
-                  color={Colors.light}
-                />
-              }
-            </Text>
+            <TouchableOpacity
+              style={{alignItems: 'center', justifyContent: 'center'}}
+              onPress={() => {
+                selectAddress();
+              }}>
+              <Text
+                style={Fonts.style.regular(
+                  Colors[appType].primaryColor,
+                  Fonts.size.medium,
+                  'center',
+                )}>
+                {data.title}
+                {
+                  <Icon
+                    name="sort-down"
+                    size={Fonts.size.medium}
+                    color={Colors.light}
+                  />
+                }
+              </Text>
+            </TouchableOpacity>
           )}
           {!data.isExpert && (
             <TouchableOpacity
@@ -114,7 +121,7 @@ export default data => {
             </TouchableOpacity>
           )}
         </View>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={() => {
             if (data.iconR) {
               console.log('onActionR');
@@ -127,7 +134,7 @@ export default data => {
             size={24}
             color={Colors[appType].primaryColor}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </View>
   );

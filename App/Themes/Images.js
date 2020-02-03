@@ -10,6 +10,8 @@ const images = {
   nails: require('../Images/services/nails.png'),
   banner: require('../Images/services/banner.png'),
 
+  logoLafemme: require('../Images/logoLafemme.png'),
+
   moto: require('../Images/moto.png'),
 
   itemMenu: require('../Images/navigation/itemMenu.png'),

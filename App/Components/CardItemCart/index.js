@@ -18,7 +18,17 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import moment from 'moment';
 
 export default data => {
-  const {name, id, total, duration, clients, experts} = data.data;
+  const {
+    name,
+    id,
+    total,
+
+
+    duration,
+    clients,
+    experts,
+  } = data.data;
+  const {dateOrder} = data;
 
   return (
     <>
@@ -31,13 +41,19 @@ export default data => {
           <Text
             style={Fonts.style.regular(Colors.dark, Fonts.size.small, 'left')}>
             <Icon name={'clock'} size={15} color={Colors.client.primaryColor} />{' '}
-            {minToHours(duration)}
+            Duración {minToHours(duration ? duration : 0)}
             {!data.isCart &&
-              `, iniciando: ${formatDate(
-                moment(data.startHour, 'HH:mm'),
+              `, iniciando: ${moment(dateOrder, 'YYYY-MM-DD  HH:mm').format(
                 'h:mm a',
               )}`}
           </Text>
+
+          {/* 
+          formatDate(
+                moment(data.date, 'HH:mm'),
+                'h:mm a',
+              )
+               */}
           <Text
             style={Fonts.style.regular(Colors.dark, Fonts.size.small, 'left')}>
             <Icon
@@ -57,12 +73,12 @@ export default data => {
             {experts} Expertos
           </Text> */}
         </View>
-        <View style={styles.priceContainer}>
+        {/* <View style={styles.priceContainer}>
           <Text
             style={Fonts.style.regular(Colors.dark, Fonts.size.medium, 'left')}>
             {Utilities.formatCOP(total)}
           </Text>
-        </View>
+        </View> */}
         {data.isCart && (
           <TouchableOpacity
             onPress={() => {

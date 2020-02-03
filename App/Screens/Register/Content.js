@@ -5,10 +5,12 @@ import {
   Image,
   TouchableOpacity,
   KeyboardAvoidingView,
+  Alert,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import {Colors, Images, Fonts} from '../../Themes';
+import auth from '@react-native-firebase/auth';
 
 import MyTextInput from '../../Components/MyTextInput';
 
@@ -22,45 +24,118 @@ export default class Register extends Component {
       userPassword: '',
       userFirstName: '',
       userLastName: '',
+      userPhone: '',
     };
+  }
+
+  async setDataRegister() {
+    const {
+      userEmail,
+      userPassword,
+      userFirstName,
+      userLastName,
+      userPhone,
+    } = this.state;
+    const {setLoading, setTempRegister} = this.props;
+
+    if (
+      userEmail !== '' &&
+      userPassword !== '' &&
+      userFirstName !== '' &&
+      userLastName !== ''
+    ) {
+      // setLoading(true);
+      await setTempRegister(this.state);
+      this.handleSignUp();
+    } else {
+      Alert.alert('Ups...', 'Completa todos los datos del registro');
+    }
+  }
+
+  async handleSignUp() {
+    const {userEmail, userPassword} = this.state;
+    const {setLoading} = this.props;
+
+    console.log('handleSignUp', userEmail, userPassword);
+    if (userEmail !== '' && userPassword !== '') {
+      try {
+        setLoading(true);
+        auth()
+          .createUserWithEmailAndPassword(userEmail, userPassword)
+          .catch(function(error) {
+            // Handle Errors here.
+            var errorCode = error.code;
+            var errorMessage = error.message;
+
+            console.log('errorCode', errorCode);
+            console.log('errorMessage', errorMessage);
+
+            if (
+              error
+                .toString()
+                .includes(
+                  'The email address is already in use by another account.',
+                )
+            ) {
+              Alert.alert('Error de Autentificación', 'authError');
+            } else {
+              Alert.alert(
+                'Ups...',
+                'Tuvimos un problema procesando tu solicitud, por favor intentalo de nuevo',
+              );
+            }
+          });
+
+        setLoading(false);
+        // await this.props.setAuth(authResponse);
+      } catch (error) {
+        console.log('error:register', error);
+        setLoading(false);
+        if (
+          error
+            .toString()
+            .includes('The email address is already in use by another account.')
+        ) {
+          Alert.alert('Error de Autentificación', 'authError');
+        } else {
+          Alert.alert(
+            'Ups...',
+            'Tuvimos un problema procesando tu solicitud, por favor intentalo de nuevo',
+          );
+        }
+      }
+    } else {
+      Alert.alert(
+        'Ups...',
+        'Tuvimos un problema, revisa los datos ingresados e intenta de nuevo.',
+      );
+    }
   }
 
   render() {
     const {loading, navigation, isLogin} = this.props;
-    const {userEmail, userPassword, userFirstName, userLastName} = this.state;
+    const {
+      userEmail,
+      userPassword,
+      userFirstName,
+      userPhone,
+      userLastName,
+    } = this.state;
     return (
       <View style={styles.container}>
         <KeyboardAvoidingView
           style={styles.containerItems}
           behavior="padding"
           enabled>
-          {/* <View style={styles.headerContainer}>
-            <Text
-              style={Fonts.style.bold(
-                Colors.light,
-                Fonts.size.medium,
-                'center',
-              )}>
-              {'WELCOME TO THE'}
-            </Text>
-
-            <Image source={Images.welcome} style={styles.logo} />
-            <Text
-              style={Fonts.style.regular(
-                Colors.light,
-                Fonts.size.small,
-                'center',
-              )}>
-              {'by Johnatan Botero'}
-            </Text>
-          </View> */}
           <View style={styles.contentContainer}>
+            <Image style={{marginVertical: 20}} source={Images.logoLafemme} />
             <Text
               style={Fonts.style.regular(Colors.dark, Fonts.size.h6, 'center')}>
-              {'Create an Accoun'}
+              {'Crear una cuenta'}
             </Text>
             <MyTextInput
               pHolder={'Nombre'}
+              keyboardType={'default'}
               text={userFirstName}
               onChangeText={text => this.setState({userFirstName: text})}
               secureText={false}
@@ -70,13 +145,15 @@ export default class Register extends Component {
             <MyTextInput
               pHolder={'Apellido'}
               text={userLastName}
+              keyboardType={'default'}
               onChangeText={text => this.setState({userLastName: text})}
               secureText={false}
               textContent={'familyName'}
               autoCapitalize={'words'}
             />
             <MyTextInput
-              pHolder={'Email'}
+              pHolder={'Correo electronico'}
+              keyboardType={'email-address'}
               text={userEmail}
               onChangeText={text => this.setState({userEmail: text})}
               secureText={false}
@@ -84,16 +161,46 @@ export default class Register extends Component {
               autoCapitalize={'none'}
             />
             <MyTextInput
-              pHolder={'Password'}
+              pHolder={'*Numero Celular (Opcional)'}
+              keyboardType={'phone-pad'}
+              text={userPhone}
+              onChangeText={text => this.setState({userPhone: text})}
+              secureText={false}
+              textContent={'none'}
+              autoCapitalize={'none'}
+            />
+
+            <MyTextInput
+              pHolder={'Contraseña'}
               text={userPassword}
+              keyboardType={'default'}
               onChangeText={text => this.setState({userPassword: text})}
               secureText={true}
               textContent={'password'}
               autoCapitalize={'none'}
             />
+            <TouchableOpacity style={{marginVertical: 30}}>
+              <Text
+                style={Fonts.style.regular(
+                  Colors.dark,
+                  Fonts.size.small,
+                  'center',
+                )}>
+                {'Al crear una cuenta acepto los'}{' '}
+                <Text
+                  style={Fonts.style.underline(
+                    Colors.client.primaryColor,
+                    Fonts.size.small,
+                    'center',
+                  )}>
+                  {'Terminos y Condiciones'}
+                </Text>
+              </Text>
+            </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate('Home', {});
+                this.setDataRegister();
+                // navigation.navigate('Home', {});
                 // this.props.getPlaces('whas');
               }}
               style={styles.btnContainer}>
@@ -103,7 +210,7 @@ export default class Register extends Component {
                   Fonts.size.medium,
                   'center',
                 )}>
-                {'Create Accoun'}
+                {'Crear cuenta'}
               </Text>
             </TouchableOpacity>
           </View>
@@ -120,7 +227,7 @@ export default class Register extends Component {
                   Fonts.size.medium,
                   'right',
                 )}>
-                {'Sign In'}
+                {'Iniciar sesión'}
               </Text>
             </TouchableOpacity>
           </View>

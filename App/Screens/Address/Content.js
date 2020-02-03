@@ -24,7 +24,6 @@ import {validateCoverage} from '../../Helpers/GeoHelper';
 import Loading from '../Loading';
 import {msToDate, msToDay, msToHour} from '../../Helpers/MomentHelper';
 
-
 export default class Address extends Component {
   constructor(props) {
     super(props);
@@ -61,19 +60,23 @@ export default class Address extends Component {
 
     const {latitude, longitude} = address.coordinates;
 
+    console.log('address', address);
+
+    console.log('address', latitude, longitude, coverageZones);
     let coverage = validateCoverage(latitude, longitude, coverageZones);
 
     if (coverage) {
+      setLoading(true);
+      await updateProfile({...user.cart, address}, 'cart');
+      this.props.closeModal();
+      setLoading(false);
     } else {
       Alert.alert(
         'Lo sentimos',
         'Ya no tenemos combertura en esta zona, selecciona otra dirección para continuar.',
       );
+      setLoading(false);
     }
-    setLoading(true);
-    await updateProfile({...user.cart, address}, 'cart');
-    this.props.closeModal();
-    setLoading(false);
   }
 
   render() {

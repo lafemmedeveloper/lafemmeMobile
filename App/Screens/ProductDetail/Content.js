@@ -288,101 +288,102 @@ export default class Home extends Component {
     let addOnDuration = _.sumBy(addonsGuest, 'addonsDuration');
 
     let timeTotal =
-      (product.duration * (guestList.length + 1) + addOnDuration) / experts;
+      (product.duration * (guestList.length + 1) + addOnDuration) /
+      experts.length;
 
     return (
-      <View
-        style={[
-          styles.container,
-          {backgroundColor: Colors.client.secondaryColor},
-        ]}>
-        <ScrollView style={[ApplicationStyles.scrollCart, {}]} bounces={true}>
-          <View //image
-            style={[
-              {
-                zIndex: 1000,
-                width: Metrics.screenWidth,
-                height: Metrics.screenWidth / 2,
-                resizeMode: 'cover',
-                backgroundColor: Colors.client.secondaryColor,
-              },
-              ApplicationStyles.shadownClient,
-            ]}>
-            <FastImage
-              style={{
-                // zIndex: 1000,
-                width: Metrics.screenWidth,
-                height: Metrics.screenWidth / 2,
-                resizeMode: 'cover',
-                position: 'absolute',
-              }}
-              source={{
-                uri: product.imageUrl,
-                priority: FastImage.priority.normal,
-              }}
-              resizeMode={FastImage.resizeMode.cover}
-            />
+      <View style={[styles.container]}>
+        <View //image
+          style={[
+            {
+              zIndex: 1000,
+              width: Metrics.screenWidth,
+              height: Metrics.screenWidth / 2,
+              resizeMode: 'cover',
+              backgroundColor: Colors.client.primaryColor,
+            },
+            ApplicationStyles.shadownClient,
+          ]}>
+          <FastImage
+            style={{
+              // zIndex: 1000,
+              width: Metrics.screenWidth,
+              height: Metrics.screenWidth / 2,
+              resizeMode: 'cover',
+              position: 'absolute',
+            }}
+            source={{
+              uri: product.imageUrl,
+              priority: FastImage.priority.normal,
+            }}
+            resizeMode={FastImage.resizeMode.cover}
+          />
 
-            <View
+          <View
+            style={{
+              // zIndex: 2000,
+              width: Metrics.screenWidth,
+              height: Metrics.screenWidth / 2,
+              resizeMode: 'cover',
+              position: 'absolute',
+              bottom: 10,
+              justifyContent: 'flex-end',
+              marginHorizontal: 10,
+            }}>
+            <Image
               style={{
-                // zIndex: 2000,
-                width: Metrics.screenWidth,
-                height: Metrics.screenWidth / 2,
-                resizeMode: 'cover',
-                position: 'absolute',
-                bottom: 10,
-                justifyContent: 'flex-end',
-                marginHorizontal: 10,
-              }}>
-              <Image
+                width: 20,
+                height: 20,
+                resizeMode: 'contain',
+                marginLeft: 10,
+                tintColor: Colors.dark,
+              }}
+              source={Images.time}
+            />
+            <Text
+              style={[
+                Fonts.style.bold(Colors.dark, Fonts.size.medium, 'center', 1),
+                {position: 'absolute', marginLeft: 35},
+              ]}>
+              {product.duration} min
+            </Text>
+          </View>
+          <View
+            style={{
+              // zIndex: 2000,
+              // position: 'absolute',
+              height: 40 + Metrics.addHeader,
+              paddingTop: Metrics.addHeader,
+              // backgroundColor: Colors.client.secondaryColor,
+              width: Metrics.screenWidth,
+              justifyContent: 'center',
+            }}>
+            <TouchableOpacity onPress={() => this.goBack()}>
+              <View
                 style={{
+                  // zIndex: 2100,
+                  // width: 20,
+                  // height: 20,
+                  marginLeft: 20,
+                }}>
+                <Icon name={'chevron-left'} size={35} color={Colors.dark} />
+              </View>
+              {/* <Image
+                style={{
+                  // zIndex: 2100,
                   width: 20,
                   height: 20,
+                  marginLeft: 20,
                   resizeMode: 'contain',
-                  marginLeft: 10,
                   tintColor: Colors.light,
                 }}
-                source={Images.time}
-              />
-              <Text
-                style={[
-                  Fonts.style.bold(
-                    Colors.light,
-                    Fonts.size.medium,
-                    'center',
-                    1,
-                  ),
-                  {position: 'absolute', marginLeft: 35},
-                ]}>
-                {product.duration} min
-              </Text>
-            </View>
-            <View
-              style={{
-                // zIndex: 2000,
-                // position: 'absolute',
-                height: 40 + Metrics.addHeader,
-                paddingTop: Metrics.addHeader,
-                // backgroundColor: Colors.client.secondaryColor,
-                width: Metrics.screenWidth,
-                justifyContent: 'center',
-              }}>
-              <TouchableOpacity onPress={() => this.goBack()}>
-                <Image
-                  style={{
-                    // zIndex: 2100,
-                    width: 20,
-                    height: 20,
-                    marginLeft: 20,
-                    resizeMode: 'contain',
-                    tintColor: Colors.light,
-                  }}
-                  source={Images.close}
-                />
-              </TouchableOpacity>
-            </View>
+                source={Images.close}
+              /> */}
+            </TouchableOpacity>
           </View>
+        </View>
 
+        <ScrollView style={ApplicationStyles.scrollCart}>
           <View
             style={{
               width: Metrics.screenWidth,
@@ -603,7 +604,7 @@ export default class Home extends Component {
                   width: Metrics.screenWidth * 0.85,
                   height: 30,
                   alignSelf: 'flex-end',
-                  backgroundColor: Colors.client.secondaryColor,
+                  backgroundColor: Colors.client.primaryColor,
                   borderRadius: 10,
                   marginVertical: 5,
                   alignItems: 'center',
@@ -1040,7 +1041,7 @@ export default class Home extends Component {
               position: 'absolute',
               height: 150,
               // backgroundColor: Colors.light,
-              backgroundColor: Colors.client.secondaryColor,
+              backgroundColor: Colors.client.primaryColor,
               width: Metrics.screenWidth,
               bottom: 0,
             },
@@ -1087,7 +1088,7 @@ export default class Home extends Component {
               {
                 // height: 90 + Metrics.addFooter,
                 flex: 1,
-                backgroundColor: Colors.client.secondaryColor,
+                backgroundColor: Colors.client.primaryColor,
                 width: Metrics.screenWidth,
                 justifyContent: 'center',
                 alignItems: 'center',
@@ -1496,7 +1497,7 @@ export default class Home extends Component {
                   marginVertical: 10,
                   alignSelf: 'center',
                   borderRadius: Metrics.borderRadius,
-                  backgroundColor: Colors.client.secondaryColor,
+                  backgroundColor: Colors.client.primaryColor,
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}>
@@ -1640,7 +1641,7 @@ export default class Home extends Component {
                 marginVertical: 10,
                 alignSelf: 'center',
                 borderRadius: Metrics.borderRadius,
-                backgroundColor: Colors.client.secondaryColor,
+                backgroundColor: Colors.client.primaryColor,
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>

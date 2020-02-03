@@ -31,7 +31,7 @@ export default dta => {
     <Animated.View style={[styles.container]}>
       <TouchableOpacity
         onPress={() => {
-          duration = 250;
+          let duration = 250;
           let toHeight =
             itemHeight * (products && products.length ? products.length : 50);
 
@@ -56,6 +56,7 @@ export default dta => {
         style={[
           ApplicationStyles.itemService,
           ApplicationStyles.shadownClient,
+          {zIndex: 150},
         ]}>
         <FastImage
           style={ApplicationStyles.itemImage}
@@ -83,6 +84,7 @@ export default dta => {
             // flex: 0
             // padding: 10,
             // paddingTop: 0
+            zIndex: 100,
           },
           {height: animation},
         ]}>
@@ -95,12 +97,12 @@ export default dta => {
                 onPress={() => {
                   const result = _.filter(
                     addOns,
-                    o => o.idProduct == product.id,
+                    o => o.idProduct === product.id,
                   );
 
                   dta.selectService({...product, addOns: result});
                 }}>
-                {index != 0 && (
+                {index !== 0 && (
                   <Animated.View
                     opacity={opacity}
                     style={{
@@ -108,7 +110,8 @@ export default dta => {
                       height: 1,
                       alignSelf: 'center',
                       backgroundColor: 'rgba(0,0,0,0.05)',
-                    }}></Animated.View>
+                    }}
+                  />
                 )}
                 <Animated.View
                   opacity={opacity}
@@ -121,6 +124,33 @@ export default dta => {
                     // backgroundColor: Colors.light
                   }}
                   image={{uri: data.imageUrl}}>
+                  <View
+                    style={{
+                      // width: 20,
+                      height: 80,
+                      resizeMode: 'cover',
+                      margin: 5,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexDirection: 'row',
+                    }}>
+                    <Animated.View
+                      opacity={opacity}
+                      style={{
+                        width: 60,
+                        height: 60,
+                      }}>
+                      <FastImage
+                        source={{uri: product.imageUrl}}
+                        style={{
+                          width: 60,
+                          height: 60,
+                          borderRadius: Metrics.borderRadius,
+                          resizeMode: 'cover',
+                        }}
+                      />
+                    </Animated.View>
+                  </View>
                   <View style={{flex: 1, marginHorizontal: 10}}>
                     <View
                       style={{

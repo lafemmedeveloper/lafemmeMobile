@@ -10,7 +10,7 @@ export default {
   },
   containerItems: {
     flex: 1,
-    marginTop: Metrics.header,
+    // marginTop: Metrics.header,
     paddingBottom: 10,
     alignItems: 'center',
   },
@@ -107,7 +107,7 @@ export default {
     width: Metrics.screenWidth * 0.8,
     alignSelf: 'center',
     borderRadius: Metrics.borderRadius,
-    marginVertical: Metrics.addFooter * 2,
+    // marginVertical: Metrics.addFooter * 2,
 
     justifyContent: 'center',
     alignItems: 'center',

@@ -5,6 +5,7 @@ export default StyleSheet.create({
   container: {
     flex: 1,
     width: Metrics.screenWidth,
+    paddingTop: Metrics.addHeader,
     // height: Metrics.screenHeight * 0.85,
 
     justifyContent: 'center',
@@ -149,19 +150,27 @@ export default StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  containerNoUSer: {
+    flex: 1,
+    width: Metrics.screenWidth,
+    paddingTop: Metrics.addHeader,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    paddingHorizontal: 40,
+    alignSelf: 'center',
+    alignItems: 'center',
+  },
   btnContainer: {
     flex: 0,
-    height: 60 + Metrics.addFooter,
-    width: Metrics.screenWidth,
+    height: 60,
+    width: Metrics.screenWidth * 0.8,
     alignSelf: 'center',
-    borderTopLeftRadius: Metrics.borderRadius,
-    borderTopRightRadius: Metrics.borderRadius,
-    paddingBottom: Metrics.addFooter,
-    // marginVertical: Metrics.addFooter * 2,
+    borderRadius: Metrics.borderRadius,
+    marginVertical: Metrics.addFooter * 2,
 
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: Colors.client.primaryColor,
+    backgroundColor: Colors.client.secondaryColor,
     shadowColor: Colors.dark,
     shadowOffset: {
       width: 2,

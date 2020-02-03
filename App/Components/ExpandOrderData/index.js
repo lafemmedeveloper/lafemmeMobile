@@ -113,8 +113,8 @@ export default dta => {
               key={item.id}
               isCart={false}
               showExperts={true}
-              startHour={order.hour}
               data={item}
+              dateOrder={order.hoursServices[index]}
               removeItem={id => {
                 Alert.alert(
                   'Alerta',
@@ -285,7 +285,7 @@ export default dta => {
                   key={'date'}
                   textSecondary={''}
                   value={order.day ? order.day : false}
-                  textActive={`${formatDate(order.day, 'dddd, LL')}`}
+                  textActive={`${formatDate(order.day, 'dddd, LLL')}`}
                   textInactive={'+ Selecciona la fecha del servicio'}
                   icon={'calendar'}
                 />
@@ -311,7 +311,7 @@ export default dta => {
                 </Text>
               </View>
 
-              <View>
+              {/* <View>
                 <FieldCartConfig
                   key={'hour'}
                   textSecondary={''}
@@ -323,7 +323,7 @@ export default dta => {
                   textInactive={'+ Selecciona la hora del servicio'}
                   icon={'clock'}
                 />
-              </View>
+              </View> */}
 
               <View style={styles.itemTitleContainer}>
                 <Text
@@ -364,7 +364,25 @@ export default dta => {
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
-          Alert.alert('Alerta', 'Realmente deseas cancelar este servicio.');
+          Alert.alert(
+            'Alerta',
+            'Realmente deseas cancelar esta orden.\n\n(este proceso no puede ser revertido)',
+            [
+              {
+                text: 'No cancelar',
+                onPress: () => console.log('Cancel Pressed'),
+                style: 'cancel',
+              },
+              {
+                text: 'Cancelar',
+                onPress: () => {
+                  console.log('cancelar');
+                  dta.cancelOrder(order.id);
+                },
+              },
+            ],
+            {cancelable: false},
+          );
         }}
         style={[styles.cancelBtn]}>
         <Text

@@ -14,6 +14,7 @@ import {Colors} from '../../Themes';
 export default data => {
   return (
     <TextInput
+      keyboardType={data.keyboardType}
       placeholderTextColor={Colors.gray}
       multiline={data.multiLine}
       autoCapitalize={data.autoCapitalize}

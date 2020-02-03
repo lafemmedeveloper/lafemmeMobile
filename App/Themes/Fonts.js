@@ -48,6 +48,15 @@ const style = {
     lineHeight: size * 1.5,
     letterSpacing: letterSpacing,
   }),
+  underline: (color, size, align, letterSpacing) => ({
+    fontFamily: type.regular,
+    textDecorationLine: 'underline',
+    color: color,
+    fontSize: size,
+    textAlign: align,
+    lineHeight: size * 1.5,
+    letterSpacing: letterSpacing,
+  }),
 
   light: (color, size, align, letterSpacing) => ({
     fontFamily: type.light,

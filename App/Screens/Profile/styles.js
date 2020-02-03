@@ -7,9 +7,21 @@ export default {
     paddingTop: Metrics.addHeader,
     flexDirection: 'column',
 
-    alignItems: 'center',
+    // alignItems: 'center',
     // backgroundColor: 'red',
   },
+  containerNoUSer: {
+    flex: 1,
+    width: Metrics.screenWidth,
+    paddingTop: Metrics.addHeader,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    paddingHorizontal: 40,
+    alignSelf: 'center',
+    alignItems: 'center',
+
+  },
+
   containerItems: {
     flex: 1,
     marginTop: Metrics.header,
@@ -17,6 +29,7 @@ export default {
     alignItems: 'center',
   },
 
+  icon: {width: 20, height: 20, resizeMode: 'contain', marginRight: 20},
   headerContainer: {
     flex: 0,
     width: Metrics.screenWidth,
@@ -29,16 +42,17 @@ export default {
   separatorLine: {
     width: '100%',
     height: 0.5,
-    backgroundColor: Colors.gray,
+    backgroundColor: Colors.lightGray,
   },
-
+  separator: {height: 20},
   profileContainer: {
     flex: 0,
     width: Metrics.screenWidth,
     // backgroundColor: 'green',
     // height: 40,
-    paddingVertical: 20,
-
+    // paddingVertical: 20,
+    borderBottomWidth: 10,
+    borderBottomColor: Colors.lightGray,
     justifyContent: 'center',
     alignItems: 'center',
   },

@@ -87,15 +87,19 @@ export default class Home extends Component {
       getServices,
       getOrders,
       getDeviceInfo,
-
+      getCoverage,
       setAuth,
       setAccount,
       setLoading,
+      getGallery,
       user,
+      logOut,
     } = this.props;
-
+    // await logOut();
     setLoading(true);
     await getDeviceInfo();
+    await getGallery();
+    await getCoverage('Medellín');
 
     // Notifications Module
     console.log('startMessaging');
@@ -145,19 +149,20 @@ export default class Home extends Component {
 
     console.log('deviceInfo', this.props);
     this.unsubscriber = await auth().onAuthStateChanged(user => {
+      console.log('onAuthStateChanged', user);
       if (user) {
         setAuth(user);
 
         if (auth().currentUser && auth().currentUser.uid && user == null) {
           this.callSetUser(auth().currentUser.uid);
         }
+
+        if (auth().currentUser && auth().currentUser.uid) {
+          // console.log(auth().currentUser);
+          setAccount(auth().currentUser.uid);
+        }
       }
     });
-
-    if (auth().currentUser && auth().currentUser.uid) {
-      // console.log(auth().currentUser);
-      await setAccount(auth().currentUser.uid);
-    }
 
     await getServices();
     if (user) {
@@ -190,7 +195,6 @@ export default class Home extends Component {
     setLoading(!loading);
   }
 
-
   actionR() {
     console.log('actionR');
     this.setL();
@@ -205,7 +209,11 @@ export default class Home extends Component {
     // StatusBar.setBarStyle('dark-content', false);
 
     if (user !== null) {
-      navigation.navigate('ProductDetail', {product});
+      if (user.cart.address) {
+        navigation.navigate('ProductDetail', {product});
+      } else {
+        this.setState({modalAddress: true});
+      }
     } else {
       this.setState({modalAuth: true});
     }
@@ -220,11 +228,11 @@ export default class Home extends Component {
   render() {
     const {
       services,
-      imgs,
+      gallery,
       user,
       orders,
       deviceInfo,
-      logOut,
+
       modalOrders,
       appType,
       loading,
@@ -247,7 +255,10 @@ export default class Home extends Component {
           iconR={null}
           user={user}
           ordersActive={orders.length}
-          selectAddress={() => this.selectAddress()}
+          selectAddress={() => {
+            console.log('selectAddress');
+            this.selectAddress();
+          }}
           onActionL={() => {}}
           onActionR={() => {}}
         />
@@ -376,41 +387,6 @@ export default class Home extends Component {
               selectBanner={() => this.selectBanner()}
             />
           )}
-          {user && (
-            <Text
-              style={Fonts.style.regular(
-                Colors.dark,
-                Fonts.size.small,
-                'center',
-              )}>
-              {'email:'} {user.email}
-            </Text>
-          )}
-
-          <TouchableOpacity
-            onPress={() => {
-              console.log('signOut');
-              auth().signOut;
-              logOut();
-            }}>
-            <Text
-              style={Fonts.style.regular(
-                Colors.dark,
-                Fonts.size.small,
-                'center',
-              )}>
-              {'LOGOUT'}
-            </Text>
-          </TouchableOpacity>
-          <Text
-            style={Fonts.style.regular(
-              Colors.dark,
-              Fonts.size.small,
-              'center',
-            )}>
-            {'bundleId:'} {deviceInfo.readableVersion}
-          </Text>
-          <View style={{height: 70}}></View>
         </ScrollView>
 
         {user && user.cart && (
@@ -425,7 +401,7 @@ export default class Home extends Component {
             }}>
             <CartFooter
               key={'CartFooter'}
-              title={'Servicios'}
+              title={'Completar orden'}
               servicesNumber={user.cart.services.length}
               servicesTotal={
                 user.cart.services.length > 0
@@ -729,33 +705,12 @@ export default class Home extends Component {
                     width: Metrics.screenWidth / 2,
                     // height:'100%',
                     // backgroundColor: 'green',
+                    marginBottom: Metrics.addFooter + 20,
                     flexDirection: 'row',
                     flexWrap: 'wrap',
                   }}>
                   {openModal &&
-                    imgs.map((item, index) => {
-                      if (index % 2 != 0) {
-                        return null;
-                      }
-                      return (
-                        <GalleryItem key={index} index={index} item={item} />
-                      );
-                    })}
-                </View>
-                <View
-                  style={{
-                    flex: 1,
-                    width: Metrics.screenWidth / 2,
-                    // height:'100%',
-                    // backgroundColor: 'green',
-                    flexDirection: 'row',
-                    flexWrap: 'wrap',
-                  }}>
-                  {openModal &&
-                    imgs.map((item, index) => {
-                      if (index % 2 == 0) {
-                        return null;
-                      }
+                    gallery.map((item, index) => {
                       return (
                         <GalleryItem key={index} index={index} item={item} />
                       );

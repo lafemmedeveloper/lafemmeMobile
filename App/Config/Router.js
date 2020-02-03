@@ -14,7 +14,7 @@ import RegisterScreen from '../Screens/Register';
 
 import ProfileScreen from '../Screens/Profile';
 // import GalleryScreen from '../Screens/Gallery';
-// import ServicesScreen from '../Screens/Services';,
+import OrdersScreen from '../Screens/Orders';
 // import ProfileScreen from '../Screens/Profile';
 
 import {Colors, Images} from '../Themes';
@@ -33,30 +33,16 @@ const HomeStack = createStackNavigator(
     },
   },
 );
-// const GalleryStack = createStackNavigator(
-//   {
-//     Gallery: {
-//       screen: GalleryScreen,
-//     },
-//   },
-//   {
-//     headerMode: 'none',
-//     initialRouteName: 'Gallery',
-//     navigationOptions: {
-//       gesturesEnabled: false,
-//     },
-//   },
-// );
 
-const ServicesStack = createStackNavigator(
+const OrdersStack = createStackNavigator(
   {
-    Services: {
-      screen: HomeScreen,
+    Orders: {
+      screen: OrdersScreen,
     },
   },
   {
     headerMode: 'none',
-    initialRouteName: 'Services',
+    initialRouteName: 'Orders',
     navigationOptions: {
       gesturesEnabled: false,
     },
@@ -65,13 +51,13 @@ const ServicesStack = createStackNavigator(
 
 const ProfileStack = createStackNavigator(
   {
-    Services: {
+    Profile: {
       screen: ProfileScreen,
     },
   },
   {
     headerMode: 'none',
-    initialRouteName: 'Services',
+    initialRouteName: 'Profile',
     navigationOptions: {
       gesturesEnabled: false,
     },
@@ -109,8 +95,8 @@ const TabNavigator = createBottomTabNavigator(
     //   },
     // },
 
-    Services: {
-      screen: HomeStack,
+    Orders: {
+      screen: OrdersStack,
       navigationOptions: ({navigation}) => {
         const tabBarVisible = navigation.state.index === 0;
         return {
@@ -143,7 +129,7 @@ const TabNavigator = createBottomTabNavigator(
     },
   },
   {
-    order: ['Home', 'Services', 'Profile'],
+    order: ['Home', 'Orders', 'Profile'],
     tabBarOptions: {
       activeTintColor: Colors.client.primaryColor,
       style: {

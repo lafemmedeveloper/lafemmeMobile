@@ -6,6 +6,7 @@ import {
   GET_EXPERT_OPEN_ORDERS,
   GET_EXPERT_ACTIVE_ORDERS,
   GET_EXPERT_HISTORY_ORDERS,
+  GET_GALLERY,
 } from './Types';
 import _ from 'lodash';
 
@@ -17,12 +18,20 @@ const initialState = {
   expertOpenOrders: [],
   expertActiveOrders: [],
   expertHistoryOrders: [],
+  gallery: [],
 };
 
 const getServices = (state = initialState, {payload}) => {
   return {
     ...state,
     services: payload,
+  };
+};
+
+const getGallery = (state = initialState, {payload}) => {
+  return {
+    ...state,
+    gallery: payload,
   };
 };
 
@@ -79,6 +88,7 @@ const descriptor = {
   [GET_SERVICES]: getServices,
   [GET_COVERAGE]: getCoverage,
   [GET_ORDERS]: getOrders,
+  [GET_GALLERY]: getGallery,
   [GET_EXPERT_OPEN_ORDERS]: getExpertOpenOrders,
   [GET_EXPERT_ACTIVE_ORDERS]: getExpertActiveOrders,
   [GET_EXPERT_HISTORY_ORDERS]: getExpertHistoryOrders,

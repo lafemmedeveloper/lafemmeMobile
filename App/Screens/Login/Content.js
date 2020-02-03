@@ -13,6 +13,7 @@ import auth from '@react-native-firebase/auth';
 import MyTextInput from '../../Components/MyTextInput';
 
 import styles from './styles';
+import Loading from '../../Components/Loading';
 
 export default class Login extends Component {
   constructor(props) {
@@ -24,9 +25,9 @@ export default class Login extends Component {
   }
 
   async componentDidMount() {
-    const {deviceInfo} = this.props;
-
-    console.log('deviceInfo', deviceInfo);
+    //     const {deviceInfo} = this.props;
+    // //
+    // console.log('_deviceInfo', this.props);
   }
 
   async handleLogin() {
@@ -66,7 +67,7 @@ export default class Login extends Component {
   async setDefaultUser() {
     this.setState({
       userEmail: 'j@jb.com',
-      userPassword: 'qwerty',
+      userPassword: 'qwerty!',
     });
   }
 
@@ -77,8 +78,8 @@ export default class Login extends Component {
     });
   }
   render() {
-    const {loading, navigation, isLogin, deviceInfo} = this.props;
-    const {appType} = deviceInfo;
+    const {loading, navigation, isLogin, appType, deviceInfo} = this.props;
+
     const {userEmail, userPassword} = this.state;
     return (
       <View style={styles.container}>
@@ -87,9 +88,11 @@ export default class Login extends Component {
           behavior="padding"
           enabled>
           <View style={styles.contentContainer}>
+            <Image style={{marginVertical: 20}} source={Images.logoLafemme} />
+
             <Text
               style={Fonts.style.regular(Colors.dark, Fonts.size.h6, 'center')}>
-              {'Iniciar Sesion'}
+              {'Iniciar Sesión'}
             </Text>
             {__DEV__ && (
               <>
@@ -157,7 +160,7 @@ export default class Login extends Component {
                   Fonts.size.medium,
                   'center',
                 )}>
-                {'Login'}
+                {'Iniciar sesión'}
               </Text>
             </TouchableOpacity>
           </View>
@@ -165,7 +168,6 @@ export default class Login extends Component {
             <TouchableOpacity
               onPress={() => {
                 isLogin();
-                // navigation.navigate('Register', {});
               }}
               style={styles.btnRegisterLogin}>
               <Text
@@ -174,13 +176,13 @@ export default class Login extends Component {
                   Fonts.size.medium,
                   'right',
                 )}>
-                {'Create an Account'}
+                {'Crear cuenta'}
               </Text>
             </TouchableOpacity>
           </View>
         </KeyboardAvoidingView>
 
-        {loading && <View style={styles.loading} />}
+        {loading && <Loading type={'client'} loading={loading} />}
       </View>
     );
   }

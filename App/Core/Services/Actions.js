@@ -5,6 +5,7 @@ import {
   GET_EXPERT_OPEN_ORDERS,
   GET_EXPERT_ACTIVE_ORDERS,
   GET_EXPERT_HISTORY_ORDERS,
+  GET_GALLERY,
 } from './Types';
 
 import firestore from '@react-native-firebase/firestore';
@@ -26,6 +27,22 @@ export const getServices = () => async dispatch => {
   });
 
   return dispatch({type: GET_SERVICES, payload: data});
+};
+
+export const getGallery = () => async dispatch => {
+  const galley = await firestore()
+    .collection('gallery')
+    .get();
+  const data = await galley.docs.map(doc => {
+    const item = doc.data();
+    console.log('getGallery', item);
+    return {
+      ...item,
+      id: doc.id,
+    };
+  });
+  console.log('data', data);
+  return dispatch({type: GET_GALLERY, payload: data});
 };
 
 export const getCoverage = city => async dispatch => {
@@ -62,6 +79,24 @@ export const getOrders = () => (dispatch, getStore) => {
     });
     return dispatch({type: GET_ORDERS, payload: listOrders});
   });
+};
+
+export const cancelOrder = orderId => async (dispatch, getStore) => {
+  try {
+    const orderRef = firestore()
+      .collection('orders')
+      .doc(orderId);
+    // console.log('typeData', typeData);
+    await orderRef.set(
+      {
+        status: 6,
+      },
+      {merge: true},
+    );
+    // dispatch({type: CANCEL_ORDER});
+  } catch (error) {
+    console.log('error', error);
+  }
 };
 
 export const getExpertOpenOrders = () => (dispatch, getStore) => {

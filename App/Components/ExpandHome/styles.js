@@ -8,6 +8,7 @@ export default StyleSheet.create({
     alignSelf: 'center',
     //position: "absolute",
     width: '95%',
+    // backgroundColor: 'red',
     // backgroundColor: Colors.textInputBg,
     // paddingHorizontal: 10
   },

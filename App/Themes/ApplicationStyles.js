@@ -25,7 +25,7 @@ const ApplicationStyles = {
     marginTop: 60 + Metrics.addHeader + 10,
     marginBottom: 5,
     flexDirection: 'row',
-    width: Metrics.screenWidth * 0.9,
+    width: Metrics.screenWidth * 0.95,
     paddingVertical: 10,
     flex: 0,
     marginVertical: 5,
@@ -73,7 +73,7 @@ const ApplicationStyles = {
   },
   itemService: {
     borderRadius: Metrics.borderRadius,
-    width: Metrics.screenWidth * 0.9,
+    width: Metrics.screenWidth * 0.95,
     height: Metrics.screenWidth * 0.4,
     marginVertical: 5,
     alignSelf: 'center',
