@@ -69,14 +69,20 @@ export default class Address extends Component {
       pets: petsType.nothing,
       addressDetail: '',
       notesAddress: '',
-      coordinate: new AnimatedRegion({
+      coordinate: {
         latitude: 6.2458077,
         longitude: -75.5680703,
-      }),
+      },
+      // coordinate: new AnimatedRegion({
+      //   latitude: 6.2458077,
+      //   longitude: -75.5680703,
+      // }),
     };
   }
 
-  async componentDidMount() {}
+  async componentDidMount() {
+    console.log('coordinate', this.state.coordinate.latitude);
+  }
 
   async saveAddress() {
     const {user, updateProfile, setLoading} = this.props;
@@ -164,7 +170,7 @@ export default class Address extends Component {
           <View style={styles.headerContainer}>
             <Text
               style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
-              {'Agregar Nueva direccion'}
+              {'Agregar Nueva direccions'}
             </Text>
             <View opacity={0.0} style={ApplicationStyles.separatorLine} />
             {__DEV__ && (

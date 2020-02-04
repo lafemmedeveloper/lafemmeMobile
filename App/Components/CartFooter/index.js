@@ -18,7 +18,6 @@ export default data => {
     <TouchableOpacity
       onPress={() => data.onAction()}
       style={[styles.container, ApplicationStyles.shadownClient]}>
-
       <View style={styles.counter}>
         <Text
           style={Fonts.style.bold(

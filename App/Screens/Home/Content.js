@@ -12,8 +12,6 @@ import {
   Alert,
 } from 'react-native';
 
-import {requestNotifications} from 'react-native-permissions';
-
 import moment from 'moment';
 import LinearGradient from 'react-native-linear-gradient';
 import _ from 'lodash';
@@ -209,7 +207,7 @@ export default class Home extends Component {
     // StatusBar.setBarStyle('dark-content', false);
 
     if (user !== null) {
-      if (user.cart.address) {
+      if (user && user.cart && user.cart.address) {
         navigation.navigate('ProductDetail', {product});
       } else {
         this.setState({modalAddress: true});
@@ -402,8 +400,15 @@ export default class Home extends Component {
             <CartFooter
               key={'CartFooter'}
               title={'Completar orden'}
-              servicesNumber={user.cart.services.length}
+              servicesNumber={
+                user && user.cart && user.cart.services
+                  ? user.cart.services.length
+                  : 0
+              }
               servicesTotal={
+                user &&
+                user.cart &&
+                user.cart.services &&
                 user.cart.services.length > 0
                   ? _.sumBy(user.cart.services, 'total')
                   : 0

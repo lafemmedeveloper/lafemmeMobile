@@ -72,9 +72,13 @@ export default class Home extends Component {
   }
 
   async sendItemCart(item) {
+    console.log('item', item);
     const {user, updateProfile, setLoading, navigation} = this.props;
 
-    let services = [...user.cart.services, item];
+    console.log('data', user, updateProfile, setLoading, navigation);
+    let old = user.cart.services ? user.cart.services : [];
+
+    let services = [...old, item];
 
     console.log('services', services);
 
@@ -1474,7 +1478,8 @@ export default class Home extends Component {
                     },
                     ...guestList,
                   ];
-
+                  console.log('a');
+                  console.log(('=> gList:sendItemCart', gList));
                   let data = {
                     name: product.name,
                     servicesType: product.slug,
@@ -1487,8 +1492,8 @@ export default class Home extends Component {
                     total: product.price * (guestList.length + 1) + addOnPrice,
                     experts,
                   };
-
-                  console.log(('=> data', data));
+                  console.log('b');
+                  console.log(('=> data:sendItemCart', data));
                   this.sendItemCart(data);
                 }}
                 style={{
