@@ -128,7 +128,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.lafemme.client"
+        applicationId "com.femme.client"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

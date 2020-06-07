@@ -725,15 +725,15 @@ export default class Address extends Component {
                   autoCapitalize={'none'}
                 />
 
-                <Text
+                {/* <Text
                   style={[
                     Fonts.style.bold(Colors.dark, Fonts.size.small, 'left'),
                     {marginVertical: 5},
                   ]}>
                   Mascotas
-                </Text>
+                </Text> */}
               </View>
-
+              {/* 
               <View style={styles.itemAddressContainer}>
                 <TouchableOpacity
                   onPress={() => {
@@ -827,7 +827,7 @@ export default class Address extends Component {
                     AMBOS
                   </Text>
                 </TouchableOpacity>
-              </View>
+              </View> */}
 
               <View
                 style={{width: '90%', alignSelf: 'center', marginVertical: 10}}>

@@ -5,7 +5,7 @@ export default StyleSheet.create({
     flex: 1,
     width: Metrics.screenWidth,
     height: Metrics.screenHeight,
-    backgroundColor: '#F8F8F8',
+    backgroundColor: Colors.backgroundColor,
   },
   loading: {
     backgroundColor: Colors.loader,

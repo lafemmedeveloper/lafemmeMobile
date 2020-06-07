@@ -169,8 +169,8 @@ export default dta => {
                     </View>
                     <View>
                       <Text
-                        style={Fonts.style.regular(
-                          Colors.gray,
+                        style={Fonts.style.light(
+                          Colors.dark,
                           Fonts.size.medium,
                           'left',
                         )}>

@@ -294,10 +294,24 @@ export default class Orders extends Component {
       <View style={styles.container}>
         <View style={styles.headerContainer}>
           <View opacity={0.0} style={ApplicationStyles.separatorLine} />
-          <Text style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
-            {'Orden de Servicio'}
+          <Image
+            source={Images.billResume}
+            style={{
+              width: 40,
+              height: 40,
+              resizeMode: 'contain',
+              alignSelf: 'center',
+              marginBottom: 10,
+            }}
+          />
+          <Text
+            style={[
+              Fonts.style.semiBold(Colors.dark, Fonts.size.h6, 'center'),
+              {marginBottom: 10},
+            ]}>
+            {'Mis servicios'}
           </Text>
-          <View opacity={0.0} style={ApplicationStyles.separatorLine} />
+          {/* <View opacity={0.0} style={ApplicationStyles.separatorLine} /> */}
         </View>
         <View
           style={{
@@ -314,19 +328,21 @@ export default class Orders extends Component {
               styles.headerBtn,
               {
                 backgroundColor:
-                  toggleType === 0 ? Colors.client.primaryColor : Colors.gray,
+                  toggleType === 0
+                    ? Colors.client.primaryColor
+                    : Colors.disabledBtn,
               },
             ]}>
             <Text
-              style={Fonts.style.bold(
-                Colors.light,
+              style={Fonts.style.semiBold(
+                toggleType === 0 ? Colors.light : Colors.dark,
                 Fonts.size.medium,
                 'center',
               )}>
-              {'Mi Próximos Servicios'}
+              {'Próximos Servicios'}
             </Text>
           </TouchableOpacity>
-          <View style={{width: 5}}></View>
+          <View style={{width: 5}} />
           <TouchableOpacity
             onPress={() => {
               this.setState({toggleType: 1});
@@ -335,12 +351,14 @@ export default class Orders extends Component {
               styles.headerBtn,
               {
                 backgroundColor:
-                  toggleType === 1 ? Colors.client.primaryColor : Colors.gray,
+                  toggleType === 1
+                    ? Colors.client.primaryColor
+                    : Colors.disabledBtn,
               },
             ]}>
             <Text
-              style={Fonts.style.bold(
-                Colors.light,
+              style={Fonts.style.semiBold(
+                toggleType === 1 ? Colors.light : Colors.dark,
                 Fonts.size.medium,
                 'center',
               )}>
@@ -374,7 +392,7 @@ export default class Orders extends Component {
             history.map((item, index) => {
               return (
                 <View key={item.id}>
-                  <ExpandHistoryData user={user} order={item} />
+                  <ExpandHistoryData order={item} appType={appType} />
                 </View>
               );
             })}
@@ -389,68 +407,15 @@ export default class Orders extends Component {
                 )}>
                 {'Ups...'}
               </Text>
-              <View style={{height: 20}} />
+              <View style={{height: 10}} />
               <Text
                 style={Fonts.style.regular(
                   Colors.dark,
                   Fonts.size.medium,
                   'center',
                 )}>
-                {'No encontramos ordenes'}
+                {'No encontramos ordenes activas en nuestro sistema'}
               </Text>
-
-              <View
-                style={{
-                  width: Metrics.screenWidth * 0.9,
-                  flexDirection: 'column',
-                  justifyContent: 'space-between',
-                  alignSelf: 'center',
-                  marginVertical: 20,
-                }}>
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate('Home');
-                  }}
-                  style={[
-                    styles.headerBtn,
-                    {
-                      backgroundColor: Colors.gray,
-                      flex: 0,
-                      paddingHorizontal: 20,
-                    },
-                  ]}>
-                  <Text
-                    style={Fonts.style.bold(
-                      Colors.light,
-                      Fonts.size.medium,
-                      'center',
-                    )}>
-                    {'Crear nuevo servicio'}
-                  </Text>
-                </TouchableOpacity>
-                <View style={{width: 5}} />
-                <TouchableOpacity
-                  onPress={() => {
-                    this.setState({toggleType: 1});
-                  }}
-                  style={[
-                    styles.headerBtn,
-                    {
-                      backgroundColor: Colors.gray,
-                      flex: 0,
-                      paddingHorizontal: 20,
-                    },
-                  ]}>
-                  <Text
-                    style={Fonts.style.bold(
-                      Colors.light,
-                      Fonts.size.medium,
-                      'center',
-                    )}>
-                    {'Intentar de nuevo'}
-                  </Text>
-                </TouchableOpacity>
-              </View>
             </View>
           )}
 
@@ -464,70 +429,48 @@ export default class Orders extends Component {
                 )}>
                 {'Ups...'}
               </Text>
-              <View style={{height: 20}} />
+              <View style={{height: 10}} />
               <Text
                 style={Fonts.style.regular(
                   Colors.dark,
                   Fonts.size.medium,
                   'center',
                 )}>
-                {'No encontramos ordenes'}
+                {'No encontramos ordenes pasadas en nuestro sistema'}
               </Text>
-
-              <View
-                style={{
-                  width: Metrics.screenWidth * 0.9,
-                  flexDirection: 'column',
-                  justifyContent: 'space-between',
-                  alignSelf: 'center',
-                  marginVertical: 20,
-                }}>
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate('Home');
-                  }}
-                  style={[
-                    styles.headerBtn,
-                    {
-                      backgroundColor: Colors.gray,
-                      flex: 0,
-                      paddingHorizontal: 20,
-                    },
-                  ]}>
-                  <Text
-                    style={Fonts.style.bold(
-                      Colors.light,
-                      Fonts.size.medium,
-                      'center',
-                    )}>
-                    {'Crear nuevo servicio'}
-                  </Text>
-                </TouchableOpacity>
-                <View style={{width: 5}} />
-                <TouchableOpacity
-                  onPress={() => {
-                    this.setState({toggleType: 1});
-                  }}
-                  style={[
-                    styles.headerBtn,
-                    {
-                      backgroundColor: Colors.gray,
-                      flex: 0,
-                      paddingHorizontal: 20,
-                    },
-                  ]}>
-                  <Text
-                    style={Fonts.style.bold(
-                      Colors.light,
-                      Fonts.size.medium,
-                      'center',
-                    )}>
-                    {'Intentar de nuevo'}
-                  </Text>
-                </TouchableOpacity>
-              </View>
             </View>
           )}
+
+          <View
+            style={{
+              width: Metrics.screenWidth * 0.9,
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              alignSelf: 'center',
+              marginVertical: 20,
+            }}>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('Home');
+              }}
+              style={[
+                styles.btnGeneric,
+                {
+                  backgroundColor: Colors.client.primaryColor,
+                  flex: 0,
+                  paddingHorizontal: 20,
+                },
+              ]}>
+              <Text
+                style={Fonts.style.semiBold(
+                  Colors.light,
+                  Fonts.size.medium,
+                  'center',
+                )}>
+                {'Crear nuevo servicio'}
+              </Text>
+            </TouchableOpacity>
+          </View>
 
           <View style={{height: Metrics.addFooter + 20}} />
         </ScrollView>

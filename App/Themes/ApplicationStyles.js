@@ -22,7 +22,7 @@ const ApplicationStyles = {
   },
   bannerOrders: {
     alignSelf: 'center',
-    marginTop: 60 + Metrics.addHeader + 10,
+    marginTop: Metrics.addHeader,
     marginBottom: 5,
     flexDirection: 'row',
     width: Metrics.screenWidth * 0.95,
@@ -53,13 +53,13 @@ const ApplicationStyles = {
     alignSelf: 'center',
     height: 0.5,
     backgroundColor: Colors.dark,
-    marginVertical: 5,
+    marginVertical: 20,
   },
 
   scrollHomeExpert: {
     width: Metrics.screenWidth * 0.95,
-    marginVertical: 10,
-    marginTop: Metrics.addHeader,
+    // marginVertical: 10,
+    // marginTop: Metrics.addHeader,
     alignSelf: 'center',
     marginBottom: 10,
     flex: 1,
@@ -105,7 +105,7 @@ const ApplicationStyles = {
 
     shadowColor: Colors.client.primaryColor,
     shadowOffset: {
-      width: 0,
+      width: 2,
       height: 2,
     },
     shadowOpacity: 0.1,

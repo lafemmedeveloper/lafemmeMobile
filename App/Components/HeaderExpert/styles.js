@@ -8,7 +8,7 @@ export default StyleSheet.create({
     zIndex: 100,
     height: 60 + Metrics.addHeader,
     // height: Metrics.screenHeight * 0.15 + Metrics.addHeader,
-    backgroundColor: '#F8F8F8',
+    backgroundColor: Colors.backgroundColor,
   },
 
   // imageHeader: {

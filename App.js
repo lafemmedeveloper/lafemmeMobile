@@ -41,8 +41,8 @@ export default class App extends Component {
     return (
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
-          {bundleId === 'com.lafemme.client' ||
-          bundleId === 'com.lafemme.clientstaging' ? (
+          {bundleId === 'com.femme.client' ||
+          bundleId === 'com.femme.clientstaging' ? (
             <>
               <Router
                 ref={nav => {

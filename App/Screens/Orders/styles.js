@@ -52,6 +52,20 @@ export default StyleSheet.create({
     paddingVertical: 10,
   },
 
+  btnGeneric: {
+    flex: 1,
+    marginVertical: 5,
+    width: Metrics.contentWidth,
+    alignSelf: 'center',
+    flexDirection: 'row',
+    borderRadius: Metrics.borderRadius,
+    justifyContent: 'center',
+
+    backgroundColor: Colors.textInputBg,
+
+    paddingVertical: 8,
+  },
+
   cancelBtn: {
     flex: 1,
 

@@ -88,44 +88,21 @@ export default class Login extends Component {
           behavior="padding"
           enabled>
           <View style={styles.contentContainer}>
-            <Image style={{marginVertical: 20}} source={Images.logoLafemme} />
+            <Image
+              style={{width: 100, height: 100, resizeMode: 'contain'}}
+              source={Images.logoLafemme}
+            />
 
             <Text
-              style={Fonts.style.regular(Colors.dark, Fonts.size.h6, 'center')}>
+              style={[
+                Fonts.style.regular(Colors.dark, Fonts.size.h6, 'center'),
+                {marginVertical: 20},
+              ]}>
               {'Iniciar Sesión'}
             </Text>
-            {__DEV__ && (
-              <>
-                <TouchableOpacity
-                  onPress={() => {
-                    this.setDefaultUser();
-                  }}>
-                  <Text
-                    style={Fonts.style.regular(
-                      Colors.dark,
-                      Fonts.size.small,
-                      'center',
-                    )}>
-                    set Default Client
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {
-                    this.setDefaultExpert();
-                  }}>
-                  <Text
-                    style={Fonts.style.regular(
-                      Colors.dark,
-                      Fonts.size.small,
-                      'center',
-                    )}>
-                    set Default Expert
-                  </Text>
-                </TouchableOpacity>
-              </>
-            )}
+
             <MyTextInput
-              pHolder={'Email'}
+              pHolder={'Correo electrónico'}
               text={userEmail}
               onChangeText={text => this.setState({userEmail: text})}
               secureText={false}
@@ -133,7 +110,7 @@ export default class Login extends Component {
               autoCapitalize={'none'}
             />
             <MyTextInput
-              pHolder={'Password'}
+              pHolder={'Contraseña'}
               text={userPassword}
               onChangeText={text => this.setState({userPassword: text})}
               secureText={true}
@@ -142,7 +119,6 @@ export default class Login extends Component {
             />
             <TouchableOpacity
               onPress={() => {
-                // navigation.navigate('Home', {});
                 this.handleLogin();
               }}
               style={[
@@ -164,6 +140,50 @@ export default class Login extends Component {
               </Text>
             </TouchableOpacity>
           </View>
+
+          <Text
+            style={[
+              Fonts.style.regular(Colors.dark, Fonts.size.medium, 'center'),
+              {marginVertical: 10},
+            ]}>
+            {'O continúa con:'}
+          </Text>
+          <TouchableOpacity
+            onPress={() => {
+              this.handleLogin();
+            }}
+            style={[styles.btnSocialContainer]}>
+            <Image
+              source={{uri: Images.fbIcon}}
+              style={{width: 25, height: 25, marginRight: 10}}
+            />
+            <Text
+              style={Fonts.style.semiBold(
+                Colors.dark,
+                Fonts.size.small,
+                'center',
+              )}>
+              {'Continuar con Facebook'}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              this.handleLogin();
+            }}
+            style={[styles.btnSocialContainer]}>
+            <Image
+              source={{uri: Images.gIcon}}
+              style={{width: 25, height: 25, marginRight: 10}}
+            />
+            <Text
+              style={Fonts.style.semiBold(
+                Colors.dark,
+                Fonts.size.small,
+                'center',
+              )}>
+              {'Continuar con Google'}
+            </Text>
+          </TouchableOpacity>
           <View style={styles.footerContainer}>
             <TouchableOpacity
               onPress={() => {
@@ -181,7 +201,43 @@ export default class Login extends Component {
             </TouchableOpacity>
           </View>
         </KeyboardAvoidingView>
+        {__DEV__ && (
+          <View
+            style={{
+              opacity: 0.2,
+              position: 'absolute',
+              flexDirection: 'row',
 
+              bottom: 30,
+            }}>
+            <TouchableOpacity
+              onPress={() => {
+                this.setDefaultUser();
+              }}>
+              <Text
+                style={Fonts.style.regular(
+                  Colors.dark,
+                  Fonts.size.small,
+                  'center',
+                )}>
+                set Default Client
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                this.setDefaultExpert();
+              }}>
+              <Text
+                style={Fonts.style.regular(
+                  Colors.dark,
+                  Fonts.size.small,
+                  'center',
+                )}>
+                set Default Expert
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
         {loading && <Loading type={'client'} loading={loading} />}
       </View>
     );

@@ -57,11 +57,11 @@ export default StyleSheet.create({
   },
   btnContainer: {
     flex: 0,
-    height: 60,
-    width: Metrics.screenWidth * 0.8,
+    height: 40,
+    width: Metrics.contentWidth, // Metrics.screenWidth * 0.8,
     alignSelf: 'center',
     borderRadius: Metrics.borderRadius,
-    marginVertical: Metrics.addFooter * 2,
+    marginVertical: 20,
 
     justifyContent: 'center',
     alignItems: 'center',
@@ -75,5 +75,29 @@ export default StyleSheet.create({
     shadowRadius: 1,
 
     elevation: 5,
+  },
+  btnSocialContainer: {
+    flexDirection: 'row',
+    flex: 0,
+    height: 40,
+    width: Metrics.contentWidth, // Metrics.screenWidth * 0.8,
+    alignSelf: 'center',
+    borderRadius: Metrics.borderRadius,
+    marginVertical: 10,
+    borderWidth: 0.5,
+    borderColor: Colors.pinkMask(0.25),
+
+    justifyContent: 'center',
+    alignItems: 'center',
+
+    // shadowColor: Colors.dark,
+    // shadowOffset: {
+    //   width: 2,
+    //   height: 1,
+    // },
+    // shadowOpacity: 0.25,
+    // shadowRadius: 1,
+
+    // elevation: 5,
   },
 });

@@ -42,7 +42,7 @@ import AppConfig from '../../Config/AppConfig';
 // };
 
 export default dta => {
-  const {order, user} = dta;
+  const {order, appType} = dta;
 
   return (
     <View
@@ -61,7 +61,7 @@ export default dta => {
           <Text
             numberOfLines={1}
             style={Fonts.style.bold(
-              Colors.client.primaryColor,
+              Colors[appType].primaryColor,
               Fonts.size.small,
               'center',
             )}>
@@ -73,7 +73,7 @@ export default dta => {
           <Icon
             name={'map-marker-alt'}
             size={12}
-            color={Colors.client.primaryColor}
+            color={Colors[appType].primaryColor}
           />{' '}
           {order.address.name}
         </Text>
@@ -82,7 +82,7 @@ export default dta => {
           <Icon
             name={'calendar'}
             size={12}
-            color={Colors.client.primaryColor}
+            color={Colors[appType].primaryColor}
           />{' '}
           {formatDate(order.day, 'ddd, LLL')}
         </Text>

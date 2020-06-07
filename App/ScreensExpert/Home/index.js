@@ -14,11 +14,12 @@ import {setAuth, logOut} from '../../Core/User/Actions';
 const mapStateToProps = ({ui, currentUser, services}) => {
   const {loading, deviceInfo} = ui;
   const {auth, user} = currentUser;
-
+  const {appType} = deviceInfo;
   return {
     loading,
     user,
     auth,
+    appType,
     services: services.services,
     orders: services.orders,
     expertOpenOrders: services.expertOpenOrders,
@@ -42,4 +43,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Content);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Content);

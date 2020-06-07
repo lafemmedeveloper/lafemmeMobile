@@ -40,6 +40,13 @@ export default data => {
             ]}>
             {data.name.toUpperCase()}
           </Text>
+          <Text
+            style={[
+              Fonts.style.bold(Colors.light, Fonts.size.small, 'center'),
+              ApplicationStyles.shadownClient,
+            ]}>
+            {data.subtitle}
+          </Text>
         </View>
       </TouchableOpacity>
     </View>

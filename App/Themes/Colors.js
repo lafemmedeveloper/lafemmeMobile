@@ -13,6 +13,9 @@ const colors = {
   light: '#fff',
   textInputBg: '#f7f7f8',
 
+  backgroundColor: '#FAF9FF',
+
+  disabledBtn: '#EFEFEF',
   accentColors: ['#ff7d6c', '#f24c88', '#00acb3', '#3ebfb4', '#16d8d8'],
   status: [
     '#adadad',

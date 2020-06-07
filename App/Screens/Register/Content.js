@@ -131,7 +131,7 @@ export default class Register extends Component {
             <Image style={{marginVertical: 20}} source={Images.logoLafemme} />
             <Text
               style={Fonts.style.regular(Colors.dark, Fonts.size.h6, 'center')}>
-              {'Crear una cuenta'}
+              {'Crea tu cuenta'}
             </Text>
             <MyTextInput
               pHolder={'Nombre'}
@@ -143,7 +143,7 @@ export default class Register extends Component {
               autoCapitalize={'words'}
             />
             <MyTextInput
-              pHolder={'Apellido'}
+              pHolder={'Apellidos'}
               text={userLastName}
               keyboardType={'default'}
               onChangeText={text => this.setState({userLastName: text})}
@@ -152,7 +152,7 @@ export default class Register extends Component {
               autoCapitalize={'words'}
             />
             <MyTextInput
-              pHolder={'Correo electronico'}
+              pHolder={'Correo electrónico'}
               keyboardType={'email-address'}
               text={userEmail}
               onChangeText={text => this.setState({userEmail: text})}
@@ -193,8 +193,9 @@ export default class Register extends Component {
                     Fonts.size.small,
                     'center',
                   )}>
-                  {'Terminos y Condiciones'}
-                </Text>
+                  {'Términos y Condiciones'}
+                </Text>{' '}
+                {'de La Femme'}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity

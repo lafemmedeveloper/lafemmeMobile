@@ -25,6 +25,8 @@ import {
 import auth from '@react-native-firebase/auth';
 import styles from './styles';
 import {getExpertHistoryOrders} from '../../Core/Services/Actions';
+import ServiceItemBanner from '../../Components/ServiceItemBanner';
+import ExpandHistoryData from '../../Components/ExpandHistoryData';
 
 export default class History extends Component {
   constructor(props) {
@@ -34,8 +36,8 @@ export default class History extends Component {
     };
   }
 
-  setMenuIndex(pos) {
-    this.setState({menuIndex: pos});
+  setMenuIndex(menuIndex) {
+    this.setState({menuIndex});
   }
   render() {
     const {user, expertActiveOrders, expertHistoryOrders, appType} = this.props;
@@ -60,76 +62,20 @@ export default class History extends Component {
             fielx: 1,
             width: Metrics.screenWidth,
             height: '100%',
-            marginTop: 60 + Metrics.addHeader,
+            marginTop: 40 + Metrics.addHeader,
+            paddingTop: 25,
           }}>
           <>
             {menuIndex === 0 &&
               expertActiveOrders.length > 0 &&
               expertActiveOrders.map((item, idex) => {
-                return (
-                  <View
-                    key={idex}
-                    style={{
-                      width: Metrics.screenWidth * 0.95,
-
-                      marginVertical: 5,
-                      alignSelf: 'center',
-                    }}>
-                    <Text
-                      style={Fonts.style.bold(
-                        Colors.dark,
-                        Fonts.size.small,
-                        'left',
-                      )}>
-                      {item.date}
-                    </Text>
-                  </View>
-                );
+                return <ExpandHistoryData order={item} appType={appType} />;
               })}
             {menuIndex === 1 &&
               expertHistoryOrders.length > 0 &&
               expertHistoryOrders.map((item, idex) => {
-                return (
-                  <View
-                    key={idex}
-                    style={{
-                      width: Metrics.screenWidth * 0.95,
-
-                      marginVertical: 5,
-                      alignSelf: 'center',
-                    }}>
-                    <Text
-                      style={Fonts.style.bold(
-                        Colors.dark,
-                        Fonts.size.small,
-                        'left',
-                      )}>
-                      {item.date}
-                    </Text>
-                  </View>
-                );
+                return <ExpandHistoryData order={item} appType={appType} />;
               })}
-
-            {expertHistoryOrders.length === 0 ||
-              (expertActiveOrders.length === 0 && (
-                <View
-                  style={{
-                    width: Metrics.screenWidth,
-                    // height: '100%',
-                    flex: 1,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
-                  <Text
-                    style={Fonts.style.bold(
-                      Colors.dark,
-                      Fonts.size.small,
-                      'left',
-                    )}>
-                    Lo sentimos no tienes ordenes pendientes
-                  </Text>
-                </View>
-              ))}
           </>
         </ScrollView>
       </View>

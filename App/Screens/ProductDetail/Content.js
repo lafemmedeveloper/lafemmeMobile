@@ -180,6 +180,24 @@ export default class Home extends Component {
     let data = addonsList;
     const index = addonsList ? addonsList.findIndex(i => i.id === item.id) : -1;
     console.log('index', index);
+    let itemData;
+
+    if (item.isCountAddon) {
+      itemData = {
+        count: 1,
+        addOnPrice: item.price,
+        addonsDuration: item.duration,
+        ...item,
+      };
+    } else {
+      itemData = {
+        count: 0,
+        addOnPrice: item.price,
+        addonsDuration: item.duration,
+        ...item,
+      };
+    }
+
     if (index !== -1) {
       console.log('this.state.addonsGuest', this.state.addonsGuest);
       let addonsGuest = _.filter(
@@ -198,7 +216,7 @@ export default class Home extends Component {
 
       data = [...addonsList.slice(0, index), ...addonsList.slice(index + 1)];
     } else {
-      data = addonsList && addonsList ? [...addonsList, item] : [item];
+      data = addonsList && addonsList ? [...addonsList, itemData] : [itemData];
     }
 
     this.setState({addonsList: data}, () => {
@@ -206,6 +224,112 @@ export default class Home extends Component {
     });
   }
 
+  countableAddOrRemove(add, indexItem) {
+    const {addonsList, addonsGuest} = this.state;
+    console.log('=> 0 add', add);
+    console.log('=> 2 addonSelected', addonsList[indexItem]);
+    console.log('=> 3 indexItem', indexItem);
+
+    let count = add
+      ? addonsList[indexItem].count + 1
+      : addonsList[indexItem].count > 1
+      ? addonsList[indexItem].count - 1
+      : 1;
+
+    let item = {
+      ...addonsList[indexItem],
+      count,
+      addOnPrice: count * addonsList[indexItem].price,
+      addonsDuration: count * addonsList[indexItem].duration,
+    };
+
+    let _addonsList = addonsList;
+
+    _addonsList[indexItem] = item;
+    // let data = addonsGuest;
+    console.log('_addonsList', _addonsList);
+    // console.log('data', data);
+    // const indexAddonId = addonsGuest
+    //   ? addonsGuest.findIndex(
+    //       i => i.addonId === addonSelected.id && i.guestId === guest.id,
+    //     )
+    //   : -1;
+
+    // console.log('indexAddonId', indexAddonId);
+
+    // if (indexAddonId !== -1) {
+    //   data = [
+    //     ...addonsGuest.slice(0, indexAddonId),
+    //     ...addonsGuest.slice(indexAddonId + 1),
+    //   ];
+    // } else {
+    //   data = addonsGuest ? [...addonsGuest, item] : [item];
+    // }
+    // console.log('=> 4 post:data', data);
+
+    this.setState({addonsList: _addonsList}, () => {
+      console.log('=> addonsList', this.state.addonsList);
+    });
+
+    //
+    //
+    //
+    // let itemGuest = {
+    //   addonId: addonSelected.id,
+    //   addOnPrice: addonSelected.price,
+    //   guestId: guest.id,
+    //   addonName: addonSelected.name,
+    //   addonsDuration: addonSelected.duration,
+    // };
+
+    // let data = addonsGuest;
+    // console.log('=> 3 pre:item', item);
+
+    // const indexAddonId = addonsGuest
+    //   ? addonsGuest.findIndex(
+    //       i => i.addonId === addonSelected.id && i.guestId === guest.id,
+    //     )
+    //   : -1;
+
+    // console.log('indexAddonId', indexAddonId);
+
+    // if (indexAddonId !== -1) {
+    //   data = [
+    //     ...addonsGuest.slice(0, indexAddonId),
+    //     ...addonsGuest.slice(indexAddonId + 1),
+    //   ];
+    // } else {
+    //   data = addonsGuest ? [...addonsGuest, item] : [item];
+    // }
+    // console.log('=> 4 post:data', data);
+
+    // this.setState({addonsGuest: data}, () => {
+    //   console.log('=> addonsGuest', this.state.addonsGuest);
+    // });
+
+    // let data = addonsGuest;
+    // console.log('=> 3 pre:item', item);
+
+    // const indexAddonId = addonsGuest
+    //   ? addonsGuest.findIndex(i => i.addonId === 'countItem')
+    //   : -1;
+
+    // console.log('indexAddonId', indexAddonId);
+
+    // if (indexAddonId !== -1) {
+    //   data = [
+    //     ...addonsGuest.slice(0, indexAddonId),
+    //     ...addonsGuest.slice(indexAddonId + 1),
+    //   ];
+    // } else {
+    //   data = addonsGuest ? [...addonsGuest, item] : [item];
+    // }
+    // console.log('=> 4 post:data', data);
+
+    // this.setState({addonsGuest: data}, () => {
+    //   console.log('=> addonsGuest', this.state.addonsGuest);
+    // });
+  }
   selectAddonGuest(addonSelected, guest, indexItem) {
     console.log('=> 0 indexItem', indexItem);
     console.log('=> 1 addonSelected', addonSelected);
@@ -291,18 +415,27 @@ export default class Home extends Component {
     let addOnPrice = _.sumBy(addonsGuest, 'addOnPrice');
     let addOnDuration = _.sumBy(addonsGuest, 'addonsDuration');
 
+    let countItems = _.filter(addonsList, item => item.isCountAddon === true);
+    console.log('countItems', countItems);
+    let addOnCountPrice = _.sumBy(countItems, 'addOnPrice');
+    let addOnCountDuration = _.sumBy(countItems, 'addonsDuration');
+
+    console.log('addOnCountDuration', addOnCountPrice);
+    console.log('addOnCountDuration', addOnCountDuration);
     let timeTotal =
-      (product.duration * (guestList.length + 1) + addOnDuration) /
+      (product.duration * (guestList.length + 1) +
+        addOnDuration +
+        addOnCountDuration) /
       experts.length;
 
     return (
       <View style={[styles.container]}>
-        <View //image
+        <View //Header
           style={[
             {
               zIndex: 1000,
               width: Metrics.screenWidth,
-              height: Metrics.screenWidth / 2,
+              height: Metrics.screenWidth / 1.5,
               resizeMode: 'cover',
               backgroundColor: Colors.client.primaryColor,
             },
@@ -312,7 +445,7 @@ export default class Home extends Component {
             style={{
               // zIndex: 1000,
               width: Metrics.screenWidth,
-              height: Metrics.screenWidth / 2,
+              height: Metrics.screenWidth / 1.5,
               resizeMode: 'cover',
               position: 'absolute',
             }}
@@ -327,7 +460,7 @@ export default class Home extends Component {
             style={{
               // zIndex: 2000,
               width: Metrics.screenWidth,
-              height: Metrics.screenWidth / 2,
+              height: Metrics.screenWidth / 1.5,
               resizeMode: 'cover',
               position: 'absolute',
               bottom: 10,
@@ -342,7 +475,7 @@ export default class Home extends Component {
                 marginLeft: 10,
                 tintColor: Colors.dark,
               }}
-              source={Images.time}
+              source={Images.menuAppoiment}
             />
             <Text
               style={[
@@ -370,7 +503,7 @@ export default class Home extends Component {
                   // height: 20,
                   marginLeft: 20,
                 }}>
-                <Icon name={'chevron-left'} size={35} color={Colors.dark} />
+                <Icon name={'chevron-left'} size={20} color={Colors.dark} />
               </View>
               {/* <Image
                 style={{
@@ -401,230 +534,244 @@ export default class Home extends Component {
                 alignSelf: 'center',
                 // backgroundColor: 'red'
               }}>
-              <View
+              <View //description
                 style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
+                  flex: 0,
+                  marginVertical: 10,
                 }}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                  }}>
+                  <Text
+                    style={Fonts.style.bold(
+                      Colors.dark,
+                      Fonts.size.h6,
+                      'left',
+                      1,
+                    )}>
+                    {product.name}{' '}
+                  </Text>
+                  <Text
+                    style={Fonts.style.regular(
+                      Colors.dark,
+                      Fonts.size.h6,
+                      'right',
+                      1,
+                    )}>
+                    {Utilities.formatCOP(product.price)}{' '}
+                    <Text
+                      style={Fonts.style.regular(
+                        Colors.gray,
+                        Fonts.size.small,
+                        'right',
+                        1,
+                      )}>
+                      c/u
+                    </Text>
+                  </Text>
+                </View>
                 <Text
-                  style={Fonts.style.bold(
+                  style={Fonts.style.light(
                     Colors.dark,
-                    Fonts.size.h6,
+                    Fonts.size.medium,
+                    'left',
+                    0,
+                  )}>
+                  {product.shortDescription}
+                </Text>
+              </View>
+
+              <View opacity={0.25} style={[ApplicationStyles.separatorLine]} />
+              <View
+                style={{}} // CLients
+              >
+                <View
+                  style={{
+                    width: Metrics.screenWidth * 0.9,
+                    alignSelf: 'flex-end',
+                    marginVertical: 5,
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
+                  <Text>
+                    <Icon
+                      name="toggle-on"
+                      size={20}
+                      color={Colors.client.primaryColor}
+                    />
+                  </Text>
+                  <View
+                    style={{
+                      flex: 1,
+
+                      marginHorizontal: 5,
+                    }}>
+                    <Text
+                      style={Fonts.style.regular(
+                        Colors.dark,
+                        Fonts.size.medium,
+                        'left',
+                        0,
+                      )}>
+                      {user.firstName} {user.lastName} (yo)
+                    </Text>
+                  </View>
+                </View>
+
+                <Text
+                  style={Fonts.style.semiBold(
+                    Colors.dark,
+                    Fonts.size.medium,
                     'left',
                     1,
                   )}>
-                  {product.name}{' '}
+                  {'Invitados'}
                 </Text>
-                <Text
-                  style={Fonts.style.regular(
-                    Colors.dark,
-                    Fonts.size.h6,
-                    'right',
-                    1,
-                  )}>
-                  {Utilities.formatCOP(product.price)}{' '}
-                  <Text
-                    style={Fonts.style.regular(
-                      Colors.gray,
-                      Fonts.size.small,
-                      'right',
-                      1,
-                    )}>
-                    c/u
-                  </Text>
-                </Text>
-              </View>
-              <Text
-                style={Fonts.style.regular(
-                  Colors.gray,
-                  Fonts.size.small,
-                  'left',
-                  0,
-                )}>
-                {product.shortDescription}
-              </Text>
-              {/* <View style={{height: 20}} /> */}
 
-              <View opacity={0.25} style={ApplicationStyles.separatorLine} />
+                {guest.map((data, index) => {
+                  return (
+                    <TouchableOpacity
+                      key={data.id}
+                      onPress={() => {
+                        // console.log('data', data);
 
-              <View
-                style={{
-                  width: Metrics.screenWidth * 0.9,
-                  alignSelf: 'center',
-                  // height: 20,
-                  marginVertical: 5,
-                  flexDirection: 'row',
-                }}>
-                <View style={{flex: 6}}>
-                  <Text
-                    style={Fonts.style.bold(
-                      Colors.dark,
-                      Fonts.size.small,
-                      'left',
-                      1,
-                    )}>
-                    {'Numero de Clientes'} ({guestList.length + 1})
-                  </Text>
-                </View>
+                        this.selectGuest(data);
+                      }}
+                      style={{
+                        width: Metrics.screenWidth * 0.85,
+                        alignSelf: 'flex-end',
+                        marginVertical: 5,
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                      }}>
+                      <Text>
+                        {guestList.findIndex(i => i.id === data.id) !== -1 ? (
+                          <Icon
+                            name="toggle-on"
+                            size={20}
+                            color={Colors.client.primaryColor}
+                          />
+                        ) : (
+                          <Icon
+                            name="toggle-off"
+                            size={20}
+                            color={Colors.gray}
+                          />
+                        )}
+                      </Text>
+                      <View
+                        style={{
+                          flex: 1,
 
-                <View style={{flex: 0, alignItems: 'center'}}>
-                  <Text
-                    style={Fonts.style.bold(
-                      Colors.dark,
-                      Fonts.size.small,
-                      'right',
-                      1,
-                    )}>
-                    {Utilities.formatCOP(
-                      product.price * (guestList.length + 1),
-                    )}
-                  </Text>
-                </View>
-              </View>
-              {/* {guestItem(clients)} */}
+                          marginHorizontal: 5,
+                        }}>
+                        <Text
+                          style={Fonts.style.regular(
+                            Colors.dark,
+                            Fonts.size.medium,
+                            'left',
+                            0,
+                          )}>
+                          {data.firstName} {data.lastName}
+                        </Text>
+                      </View>
+                      <TouchableOpacity
+                        onPress={() => {
+                          Alert.alert(
+                            'Alerta',
+                            `Realmente desea eliminar a ${data.firstName} ${
+                              data.lastName
+                            } de tu lista de invitados.`,
+                            [
+                              {
+                                text: 'Eliminar',
+                                onPress: () => {
+                                  console.log('DeleteGuest', data.id);
+                                  this.deleteGuest(data.id);
+                                },
+                              },
+                              {
+                                text: 'Cancelar',
+                                onPress: () => console.log('Cancel Pressed'),
+                                style: 'cancel',
+                              },
+                            ],
+                            {cancelable: true},
+                          );
+                        }}>
+                        <Icon
+                          name="minus-circle"
+                          size={20}
+                          color={Colors.gray}
+                        />
+                      </TouchableOpacity>
+                    </TouchableOpacity>
+                  );
+                })}
 
-              {/* {guestList.map((data, index) => { */}
-
-              <View
-                style={{
-                  width: Metrics.screenWidth * 0.9,
-                  alignSelf: 'flex-end',
-                  marginVertical: 5,
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}>
-                <Text>
-                  <Icon
-                    name="toggle-on"
-                    size={20}
-                    color={Colors.client.primaryColor}
-                  />
-                </Text>
-                <View
+                <TouchableOpacity
+                  onPress={() => {
+                    this.setState({showModalGuest: true});
+                  }}
                   style={{
-                    flex: 1,
-
-                    marginHorizontal: 5,
+                    width: Metrics.screenWidth * 0.85,
+                    height: 30,
+                    alignSelf: 'flex-end',
+                    backgroundColor: Colors.client.primaryColor,
+                    borderRadius: 10,
+                    marginVertical: 5,
+                    alignItems: 'center',
+                    justifyContent: 'center',
                   }}>
                   <Text
-                    style={Fonts.style.regular(
-                      Colors.dark,
-                      Fonts.size.medium,
-                      'left',
-                      0,
+                    style={Fonts.style.bold(
+                      Colors.light,
+                      Fonts.size.small,
+                      'center',
+                      1,
                     )}>
-                    {user.firstName} {user.lastName} (yo)
+                    {'Agregar Invitado'}
                   </Text>
-                </View>
-              </View>
+                </TouchableOpacity>
+                <View
+                  style={{
+                    width: Metrics.screenWidth * 0.9,
+                    alignSelf: 'center',
+                    // height: 20,
 
-              <Text
-                style={Fonts.style.regular(
-                  Colors.dark,
-                  Fonts.size.small,
-                  'left',
-                  1,
-                )}>
-                {'Invitados'}
-              </Text>
+                    marginVertical: 5,
+                    flexDirection: 'row',
+                  }}>
+                  <View style={{flex: 6}}>
+                    <Text
+                      style={Fonts.style.bold(
+                        Colors.dark,
+                        Fonts.size.medium,
+                        'left',
+                        1,
+                      )}>
+                      {'Numero de Clientes'} ({guestList.length + 1})
+                    </Text>
+                  </View>
 
-              {guest.map((data, index) => {
-                return (
-                  <TouchableOpacity
-                    key={data.id}
-                    onPress={() => {
-                      // console.log('data', data);
-
-                      this.selectGuest(data);
-                    }}
-                    style={{
-                      width: Metrics.screenWidth * 0.85,
-                      alignSelf: 'flex-end',
-                      marginVertical: 5,
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                    }}>
-                    <Text>
-                      {guestList.findIndex(i => i.id === data.id) !== -1 ? (
-                        <Icon
-                          name="toggle-on"
-                          size={20}
-                          color={Colors.client.primaryColor}
-                        />
-                      ) : (
-                        <Icon name="toggle-off" size={20} color={Colors.gray} />
+                  <View style={{flex: 0, alignItems: 'center'}}>
+                    <Text
+                      style={Fonts.style.bold(
+                        Colors.dark,
+                        Fonts.size.medium,
+                        'right',
+                        1,
+                      )}>
+                      {Utilities.formatCOP(
+                        product.price * (guestList.length + 1),
                       )}
                     </Text>
-                    <View
-                      style={{
-                        flex: 1,
-
-                        marginHorizontal: 5,
-                      }}>
-                      <Text
-                        style={Fonts.style.regular(
-                          Colors.dark,
-                          Fonts.size.medium,
-                          'left',
-                          0,
-                        )}>
-                        {data.firstName} {data.lastName}
-                      </Text>
-                    </View>
-                    <TouchableOpacity
-                      onPress={() => {
-                        Alert.alert(
-                          'Alerta',
-                          `Realmente desea eliminar a ${data.firstName} ${data.lastName} de tu lista de invitados.`,
-                          [
-                            {
-                              text: 'Eliminar',
-                              onPress: () => {
-                                console.log('DeleteGuest', data.id);
-                                this.deleteGuest(data.id);
-                              },
-                            },
-                            {
-                              text: 'Cancelar',
-                              onPress: () => console.log('Cancel Pressed'),
-                              style: 'cancel',
-                            },
-                          ],
-                          {cancelable: true},
-                        );
-                      }}>
-                      <Icon name="minus-circle" size={20} color={Colors.gray} />
-                    </TouchableOpacity>
-                  </TouchableOpacity>
-                );
-              })}
-
-              <TouchableOpacity
-                onPress={() => {
-                  this.setState({showModalGuest: true});
-                }}
-                style={{
-                  width: Metrics.screenWidth * 0.85,
-                  height: 30,
-                  alignSelf: 'flex-end',
-                  backgroundColor: Colors.client.primaryColor,
-                  borderRadius: 10,
-                  marginVertical: 5,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                <Text
-                  style={Fonts.style.bold(
-                    Colors.light,
-                    Fonts.size.small,
-                    'center',
-                    1,
-                  )}>
-                  {'Agregar Invitado'}
-                </Text>
-              </TouchableOpacity>
-
+                  </View>
+                </View>
+              </View>
               {/* {guestList.length >= 1 && ( */}
               <>
                 {/* <View style={{height: 20}} /> */}
@@ -844,8 +991,8 @@ export default class Home extends Component {
                               flex: 4,
                             }}>
                             <Text
-                              style={Fonts.style.regular(
-                                Colors.gray,
+                              style={Fonts.style.light(
+                                Colors.dark,
                                 Fonts.size.small,
                                 'left',
                                 0,
@@ -856,80 +1003,186 @@ export default class Home extends Component {
                         </View>
                       </View>
 
-                      {addonsList.findIndex(i => i.id === data.id) !== -1 && (
-                        <TouchableOpacity
-                          onPress={() => {
-                            this.selectAddonGuest(data, {id: 'yo'});
-                          }}
-                          style={{
-                            width: Metrics.screenWidth * 0.8,
-                            alignSelf: 'flex-end',
-                            marginVertical: 5,
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                          }}>
-                          <Text>
-                            {addonsGuest.findIndex(
-                              i => i.addonId === data.id && i.guestId === 'yo',
-                            ) !== -1 ? (
+                      {/* {data.isCountAddon && (
+                                <Text
+                                  style={Fonts.style.regular(
+                                    Colors.gray,
+                                    Fonts.size.small,
+                                    'right',
+                                    1,
+                                  )}>
+                                  Cantidad de servicios
+                                </Text>
+                              )} */}
+                      {data.isCountAddon &&
+                        addonsList.findIndex(i => i.id === data.id) !== -1 && (
+                          <View
+                            style={{
+                              width: Metrics.screenWidth * 0.9,
+                              alignSelf: 'center',
+                              // height: 20,
+                              marginVertical: 5,
+                              flexDirection: 'row',
+                            }}>
+                            <View style={{flex: 6, marginLeft: 40}}>
+                              <Text
+                                style={Fonts.style.bold(
+                                  Colors.dark,
+                                  Fonts.size.small,
+                                  'left',
+                                  1,
+                                )}>
+                                {'Cantidad de items'}
+                              </Text>
+                            </View>
+
+                            <TouchableOpacity
+                              onPress={() => {
+                                this.countableAddOrRemove(
+                                  false,
+                                  addonsList.findIndex(i => i.id === data.id),
+                                );
+                              }}
+                              style={{flex: 0, alignItems: 'center'}}>
                               <Icon
-                                name="toggle-on"
+                                name="minus-circle"
                                 size={20}
                                 color={Colors.client.primaryColor}
                               />
-                            ) : (
+                            </TouchableOpacity>
+                            <View
+                              style={{
+                                flex: 0,
+                                alignItems: 'center',
+                                marginHorizontal: 10,
+                              }}>
+                              <Text
+                                style={Fonts.style.bold(
+                                  Colors.dark,
+                                  Fonts.size.small,
+                                  'center',
+                                  1,
+                                )}>
+                                {
+                                  addonsList[
+                                    addonsList.findIndex(i => i.id === data.id)
+                                  ].count
+                                }
+                              </Text>
+                            </View>
+                            <TouchableOpacity
+                              onPress={() => {
+                                this.countableAddOrRemove(
+                                  true,
+                                  addonsList.findIndex(i => i.id === data.id),
+                                );
+                              }}
+                              style={{flex: 0, alignItems: 'center'}}>
                               <Icon
-                                name="toggle-off"
+                                name={'plus-circle'}
                                 size={20}
-                                color={Colors.gray}
+                                color={Colors.client.primaryColor}
                               />
-                            )}
-                          </Text>
-                          <View
-                            style={{
-                              flex: 1,
-
-                              marginHorizontal: 5,
-                            }}>
+                            </TouchableOpacity>
                             <Text
                               style={Fonts.style.regular(
                                 Colors.dark,
-                                Fonts.size.medium,
+                                Fonts.size.small,
                                 'left',
-                                0,
+                                1,
                               )}>
-                              {user.firstName} {user.lastName} (yo)
+                              {' '}
+                              +
+                              {Utilities.formatCOP(
+                                addonsList[
+                                  addonsList.findIndex(i => i.id === data.id)
+                                ].count *
+                                  addonsList[
+                                    addonsList.findIndex(i => i.id === data.id)
+                                  ].price,
+                              )}
                             </Text>
                           </View>
-                          <View>
-                            {addonsGuest.findIndex(
-                              i => i.addonId === data.id && i.guestId === 'yo',
-                            ) !== -1 ? (
-                              <Text
-                                style={Fonts.style.regular(
-                                  Colors.dark,
-                                  Fonts.size.small,
-                                  'left',
-                                  1,
-                                )}>
-                                +{Utilities.formatCOP(data.price)}
-                              </Text>
-                            ) : (
-                              <Text
-                                style={Fonts.style.regular(
-                                  Colors.dark,
-                                  Fonts.size.small,
-                                  'left',
-                                  1,
-                                )}>
-                                +{Utilities.formatCOP(0)}
-                              </Text>
-                            )}
-                          </View>
-                        </TouchableOpacity>
-                      )}
+                        )}
 
-                      {addonsList.findIndex(i => i.id === data.id) !== -1 &&
+                      {!data.isCountAddon &&
+                        addonsList.findIndex(i => i.id === data.id) !== -1 && (
+                          <TouchableOpacity
+                            onPress={() => {
+                              this.selectAddonGuest(data, {id: 'yo'});
+                            }}
+                            style={{
+                              width: Metrics.screenWidth * 0.8,
+                              alignSelf: 'flex-end',
+                              marginVertical: 5,
+                              flexDirection: 'row',
+                              justifyContent: 'space-between',
+                            }}>
+                            <Text>
+                              {addonsGuest.findIndex(
+                                i =>
+                                  i.addonId === data.id && i.guestId === 'yo',
+                              ) !== -1 ? (
+                                <Icon
+                                  name="toggle-on"
+                                  size={20}
+                                  color={Colors.client.primaryColor}
+                                />
+                              ) : (
+                                <Icon
+                                  name="toggle-off"
+                                  size={20}
+                                  color={Colors.gray}
+                                />
+                              )}
+                            </Text>
+                            <View
+                              style={{
+                                flex: 1,
+
+                                marginHorizontal: 5,
+                              }}>
+                              <Text
+                                style={Fonts.style.regular(
+                                  Colors.dark,
+                                  Fonts.size.medium,
+                                  'left',
+                                  0,
+                                )}>
+                                {user.firstName} {user.lastName} (yo)
+                              </Text>
+                            </View>
+                            <View>
+                              {addonsGuest.findIndex(
+                                i =>
+                                  i.addonId === data.id && i.guestId === 'yo',
+                              ) !== -1 ? (
+                                <Text
+                                  style={Fonts.style.regular(
+                                    Colors.dark,
+                                    Fonts.size.small,
+                                    'left',
+                                    1,
+                                  )}>
+                                  +{Utilities.formatCOP(data.price)}
+                                </Text>
+                              ) : (
+                                <Text
+                                  style={Fonts.style.regular(
+                                    Colors.dark,
+                                    Fonts.size.small,
+                                    'left',
+                                    1,
+                                  )}>
+                                  +{Utilities.formatCOP(0)}
+                                </Text>
+                              )}
+                            </View>
+                          </TouchableOpacity>
+                        )}
+
+                      {!data.isCountAddon &&
+                        addonsList.findIndex(i => i.id === data.id) !== -1 &&
                         guestList.map((item, indexItem) => {
                           return (
                             <TouchableOpacity
@@ -1010,8 +1263,6 @@ export default class Home extends Component {
                             </TouchableOpacity>
                           );
                         })}
-
-                      {/* <View style={{height: 20}} /> */}
                     </View>
                   );
                 })}
@@ -1024,8 +1275,8 @@ export default class Home extends Component {
                 {'Información adicional'}
               </Text>
               <Text
-                style={Fonts.style.regular(
-                  Colors.gray,
+                style={Fonts.style.light(
+                  Colors.dark,
                   Fonts.size.small,
                   'left',
                   0,
@@ -1070,7 +1321,9 @@ export default class Home extends Component {
               )}>
               {'SUBTOTAL'}{' '}
               {Utilities.formatCOP(
-                product.price * (guestList.length + 1) + addOnPrice,
+                product.price * (guestList.length + 1) +
+                  addOnPrice +
+                  addOnCountPrice,
               )}
             </Text>
             <Text
@@ -1137,8 +1390,18 @@ export default class Home extends Component {
               borderTopLeftRadius: 10,
             }}>
             <View opacity={0.0} style={ApplicationStyles.separatorLine} />
+            <Image
+              source={Images.billResume}
+              style={{
+                width: 40,
+                height: 40,
+                resizeMode: 'contain',
+                alignSelf: 'center',
+                marginBottom: 20,
+              }}
+            />
             <Text
-              style={Fonts.style.bold(
+              style={Fonts.style.semiBold(
                 Colors.dark,
                 Fonts.size.medium,
                 'center',
@@ -1152,11 +1415,10 @@ export default class Home extends Component {
               {product.name}
             </Text>
             <View opacity={0.0} style={ApplicationStyles.separatorLine} />
-
             <ScrollView>
               <Text
-                style={Fonts.style.regular(
-                  Colors.dark,
+                style={Fonts.style.semiBold(
+                  Colors.client.primaryColor,
                   Fonts.size.medium,
                   'center',
                   1,
@@ -1165,12 +1427,13 @@ export default class Home extends Component {
               </Text>
               <View
                 style={{
+                  alignSelf: 'center',
                   width: Metrics.screenWidth * 0.85,
                 }}>
                 <View
                   style={{
                     flex: 1,
-                    marginHorizontal: 5,
+                    // marginHorizontal: 5,
                   }}>
                   <TitleValue
                     title={`${user.firstName} ${user.lastName} (yo)`}
@@ -1186,7 +1449,7 @@ export default class Home extends Component {
                     value={Utilities.formatCOP(product.price)}
                     titleType={'regular'}
                     valueType={'regular'}
-                    width={Metrics.screenWidth * 0.8}
+                    width={'95%'}
                   />
                 </View>
 
@@ -1198,14 +1461,14 @@ export default class Home extends Component {
                     key={index}
                     style={{
                       flex: 1,
-                      marginHorizontal: 5,
+                      // marginHorizontal: 5,
                     }}>
                     <TitleValue
                       title={item.addonName}
                       value={Utilities.formatCOP(item.addOnPrice)}
                       titleType={'regular'}
                       valueType={'regular'}
-                      width={Metrics.screenWidth * 0.8}
+                      width={'95%'}
                     />
                   </View>
                 ))}
@@ -1216,12 +1479,10 @@ export default class Home extends Component {
                     key={data.id}
                     style={{
                       flex: 1,
-                      marginHorizontal: 5,
-                      // width: Metrics.screenWidth * 0.85,
-                      // // alignSelf: 'flex-end',
-                      // // marginVertical: 5,
-                      // // flexDirection: 'row',
-                      // // justifyContent: 'space-between',
+                      // marginHorizontal: 5,
+                      alignSelf: 'center',
+                      width: Metrics.screenWidth * 0.85,
+                      alignItems: 'center',
                     }}>
                     <TitleValue
                       title={`${data.firstName} ${data.lastName}`}
@@ -1234,71 +1495,26 @@ export default class Home extends Component {
                     />
 
                     {/* <View
-                      style={{
-                        flex: 1,
-
-                        marginHorizontal: 5,
-                      }}>
-                      <Text
-                        style={Fonts.style.bold(
-                          Colors.dark,
-                          Fonts.size.medium,
-                          'left',
-                          1,
-                        )}>
-                        {data.firstName} {data.lastName}
-                      </Text>
-                    </View> */}
-
-                    <View
                       key={index}
                       style={{
                         flex: 1,
-                        marginHorizontal: 5,
                       }}>
                       <TitleValue
                         title={'Servicio'}
                         value={Utilities.formatCOP(product.price)}
                         titleType={'regular'}
                         valueType={'regular'}
-                        width={Metrics.screenWidth * 0.8}
+                        width={'95%'}
                       />
-                    </View>
-
-                    {/* <View
-                      style={{
-                        // flex: 1,
-                        width: Metrics.screenWidth * 0.8,
-                        alignSelf: 'flex-end',
-
-                        marginHorizontal: 5,
-                      }}>
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                          justifyContent: 'space-between',
-                          marginHorizontal: 5,
-                        }}>
-                        <Text
-                          style={Fonts.style.regular(
-                            Colors.dark,
-                            Fonts.size.medium,
-                            'left',
-                            1,
-                          )}>
-                          Servicio
-                        </Text>
-                        <Text
-                          style={Fonts.style.regular(
-                            Colors.dark,
-                            Fonts.size.medium,
-                            'left',
-                            1,
-                          )}>
-                          {Utilities.formatCOP(product.price)}
-                        </Text>
-                      </View>
                     </View> */}
+
+                    <TitleValue
+                      title={'Servicio'}
+                      value={Utilities.formatCOP(product.price)}
+                      titleType={'regular'}
+                      valueType={'regular'}
+                      width={'95%'}
+                    />
 
                     <View
                       style={{
@@ -1315,48 +1531,76 @@ export default class Home extends Component {
                           key={index}
                           style={{
                             flex: 1,
-
-                            marginHorizontal: 5,
+                            // marginHorizontal: 5,
+                            alignSelf: 'center',
+                            width: Metrics.screenWidth * 0.85,
+                            alignItems: 'center',
                           }}>
-                          <View
-                            style={{
-                              flex: 1,
-                              flexDirection: 'row',
-                              // alignSelf: 'flex-end',
-                              justifyContent: 'space-between',
-                              marginHorizontal: 5,
-                            }}>
-                            <Text
-                              style={Fonts.style.regular(
-                                Colors.dark,
-                                Fonts.size.medium,
-                                'left',
-                                1,
-                              )}>
-                              {item.addonName}
-                            </Text>
-                            <Text
-                              style={Fonts.style.regular(
-                                Colors.dark,
-                                Fonts.size.medium,
-                                'left',
-                                1,
-                              )}>
-                              {Utilities.formatCOP(item.addOnPrice)}
-                            </Text>
-                          </View>
+                          <TitleValue
+                            title={item.addonName}
+                            value={Utilities.formatCOP(item.addOnPrice)}
+                            titleType={'regular'}
+                            valueType={'regular'}
+                            width={'95%'}
+                          />
                         </View>
                       ))}
                     </View>
                   </View>
                 );
               })}
-
+              {countItems.length > 0 && (
+                <View
+                  style={{
+                    width: Metrics.screenWidth * 0.95,
+                    flex: 1,
+                    alignSelf: 'center',
+                    flexDirection: 'column',
+                  }}>
+                  <Text
+                    style={Fonts.style.semiBold(
+                      Colors.client.primaryColor,
+                      Fonts.size.medium,
+                      'center',
+                      1,
+                    )}>
+                    {'Adiciones comunes'}
+                  </Text>
+                  <Text
+                    style={Fonts.style.light(
+                      Colors.client.dark,
+                      Fonts.size.small,
+                      'center',
+                      1,
+                    )}>
+                    {'Son asignadas durante el servicio'}
+                  </Text>
+                  {countItems.map((item, index) => (
+                    <View
+                      key={`count-${index}`}
+                      style={{
+                        flex: 1,
+                        // marginHorizontal: 5,
+                        alignSelf: 'center',
+                        width: Metrics.screenWidth * 0.85,
+                        alignItems: 'center',
+                      }}>
+                      <TitleValue
+                        title={`${item.name} x${item.count}`}
+                        value={Utilities.formatCOP(item.addOnPrice)}
+                        titleType={'regular'}
+                        valueType={'regular'}
+                        width={'100%'}
+                      />
+                    </View>
+                  ))}
+                </View>
+              )}
               <View opacity={0.25} style={ApplicationStyles.separatorLine} />
 
               <Text
-                style={Fonts.style.regular(
-                  Colors.dark,
+                style={Fonts.style.semiBold(
+                  Colors.client.primaryColor,
                   Fonts.size.medium,
                   'center',
                   1,
@@ -1432,7 +1676,7 @@ export default class Home extends Component {
                       'left',
                       1,
                     )}>
-                    {Utilities.formatCOP(addOnPrice)}
+                    {Utilities.formatCOP(addOnPrice + addOnCountPrice)}
                   </Text>
                 </View>
 
@@ -1444,10 +1688,10 @@ export default class Home extends Component {
                     marginHorizontal: 5,
                   }}>
                   <Text
-                    style={Fonts.style.bold(
-                      Colors.dark,
+                    style={Fonts.style.semiBold(
+                      Colors.client.primaryColor,
                       Fonts.size.medium,
-                      'left',
+                      'center',
                       1,
                     )}>
                     TOTAL
@@ -1460,7 +1704,9 @@ export default class Home extends Component {
                       1,
                     )}>
                     {Utilities.formatCOP(
-                      product.price * (guestList.length + 1) + addOnPrice,
+                      product.price * (guestList.length + 1) +
+                        addOnPrice +
+                        addOnCountPrice,
                     )}
                   </Text>
                 </View>
@@ -1488,8 +1734,11 @@ export default class Home extends Component {
                     addons: addonsGuest,
                     duration: timeTotal,
                     totalServices: product.price * (guestList.length + 1),
-                    totalAddons: addOnPrice,
-                    total: product.price * (guestList.length + 1) + addOnPrice,
+                    totalAddons: addOnPrice + addOnCountPrice,
+                    total:
+                      product.price * (guestList.length + 1) +
+                      addOnPrice +
+                      addOnCountPrice,
                     experts,
                   };
                   console.log('b');
@@ -1584,13 +1833,11 @@ export default class Home extends Component {
 
             <View>
               <Text
-                style={Fonts.style.bold(
-                  Colors.dark,
-                  Fonts.size.medium,
-                  'center',
-                  1,
-                )}>
-                Agrega o selecciona un invitado a tu servicio
+                style={[
+                  Fonts.style.bold(Colors.dark, Fonts.size.medium, 'center', 1),
+                  {marginVertical: 10},
+                ]}>
+                Agregar un nuevo invitado
               </Text>
             </View>
             <MyTextInput
@@ -1660,7 +1907,7 @@ export default class Home extends Component {
                 Agregar Invitado
               </Text>
             </TouchableOpacity>
-            <View style={{height: Metrics.addFooter + 10}}></View>
+            <View style={{height: Metrics.addFooter + 10}} />
             {/* <SwipeListView
               data={user.guest}
               renderItem={data => (

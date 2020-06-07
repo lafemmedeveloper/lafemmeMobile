@@ -83,16 +83,16 @@
 		9F9580722369F56E00D6C5BA /* OpenSans-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "OpenSans-SemiBold.ttf"; path = "../assets/fonts/OpenSans-SemiBold.ttf"; sourceTree = "<group>"; };
 		9F9580732369F56E00D6C5BA /* OpenSans-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "OpenSans-Regular.ttf"; path = "../assets/fonts/OpenSans-Regular.ttf"; sourceTree = "<group>"; };
 		9F958078236B3C1800D6C5BA /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "laFemmeMobile/GoogleService-Info.plist"; sourceTree = "<group>"; };
-		9F958082236B41B300D6C5BA /* GoogleService-Info.com.lafemme.expert.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.com.lafemme.expert.plist"; sourceTree = "<group>"; };
-		9F958083236B41B300D6C5BA /* GoogleService-Info.com.lafemme.clientstaging.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.com.lafemme.clientstaging.plist"; sourceTree = "<group>"; };
-		9F958084236B41B300D6C5BA /* GoogleService-Info.com.lafemme.expertstaging.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.com.lafemme.expertstaging.plist"; sourceTree = "<group>"; };
-		9F958085236B41B300D6C5BA /* GoogleService-Info.com.lafemme.client.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.com.lafemme.client.plist"; sourceTree = "<group>"; };
 		9F9580A4236B530000D6C5BA /* La Femme Staging.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "La Femme Staging.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9F9580A5236B530000D6C5BA /* lafemme copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "lafemme copy-Info.plist"; path = "/Users/Shared/Previously Relocated Items/Security/Master/laFemme/lafemmemobileUpdate/laFemmeMobile/ios/lafemme copy-Info.plist"; sourceTree = "<absolute>"; };
 		9F9580BD236B530900D6C5BA /* La Femme Expert.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "La Femme Expert.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9F9580BE236B530900D6C5BA /* lafemmeStaging copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "lafemmeStaging copy-Info.plist"; path = "/Users/Shared/Previously Relocated Items/Security/Master/laFemme/lafemmemobileUpdate/laFemmeMobile/ios/lafemmeStaging copy-Info.plist"; sourceTree = "<absolute>"; };
 		9F9580D6236B531E00D6C5BA /* La Femme Expert Staging.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "La Femme Expert Staging.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9F9580D7236B531E00D6C5BA /* lafemmeExpert copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "lafemmeExpert copy-Info.plist"; path = "/Users/Shared/Previously Relocated Items/Security/Master/laFemme/lafemmemobileUpdate/laFemmeMobile/ios/lafemmeExpert copy-Info.plist"; sourceTree = "<absolute>"; };
+		9FF36A72248D3FB500CC7DA7 /* GoogleService-Info.com.femme.expertstaging.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.com.femme.expertstaging.plist"; sourceTree = "<group>"; };
+		9FF36A73248D3FB500CC7DA7 /* GoogleService-Info.com.femme.clientstaging.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.com.femme.clientstaging.plist"; sourceTree = "<group>"; };
+		9FF36A74248D3FB500CC7DA7 /* GoogleService-Info.com.femme.expert.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.com.femme.expert.plist"; sourceTree = "<group>"; };
+		9FF36A75248D3FB500CC7DA7 /* GoogleService-Info.com.femme.client.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.com.femme.client.plist"; sourceTree = "<group>"; };
 		A19F3C08B56262E3F8AEFAC5 /* Pods-laFemmeMobile-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-laFemmeMobile-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-laFemmeMobile-tvOSTests/Pods-laFemmeMobile-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		A2F9DFCD48D647C155431DB7 /* Pods-lafemme.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lafemme.debug.xcconfig"; path = "Target Support Files/Pods-lafemme/Pods-lafemme.debug.xcconfig"; sourceTree = "<group>"; };
 		AF73A1A6D17BEF11E8B17F8C /* libPods-lafemmeExpertStaging.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-lafemmeExpertStaging.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -181,14 +181,14 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				9FF36A75248D3FB500CC7DA7 /* GoogleService-Info.com.femme.client.plist */,
+				9FF36A73248D3FB500CC7DA7 /* GoogleService-Info.com.femme.clientstaging.plist */,
+				9FF36A74248D3FB500CC7DA7 /* GoogleService-Info.com.femme.expert.plist */,
+				9FF36A72248D3FB500CC7DA7 /* GoogleService-Info.com.femme.expertstaging.plist */,
 				9F7EA45123D35B4A000E2769 /* La Femme Expert.entitlements */,
 				9F7EA45023D35B44000E2769 /* La Femme.entitlements */,
 				9F36230E23C7BFF700E51A57 /* La Femme Staging.entitlements */,
 				9F3622E623C7B1D100E51A57 /* La Femme Expert Staging.entitlements */,
-				9F958085236B41B300D6C5BA /* GoogleService-Info.com.lafemme.client.plist */,
-				9F958083236B41B300D6C5BA /* GoogleService-Info.com.lafemme.clientstaging.plist */,
-				9F958082236B41B300D6C5BA /* GoogleService-Info.com.lafemme.expert.plist */,
-				9F958084236B41B300D6C5BA /* GoogleService-Info.com.lafemme.expertstaging.plist */,
 				9F95806F2369F55A00D6C5BA /* Resources */,
 				13B07FAE1A68108700A75B9A /* laFemmeMobile */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
@@ -354,16 +354,20 @@
 				ORGANIZATIONNAME = Facebook;
 				TargetAttributes = {
 					13B07F861A680F5B00A75B9A = {
-						DevelopmentTeam = 7P59ZNH6U6;
+						DevelopmentTeam = CE49PKHAHF;
+						ProvisioningStyle = Automatic;
 					};
 					9F95808D236B530000D6C5BA = {
-						DevelopmentTeam = 7P59ZNH6U6;
+						DevelopmentTeam = CE49PKHAHF;
+						ProvisioningStyle = Automatic;
 					};
 					9F9580A6236B530900D6C5BA = {
-						DevelopmentTeam = 7P59ZNH6U6;
+						DevelopmentTeam = CE49PKHAHF;
+						ProvisioningStyle = Automatic;
 					};
 					9F9580BF236B531E00D6C5BA = {
-						DevelopmentTeam = 7P59ZNH6U6;
+						DevelopmentTeam = CE49PKHAHF;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -1048,9 +1052,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconClient;
 				CODE_SIGN_ENTITLEMENTS = "La Femme.entitlements";
-				CURRENT_PROJECT_VERSION = 2;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
-				DEVELOPMENT_TEAM = 7P59ZNH6U6;
+				DEVELOPMENT_TEAM = CE49PKHAHF;
 				INFOPLIST_FILE = laFemmeMobile/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.0.0;
@@ -1059,8 +1065,9 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.lafemme.client;
+				PRODUCT_BUNDLE_IDENTIFIER = com.femme.client;
 				PRODUCT_NAME = "La Femme";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1071,8 +1078,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconClient;
 				CODE_SIGN_ENTITLEMENTS = "La Femme.entitlements";
-				CURRENT_PROJECT_VERSION = 2;
-				DEVELOPMENT_TEAM = 7P59ZNH6U6;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = CE49PKHAHF;
 				INFOPLIST_FILE = laFemmeMobile/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.0.0;
@@ -1081,8 +1090,9 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.lafemme.client;
+				PRODUCT_BUNDLE_IDENTIFIER = com.femme.client;
 				PRODUCT_NAME = "La Femme";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
@@ -1194,19 +1204,22 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconClientStaging;
 				CODE_SIGN_ENTITLEMENTS = "La Femme Staging.entitlements";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
-				DEVELOPMENT_TEAM = 7P59ZNH6U6;
+				DEVELOPMENT_TEAM = CE49PKHAHF;
 				INFOPLIST_FILE = "lafemme copy-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.0.2;
+				MARKETING_VERSION = 1.0.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.lafemme.clientstaging;
+				PRODUCT_BUNDLE_IDENTIFIER = com.femme.clientstaging;
 				PRODUCT_NAME = "La Femme Staging";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1217,18 +1230,21 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconClientStaging;
 				CODE_SIGN_ENTITLEMENTS = "La Femme Staging.entitlements";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 7P59ZNH6U6;
+				DEVELOPMENT_TEAM = CE49PKHAHF;
 				INFOPLIST_FILE = "lafemme copy-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.0.2;
+				MARKETING_VERSION = 1.0.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.lafemme.clientstaging;
+				PRODUCT_BUNDLE_IDENTIFIER = com.femme.clientstaging;
 				PRODUCT_NAME = "La Femme Staging";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
@@ -1239,9 +1255,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconExpert;
 				CODE_SIGN_ENTITLEMENTS = "La Femme Expert.entitlements";
-				CURRENT_PROJECT_VERSION = 2;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
-				DEVELOPMENT_TEAM = 7P59ZNH6U6;
+				DEVELOPMENT_TEAM = CE49PKHAHF;
 				INFOPLIST_FILE = "lafemmeStaging copy-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.0.0;
@@ -1250,8 +1268,9 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.lafemme.expert;
+				PRODUCT_BUNDLE_IDENTIFIER = com.femme.expert;
 				PRODUCT_NAME = "La Femme Expert";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1262,8 +1281,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconExpert;
 				CODE_SIGN_ENTITLEMENTS = "La Femme Expert.entitlements";
-				CURRENT_PROJECT_VERSION = 2;
-				DEVELOPMENT_TEAM = 7P59ZNH6U6;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = CE49PKHAHF;
 				INFOPLIST_FILE = "lafemmeStaging copy-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.0.0;
@@ -1272,8 +1293,9 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.lafemme.expert;
+				PRODUCT_BUNDLE_IDENTIFIER = com.femme.expert;
 				PRODUCT_NAME = "La Femme Expert";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
@@ -1284,9 +1306,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconExpertStaging;
 				CODE_SIGN_ENTITLEMENTS = "La Femme Expert Staging.entitlements";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
-				DEVELOPMENT_TEAM = 7P59ZNH6U6;
+				DEVELOPMENT_TEAM = CE49PKHAHF;
 				INFOPLIST_FILE = "lafemmeExpert copy-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.0.0;
@@ -1295,8 +1319,9 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.lafemme.expertstaging;
+				PRODUCT_BUNDLE_IDENTIFIER = com.femme.expertstaging;
 				PRODUCT_NAME = "La Femme Expert Staging";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1307,8 +1332,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconExpertStaging;
 				CODE_SIGN_ENTITLEMENTS = "La Femme Expert Staging.entitlements";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 7P59ZNH6U6;
+				DEVELOPMENT_TEAM = CE49PKHAHF;
 				INFOPLIST_FILE = "lafemmeExpert copy-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.0.0;
@@ -1317,8 +1344,9 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.lafemme.expertstaging;
+				PRODUCT_BUNDLE_IDENTIFIER = com.femme.expertstaging;
 				PRODUCT_NAME = "La Femme Expert Staging";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

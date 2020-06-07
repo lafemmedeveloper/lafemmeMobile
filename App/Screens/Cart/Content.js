@@ -196,16 +196,22 @@ export default class Cart extends Component {
       <View style={styles.container}>
         <View style={styles.headerContainer}>
           <View opacity={0.0} style={ApplicationStyles.separatorLine} />
+          <Image
+            source={Images.billResume}
+            style={{
+              width: 30,
+              height: 30,
+              resizeMode: 'contain',
+              alignSelf: 'center',
+              marginBottom: 10,
+            }}
+          />
           <Text style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
             {'Resumen del Servicio'}
           </Text>
 
           <Text
-            style={Fonts.style.regular(
-              Colors.gray,
-              Fonts.size.small,
-              'center',
-            )}>
+            style={Fonts.style.light(Colors.data, Fonts.size.small, 'center')}>
             {'Agrega los servicios segun el orden que deseas recibirlos.'}
           </Text>
           <View opacity={0.0} style={ApplicationStyles.separatorLine} />

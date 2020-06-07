@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>172150230750-nucbc1s4olluc0na1f1r6kh2nngg6kgd.apps.googleusercontent.com</string>
+	<string>172150230750-v8ulql21i5pm9400im5kusg5i1gc1931.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.172150230750-nucbc1s4olluc0na1f1r6kh2nngg6kgd</string>
+	<string>com.googleusercontent.apps.172150230750-v8ulql21i5pm9400im5kusg5i1gc1931</string>
 	<key>API_KEY</key>
 	<string>AIzaSyBjOgo6AaLNJ76PDsu8vuC2Wl9I9oNlBpI</string>
 	<key>GCM_SENDER_ID</key>
@@ -13,7 +13,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.lafemme.client</string>
+	<string>com.femme.expert</string>
 	<key>PROJECT_ID</key>
 	<string>lafemme-5017a</string>
 	<key>STORAGE_BUCKET</key>
@@ -29,7 +29,7 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:172150230750:ios:f3deee6f4607c2c95bbc4f</string>
+	<string>1:172150230750:ios:c50c814f5b55efcf5bbc4f</string>
 	<key>DATABASE_URL</key>
 	<string>https://lafemme-5017a.firebaseio.com</string>
 </dict>

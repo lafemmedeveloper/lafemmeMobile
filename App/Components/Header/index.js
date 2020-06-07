@@ -115,7 +115,7 @@ export default data => {
                 </Text>
               ) : (
                 <Text style={Fonts.style.regular(Colors.light, Fonts.size.small, 'center')}>
-                  {'Agrega o selecciona una ddireccion'}
+                  {'Agrega o selecciona una direccion'}
                 </Text>
               )} */}
             </TouchableOpacity>

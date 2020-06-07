@@ -183,7 +183,7 @@ export default class Profile extends Component {
             {'Perfil y configuración'}
           </Text>
         </View>
-        <View style={styles.separatorLine} />
+        {/* <View style={styles.separatorLine} /> */}
         <ScrollView>
           <View //profile
             style={styles.profileContainer} //profile
@@ -250,7 +250,7 @@ export default class Profile extends Component {
               action={() => {
                 console.log('address');
               }}
-              decorationLine={true}
+              decorationLine={false}
             />
           </View>
           <View //Legals

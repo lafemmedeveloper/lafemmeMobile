@@ -51,6 +51,7 @@ import Loading from '../../Components/Loading';
 import {green} from 'ansi-colors';
 import {formatDate} from '../../Helpers/MomentHelper';
 import AppConfig from '../../Config/AppConfig';
+import ServiceItemBanner from '../../Components/ServiceItemBanner';
 
 const TIME_SET = 500;
 
@@ -261,111 +262,21 @@ export default class Home extends Component {
           onActionR={() => {}}
         />
 
-        <ScrollView style={ApplicationStyles.scrollHome} bounces={true}>
+        <ScrollView
+          style={[ApplicationStyles.scrollHome, {marginTop: Metrics.header}]}
+          bounces={true}>
           {orders.length > 0 ? (
-            <TouchableOpacity
+            <ServiceItemBanner
+              item={orders[0]}
+              appType={appType}
               onPress={() => {
                 this.setState({modalOrders: true}, () => {
                   console.log('modalOrders', this.state.modalOrders);
                 });
-              }}>
-              <LinearGradient
-                style={[
-                  ApplicationStyles.bannerOrders,
-                  ApplicationStyles.shadownClient,
-                ]}
-                colors={[
-                  Colors.client.primaryColor,
-                  Colors.client.secondaryColor,
-                ]}
-                start={{x: 0, y: 1}}
-                end={{x: 1, y: 0}}>
-                <View
-                  style={{
-                    flex: 1,
-                    marginHorizontal: 15,
-                    justifyContent: 'center',
-                  }}>
-                  <Text
-                    style={Fonts.style.bold(
-                      Colors.light,
-                      Fonts.size.small,
-                      'left',
-                    )}>
-                    Mi Proximo Servicio:
-                  </Text>
-                  <Text
-                    style={Fonts.style.regular(
-                      Colors.light,
-                      Fonts.size.small,
-                      'left',
-                    )}>
-                    <Icon
-                      name={'map-marker-alt'}
-                      size={12}
-                      color={Colors.light}
-                    />{' '}
-                    {orders[0].address.name}
-                  </Text>
-                  <Text
-                    style={Fonts.style.regular(
-                      Colors.light,
-                      Fonts.size.small,
-                      'left',
-                    )}>
-                    <Icon name={'calendar'} size={12} color={Colors.light} />{' '}
-                    {formatDate(orders[0].day, 'ddd, LL')}
-                  </Text>
-                  <Text
-                    style={Fonts.style.regular(
-                      Colors.light,
-                      Fonts.size.small,
-                      'left',
-                    )}>
-                    <Icon name={'clock'} size={12} color={Colors.light} />{' '}
-                    {formatDate(moment(orders[0].hour, 'HH:mm'), 'h:mm a')}
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    // flex: 0,
-                    width: 140,
-
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}>
-                  <Image
-                    source={Images.moto}
-                    style={{
-                      height: 55,
-                      width: 140,
-                      resizeMode: 'contain',
-                    }}
-                  />
-                  <View
-                    style={{
-                      backgroundColor: Colors.status[orders[0].status],
-                      marginTop: 5,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      borderRadius: 10,
-                      paddingHorizontal: 10,
-                    }}>
-                    <Text
-                      numberOfLines={1}
-                      style={Fonts.style.bold(
-                        Colors.light,
-                        Fonts.size.tiny,
-                        'left',
-                      )}>
-                      {AppConfig.orderStatusStr[orders[0].status]}
-                    </Text>
-                  </View>
-                </View>
-              </LinearGradient>
-            </TouchableOpacity>
+              }}
+            />
           ) : (
-            <View style={{marginTop: 60 + Metrics.addHeader + 10}}></View>
+            <View style={{marginTop: Metrics.addHeader}} />
           )}
           {services.map(data => {
             return (
@@ -380,11 +291,13 @@ export default class Home extends Component {
           {services && (
             <BannerScroll
               key={'banner'}
-              name={'Galería'}
+              name={'INSPO'}
+              subtitle={'Busca inspiración para tu próxima cita'}
               image={Images.banner}
               selectBanner={() => this.selectBanner()}
             />
           )}
+          <View style={{height: 50}} />
         </ScrollView>
 
         {user && user.cart && (

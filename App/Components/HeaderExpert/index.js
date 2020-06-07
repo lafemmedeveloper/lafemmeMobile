@@ -44,7 +44,7 @@ export default data => {
           style={styles.itemBtn}>
           <Text
             style={Fonts.style.bold(Colors.dark, Fonts.size.medium, 'center')}>
-            Activas{'\n'}
+            {'Activas'}
           </Text>
           <View
             style={[
@@ -63,7 +63,7 @@ export default data => {
           style={styles.itemBtn}>
           <Text
             style={Fonts.style.bold(Colors.dark, Fonts.size.medium, 'center')}>
-            Historial{'\n'}
+            {'Historial'}
           </Text>
           <View
             style={[

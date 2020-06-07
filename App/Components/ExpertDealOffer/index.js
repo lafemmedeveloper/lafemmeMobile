@@ -47,9 +47,7 @@ const ASPECT_RATIO = screen.width * 0.8 - 500 / screen.height;
 const LATITUDE_DELTA = 0.0003;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
-export default dta => {
-  const {order} = dta;
-
+export default ({order, user, onSwipe}) => {
   return (
     <View style={styles.cellContainer}>
       <View style={styles.contentContainer}>
@@ -295,7 +293,14 @@ export default dta => {
                       ApplicationStyles.shadownClient,
                     ]}>
                     {expert.id == null ? (
-                      <>
+                      <View
+                        style={{
+                          width: '100%',
+                          flexDirection: 'row',
+                          alignContent: 'center',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                        }}>
                         <View
                           style={{
                             width: 40,
@@ -317,9 +322,46 @@ export default dta => {
                             Fonts.size.small,
                             'left',
                           )}>
-                          Buscando Experto...
+                          {'Buscando Experto...'}
                         </Text>
-                      </>
+                        <TouchableOpacity
+                          style={{
+                            backgroundColor: Colors.dark,
+                            borderRadius: Metrics.borderRadius,
+                            paddingHorizontal: 5,
+                            paddingVertical: 2.5,
+                          }}
+                          onPress={() => {
+                            Alert.alert(
+                              'Aplicar a servicio',
+                              'Realmente deseas aplicar a este servio\n\nRecuerda que no puedes cancelar y si tienes alguna novedad la debes reportar con la administracion',
+                              [
+                                {
+                                  text: 'No solicitar',
+                                  onPress: () => console.log('Cancel Pressed'),
+                                  style: 'cancel',
+                                },
+                                {
+                                  text: 'Solicitar',
+                                  onPress: () => {
+                                    console.log('Solicitar');
+                                    onSwipe();
+                                  },
+                                },
+                              ],
+                              {cancelable: false},
+                            );
+                          }}>
+                          <Text
+                            style={Fonts.style.bold(
+                              Colors.expert.primaryColor,
+                              Fonts.size.small,
+                              'left',
+                            )}>
+                            Solicitar
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
                     ) : (
                       <Image
                         source={{uri: expert.thumbnail}}
@@ -394,25 +436,28 @@ export default dta => {
           />
         </Marker.Animated>
       </MapView>
-      <View style={styles.swipe}>
-        <SwipeButton
-          disabled={false}
-          onSwipeStart={() => console.log('Swipe started!')}
-          onSwipeFail={() => console.log('Incomplete swipe!')}
-          onSwipeSuccess={() => dta.onSwipe()}
-          railBackgroundColor={Colors.expertMask(0.4)}
-          railBorderColor={'transparent'}
-          titleColor={Colors.light}
-          railFillBackgroundColor={Colors.expertMask(0.6)}
-          railFillBorderColor={'transparent'}
-          shouldResetAfterSuccess={false}
-          titleStyles={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}
-          swipeSuccessThreshold={90}
-          thumbIconBackgroundColor={Colors.expert.primaryColor}
-          thumbIconBorderColor={'transparent'}
-          title={'Aceptar Servicio'}
-        />
-      </View>
+
+      {/* {order.experts.findIndex(i => i.id === user.id) && (
+        <View style={styles.swipe}>
+          <SwipeButton
+            disabled={false}
+            onSwipeStart={() => console.log('Swipe started!')}
+            onSwipeFail={() => console.log('Incomplete swipe!')}
+            onSwipeSuccess={() => dta.onSwipe()}
+            railBackgroundColor={Colors.expertMask(0.4)}
+            railBorderColor={'transparent'}
+            titleColor={Colors.light}
+            railFillBackgroundColor={Colors.expertMask(0.6)}
+            railFillBorderColor={'transparent'}
+            shouldResetAfterSuccess={false}
+            titleStyles={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}
+            swipeSuccessThreshold={90}
+            thumbIconBackgroundColor={Colors.expert.primaryColor}
+            thumbIconBorderColor={'transparent'}
+            title={'Aceptar Servicio'}
+          />
+        </View>
+      )} */}
     </View>
   );
 };

@@ -52,7 +52,7 @@ export default {
     // height: 40,
     // paddingVertical: 20,
     borderBottomWidth: 10,
-    borderBottomColor: Colors.lightGray,
+    borderBottomColor: Colors.disabledBtn,
     justifyContent: 'center',
     alignItems: 'center',
   },

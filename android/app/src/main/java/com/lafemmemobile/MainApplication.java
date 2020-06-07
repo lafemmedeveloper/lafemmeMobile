@@ -1,4 +1,4 @@
-package com.lafemme.client;
+package com.femme.client;
 
 import android.app.Application;
 import android.content.Context;

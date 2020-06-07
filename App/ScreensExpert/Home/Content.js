@@ -48,6 +48,8 @@ import {formatDate} from '../../Helpers/MomentHelper';
 
 import ExpertDealOffer from '../../Components/ExpertDealOffer';
 import ClientOnExpert from '../ClientOnExpert';
+import {setLoading} from '../../Core/UI/Actions';
+import ServiceItemBanner from '../../Components/ServiceItemBanner';
 
 export default class Home extends Component {
   constructor(props) {
@@ -73,6 +75,8 @@ export default class Home extends Component {
     const {
       logOut,
       user,
+      appType,
+      loading,
       expertOpenOrders,
       expertActiveOrders,
       assignExpert,
@@ -88,42 +92,78 @@ export default class Home extends Component {
     } else {
       return (
         <View style={styles.container}>
-          {expertActiveOrders.length > 0 && (
-            <View style={styles.bannerExpert} />
+          {expertActiveOrders.length > 0 ? (
+            <ServiceItemBanner
+              item={expertActiveOrders[0]}
+              appType={appType}
+              onPress={() => {}}
+            />
+          ) : (
+            <View style={{marginTop: Metrics.addHeader}} />
           )}
-          <ScrollView style={ApplicationStyles.scrollHomeExpert} bounces={true}>
-            {/* <View style={{height: Metrics.addHeader}}></View> */}
-            {expertOpenOrders.map((item, index) => {
-              console.log(item);
-              return (
-                <View key={item.id}>
-                  <ExpertDealOffer
-                    order={item}
-                    onSwipe={() => {
-                      console.log('ExpertDealOffer:home');
+          {expertOpenOrders.length > 0 ? (
+            <ScrollView
+              style={[ApplicationStyles.scrollHomeExpert, {flex: 1}]}
+              bounces={true}>
+              {/* <View style={{height: Metrics.addHeader}}></View> */}
+              {expertOpenOrders.map((item, index) => {
+                console.log(item);
+                return (
+                  <View key={item.id}>
+                    <ExpertDealOffer
+                      order={item}
+                      user={user}
+                      onSwipe={() => {
+                        console.log('ExpertDealOffer:home');
+                        setLoading(true);
+                        let expertData = {
+                          coordinates: {
+                            latitude: 6.2458007,
+                            longitude: -75.5680003,
+                          },
+                          id: user.id,
+                          ranking: user.ranking,
+                          lastName: user.lastName,
+                          firstName: user.firstName,
+                          image: user.pics.image,
+                          thumbnail: user.pics.thumbnail,
+                        };
 
-                      let expertData = {
-                        coordinates: {
-                          latitude: 6.2458007,
-                          longitude: -75.5680003,
-                        },
-                        id: user.id,
-                        ranking: user.ranking,
-                        lastName: user.lastName,
-                        firstName: user.firstName,
-                        image:
-                          'https://scontent-bog1-1.xx.fbcdn.net/v/t1.0-9/16196015_10154888128487744_6901111466535510271_n.png?_nc_cat=103&_nc_ohc=SBVtumyhgCQAQmiVN7qs7I5c_oa4T4vHAybSU-2fHMVlgtVIfm468rPBw&_nc_ht=scontent-bog1-1.xx&oh=ff0751caf080bf1c49c2a2dd83afcea6&oe=5EA7DCE9',
-                        thumbnail:
-                          'https://scontent-bog1-1.xx.fbcdn.net/v/t1.0-9/16196015_10154888128487744_6901111466535510271_n.png?_nc_cat=103&_nc_ohc=SBVtumyhgCQAQmiVN7qs7I5c_oa4T4vHAybSU-2fHMVlgtVIfm468rPBw&_nc_ht=scontent-bog1-1.xx&oh=ff0751caf080bf1c49c2a2dd83afcea6&oe=5EA7DCE9',
-                      };
-
-                      assignExpert(item.id, index, expertData);
-                    }}
-                  />
-                </View>
-              );
-            })}
-          </ScrollView>
+                        assignExpert(item.id, index, expertData);
+                      }}
+                    />
+                  </View>
+                );
+              })}
+            </ScrollView>
+          ) : (
+            <View
+              style={{
+                flex: 1,
+                paddingHorizontal: 30,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <Text
+                style={Fonts.style.semiBold(
+                  Colors.dark,
+                  Fonts.size.h6,
+                  'center',
+                )}>
+                {'No hay ordenes actualmente'}
+              </Text>
+              <Text
+                style={Fonts.style.regular(
+                  Colors.dark,
+                  Fonts.size.medium,
+                  'center',
+                )}>
+                {
+                  'Este pendiente de las notificaciones que te avisaremos cuando tengamos nuevos clientes'
+                }
+              </Text>
+            </View>
+          )}
         </View>
       );
     }

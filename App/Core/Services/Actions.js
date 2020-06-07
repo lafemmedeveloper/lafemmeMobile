@@ -9,6 +9,8 @@ import {
 } from './Types';
 
 import firestore from '@react-native-firebase/firestore';
+import {Alert} from 'react-native';
+import {setLoading} from '../UI/Actions';
 
 // export const getServices = async dispatch => {
 
@@ -224,5 +226,64 @@ export const assignExpert = (
       orderIndex,
       expertData,
     }),
-  });
+  })
+    .then(response => response.json())
+    .then(responseJson => {
+      console.log('==> responseJson:assignExpert', responseJson);
+      const {status, msn} = responseJson;
+      Alert.alert(status ? 'Muy bien!' : 'Error', msn);
+
+      if (status) {
+        console.log('validateExpert');
+        validateExperts(orderId, dispatch);
+      }
+    })
+    .catch(error => {
+      setLoading(false);
+      console.log('==>error:assignExpert', error);
+    });
+};
+
+const validateExperts = (orderId, dispatch) => {
+  console.log('validateExperts!');
+
+  const documentSnapshot = firestore()
+    .collection('orders')
+    .doc(orderId);
+
+  documentSnapshot
+    .get()
+    .then(doc => {
+      if (!doc.exists) {
+        console.log('No such document!');
+      } else {
+        let isCompleteExpert = true;
+        let services = doc.data().services;
+
+        for (let index = 0; index < services.length; index++) {
+          console.log('==> a: ', services[index]);
+          for (let endex = 0; endex < services[index].experts.length; endex++) {
+            console.log('==> b: ', services[index].experts);
+            console.log('==> b: ', services[index].experts[endex]);
+            if (services[index].experts[endex].id === null) {
+              isCompleteExpert = false;
+            }
+          }
+        }
+        console.log('isCompleteExpert', isCompleteExpert);
+        if (isCompleteExpert) {
+          documentSnapshot.set(
+            {
+              status: 1,
+            },
+            {merge: true},
+          );
+        }
+        setLoading(false);
+      }
+    })
+    .catch(err => {
+      dispatch(setLoading(false));
+      console.log('Error getting document', err);
+    });
 };
