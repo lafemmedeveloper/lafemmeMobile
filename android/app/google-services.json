@@ -8,7 +8,7 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:172150230750:android:546a6b2f6ab5e96c5bbc4f",
+        "mobilesdk_app_id": "1:172150230750:android:21dce1091c4534af5bbc4f",
         "android_client_info": {
           "package_name": "com.femme.client"
         }
@@ -32,10 +32,48 @@
               "client_type": 3
             },
             {
-              "client_id": "172150230750-6ggso7lncckhd6vj81gd40ts4th7kcfe.apps.googleusercontent.com",
+              "client_id": "172150230750-v8ulql21i5pm9400im5kusg5i1gc1931.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.femme.expertstaging"
+                "bundle_id": "com.femme.expert",
+                "app_store_id": "1517296035"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:172150230750:android:546a6b2f6ab5e96c5bbc4f",
+        "android_client_info": {
+          "package_name": "com.lafemme.client"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "172150230750-ba88eh0990vhchb4ncikoenf12r6f60i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBX9OXlxkA18EWnRrg6bzgWuQkHbTVx1aI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "172150230750-ba88eh0990vhchb4ncikoenf12r6f60i.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "172150230750-v8ulql21i5pm9400im5kusg5i1gc1931.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.femme.expert",
+                "app_store_id": "1517296035"
               }
             }
           ]
