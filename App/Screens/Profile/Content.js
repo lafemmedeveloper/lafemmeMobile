@@ -214,20 +214,26 @@ export default class Profile extends Component {
               )}>
               {user.email}
             </Text>
-            <TouchableOpacity>
-              <Text
-                style={Fonts.style.underline(
-                  Colors.client.primaryColor,
-                  Fonts.size.small,
-                  'center',
-                )}>
-                {'Editar información'}
-              </Text>
-            </TouchableOpacity>
             <View style={styles.separator} />
           </View>
           <View //items
             style={styles.profileContainer}>
+            <ItemProfile
+              title={'Actualizar nombre'}
+              icon={'lock'}
+              action={() => {
+                console.log('dfghytf');
+              }}
+              decorationLine={true}
+            />
+            <ItemProfile
+              title={'Actualizar email'}
+              icon={'lock'}
+              action={() => {
+                console.log('dfghytf');
+              }}
+              decorationLine={true}
+            />
             <ItemProfile
               title={'Actualizar contraseña'}
               icon={'lock'}

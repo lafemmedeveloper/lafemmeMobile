@@ -63,6 +63,7 @@ const ProfileStack = createStackNavigator(
     },
   },
 );
+
 const TabNavigator = createBottomTabNavigator(
   {
     Home: {

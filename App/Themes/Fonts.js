@@ -24,42 +24,37 @@ const size = {
 };
 
 const style = {
-  bold: (color, fontSize, align, letterSpacing) => ({
+  bold: (color, fontSize, align) => ({
     fontFamily: type.bold,
     color: color,
     fontSize,
     textAlign: align,
-    letterSpacing: letterSpacing,
   }),
-  semiBold: (color, fontSize, align, letterSpacing) => ({
+  semiBold: (color, fontSize, align) => ({
     fontFamily: type.semiBold,
     color: color,
     fontSize,
     textAlign: align,
-    letterSpacing: letterSpacing,
   }),
-  regular: (color, fontSize, align, letterSpacing) => ({
+  regular: (color, fontSize, align) => ({
     fontFamily: type.regular,
     color: color,
     fontSize,
     textAlign: align,
-    letterSpacing: letterSpacing,
   }),
-  underline: (color, fontSize, align, letterSpacing) => ({
+  underline: (color, fontSize, align) => ({
     fontFamily: type.regular,
     textDecorationLine: 'underline',
     color: color,
     fontSize,
     textAlign: align,
-    letterSpacing: letterSpacing,
   }),
 
-  light: (color, fontSize, align, letterSpacing) => ({
+  light: (color, fontSize, align) => ({
     fontFamily: type.light,
     color: color,
     fontSize,
     textAlign: align,
-    letterSpacing: letterSpacing,
   }),
 };
 

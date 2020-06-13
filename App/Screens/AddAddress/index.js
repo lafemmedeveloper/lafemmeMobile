@@ -21,8 +21,10 @@ const mapDispatchToProps = dispatch => {
     setLoading: state => dispatch(setLoading(state)),
     getCoverage: city => dispatch(getCoverage(city)),
     updateProfile: (data, typeData) => dispatch(updateProfile(data, typeData)),
-
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Content);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Content);

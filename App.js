@@ -25,8 +25,11 @@ export default class App extends Component {
   }
 
   async componentDidMount() {
-    let unsubscribe = store.subscribe(this.handleChange);
+    this.unsubscribe = store.subscribe(this.handleChange);
     this.handleChange();
+  }
+  componentWillUnmount() {
+    this.unsubscribe();
   }
 
   handleChange() {
