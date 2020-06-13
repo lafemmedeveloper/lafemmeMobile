@@ -144,6 +144,16 @@ android {
         }
     }
     signingConfigs {
+        release {
+            if (System.getenv('LOCAL_SIGNING') == "true") {
+                if (project.hasProperty('MYAPP_RELEASE_STORE_FILE')) {
+                    storeFile file(MYAPP_RELEASE_STORE_FILE)
+                    storePassword MYAPP_RELEASE_STORE_PASSWORD
+                    keyAlias MYAPP_RELEASE_KEY_ALIAS
+                    keyPassword MYAPP_RELEASE_KEY_PASSWORD
+                }
+            }
+        }
         debug {
             storeFile file('debug.keystore')
             storePassword 'android'
@@ -159,6 +169,9 @@ android {
         release {
             // Caution! In production, you need to generate your own keystore file.
             // see https://facebook.github.io/react-native/docs/signed-apk-android.
+            if (System.getenv('LOCAL_SIGNING') == "true") {
+                signingConfig signingConfigs.release
+            }
             signingConfig signingConfigs.debug
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
@@ -201,4 +214,3 @@ task copyDownloadableDepsToLibs(type: Copy) {
 }
 
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
-apply plugin: 'com.google.gms.google-services'
