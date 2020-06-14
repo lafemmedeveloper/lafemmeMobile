@@ -239,6 +239,16 @@ android {
     }
 
 dependencies {
+  // Firebase dependencies
+    implementation "com.google.android.gms:play-services-base:16.1.0"
+    implementation "com.google.firebase:firebase-core:16.0.8"
+ // Firebase dependencies cierre
+
+     // 1 - Required to init Firebase automatically (THE MAGIC LINE)
+    implementation "com.google.firebase:firebase-core:11.6.2"
+
+    // 2 - FirebaseUI for Firebase Auth (Or whatever you need...)
+    implementation 'com.firebaseui:firebase-ui-auth:3.1.2'
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.facebook.react:react-native:+"  // From node_modules
 
@@ -263,3 +273,4 @@ apply plugin: 'com.google.gms.google-services'
 com.google.gms.googleservices.GoogleServicesPlugin.config.disableVersionCheck = true
 
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
+apply plugin: 'com.google.gms.google-services'
