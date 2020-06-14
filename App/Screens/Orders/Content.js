@@ -1,55 +1,22 @@
 import React, {Component} from 'react';
-import {
-  View,
-  Text,
-  Image,
-  Alert,
-  Dimensions,
-  StyleSheet,
-  TouchableOpacity,
-  KeyboardAvoidingView,
-} from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
+import {View, Text, Image, TouchableOpacity} from 'react-native';
+
 import firestore from '@react-native-firebase/firestore';
 import {Colors, Images, Fonts, ApplicationStyles, Metrics} from '../../Themes';
-import auth from '@react-native-firebase/auth';
-import MyTextInput from '../../Components/MyTextInput';
-import CardItemCart from '../../Components/CardItemCart';
-import FieldCartConfig from '../../Components/FieldCartConfig';
+
 import styles from './styles';
 import {ScrollView} from 'react-native-gesture-handler';
-import Icon from 'react-native-vector-icons/FontAwesome5';
 
 import ExpandOrderData from '../../Components/ExpandOrderData';
 import ExpandHistoryData from '../../Components/ExpandHistoryData';
 
-import {getDate, formatDate} from '../../Helpers/MomentHelper';
-import DatePicker from 'react-native-datepicker';
-import _ from 'lodash';
-import Utilities from '../../Utilities';
-import {msToDate, msToDay, msToHour} from '../../Helpers/MomentHelper';
+import {getDate} from '../../Helpers/MomentHelper';
+
 import moment from 'moment';
-import MapView, {
-  PROVIDER_GOOGLE,
-  Marker,
-  AnimatedRegion,
-} from 'react-native-maps';
+
 import Modal from 'react-native-modal';
 import Login from '../Login/Content';
 import Register from '../Register/Content';
-// import { getOrders } from '../../Core/Services/Actions';
-
-const config = {
-  minHour: moment('08:00').format('HH:mm'),
-  maxHour: moment('20:00').format('HH:mm'),
-};
-
-const screen = Dimensions.get('window');
-const ASPECT_RATIO = screen.width * 0.8 - 500 / screen.height;
-const LATITUDE_DELTA = 0.0003;
-const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
-
-const mapStyle = require('../../Config/mapStyle.json');
 
 export default class Orders extends Component {
   constructor(props) {
@@ -79,7 +46,7 @@ export default class Orders extends Component {
   }
 
   async sendOrder(data) {
-    const {user, updateProfile, setLoading, orders} = this.props;
+    const {updateProfile, setLoading, orders} = this.props;
     setLoading(true);
     try {
       firestore()
@@ -164,10 +131,8 @@ export default class Orders extends Component {
       navigation,
       setLoading,
       deviceInfo,
-      getOrders,
       setAccount,
       appType,
-      logOut,
       setTempRegister,
     } = this.props;
     const {toggleType, isLogin, modalAuth} = this.state;
