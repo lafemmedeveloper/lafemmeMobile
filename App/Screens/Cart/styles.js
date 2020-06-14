@@ -134,15 +134,7 @@ export default StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: Colors.client.primaryColor,
-    shadowColor: Colors.dark,
-    shadowOffset: {
-      width: 2,
-      height: 1,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 1,
 
-    elevation: 5,
   },
   linearGradient: {
     flex: 1,

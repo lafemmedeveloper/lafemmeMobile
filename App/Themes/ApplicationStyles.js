@@ -102,52 +102,48 @@ const ApplicationStyles = {
 
   shadownClient: {
     // shadown
-
-    shadowColor: Colors.client.primaryColor,
-    shadowOffset: {
-      width: 2,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 2.84,
-
-    elevation: 2,
+    // shadowColor: Colors.client.primaryColor,
+    // shadowOffset: {
+    //   width: 2,
+    //   height: 2,
+    // },
+    // shadowOpacity: 0.1,
+    // shadowRadius: 2.84,
+    // elevation: 2,
   },
 
   shadownExpert: {
     // shadown
-    shadowColor: Colors.expert.primaryColor,
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-
-    elevation: 5,
+    // shadowColor: Colors.expert.primaryColor,
+    // shadowOffset: {
+    //   width: 0,
+    //   height: 2,
+    // },
+    // shadowOpacity: 0.25,
+    // shadowRadius: 3.84,
+    // elevation: 5,
   },
 
   shadownClientTop: {
     // shadown
-    shadowColor: Colors.client.primaryColor,
-    shadowOffset: {
-      width: 0,
-      height: -2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-
-    elevation: 5,
+    // shadowColor: Colors.client.primaryColor,
+    // shadowOffset: {
+    //   width: 0,
+    //   height: -2,
+    // },
+    // shadowOpacity: 0.25,
+    // shadowRadius: 3.84,
+    // elevation: 5,
   },
   imageshadownClient: {
     // shadown
-    shadowColor: Colors.client.primaryColor,
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    // shadowColor: Colors.client.primaryColor,
+    // shadowOffset: {
+    //   width: 0,
+    //   height: 2,
+    // },
+    // shadowOpacity: 0.25,
+    // shadowRadius: 3.84,
   },
 };
 

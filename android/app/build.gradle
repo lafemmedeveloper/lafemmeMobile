@@ -1,6 +1,5 @@
 apply plugin: "com.android.application"
 
-apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
 
 import com.android.build.OutputFile
 
@@ -83,11 +82,13 @@ project.ext.react = [
 ]
 
 project.ext.envConfigFiles = [
-    clientDebug  : ".env.staging",
-    clientRelease: ".env"
-    expertDebug  : ".env.staging",
-    expertRelease: ".env"
+    debug  : ".env",
+    release: ".env",
+    stagingDebug  : ".env.staging",
+    stagingRelease: ".env.staging"
 ]
+
+apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
 
 apply from: "../../node_modules/react-native/react.gradle"
 apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
@@ -146,6 +147,7 @@ android {
         versionName "1.0.0"
         multiDexEnabled true
         resValue "string", "build_config_package", "com.femme"
+
     }
     splits {
         abi {
@@ -187,6 +189,29 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
+    productFlavors {
+        client {
+            dimension "default"
+            applicationIdSuffix ".client"
+            buildConfigField "String", "VARIANT", "\"client\""
+        }
+        clientStaging {
+            dimension "default"
+            applicationIdSuffix ".clientstaging"
+            buildConfigField "String", "VARIANT", "\"clientStaging\""
+        }
+        expert {
+            dimension "default"
+            applicationIdSuffix ".expert"
+            buildConfigField "String", "VARIANT", "\"expert\""
+        }
+        expertStaging {
+            dimension "default"
+            applicationIdSuffix ".expertstaging"
+            buildConfigField "String", "VARIANT", "\"expertStaging\""
+        }
+
+    }
     // applicationVariants are e.g. debug, release
     applicationVariants.all { variant ->
         variant.outputs.each { output ->
@@ -203,40 +228,7 @@ android {
     }
 }
 
-    productFlavors {
-        clientstagingdebug {
-            applicationIdSuffix ".clientstaging"
-            buildConfigField "String", "VARIANT", "\"staging\""
-        }
-        clientstagingrelease {
-            applicationIdSuffix ".clientstaging"
-            buildConfigField "String", "VARIANT", "\"staging\""
-        }
-        clientproductiondebug {
-            applicationIdSuffix ".client"
-            buildConfigField "String", "VARIANT", "\"production\""
-        }
-        clientproductonrelease {
-            applicationIdSuffix ".client"
-            buildConfigField "String", "VARIANT", "\"production\""
-        }
-        expertstagingdebug {
-             applicationIdSuffix ".expertstaging"
-            buildConfigField "String", "VARIANT", "\"production\""
-        }
-        expertsstagingrelease {
-            applicationIdSuffix ".expertstaging"
-            buildConfigField "String", "VARIANT", "\"production\""
-        }
-        expertsproductiondebug {
-            applicationIdSuffix ".expert"
-            buildConfigField "String", "VARIANT", "\"production\""
-        }
-        expertsproductonrelease {
-            applicationIdSuffix ".espert"
-            buildConfigField "String", "VARIANT", "\"production\""
-        }
-    }
+
 
 dependencies {
   // Firebase dependencies

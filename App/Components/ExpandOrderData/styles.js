@@ -30,15 +30,5 @@ export default StyleSheet.create({
     padding: 10,
     marginTop: 5,
     borderRadius: 10,
-
-    shadowColor: Colors.client.primaryColor,
-    shadowOffset: {
-      width: 0,
-      height: 0,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 0.84,
-
-    elevation: 2,
   },
 });

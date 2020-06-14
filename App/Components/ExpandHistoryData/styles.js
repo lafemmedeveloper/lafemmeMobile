@@ -33,14 +33,5 @@ export default StyleSheet.create({
     borderRadius: 10,
     flexDirection: 'row',
 
-    shadowColor: Colors.client.primaryColor,
-    shadowOffset: {
-      width: 0,
-      height: 0,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 0.84,
-
-    elevation: 2,
   },
 });
