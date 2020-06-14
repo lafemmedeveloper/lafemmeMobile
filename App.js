@@ -1,12 +1,11 @@
 import React, {Component} from 'react';
 import {Provider} from 'react-redux';
-import {View} from 'react-native';
 import {PersistGate} from 'redux-persist/integration/react';
 import {store, persistor} from './App/Core';
 import Router from './App/Config/Router';
+import Config from 'react-native-config';
 import RouterExpert from './App/Config/RouterExpert';
 import DeviceInfo from 'react-native-device-info';
-import {ApplicationStyles} from './App/Themes';
 import Loading from './App/Components/Loading';
 let bundleId = DeviceInfo.getBundleId();
 
@@ -27,6 +26,11 @@ export default class App extends Component {
   async componentDidMount() {
     this.unsubscribe = store.subscribe(this.handleChange);
     this.handleChange();
+
+    console.log('config', Config, {
+      APIKEY: Config.APIKEY,
+      AUTHDOMAIN: Config.AUTHDOMAIN,
+    });
   }
   componentWillUnmount() {
     this.unsubscribe();

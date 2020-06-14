@@ -1,5 +1,7 @@
 apply plugin: "com.android.application"
 
+apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
+
 import com.android.build.OutputFile
 
 /**
@@ -80,6 +82,13 @@ project.ext.react = [
     enableHermes: true,  // clean and rebuild if changing
 ]
 
+project.ext.envConfigFiles = [
+    clientDebug  : ".env.staging",
+    clientRelease: ".env"
+    expertDebug  : ".env.staging",
+    expertRelease: ".env"
+]
+
 apply from: "../../node_modules/react-native/react.gradle"
 apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
 /**
@@ -127,13 +136,16 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+    flavorDimensions "default"
+
     defaultConfig {
-        applicationId "com.femme.client"
+        applicationId "com.femme"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0.0"
         multiDexEnabled true
+        resValue "string", "build_config_package", "com.femme"
     }
     splits {
         abi {
@@ -191,6 +203,41 @@ android {
     }
 }
 
+    productFlavors {
+        clientstagingdebug {
+            applicationIdSuffix ".clientstaging"
+            buildConfigField "String", "VARIANT", "\"staging\""
+        }
+        clientstagingrelease {
+            applicationIdSuffix ".clientstaging"
+            buildConfigField "String", "VARIANT", "\"staging\""
+        }
+        clientproductiondebug {
+            applicationIdSuffix ".client"
+            buildConfigField "String", "VARIANT", "\"production\""
+        }
+        clientproductonrelease {
+            applicationIdSuffix ".client"
+            buildConfigField "String", "VARIANT", "\"production\""
+        }
+        expertstagingdebug {
+             applicationIdSuffix ".expertstaging"
+            buildConfigField "String", "VARIANT", "\"production\""
+        }
+        expertsstagingrelease {
+            applicationIdSuffix ".expertstaging"
+            buildConfigField "String", "VARIANT", "\"production\""
+        }
+        expertsproductiondebug {
+            applicationIdSuffix ".expert"
+            buildConfigField "String", "VARIANT", "\"production\""
+        }
+        expertsproductonrelease {
+            applicationIdSuffix ".espert"
+            buildConfigField "String", "VARIANT", "\"production\""
+        }
+    }
+
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.facebook.react:react-native:+"  // From node_modules
@@ -210,5 +257,9 @@ task copyDownloadableDepsToLibs(type: Copy) {
     from configurations.compile
     into 'libs'
 }
+
+// Required by react-native-firebase
+apply plugin: 'com.google.gms.google-services'
+com.google.gms.googleservices.GoogleServicesPlugin.config.disableVersionCheck = true
 
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)

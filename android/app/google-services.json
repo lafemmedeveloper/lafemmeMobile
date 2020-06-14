@@ -45,9 +45,83 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:172150230750:android:546a6b2f6ab5e96c5bbc4f",
+        "mobilesdk_app_id": "1:172150230750:android:1a1b40d76933a9325bbc4f",
         "android_client_info": {
-          "package_name": "com.lafemme.client"
+          "package_name": "com.femme.clientstaging"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "172150230750-ba88eh0990vhchb4ncikoenf12r6f60i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBX9OXlxkA18EWnRrg6bzgWuQkHbTVx1aI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "172150230750-ba88eh0990vhchb4ncikoenf12r6f60i.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "172150230750-v8ulql21i5pm9400im5kusg5i1gc1931.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.femme.expert",
+                "app_store_id": "1517296035"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:172150230750:android:4296798c9aed3bca5bbc4f",
+        "android_client_info": {
+          "package_name": "com.femme.expert"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "172150230750-ba88eh0990vhchb4ncikoenf12r6f60i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBX9OXlxkA18EWnRrg6bzgWuQkHbTVx1aI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "172150230750-ba88eh0990vhchb4ncikoenf12r6f60i.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "172150230750-v8ulql21i5pm9400im5kusg5i1gc1931.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.femme.expert",
+                "app_store_id": "1517296035"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:172150230750:android:5347e72f9203987d5bbc4f",
+        "android_client_info": {
+          "package_name": "com.femme.expertstaging"
         }
       },
       "oauth_client": [

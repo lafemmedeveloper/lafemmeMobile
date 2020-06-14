@@ -1,4 +1,4 @@
-package com.femme.client;
+package com.femme;
 
 import com.facebook.react.ReactActivity;
 
