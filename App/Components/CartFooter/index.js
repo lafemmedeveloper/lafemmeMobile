@@ -11,7 +11,6 @@ import {View, Text, TouchableOpacity} from 'react-native';
 import styles from './styles';
 import {Fonts, Colors, ApplicationStyles} from '../../Themes';
 import Utilities from '../../Utilities';
-import Icon from 'react-native-vector-icons/FontAwesome5';
 
 export default data => {
   return (

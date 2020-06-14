@@ -1,0 +1,8 @@
+__mocks__/
+android/**
+flow-typed/
+ios/**
+jest-config/
+storybook/storyLoader.js
+gitignored/**
+**/__generated__/**

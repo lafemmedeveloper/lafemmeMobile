@@ -7,13 +7,9 @@
  */
 import React from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
-
 import Icon from 'react-native-vector-icons/FontAwesome5';
-
 import styles from './styles';
-import {Fonts, Colors, Images} from '../../Themes';
-import Utilities from '../../Utilities';
-import {minToHours} from '../../Helpers/MomentHelper';
+import {Fonts, Colors} from '../../Themes';
 import AppConfig from '../../Config/AppConfig';
 
 export default data => {

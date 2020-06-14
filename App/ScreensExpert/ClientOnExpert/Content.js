@@ -1,25 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {Component} from 'react';
-import {
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
-  KeyboardAvoidingView,
-  Keyboard,
-  ScrollView,
-} from 'react-native';
+import {View, Text, TouchableOpacity} from 'react-native';
 
-import _ from 'lodash';
-import {
-  Colors,
-  Fonts,
-  Images,
-  Metrics,
-  ApplicationStyles,
-  FlatList,
-} from '../../Themes';
-import auth from '@react-native-firebase/auth';
 import styles from './styles';
 
 export default class Loading extends Component {

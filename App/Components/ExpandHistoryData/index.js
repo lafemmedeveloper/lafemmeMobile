@@ -6,29 +6,13 @@
  * @flow
  */
 import React from 'react';
-import {
-  View,
-  Image,
-  Text,
-  TouchableOpacity,
-  Animated,
-  ScrollView,
-  StyleSheet,
-  Alert,
-  Dimensions,
-} from 'react-native';
+import {View, Image, Text} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import {getDate, formatDate} from '../../Helpers/MomentHelper';
-import moment from 'moment';
+import {formatDate} from '../../Helpers/MomentHelper';
 
 import styles from './styles';
-import {ApplicationStyles, Colors, Fonts, Images, Metrics} from '../../Themes';
-import FastImage from 'react-native-fast-image';
-import Utilities from '../../Utilities';
-import _ from 'lodash';
-import CardItemCart from '../../Components/CardItemCart';
-import FieldCartConfig from '../../Components/FieldCartConfig';
-import LinearGradient from 'react-native-linear-gradient';
+import {Colors, Fonts, Images} from '../../Themes';
+
 import AppConfig from '../../Config/AppConfig';
 
 // var orderStatusStr = {

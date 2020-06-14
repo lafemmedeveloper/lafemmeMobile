@@ -65,8 +65,8 @@
     "@babel/runtime": "^7.6.3",
     "@react-native-community/eslint-config": "^0.0.5",
     "babel-jest": "^24.9.0",
-    "enzyme": "^3.10.0",
-    "enzyme-adapter-react-16": "^1.15.1",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.2",
     "eslint": "^6.6.0",
     "jest": "^24.9.0",
     "jest-enzyme": "^7.1.2",
@@ -79,6 +79,16 @@
     "npm": ">=6.0.0"
   },
   "jest": {
-    "preset": "react-native"
+    "preset": "react-native",
+    "verbose": true,
+    "transform": {},
+    "clearMocks": true,
+    "transformIgnorePatterns": [
+      "/node_modules/(?!@)/"
+    ],
+    "setupFiles": [
+      "./node_modules/react-native-gesture-handler/jestSetup.js"
+    ],
+    "setupFilesAfterEnv": []
   }
 }

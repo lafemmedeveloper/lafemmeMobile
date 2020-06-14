@@ -6,13 +6,11 @@
  * @flow
  */
 import React from 'react';
-import {View, Image, Text, TouchableOpacity} from 'react-native';
+import {View, Text, TouchableOpacity} from 'react-native';
 
 import styles from './styles';
-import {ApplicationStyles, Colors, Fonts, Images, Metrics} from '../../Themes';
+import {ApplicationStyles, Colors, Fonts} from '../../Themes';
 import FastImage from 'react-native-fast-image';
-
-import _ from 'lodash';
 
 export default data => {
   return (

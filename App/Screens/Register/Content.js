@@ -7,7 +7,6 @@ import {
   KeyboardAvoidingView,
   Alert,
 } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
 
 import {Colors, Images, Fonts} from '../../Themes';
 import auth from '@react-native-firebase/auth';
@@ -29,14 +28,8 @@ export default class Register extends Component {
   }
 
   async setDataRegister() {
-    const {
-      userEmail,
-      userPassword,
-      userFirstName,
-      userLastName,
-      userPhone,
-    } = this.state;
-    const {setLoading, setTempRegister} = this.props;
+    const {userEmail, userPassword, userFirstName, userLastName} = this.state;
+    const {setTempRegister} = this.props;
 
     if (
       userEmail !== '' &&
@@ -113,7 +106,7 @@ export default class Register extends Component {
   }
 
   render() {
-    const {loading, navigation, isLogin} = this.props;
+    const {loading, isLogin} = this.props;
     const {
       userEmail,
       userPassword,
