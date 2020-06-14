@@ -27,9 +27,9 @@ export default class App extends Component {
     this.unsubscribe = store.subscribe(this.handleChange);
     this.handleChange();
 
-    console.log('config', Config, {
-      APIKEY: Config.APIKEY,
-      AUTHDOMAIN: Config.AUTHDOMAIN,
+    console.log('config', {
+      BUILD_TYPE: Config.BUILD_TYPE,
+      FCM_KEY: Config.FCM_KEY,
     });
   }
   componentWillUnmount() {

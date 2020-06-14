@@ -7,6 +7,8 @@ import {
 } from './Types';
 import {store, persistor} from '../../Core';
 
+import Config from 'react-native-config';
+
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import moment from 'moment';

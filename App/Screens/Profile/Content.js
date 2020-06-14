@@ -220,7 +220,7 @@ export default class Profile extends Component {
             style={styles.profileContainer}>
             <ItemProfile
               title={'Actualizar nombre'}
-              icon={'lock'}
+              icon={'user'}
               action={() => {
                 console.log('dfghytf');
               }}
@@ -228,7 +228,7 @@ export default class Profile extends Component {
             />
             <ItemProfile
               title={'Actualizar email'}
-              icon={'lock'}
+              icon={'envelope'}
               action={() => {
                 console.log('dfghytf');
               }}
@@ -236,7 +236,7 @@ export default class Profile extends Component {
             />
             <ItemProfile
               title={'Actualizar contraseña'}
-              icon={'lock'}
+              icon={'unlock-alt'}
               action={() => {
                 console.log('dfghytf');
               }}
@@ -252,7 +252,7 @@ export default class Profile extends Component {
             />
             <ItemProfile
               title={'Mis direcciones'}
-              icon={'map-marker'}
+              icon={'map-pin'}
               action={() => {
                 console.log('address');
               }}

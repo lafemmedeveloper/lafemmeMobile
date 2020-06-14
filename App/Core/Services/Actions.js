@@ -11,6 +11,7 @@ import {
 import firestore from '@react-native-firebase/firestore';
 import {Alert} from 'react-native';
 import {setLoading} from '../UI/Actions';
+import Config from 'react-native-config';
 
 // export const getServices = async dispatch => {
 
@@ -195,8 +196,7 @@ export const topicPush = (topic, notification, data) => async dispatch => {
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
-      Authorization:
-        'key=AAAAKBT0Dt4:APA91bEFw5WX5PdNrg-I7C3lWdc1P7lOno7V-jLarijN6jp5VZIFpzOyV-9e5XC2qkGEW5YFQ7M2oUUCpYihRIXZMclZIQHemle-hOWHvRinCWH5HT2hS_nXImJa92cUWBcciL-_G3cE',
+      Authorization: `key= ${Config.FCM_KEY}`,
     },
     body: JSON.stringify({
       to: `/topics/${topic}`,
