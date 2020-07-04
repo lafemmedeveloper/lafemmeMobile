@@ -4,16 +4,19 @@ import {
   Text,
   Image,
   TouchableOpacity,
-  KeyboardAvoidingView,
   Alert,
+  ScrollView,
 } from 'react-native';
 
-import {Colors, Images, Fonts} from '../../Themes';
+import {Colors, Images, Fonts, Metrics} from '../../Themes';
+
 import auth from '@react-native-firebase/auth';
+import WebView from 'react-native-webview';
+import Modal from 'react-native-modal';
 
 import MyTextInput from '../../Components/MyTextInput';
-
 import styles from './styles';
+import Loading from '../../Components/Loading';
 
 export default class Register extends Component {
   constructor(props) {
@@ -24,12 +27,14 @@ export default class Register extends Component {
       userFirstName: '',
       userLastName: '',
       userPhone: '',
+      tycModal: false,
     };
   }
 
   async setDataRegister() {
     const {userEmail, userPassword, userFirstName, userLastName} = this.state;
-    const {setTempRegister} = this.props;
+    const {setTempRegister, setLoading} = this.props;
+    setLoading(true);
 
     if (
       userEmail !== '' &&
@@ -37,28 +42,30 @@ export default class Register extends Component {
       userFirstName !== '' &&
       userLastName !== ''
     ) {
-      // setLoading(true);
       await setTempRegister(this.state);
       this.handleSignUp();
+
+      setLoading(false);
     } else {
       Alert.alert('Ups...', 'Completa todos los datos del registro');
+      setLoading(false);
     }
   }
 
   async handleSignUp() {
     const {userEmail, userPassword} = this.state;
     const {setLoading} = this.props;
+    setLoading(true);
 
-    console.log('handleSignUp', userEmail, userPassword);
     if (userEmail !== '' && userPassword !== '') {
       try {
-        setLoading(true);
         auth()
           .createUserWithEmailAndPassword(userEmail, userPassword)
+
           .catch(function(error) {
             // Handle Errors here.
-            var errorCode = error.code;
-            var errorMessage = error.message;
+            const errorCode = error.code;
+            const errorMessage = error.message;
 
             console.log('errorCode', errorCode);
             console.log('errorMessage', errorMessage);
@@ -78,9 +85,7 @@ export default class Register extends Component {
               );
             }
           });
-
         setLoading(false);
-        // await this.props.setAuth(authResponse);
       } catch (error) {
         console.log('error:register', error);
         setLoading(false);
@@ -116,10 +121,7 @@ export default class Register extends Component {
     } = this.state;
     return (
       <View style={styles.container}>
-        <KeyboardAvoidingView
-          style={styles.containerItems}
-          behavior="padding"
-          enabled>
+        <ScrollView>
           <View style={styles.contentContainer}>
             <Image style={{marginVertical: 20}} source={Images.logoLafemme} />
             <Text
@@ -172,7 +174,13 @@ export default class Register extends Component {
               textContent={'password'}
               autoCapitalize={'none'}
             />
-            <TouchableOpacity style={{marginVertical: 30}}>
+            <TouchableOpacity
+              onPress={() => {
+                this.setState({
+                  tycModal: true,
+                });
+              }}
+              style={{marginVertical: 30}}>
               <Text
                 style={Fonts.style.regular(
                   Colors.dark,
@@ -194,8 +202,6 @@ export default class Register extends Component {
             <TouchableOpacity
               onPress={() => {
                 this.setDataRegister();
-                // navigation.navigate('Home', {});
-                // this.props.getPlaces('whas');
               }}
               style={styles.btnContainer}>
               <Text
@@ -208,26 +214,53 @@ export default class Register extends Component {
               </Text>
             </TouchableOpacity>
           </View>
-          <View style={styles.footerContainer}>
+          <View style={[styles.footerContainer, {marginVertical: 10}]}>
             <TouchableOpacity
               onPress={() => {
                 isLogin();
-                // navigation.navigate('Login', {});
               }}
               style={styles.btnRegisterLogin}>
-              <Text
-                style={Fonts.style.bold(
-                  Colors.dark,
-                  Fonts.size.medium,
-                  'right',
-                )}>
-                {'Iniciar sesión'}
+              <Text style={Fonts.style.bold(Colors.dark, Fonts.size.medium)}>
+                {'Ye tengo cuenta'}
               </Text>
             </TouchableOpacity>
           </View>
-        </KeyboardAvoidingView>
-
-        {loading && <View style={styles.loading} />}
+          <Modal
+            isVisible={this.state.tycModal}
+            style={{
+              justifyContent: 'flex-end',
+              margin: 0,
+            }}
+            onBackdropPress={() => {
+              this.setState({tycModal: false});
+            }}
+            backdropColor={Colors.pinkMask(0.75)}>
+            <View
+              style={{
+                paddingTop: 40,
+                height: Metrics.screenHeight * 0.8,
+                justifyContent: 'flex-end',
+                margin: 0,
+                borderTopLeftRadius: 10,
+                borderTopRightRadius: 10,
+                alignItems: 'center',
+                backgroundColor: Colors.light,
+              }}>
+              <WebView
+                WebView={true}
+                source={{uri: 'https://www.weflow.me/terminosycondiciones'}}
+                renderLoading={this.renderLoadingView}
+                startInLoadingState={true}
+                style={{
+                  width: Metrics.screenWidth,
+                  alignSelf: 'center',
+                  flex: 1,
+                }}
+              />
+            </View>
+          </Modal>
+        </ScrollView>
+        {loading && <Loading type={'client'} loading={loading} />}
       </View>
     );
   }

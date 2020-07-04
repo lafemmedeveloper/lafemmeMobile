@@ -1,7 +1,12 @@
 import {connect} from 'react-redux';
 import Content from './Content';
 
-import {setAuth, setAccount, logOut} from '../../Core/User/Actions';
+import {
+  setAuth,
+  setAccount,
+  logOut,
+  updateProfile,
+} from '../../Core/User/Actions';
 import {setLoading, getDeviceInfo} from '../../Core/UI/Actions';
 
 const mapStateToProps = ({ui, currentUser, services}) => {
@@ -27,7 +32,11 @@ const mapDispatchToProps = dispatch => {
     setAuth: user => dispatch(setAuth(user)),
     setAccount: uid => dispatch(setAccount(uid)),
     logOut: () => dispatch(logOut()),
+    updateProfile: (data, typeData) => dispatch(updateProfile(data, typeData)),
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Content);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Content);

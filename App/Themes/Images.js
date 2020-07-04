@@ -11,8 +11,10 @@ const images = {
   banner: require('../Images/services/banner.png'),
 
   logoLafemme: require('../Images/logoLafemme.png'),
+  logoExpert: require('../Images/logoExpert.png'),
 
   moto: require('../Images/moto.png'),
+  user: require('../Images/user.png'),
 
   billResume: require('../Images/billResume.png'),
 

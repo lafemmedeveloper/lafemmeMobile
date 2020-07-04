@@ -113,7 +113,7 @@ export default class Home extends Component {
             .getToken()
             .then(token => {
               if (token) {
-                console.log('token', token);
+                /*   console.log('token', token); */
                 this.setFCM(token);
               } else {
                 console.log('token failed');

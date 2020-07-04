@@ -8,9 +8,11 @@ export default StyleSheet.create({
     // height: Metrics.screenHeight,
     justifyContent: 'center',
     alignItems: 'center',
+    paddingTop: 50,
   },
   containerItems: {
     flex: 1,
+
     // marginTop: Metrics.header,
     paddingBottom: 10,
     alignItems: 'center',

@@ -35,6 +35,7 @@ export const setAccount = uid => (dispatch, getStore) => {
           userLastName,
           userPhone,
         } = getStore().currentUser.tempDataRegister;
+        const userToken = auth().currentUser.getIdToken;
         usersRef
           .set({
             uid: auth().currentUser ? auth().currentUser.uid : null,
@@ -52,12 +53,16 @@ export const setAccount = uid => (dispatch, getStore) => {
             guest: [],
             roles: ['client'],
             cart: null,
+            token: userToken,
           })
           .then(function() {
             console.log('Document successfully written!');
             usersRef.onSnapshot(_user => {
               return resolve(
-                dispatch({type: USER_ACCOUNT, payload: _user.data()}),
+                dispatch({
+                  type: USER_ACCOUNT,
+                  payload: _user.data(),
+                }),
               );
             });
           })
@@ -95,7 +100,7 @@ export const updateProfile = (data, typeData) => async (dispatch, getStore) => {
     const userRef = firestore()
       .collection('users')
       .doc(getStore().currentUser.auth.uid);
-    // console.log('typeData', typeData);
+
     await userRef.set(
       {
         [typeData]: data,

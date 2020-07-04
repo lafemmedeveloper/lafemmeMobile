@@ -19,7 +19,6 @@ export default {
     paddingHorizontal: 40,
     alignSelf: 'center',
     alignItems: 'center',
-
   },
 
   containerItems: {
@@ -56,6 +55,7 @@ export default {
     justifyContent: 'center',
     alignItems: 'center',
   },
+
   contentContainer: {
     flex: 1,
     width: Metrics.screenWidth,
@@ -146,7 +146,15 @@ export default {
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: Colors.client.secondaryColor,
+    shadowColor: Colors.dark,
+    shadowOffset: {
+      width: 2,
+      height: 1,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 1,
 
+    elevation: 5,
   },
   linearGradient: {
     flex: 1,

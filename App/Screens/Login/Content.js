@@ -6,6 +6,7 @@ import {
   Alert,
   TouchableOpacity,
   KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 
 import {Colors, Images, Fonts} from '../../Themes';
@@ -24,73 +25,75 @@ export default class Login extends Component {
     };
   }
 
-  async componentDidMount() {
-    //     const {deviceInfo} = this.props;
-    // //
-    // console.log('_deviceInfo', this.props);
-  }
-
   async handleLogin() {
     const {userEmail, userPassword} = this.state;
     const {setLoading, setAccount} = this.props;
     setLoading(true);
-    if (userEmail !== '' && userPassword !== '') {
+
+    if (userEmail === '' && userPassword === '') {
+      setLoading(false);
+      Alert.alert('Ups...', 'Completa o verifica los datos para continuar');
+    } else {
       try {
         if (userEmail !== '' && userPassword !== '') {
-          const user = await auth().signInWithEmailAndPassword(
-            userEmail,
-            userPassword,
-          );
-
-          console.log('handleLogin', user);
+          await auth().signInWithEmailAndPassword(userEmail, userPassword);
 
           await setAccount(auth().currentUser.uid);
           setLoading(false);
-          // console.log(user);
-
-          // await this.props.setAuth(auth);
-
-          // this.setState({isLoading: false});
-          // this.props.navigation.navigate('CompleteUserData');
         }
       } catch (error) {
         console.log('error', error.message);
         setLoading(false);
-        Alert.alert('Ups...', 'Verifica los datos ingresados');
+        if (
+          error
+            .toString()
+            .includes(
+              'password is invalid or the user does not have a password.',
+            )
+        ) {
+          Alert.alert(
+            'Error de Autentificación',
+            'Tu contraseña es incorrecta',
+          );
+        } else if (
+          error.toString().includes('email address is badly formatted.')
+        ) {
+          Alert.alert(
+            'Error de Autentificación',
+            'Revisa tu correo o contraseña',
+          );
+        } else if (
+          error
+            .toString()
+            .includes(
+              'is no user record corresponding to this identifier. The user may have been deleted.',
+            )
+        ) {
+          Alert.alert(
+            'Error de Autentificación',
+            'No hay registro de usuario correspondiente a este identificador. El usuario puede haber sido eliminado.',
+          );
+        }
       }
-    } else {
-      setLoading(false);
-      Alert.alert('Ups...', 'Completa o verifica los datos para continuar');
     }
   }
 
-  async setDefaultUser() {
-    this.setState({
-      userEmail: 'j@jb.com',
-      userPassword: 'qwerty!',
-    });
-  }
-
-  async setDefaultExpert() {
-    this.setState({
-      userEmail: 'expert@jb.com',
-      userPassword: 'qwerty',
-    });
-  }
   render() {
-    const {loading, navigation, isLogin, appType, deviceInfo} = this.props;
+    const {loading, isLogin, appType} = this.props;
 
     const {userEmail, userPassword} = this.state;
+
     return (
       <View style={styles.container}>
         <KeyboardAvoidingView
-          style={styles.containerItems}
-          behavior="padding"
+          behavior={Platform.OS === 'ios' ? 'padding' : null}
           enabled>
           <View style={styles.contentContainer}>
             <Image
               style={{width: 100, height: 100, resizeMode: 'contain'}}
-              source={Images.logoLafemme}
+              source={
+                appType === 'client' ? Images.logoLafemme : Images.logoExpert
+              }
             />
 
             <Text
@@ -140,104 +143,71 @@ export default class Login extends Component {
               </Text>
             </TouchableOpacity>
           </View>
-
-          <Text
-            style={[
-              Fonts.style.regular(Colors.dark, Fonts.size.medium, 'center'),
-              {marginVertical: 10},
-            ]}>
-            {'O continúa con:'}
-          </Text>
-          <TouchableOpacity
-            onPress={() => {
-              this.handleLogin();
-            }}
-            style={[styles.btnSocialContainer]}>
-            <Image
-              source={{uri: Images.fbIcon}}
-              style={{width: 25, height: 25, marginRight: 10}}
-            />
-            <Text
-              style={Fonts.style.semiBold(
-                Colors.dark,
-                Fonts.size.small,
-                'center',
-              )}>
-              {'Continuar con Facebook'}
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              this.handleLogin();
-            }}
-            style={[styles.btnSocialContainer]}>
-            <Image
-              source={{uri: Images.gIcon}}
-              style={{width: 25, height: 25, marginRight: 10}}
-            />
-            <Text
-              style={Fonts.style.semiBold(
-                Colors.dark,
-                Fonts.size.small,
-                'center',
-              )}>
-              {'Continuar con Google'}
-            </Text>
-          </TouchableOpacity>
-          <View style={styles.footerContainer}>
-            <TouchableOpacity
-              onPress={() => {
-                isLogin();
-              }}
-              style={styles.btnRegisterLogin}>
+          {appType === 'client' && (
+            <View>
               <Text
-                style={Fonts.style.bold(
-                  Colors.dark,
-                  Fonts.size.medium,
-                  'right',
-                )}>
-                {'Crear cuenta'}
+                style={[
+                  Fonts.style.regular(Colors.dark, Fonts.size.medium, 'center'),
+                  {marginVertical: 10},
+                ]}>
+                {'O continúa con:'}
               </Text>
-            </TouchableOpacity>
-          </View>
+              <TouchableOpacity
+                onPress={() => {
+                  this.handleLogin();
+                }}
+                style={[styles.btnSocialContainer]}>
+                <Image
+                  source={{uri: Images.fbIcon}}
+                  style={{width: 25, height: 25, marginRight: 10}}
+                />
+                <Text
+                  style={Fonts.style.semiBold(
+                    Colors.dark,
+                    Fonts.size.small,
+                    'center',
+                  )}>
+                  {'Continuar con Facebook'}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  this.handleLogin();
+                }}
+                style={[styles.btnSocialContainer]}>
+                <Image
+                  source={{uri: Images.gIcon}}
+                  style={{width: 25, height: 25, marginRight: 10}}
+                />
+                <Text
+                  style={Fonts.style.semiBold(
+                    Colors.dark,
+                    Fonts.size.small,
+                    'center',
+                  )}>
+                  {'Continuar con Google'}
+                </Text>
+              </TouchableOpacity>
+              <View style={styles.footerContainer}>
+                <TouchableOpacity
+                  onPress={() => {
+                    isLogin();
+                  }}
+                  style={styles.btnRegisterLogin}>
+                  <Text
+                    style={Fonts.style.bold(
+                      Colors.dark,
+                      Fonts.size.medium,
+                      'right',
+                    )}>
+                    {'Crear cuenta'}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
         </KeyboardAvoidingView>
-        {__DEV__ && (
-          <View
-            style={{
-              opacity: 0.2,
-              position: 'absolute',
-              flexDirection: 'row',
 
-              bottom: 30,
-            }}>
-            <TouchableOpacity
-              onPress={() => {
-                this.setDefaultUser();
-              }}>
-              <Text
-                style={Fonts.style.regular(
-                  Colors.dark,
-                  Fonts.size.small,
-                  'center',
-                )}>
-                set Default Client
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                this.setDefaultExpert();
-              }}>
-              <Text
-                style={Fonts.style.regular(
-                  Colors.dark,
-                  Fonts.size.small,
-                  'center',
-                )}>
-                set Default Expert
-              </Text>
-            </TouchableOpacity>
-          </View>
-        )}
         {loading && <Loading type={'client'} loading={loading} />}
       </View>
     );
