@@ -245,7 +245,7 @@ export default class Address extends Component {
               getDefaultValue={() => ''}
               query={{
                 // available options: https://developers.google.com/places/web-service/autocomplete
-                key: 'AIzaSyBX9OXlxkA18EWnRrg6bzgWuQkHbTVx1aI',
+                key: 'AIzaSyArVhfk_wHVACPwunlCi1VP9EUgYZcnFpQ ',
                 language: 'es', // language of the results
                 types: 'geocode', // default: 'geocode'
                 components: 'country:co',
@@ -707,7 +707,11 @@ export default class Address extends Component {
                 </View>
               </View>
               <View
-                style={{width: '90%', alignSelf: 'center', marginVertical: 10}}>
+                style={{
+                  width: '90%',
+                  alignSelf: 'center',
+                  marginVertical: 10,
+                }}>
                 <Text
                   style={[
                     Fonts.style.bold(Colors.dark, Fonts.size.small, 'left'),
@@ -830,7 +834,11 @@ export default class Address extends Component {
               </View> */}
 
               <View
-                style={{width: '90%', alignSelf: 'center', marginVertical: 10}}>
+                style={{
+                  width: '90%',
+                  alignSelf: 'center',
+                  marginVertical: 10,
+                }}>
                 <Text
                   style={[
                     Fonts.style.bold(Colors.dark, Fonts.size.small, 'left'),

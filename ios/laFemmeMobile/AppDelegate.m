@@ -52,7 +52,7 @@
   
   
   
-  [GMSServices provideAPIKey:@"AIzaSyBX9OXlxkA18EWnRrg6bzgWuQkHbTVx1aI"];
+  [GMSServices provideAPIKey:@"AIzaSyArVhfk_wHVACPwunlCi1VP9EUgYZcnFpQ"];
   
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
   RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge

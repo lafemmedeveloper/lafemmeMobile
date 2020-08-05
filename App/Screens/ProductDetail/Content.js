@@ -416,6 +416,7 @@ export default class Home extends Component {
     let addOnDuration = _.sumBy(addonsGuest, 'addonsDuration');
 
     let countItems = _.filter(addonsList, item => item.isCountAddon === true);
+
     console.log('countItems', countItems);
     let addOnCountPrice = _.sumBy(countItems, 'addOnPrice');
     let addOnCountDuration = _.sumBy(countItems, 'addonsDuration');
@@ -427,7 +428,7 @@ export default class Home extends Component {
         addOnDuration +
         addOnCountDuration) /
       experts.length;
-
+    const addOnsFilter = addOns.filter(a => a.isEnabled === true);
     return (
       <View style={[styles.container]}>
         <View //Header
@@ -841,7 +842,7 @@ export default class Home extends Component {
 
               <View opacity={0.25} style={ApplicationStyles.separatorLine} />
 
-              {addOns && addOns.length > 0 && (
+              {addOnsFilter && addOnsFilter.length > 0 && (
                 <View //description
                   style={{
                     width: Metrics.screenWidth * 0.9,
@@ -859,9 +860,9 @@ export default class Home extends Component {
                 </View>
               )}
               {/* <View style={{ marginHorizontal: 20, alignSelf: 'center' }}> */}
-              {addOns &&
-                addOns.length > 0 &&
-                addOns.map((data, index) => {
+              {addOnsFilter &&
+                addOnsFilter.length > 0 &&
+                addOnsFilter.map((data, index) => {
                   return (
                     <View key={index}>
                       {index === 0 && <View style={{height: 20}} />}

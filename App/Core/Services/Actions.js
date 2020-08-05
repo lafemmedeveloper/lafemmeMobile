@@ -12,6 +12,7 @@ import firestore from '@react-native-firebase/firestore';
 import {Alert} from 'react-native';
 import {setLoading} from '../UI/Actions';
 import Config from 'react-native-config';
+import _ from 'lodash';
 
 // export const getServices = async dispatch => {
 
@@ -28,8 +29,8 @@ export const getServices = () => async dispatch => {
       id: doc.id,
     };
   });
-
-  return dispatch({type: GET_SERVICES, payload: data});
+  const sortedData = _.sortBy(data, 'order');
+  return dispatch({type: GET_SERVICES, payload: sortedData});
 };
 
 export const getGallery = () => async dispatch => {

@@ -198,7 +198,7 @@ export default class Address extends Component {
                 getDefaultValue={() => ''}
                 query={{
                   // available options: https://developers.google.com/places/web-service/autocomplete
-                  key: 'AIzaSyBX9OXlxkA18EWnRrg6bzgWuQkHbTVx1aI',
+                  key: 'AIzaSyArVhfk_wHVACPwunlCi1VP9EUgYZcnFpQ',
                   language: 'es', // language of the results
                   types: 'geocode', // default: 'geocode'
                   components: 'country:co',

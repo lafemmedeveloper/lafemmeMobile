@@ -25,7 +25,17 @@ export default dta => {
 
   const {data} = dta;
   const {products, addOns} = data;
+
+  let sortedProduct = _.sortBy(products, 'order');
   const itemHeight = 80;
+
+  console.log(
+    'these variables are not being used==>',
+    onChangeOpacity,
+    onChangeanimationItem,
+    onChangeanimation,
+  );
+  let productFilter = sortedProduct.filter(p => p.isEnabled === true);
 
   return (
     <Animated.View style={[styles.container]}>
@@ -33,7 +43,8 @@ export default dta => {
         onPress={() => {
           let duration = 250;
           let toHeight =
-            itemHeight * (products && products.length ? products.length : 50);
+            itemHeight *
+            (productFilter && productFilter.length ? productFilter.length : 50);
 
           Animated.timing(animation, {
             toValue: expanded ? toHeight : 0,
@@ -81,16 +92,13 @@ export default dta => {
         style={[
           {
             width: '100%',
-            // flex: 0
-            // padding: 10,
-            // paddingTop: 0
             zIndex: 100,
           },
           {height: animation},
         ]}>
-        {products &&
-          products.length > 0 &&
-          products.map((product, index) => {
+        {productFilter &&
+          productFilter.length > 0 &&
+          productFilter.map((product, index) => {
             return (
               <TouchableOpacity
                 key={index}
@@ -117,16 +125,13 @@ export default dta => {
                   opacity={opacity}
                   data={data}
                   style={{
-                    // width: Metrics.screenWidth * 0.95,
                     height: animationItem,
                     alignItems: 'center',
                     flexDirection: 'row',
-                    // backgroundColor: Colors.light
                   }}
                   image={{uri: data.imageUrl}}>
                   <View
                     style={{
-                      // width: 20,
                       height: 80,
                       resizeMode: 'cover',
                       margin: 5,
@@ -156,7 +161,6 @@ export default dta => {
                       style={{
                         flexDirection: 'row',
                         justifyContent: 'space-between',
-                        // backgroundColor: 'red'
                       }}>
                       <Text
                         style={Fonts.style.semiBold(
@@ -169,6 +173,8 @@ export default dta => {
                     </View>
                     <View>
                       <Text
+                        numberOfLines={2}
+                        ellipsizeMode="tail"
                         style={Fonts.style.light(
                           Colors.dark,
                           Fonts.size.medium,
@@ -180,7 +186,6 @@ export default dta => {
                   </View>
                   <View
                     style={{
-                      // width: 20,
                       height: 80,
                       resizeMode: 'cover',
                       margin: 5,
@@ -204,7 +209,8 @@ export default dta => {
                         marginLeft: 5,
                         tintColor: Colors.dark,
                         resizeMode: 'contain',
-                      }}></Image>
+                      }}
+                    />
                   </View>
                 </Animated.View>
               </TouchableOpacity>
