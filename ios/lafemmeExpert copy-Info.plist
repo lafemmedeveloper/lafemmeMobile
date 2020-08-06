@@ -23,21 +23,21 @@
     <key>CFBundleVersion</key>
     <string>$(CURRENT_PROJECT_VERSION)</string>
     <key>FirebaseAppDelegateProxyEnabled</key>
-    <false/>
+    <false />
     <key>ITSAppUsesNonExemptEncryption</key>
-    <false/>
+    <false />
     <key>LSRequiresIPhoneOS</key>
-    <true/>
+    <true />
     <key>NSAppTransportSecurity</key>
     <dict>
       <key>NSAllowsArbitraryLoads</key>
-      <true/>
+      <true />
       <key>NSExceptionDomains</key>
       <dict>
         <key>localhost</key>
         <dict>
           <key>NSExceptionAllowsInsecureHTTPLoads</key>
-          <true/>
+          <true />
         </dict>
       </dict>
     </dict>
@@ -75,11 +75,17 @@
       <string>UIInterfaceOrientationPortrait</string>
     </array>
     <key>UIViewControllerBasedStatusBarAppearance</key>
-    <false/>
+    <false />
     <key>UIBackgroundModes</key>
     <array>
       <string>location</string>
     </array>
+    <key>NSCameraUsageDescription</key>
+    <string>La Femme solicita acceso para que puedas publicar tus imagenes o enviar fotografías.</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>La Femme solicita acceso para que puedas publicar tus imagenes o enviar fotografías.</string>
+    <key>NSPhotoLibraryAddUsageDescription</key>
+    <string>La Femme solicita acceso para que puedas publicar tus imagenes o enviar fotografías.</string>
     <key>NSLocationAlwaysUsageDescription</key>
     <string>App requires background tracking</string>
     <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>

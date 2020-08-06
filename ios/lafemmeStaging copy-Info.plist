@@ -80,6 +80,12 @@
 		<array>
 			<string>location</string>
 		</array>
+		<key>NSCameraUsageDescription</key>
+		<string>La Femme solicita acceso para que puedas publicar tus imagenes o enviar fotografías.</string>
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>La Femme solicita acceso para que puedas publicar tus imagenes o enviar fotografías.</string>
+		<key>NSPhotoLibraryAddUsageDescription</key>
+		<string>La Femme solicita acceso para que puedas publicar tus imagenes o enviar fotografías.</string>
 		<key>NSLocationAlwaysUsageDescription</key>
 		<string>App requires background tracking</string>
 		<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
