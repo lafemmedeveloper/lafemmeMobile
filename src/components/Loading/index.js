@@ -2,7 +2,7 @@ import React from 'react';
 import {View} from 'react-native';
 import {WaveIndicator} from 'react-native-indicators';
 import styles from './styles';
-import {Colors} from 'App/themes';
+import {Colors} from '../../themes';
 
 export default (data) => {
   const {type, loading} = data;

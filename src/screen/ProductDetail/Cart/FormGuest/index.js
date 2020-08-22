@@ -1,7 +1,7 @@
 import React from 'react';
-import MyTextInput from 'App/components/MyTextInput';
+import MyTextInput from '../../../../components/MyTextInput';
 import {View, Text, TouchableOpacity, Alert} from 'react-native';
-import {Fonts, Colors, Metrics} from 'App/themes';
+import {Fonts, Colors, Metrics} from '../../../../themes';
 
 const FormGuest = (props) => {
   const {form, setForm, addGuest} = props;

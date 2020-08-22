@@ -1,9 +1,9 @@
 import React from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
-import {Metrics, Colors, Fonts, ApplicationStyles} from 'App/themes';
+import {Metrics, Colors, Fonts, ApplicationStyles} from '../../../../themes';
 import Utilities from '../../../../utilities';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import TitleValue from 'App/components/TitleValue';
+import TitleValue from '../../../../components/TitleValue';
 
 const HandleAddOns = (props) => {
   const {

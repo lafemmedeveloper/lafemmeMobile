@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "android": "ENVFILE=.env.staging react-native run-android --variant=clientStagingDebug --appIdSuffix clientstaging",
+    "android": "ENVFILE=.env.staging react-native run-android --variant=clientDebug --appIdSuffix clientStaging",
     "iosC": "ENVFILE=.env react-native run-ios --scheme \"lafemme\"",
     "iosE": "ENVFILE=.env react-native run-ios --scheme \"lafemmeExpert\" --simulator=\"iPhone 8\"",
     "iosCs": "ENVFILE=.env.staging react-native run-ios --scheme \"lafemmeStaging\"",

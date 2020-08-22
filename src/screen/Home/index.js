@@ -1,12 +1,12 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {View, ScrollView} from 'react-native';
 import styles from './styles';
-import ExpandHome from 'App/components/ExpandHome';
-import {Metrics, ApplicationStyles, Images} from 'App/themes';
-import {StoreContext} from 'App/flux';
-import {getServices} from 'App/flux/services/actions';
+import ExpandHome from '../../components/ExpandHome';
+import {Metrics, ApplicationStyles, Images} from '../../themes';
+import {StoreContext} from '../../flux';
+import {getServices} from '../../flux/services/actions';
 import {useNavigation} from '@react-navigation/native';
-import ModalApp from 'App/components/ModalApp';
+import ModalApp from '../../components/ModalApp';
 import Login from '../Login';
 import {observeUser} from '../../flux/auth/actions';
 import BannerScroll from '../../components/BannerScroll';

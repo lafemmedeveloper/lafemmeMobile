@@ -7,10 +7,10 @@ import {
   Alert,
   ActivityIndicator,
 } from 'react-native';
-import {Colors, Metrics, Fonts} from 'App/themes';
+import {Colors, Metrics, Fonts} from '../../themes';
 import moment from 'moment';
 import auth from '@react-native-firebase/auth';
-import {saveUser} from 'App/flux/auth/actions';
+import {saveUser} from '../../flux/auth/actions';
 
 const Register = (props) => {
   const {

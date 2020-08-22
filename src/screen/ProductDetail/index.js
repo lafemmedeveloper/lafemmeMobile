@@ -2,7 +2,7 @@ import React from 'react';
 import {View, TouchableOpacity, ScrollView} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import styles from './styles';
-import {Metrics, Colors, ApplicationStyles} from 'App/themes';
+import {Metrics, Colors, ApplicationStyles} from '../../themes';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Cart from './Cart';
 

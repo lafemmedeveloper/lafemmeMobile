@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, Alert} from 'react-native';
-import {Metrics, Colors, Fonts} from 'App/themes';
+import {Metrics, Colors, Fonts} from '../../../../themes';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Utilities from '../../../../utilities';
 

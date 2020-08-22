@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import {Metrics, Colors} from 'App/themes';
+import {Metrics, Colors} from '../../themes';
 export default StyleSheet.create({
   textInput: {
     width: '100%',

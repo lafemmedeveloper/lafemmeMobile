@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text} from 'react-native';
 import styles from './styles';
-import {Fonts, Colors} from 'App/themes';
+import {Fonts, Colors} from '../../themes';
 
 export default (data) => {
   const {title, value, width, titleType} = data;

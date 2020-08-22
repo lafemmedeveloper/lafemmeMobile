@@ -1,9 +1,9 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import Home from 'App/screen/Home';
-import Orders from 'App/screen/Orders';
-import Profile from 'App/screen/Profile';
-import {Colors, Images} from 'App./../../themes';
+import Home from '../../../screen/Home';
+import Orders from '../../../screen/Orders';
+import Profile from '../../../screen/Profile';
+import {Colors, Images} from '../../../themes';
 import {Image} from 'react-native';
 
 const Tab = createBottomTabNavigator();

@@ -1,15 +1,15 @@
 import React, {useState, useContext} from 'react';
 import {View, Text, ScrollView, TouchableOpacity} from 'react-native';
-import {Metrics, Colors, Fonts, ApplicationStyles} from 'App/themes';
-import Utilities from 'App/utilities';
-import ModalApp from 'App/components/ModalApp';
+import {Metrics, Colors, Fonts, ApplicationStyles} from '../../../themes';
+import Utilities from '../../../utilities';
+import ModalApp from '../../../components/ModalApp';
 import FormGuest from './FormGuest';
-import {addGuestDb, updateUser, setUserCart} from 'App/flux/auth/actions';
+import {addGuestDb, updateUser, setUserCart} from '../../../flux/auth/actions';
 import _ from 'lodash';
 import {minToHours} from '../../../helpers/MomentHelper';
 import {useNavigation} from '@react-navigation/native';
 
-import {StoreContext} from 'App/flux';
+import {StoreContext} from '../../../flux';
 import HandleGuest from './HandleGuest';
 import HandleAddOns from './HandleAddOns';
 import HandleResume from './HandleResume';

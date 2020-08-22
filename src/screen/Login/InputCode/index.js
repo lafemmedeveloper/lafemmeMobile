@@ -7,7 +7,7 @@ import {
   Alert,
   ActivityIndicator,
 } from 'react-native';
-import {Colors, Metrics, Fonts} from 'App/themes';
+import {Colors, Metrics, Fonts} from '../../../themes';
 import {
   CodeField,
   Cursor,

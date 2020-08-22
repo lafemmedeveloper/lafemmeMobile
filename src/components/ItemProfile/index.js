@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
 
 import styles from './styles';
-import {Colors, Fonts} from 'App/themes';
+import {Colors, Fonts} from '../../themes';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
 export default (data) => {

@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './styles';
-import {Colors} from 'App/themes';
+import {Colors} from '../../themes';
 import Modal from 'react-native-modal';
 import {View} from 'react-native';
 

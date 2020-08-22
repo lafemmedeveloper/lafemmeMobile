@@ -3,7 +3,7 @@ import {View, Text, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
 import styles from './styles';
-import {ApplicationStyles, Fonts, Colors} from 'App/themes';
+import {ApplicationStyles, Fonts, Colors} from '../../themes';
 
 export default (data) => {
   const {selectAddress} = data;

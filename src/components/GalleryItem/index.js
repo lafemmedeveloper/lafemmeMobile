@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text} from 'react-native';
-import {Metrics, Fonts, Colors} from 'App/themes';
+import {Metrics, Fonts, Colors} from '../../themes';
 import FastImage from 'react-native-fast-image';
 import moment from 'moment';
 

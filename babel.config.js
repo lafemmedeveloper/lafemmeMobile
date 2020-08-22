@@ -8,13 +8,7 @@ module.exports = {
       {
         root: ['./src'],
         alias: {
-          App: './src',
-          Components: './src/components',
-          Screens: './src/screens',
-          Flux: './src/flux',
-          Themes: './src/themes',
-          Utilities: './src/utilities',
-          Helpers: './src/helpers',
+          app: './src',
           'jest-config': './jest-config',
           test: './__tests__',
         },

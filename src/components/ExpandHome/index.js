@@ -2,9 +2,9 @@ import React from 'react';
 import {View, Image, Text, TouchableOpacity, Animated} from 'react-native';
 
 import styles from './styles';
-import {ApplicationStyles, Colors, Fonts, Images, Metrics} from 'App/themes';
+import {ApplicationStyles, Colors, Fonts, Images, Metrics} from '../../themes';
 import FastImage from 'react-native-fast-image';
-import Utilities from 'App/utilities';
+import Utilities from '../../utilities';
 import _ from 'lodash';
 
 export default (dta) => {
@@ -74,7 +74,7 @@ export default (dta) => {
           style={[ApplicationStyles.itemTextContainer]}>
           <Text
             style={[
-              Fonts.style.bold(Colors.light, Fonts.size.bigTitle, 'center'),
+              Fonts.style.bold(Colors.light, Fonts.size.h3, 'center'),
               ApplicationStyles.shadownClient,
             ]}>
             {data.name.toUpperCase()}

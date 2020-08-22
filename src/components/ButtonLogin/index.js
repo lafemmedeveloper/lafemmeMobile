@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
 import {Text, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {Fonts, Colors} from 'App/themes';
-import ModalApp from 'App/components/ModalApp';
-import Login from 'App/screen/Login';
+import {Fonts, Colors} from '../../themes';
+import ModalApp from '../../components/ModalApp';
+import Login from '../../screen/Login';
 import styles from './styles';
 
 const ButtonLogin = () => {

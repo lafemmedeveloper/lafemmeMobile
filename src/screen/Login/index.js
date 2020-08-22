@@ -7,14 +7,14 @@ import {
   Alert,
   ActivityIndicator,
 } from 'react-native';
-import {Colors, Metrics, Fonts} from 'App/themes';
+import {Colors, Metrics, Fonts} from '../../themes';
 import auth from '@react-native-firebase/auth';
 import CountryPicker from 'react-native-country-picker-modal';
 import {parsePhoneNumberFromString} from 'libphonenumber-js';
 import InputCode from './InputCode';
-import Register from 'App/screen//Register';
-import {StoreContext} from 'App/flux';
-import ModalApp from 'App/components/ModalApp';
+import Register from '../../screen//Register';
+import {StoreContext} from '../../flux';
+import ModalApp from '../../components/ModalApp';
 import {setUser} from '../../flux/auth/actions';
 
 const Login = (props) => {
