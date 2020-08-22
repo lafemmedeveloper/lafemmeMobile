@@ -1,4 +1,4 @@
-import React, {useState, useContext, useEffect} from 'react';
+import React, {useState, useContext} from 'react';
 import {View, Text, ScrollView, TouchableOpacity} from 'react-native';
 import {Metrics, Colors, Fonts, ApplicationStyles} from 'App/themes';
 import Utilities from 'App/utilities';
@@ -155,7 +155,7 @@ const Cart = (props) => {
       addonsDuration: addonSelected.duration,
     };
 
-    let data = addonsGuest;
+    let data = addonsGuest ? addonsGuest : [];
 
     const indexAddonId = addonsGuest
       ? addonsGuest.findIndex(

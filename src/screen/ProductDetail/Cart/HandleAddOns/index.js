@@ -255,7 +255,9 @@ const HandleAddOns = (props) => {
                         justifyContent: 'space-between',
                       }}>
                       <Text>
-                        {addonsGuest.findIndex(
+                        {addonsGuest &&
+                        addonsGuest.length > 0 &&
+                        addonsGuest.findIndex(
                           (i) => i.addonId === data.id && i.guestId === 'yo',
                         ) !== -1 ? (
                           <Icon
@@ -288,7 +290,9 @@ const HandleAddOns = (props) => {
                         </Text>
                       </View>
                       <View>
-                        {addonsGuest.findIndex(
+                        {addonsGuest &&
+                        addonsGuest.length > 0 &&
+                        addonsGuest.findIndex(
                           (i) => i.addonId === data.id && i.guestId === 'yo',
                         ) !== -1 ? (
                           <Text
@@ -330,7 +334,9 @@ const HandleAddOns = (props) => {
                           justifyContent: 'space-between',
                         }}>
                         <Text>
-                          {addonsGuest.findIndex(
+                          {addonsGuest &&
+                          addonsGuest.length > 0 &&
+                          addonsGuest.findIndex(
                             (i) =>
                               i.addonId === data.id && i.guestId === item.id,
                           ) !== -1 ? (
@@ -365,7 +371,9 @@ const HandleAddOns = (props) => {
                           </Text>
                         </View>
                         <View>
-                          {addonsGuest.findIndex(
+                          {addonsGuest &&
+                          addonsGuest.length > 0 &&
+                          addonsGuest.findIndex(
                             (i) =>
                               i.addonId === data.id && i.guestId === item.id,
                           ) !== -1 ? (
