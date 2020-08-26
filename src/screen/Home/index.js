@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {View, ScrollView} from 'react-native';
+import {View, ScrollView, Text} from 'react-native';
 import styles from './styles';
 import ExpandHome from '../../components/ExpandHome';
 import {Metrics, ApplicationStyles, Images} from '../../themes';
@@ -11,6 +11,8 @@ import Login from '../Login';
 import {observeUser} from '../../flux/auth/actions';
 import BannerScroll from '../../components/BannerScroll';
 import Gallery from '../Gallery';
+import CartFooter from '../../components/CartFooter';
+import _ from 'lodash';
 
 const Home = () => {
   const navigation = useNavigation();
@@ -32,6 +34,7 @@ const Home = () => {
   const {services} = service;
   const [modalAuth, setModalAuth] = useState(false);
   const [modalInspo, setModalInspo] = useState(false);
+  const [modalCart, setModalCart] = useState(false);
 
   const selectService = (product) => {
     if (user !== null) {
@@ -71,6 +74,31 @@ const Home = () => {
           )}
         </ScrollView>
       </View>
+
+      {user && user.cart.length > 0 && (
+        <View
+          style={{
+            width: Metrics.screenWidth,
+            height: 50,
+            bottom: 0,
+            backgroundColor: 'transparet',
+            position: 'absolute',
+          }}>
+          <CartFooter
+            key={'CartFooter'}
+            title={'Completar orden'}
+            servicesNumber={
+              user && user.cart && user.cart ? user.cart.length : 0
+            }
+            servicesTotal={
+              user && user.cart && user.cart.length > 0
+                ? _.sumBy(user.cart, 'total')
+                : 0
+            }
+            onAction={() => setModalCart(true)}
+          />
+        </View>
+      )}
       <ModalApp open={modalAuth} setOpen={setModalAuth}>
         <Login setModalAuth={setModalAuth} />
       </ModalApp>
@@ -81,6 +109,9 @@ const Home = () => {
           dispatch={utilDispatch}
           setModalInspo={setModalInspo}
         />
+      </ModalApp>
+      <ModalApp open={modalCart} setOpen={setModalCart}>
+        <Text>Cart</Text>
       </ModalApp>
     </>
   );
