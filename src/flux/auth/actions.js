@@ -25,22 +25,13 @@ export const saveUser = async (data, dispatch) => {
 };
 
 export const observeUser = (dispatch) => {
-  console.log('obsever user');
-  console.log(dispatch);
   auth().onAuthStateChanged(function (user) {
     if (user) {
-      console.log('user active', user);
-
-      console.log(user.uid);
       setUser(user.uid, dispatch);
-    } else {
-      console.log('not active');
     }
   });
 };
 export const setUser = async (data, dispatch) => {
-  console.log('====active user actuality =====');
-  console.log('uid:', data);
   let result = firestore().collection('users').doc(data);
   await result
     .get()
@@ -70,7 +61,6 @@ export const signOff = async (dispatch) => {
 };
 export const addGuestDb = async (data, dispatch) => {
   const {user, guestUser} = data;
-  console.log('set firebase', {user, guest: [guestUser]});
   try {
     setLoading(true, dispatch);
     const ref = firestore().collection('users').doc(user.uid);
@@ -103,8 +93,6 @@ export const updateUser = async (data, dispatch) => {
   }
 };
 export const setUserCart = async (data, user, dispatch) => {
-  console.log('setUserCart==>', data);
-
   try {
     const currentUser = auth().currentUser;
     setLoading(true, dispatch);
@@ -117,5 +105,21 @@ export const setUserCart = async (data, user, dispatch) => {
   } catch (error) {
     console.log(error);
     setLoading(false, dispatch);
+  }
+};
+export const updateProfile = async (data, typeData, dispatch) => {
+  const currentUser = auth().currentUser;
+  try {
+    const userRef = firestore().collection('users').doc(currentUser.uid);
+    await userRef.set(
+      {
+        [typeData]: data,
+      },
+      {merge: true},
+    );
+
+    setUser(currentUser.uid, dispatch);
+  } catch (error) {
+    console.log('error', error);
   }
 };

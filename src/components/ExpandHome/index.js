@@ -22,12 +22,6 @@ export default (dta) => {
   let sortedProduct = _.sortBy(products, 'order');
   const itemHeight = 80;
 
-  console.log(
-    'these variables are not being used==>',
-    onChangeOpacity,
-    onChangeanimationItem,
-    onChangeanimation,
-  );
   let productFilter = sortedProduct.filter((p) => p.isEnabled === true);
 
   return (

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useContext, useState} from 'react';
 import {ApplicationStyles, Images, Fonts, Colors, Metrics} from '../../themes';
 import {
   Text,
@@ -8,13 +8,156 @@ import {
   Alert,
   TouchableOpacity,
   StyleSheet,
+  TextInput,
 } from 'react-native';
 import Utilities from '../../utilities';
 import moment from 'moment';
+import firestore from '@react-native-firebase/firestore';
+import {observeUser, updateProfile} from '../../flux/auth/actions';
+import {getServices} from '../../flux/services/actions';
+import {StoreContext} from '../../flux';
+import CardItemCart from '../../components/CardItemCart';
+import FieldCartConfig from '../../components/FieldCartConfig';
+import {formatDate, getDate} from '../../helpers/MomentHelper';
+import DatePicker from 'react-native-datepicker';
+import _ from 'lodash';
+import ModalApp from '../../components/ModalApp';
+import AppConfig from '../../config/AppConfig';
+import {topicPush, getCoverage} from '../../flux/util/actions';
 
 const CartScreen = () => {
+  const {state, serviceDispatch, authDispatch, utilDispatch} = useContext(
+    StoreContext,
+  );
+  const {auth} = state;
+  const {user} = auth;
+
+  const [date, setDate] = useState(getDate(1));
+  const [notes, setNotes] = useState('');
+  const [modalnote, setModalnote] = useState(false);
+  const [modalAddress, setModalAddress] = useState(false);
+
+  console.log('date ==>', date);
+
+  useEffect(() => {
+    observeUser(authDispatch);
+  }, []);
+
+  useEffect(() => {
+    getServices(serviceDispatch);
+  }, []);
+
+  const updateNotes = async (notes) => {
+    try {
+      updateProfile({...user.cart, notes}, 'cart', authDispatch);
+      setModalnote(false);
+    } catch (err) {
+      console.log('updateNotes:error', err);
+    }
+  };
+
+  const updateDate = async (date) => {
+    console.log(date);
+
+    try {
+      updateProfile({...user.cart, date}, 'cart', authDispatch);
+      setDate({date});
+    } catch (err) {
+      console.log('updateDate:error', err);
+    }
+  };
+  const removeCartItem = async (id) => {
+    let services = user.cart.services;
+
+    const index = services ? services.findIndex((i) => i.id === id) : -1;
+
+    if (index !== -1) {
+      services = [...services.slice(0, index), ...services.slice(index + 1)];
+
+      updateProfile({...user.cart, services}, 'cart', authDispatch);
+    }
+  };
+
+  const sendOrder = (data) => {
+    try {
+      firestore()
+        .collection('orders')
+        .doc()
+        .set(data)
+        .then(function () {
+          console.log('order:Created');
+
+          let servicesPush = [];
+          for (var i = 0; i < data.services.length; i++) {
+            if (servicesPush.indexOf(data.services[i].name) === -1) {
+              if (i === data.services.length - 1) {
+                servicesPush = [
+                  ...servicesPush,
+                  ` y ${user.cart.services[i].name}`,
+                ];
+              } else {
+                servicesPush = [
+                  ...servicesPush,
+                  ` ${user.cart.services[i].name}`,
+                ];
+              }
+            }
+          }
+
+          let notification = {
+            title: 'Nueva orden de servicio La Femme',
+            body: `-Cuándo: ${moment(data.date, 'YYYY-MM-DD HH:mm:ss').format(
+              'LLL',
+            )}.\n-Dónde: ${data.address.locality}-${
+              data.address.neighborhood
+            }.\n-Servicios: ${servicesPush.toString()}.`,
+            content_available: true,
+            priority: 'high',
+          };
+
+          let dataPush = null;
+
+          topicPush('expert', notification, dataPush);
+
+          try {
+            updateProfile(
+              {
+                ...user.cart,
+                date: null,
+                address: null,
+                notes: null,
+                services: [],
+                coupon: null,
+              },
+              'cart',
+              authDispatch,
+            );
+          } catch (error) {}
+        })
+        .catch(function (error) {
+          console.error('Error saving order : ', error);
+        });
+    } catch (error) {
+      console.log('sendOrder:error', error);
+    }
+    closeModal();
+  };
+
+  useEffect(() => {
+    getCoverage('Medellín', utilDispatch);
+  }, []);
+
+  const closeModal = () => {
+    console.log('console close');
+  };
+  let isCompleted =
+    user.cart.address &&
+    user.cart.date &&
+    user.cart.services.length > 0 &&
+    user.cart.notes;
+
   return (
-    <View style={styles.container}>
+    <View>
       <View style={styles.headerContainer}>
         <View opacity={0.0} style={ApplicationStyles.separatorLine} />
         <Image
@@ -37,7 +180,7 @@ const CartScreen = () => {
         </Text>
         <View opacity={0.0} style={ApplicationStyles.separatorLine} />
       </View>
-      <ScrollView style={styles.contentContainer}>
+      <ScrollView>
         {user &&
           user.cart &&
           user.cart.services &&
@@ -56,8 +199,7 @@ const CartScreen = () => {
                       {
                         text: 'Eliminar',
                         onPress: () => {
-                          console.log('removeItem', id);
-                          this.removeCartItem(id);
+                          removeCartItem(id);
                         },
                       },
                       {
@@ -73,9 +215,7 @@ const CartScreen = () => {
             );
           })}
         <TouchableOpacity
-          onPress={() => {
-            this.props.closeModal();
-          }}
+          onPress={() => closeModal()}
           style={[
             styles.productContainer,
             {backgroundColor: Colors.client.primaryColor},
@@ -145,10 +285,7 @@ const CartScreen = () => {
                 {'Ubicacion del servicio'}
               </Text>
             </View>
-            <TouchableOpacity
-              onPress={() => {
-                this.props.modalAddress();
-              }}>
+            <TouchableOpacity onPress={() => setModalAddress(true)}>
               <FieldCartConfig
                 key={'address'}
                 value={user.cart.address ? user.cart.address : false}
@@ -246,10 +383,7 @@ const CartScreen = () => {
                       left: 20,
                     },
                   }}
-                  onDateChange={(date) => {
-                    console.log('send', date);
-                    this.updateDate(date);
-                  }}
+                  onDateChange={(date) => updateDate(date)}
                   placeholderTextColor={'purple'}
                   underlineColorAndroid={'rgba(0,0,0,0)'}
                   is24Hour={true}
@@ -273,13 +407,7 @@ const CartScreen = () => {
                 {'Comentarios'}
               </Text>
             </View>
-            <TouchableOpacity
-              onPress={() => {
-                this.setState({
-                  notes: user.cart.notes ? user.cart.notes : '',
-                  modalNotes: true,
-                });
-              }}>
+            <TouchableOpacity onPress={() => console.log('active')}>
               <FieldCartConfig
                 key={'comments'}
                 textSecondary={''}
@@ -293,7 +421,6 @@ const CartScreen = () => {
         )}
         <View opacity={0.0} style={ApplicationStyles.separatorLine} />
       </ScrollView>
-
       <View style={styles.footerContainer}>
         <TouchableOpacity
           onPress={() => {
@@ -311,7 +438,6 @@ const CartScreen = () => {
 
             let hoursServices = [];
 
-            // for (user.cart.services)
             for (let i = 0; i < user.cart.services.length; i++) {
               if (i === 0) {
                 hoursServices = [...hoursServices, user.cart.date];
@@ -345,7 +471,7 @@ const CartScreen = () => {
                 servicesType,
                 ...user.cart,
               };
-              this.sendOrder(data);
+              sendOrder(data);
               console.log('data', data);
             } else {
               Alert.alert(
@@ -368,98 +494,67 @@ const CartScreen = () => {
           </Text>
         </TouchableOpacity>
       </View>
+      <ModalApp open={modalnote} setOpen={setModalnote}>
+        <TouchableOpacity
+          style={{
+            alignSelf: 'center',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: 30,
+            marginVertical: 8,
+            backgroundColor: Colors.light,
+            height: 4,
+            borderRadius: 2.5,
+          }}
+          onPress={() => modalAddress(false)}
+        />
 
-      <Modal // notes
-        isVisible={modalNotes}
-        style={{
-          justifyContent: 'flex-end',
-          margin: 0,
-        }}
-        backdropColor={Colors.pinkMask(0.8)}
-        onBackdropPress={() => {
-          this.setState({modalNotes: false});
-        }}>
-        <KeyboardAvoidingView behavior={'padding'} enabled style={{flex: 0}}>
-          <TouchableOpacity
-            style={{
+        <TextInput
+          value={notes}
+          onChangeText={(text) => setNotes(text)}
+          placeholder={'Agrega notas o comentarios'}
+          style={{
+            width: '90%',
+            padding: 20,
+            marginVertical: 20,
+            borderRadius: Metrics.borderRadius,
+            height: 100,
+            backgroundColor: Colors.textInputBg,
+            alignSelf: 'center',
+          }}
+          multiline
+          numberOfLines={20}
+        />
+
+        <TouchableOpacity
+          onPress={() => {
+            updateNotes(notes);
+          }}
+          style={[
+            {
+              flex: 0,
+              borderRadius: Metrics.textInBr,
               alignSelf: 'center',
+              flexDirection: 'row',
               justifyContent: 'center',
-              alignItems: 'center',
-              width: 30,
-              marginVertical: 8,
-              backgroundColor: Colors.light,
-              height: 4,
-              borderRadius: 2.5,
-            }}
-            onPress={() => {
-              this.setState({
-                modalAddress: false,
-              });
-            }}
-          />
-          <View
-            style={{
-              // paddingTop: Metrics.addHeader,
-              alignSelf: 'center',
-              width: Metrics.screenWidth,
+              width: '90%',
 
-              backgroundColor: Colors.light,
-              backdropColor: 'red',
-              borderTopRightRadius: 10,
-              borderTopLeftRadius: 10,
-            }}>
-            <TextInput
-              value={notes}
-              onChangeText={(text) => this.setState({notes: text})}
-              placeholder={'Agrega notas o comentarios'}
-              style={{
-                width: '90%',
-                padding: 20,
-                marginVertical: 20,
-                borderRadius: Metrics.borderRadius,
-                height: 100,
-                backgroundColor: Colors.textInputBg,
-                alignSelf: 'center',
-              }}
-              multiline
-              numberOfLines={20}
-            />
-
-            <TouchableOpacity
-              onPress={() => {
-                this.updateNotes(notes);
-              }}
-              style={[
-                {
-                  flex: 0,
-                  // marginVertical: 2.5,
-                  borderRadius: Metrics.textInBr,
-                  alignSelf: 'center',
-                  flexDirection: 'row',
-                  justifyContent: 'center',
-                  width: '90%',
-
-                  paddingHorizontal: 10,
-                  paddingVertical: 10,
-                  backgroundColor: Colors.client.primaryColor,
-                  marginBottom: Metrics.addFooter + 10,
-                },
-              ]}>
-              <Text
-                style={Fonts.style.bold(
-                  Colors.light,
-                  Fonts.size.medium,
-                  'center',
-                )}>
-                {'Agregar comentarios'}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </KeyboardAvoidingView>
-      </Modal>
+              paddingHorizontal: 10,
+              paddingVertical: 10,
+              backgroundColor: Colors.client.primaryColor,
+              marginBottom: Metrics.addFooter + 10,
+            },
+          ]}>
+          <Text
+            style={Fonts.style.bold(Colors.light, Fonts.size.medium, 'center')}>
+            {'Agregar comentarios'}
+          </Text>
+        </TouchableOpacity>
+      </ModalApp>
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

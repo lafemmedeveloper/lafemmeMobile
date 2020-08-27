@@ -13,6 +13,7 @@ import BannerScroll from '../../components/BannerScroll';
 import Gallery from '../Gallery';
 import CartFooter from '../../components/CartFooter';
 import _ from 'lodash';
+import CartScreen from '../CartScreen';
 
 const Home = () => {
   const navigation = useNavigation();
@@ -38,7 +39,7 @@ const Home = () => {
 
   const selectService = (product) => {
     if (user !== null) {
-      navigation.navigate('ProductDetail', {product, user, authDispatch});
+      navigation.navigate('ProductDetail', {product, user});
     } else {
       setModalAuth(true);
     }
@@ -111,7 +112,7 @@ const Home = () => {
         />
       </ModalApp>
       <ModalApp open={modalCart} setOpen={setModalCart}>
-        <Text>Cart</Text>
+        <CartScreen />
       </ModalApp>
     </>
   );
