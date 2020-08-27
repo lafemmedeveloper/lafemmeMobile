@@ -25,7 +25,9 @@ import ModalApp from '../../components/ModalApp';
 import AppConfig from '../../config/AppConfig';
 import {topicPush, getCoverage} from '../../flux/util/actions';
 
-const CartScreen = () => {
+const CartScreen = (props) => {
+  console.log('props ==>', props);
+  const {setModalCart} = props;
   const {state, serviceDispatch, authDispatch, utilDispatch} = useContext(
     StoreContext,
   );
@@ -88,7 +90,7 @@ const CartScreen = () => {
           console.log('order:Created');
 
           let servicesPush = [];
-          for (var i = 0; i < data.services.length; i++) {
+          for (let i = 0; i < data.services.length; i++) {
             if (servicesPush.indexOf(data.services[i].name) === -1) {
               if (i === data.services.length - 1) {
                 servicesPush = [
@@ -140,16 +142,13 @@ const CartScreen = () => {
     } catch (error) {
       console.log('sendOrder:error', error);
     }
-    closeModal();
+    setModalCart(false);
   };
 
   useEffect(() => {
     getCoverage('Medellín', utilDispatch);
   }, []);
 
-  const closeModal = () => {
-    console.log('console close');
-  };
   let isCompleted =
     user.cart.address &&
     user.cart.date &&
@@ -215,7 +214,7 @@ const CartScreen = () => {
             );
           })}
         <TouchableOpacity
-          onPress={() => closeModal()}
+          onPress={() => setModalCart(false)}
           style={[
             styles.productContainer,
             {backgroundColor: Colors.client.primaryColor},

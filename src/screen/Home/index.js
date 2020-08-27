@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {View, ScrollView, Text} from 'react-native';
+import {View, ScrollView} from 'react-native';
 import styles from './styles';
 import ExpandHome from '../../components/ExpandHome';
 import {Metrics, ApplicationStyles, Images} from '../../themes';
@@ -14,8 +14,14 @@ import Gallery from '../Gallery';
 import CartFooter from '../../components/CartFooter';
 import _ from 'lodash';
 import CartScreen from '../CartScreen';
+import Address from '../Address';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
+import AddAddress from '../AddAddress';
 
 const Home = () => {
+  const TIME_SET = 500;
+
   const navigation = useNavigation();
   const {state, serviceDispatch, authDispatch, utilDispatch} = useContext(
     StoreContext,
@@ -36,15 +42,34 @@ const Home = () => {
   const [modalAuth, setModalAuth] = useState(false);
   const [modalInspo, setModalInspo] = useState(false);
   const [modalCart, setModalCart] = useState(false);
+  const [modalAddress, setModalAddress] = useState(false);
+  const [isModalCart, setIsModalCart] = useState(false);
+  const [modalAddAddress, setModalAddAddress] = useState(false);
 
   const selectService = (product) => {
     if (user !== null) {
-      navigation.navigate('ProductDetail', {product, user});
+      if (user && user.cart && user.cart.address) {
+        navigation.navigate('ProductDetail', {product, user});
+      } else {
+        setModalAddress(true);
+      }
     } else {
-      setModalAuth(true);
+      setModalAddress(true);
     }
   };
+  const addAddressState = () => {
+    setIsModalCart(false);
+    setModalAddress(true);
+  };
+  const closeModal = () => {
+    setModalAddress(false);
 
+    if (isModalCart) {
+      setTimeout(function () {
+        modalCart(true);
+      }, TIME_SET);
+    }
+  };
   return (
     <>
       <View style={styles.container}>
@@ -100,6 +125,8 @@ const Home = () => {
           />
         </View>
       )}
+
+      {/* Modals */}
       <ModalApp open={modalAuth} setOpen={setModalAuth}>
         <Login setModalAuth={setModalAuth} />
       </ModalApp>
@@ -111,9 +138,50 @@ const Home = () => {
           setModalInspo={setModalInspo}
         />
       </ModalApp>
+
       <ModalApp open={modalCart} setOpen={setModalCart}>
-        <CartScreen />
+        <CartScreen setModalCart={setModalCart} />
       </ModalApp>
+
+      <ModalApp open={modalAddress} setOpen={setModalAddress}>
+        <Address addAddressState={addAddressState} closeModal={closeModal} />
+      </ModalApp>
+
+      <ModalApp open={modalAddAddress} setOpen={setModalAddAddress}>
+        <>
+          <TouchableOpacity
+            style={{
+              alignSelf: 'center',
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: 30,
+              marginVertical: 8,
+              backgroundColor: Colors.light,
+              height: 4,
+              borderRadius: 2.5,
+            }}
+            onPress={() => setModalAddAddress(false)}
+          />
+          <View
+            style={{
+              // paddingTop: Metrics.addHeader,
+              alignSelf: 'center',
+              width: Metrics.screenWidth,
+              height: Metrics.screenHeight * 0.85,
+              backgroundColor: Colors.light,
+              backdropColor: 'red',
+              borderTopRightRadius: 10,
+              borderTopLeftRadius: 10,
+            }}>
+            <AddAddress
+              addAddress={() => setModalAddAddress(true)}
+              closeAddAddress={() => setModalAddAddress(false)}
+            />
+          </View>
+        </>
+      </ModalApp>
+
+      {/* Modals close */}
     </>
   );
 };

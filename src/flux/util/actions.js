@@ -1,4 +1,10 @@
-import {GET_GALLERY, HANDLE_ERROR, LOADING, GET_COVERAGE} from './types';
+import {
+  GET_GALLERY,
+  HANDLE_ERROR,
+  LOADING,
+  GET_COVERAGE,
+  GET_ORDERS,
+} from './types';
 
 import firestore from '@react-native-firebase/firestore';
 
@@ -58,4 +64,21 @@ export const getCoverage = async (city, dispatch) => {
   });
 
   return dispatch({type: GET_COVERAGE, payload: data});
+};
+
+export const getOrders = () => (dispatch, getStore) => {
+  const ordersRef = firestore()
+    .collection('orders')
+    .where('client.uid', '==', getStore().currentUser.auth.uid);
+  ordersRef.orderBy('createDate', 'desc');
+  let listOrders = [];
+  ordersRef.onSnapshot((orders) => {
+    listOrders = orders.docs.map((item) => {
+      return {
+        id: item.id,
+        ...item.data(),
+      };
+    });
+    return dispatch({type: GET_ORDERS, payload: listOrders});
+  });
 };
