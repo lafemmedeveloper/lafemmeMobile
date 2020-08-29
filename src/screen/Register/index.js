@@ -39,13 +39,15 @@ const Register = (props) => {
           email,
           firstName: name,
           lastName: lastName,
+          numberOfServices: 0,
           phone: currentUser.phoneNumber,
           uid: currentUser.uid,
           role: 'client',
           tyc: moment(new Date()).format('LLLL'),
           guest: [],
-          rating: 5,
+          rating: 5.0,
           cart: null,
+          address: [],
         };
         setActivityLoading(false);
         setDb(data);

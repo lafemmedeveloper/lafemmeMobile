@@ -26,8 +26,7 @@ import AppConfig from '../../config/AppConfig';
 import {topicPush, getCoverage} from '../../flux/util/actions';
 
 const CartScreen = (props) => {
-  console.log('props ==>', props);
-  const {setModalCart} = props;
+  const {setModalCart, setModalAddress} = props;
   const {state, serviceDispatch, authDispatch, utilDispatch} = useContext(
     StoreContext,
   );
@@ -37,7 +36,6 @@ const CartScreen = (props) => {
   const [date, setDate] = useState(getDate(1));
   const [notes, setNotes] = useState('');
   const [modalnote, setModalnote] = useState(false);
-  const [modalAddress, setModalAddress] = useState(false);
 
   console.log('date ==>', date);
 
@@ -505,7 +503,7 @@ const CartScreen = (props) => {
             height: 4,
             borderRadius: 2.5,
           }}
-          onPress={() => modalAddress(false)}
+          onPress={() => setModalnote(false)}
         />
 
         <TextInput

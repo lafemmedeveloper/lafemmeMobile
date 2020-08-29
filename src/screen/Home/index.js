@@ -15,8 +15,6 @@ import CartFooter from '../../components/CartFooter';
 import _ from 'lodash';
 import CartScreen from '../CartScreen';
 import Address from '../Address';
-import {TouchableOpacity} from 'react-native-gesture-handler';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
 import AddAddress from '../AddAddress';
 
 const Home = () => {
@@ -59,7 +57,7 @@ const Home = () => {
   };
   const addAddressState = () => {
     setIsModalCart(false);
-    setModalAddress(true);
+    setModalAddAddress(true);
   };
   const closeModal = () => {
     setModalAddress(false);
@@ -140,45 +138,27 @@ const Home = () => {
       </ModalApp>
 
       <ModalApp open={modalCart} setOpen={setModalCart}>
-        <CartScreen setModalCart={setModalCart} />
+        <CartScreen
+          setModalCart={setModalCart}
+          setModalAddress={setModalAddress}
+        />
       </ModalApp>
 
       <ModalApp open={modalAddress} setOpen={setModalAddress}>
-        <Address addAddressState={addAddressState} closeModal={closeModal} />
+        <Address
+          addAddressState={addAddressState}
+          closeModal={closeModal}
+          setModalAddAddress={setModalAddAddress}
+          setModalCart={setModalCart}
+        />
       </ModalApp>
 
       <ModalApp open={modalAddAddress} setOpen={setModalAddAddress}>
-        <>
-          <TouchableOpacity
-            style={{
-              alignSelf: 'center',
-              justifyContent: 'center',
-              alignItems: 'center',
-              width: 30,
-              marginVertical: 8,
-              backgroundColor: Colors.light,
-              height: 4,
-              borderRadius: 2.5,
-            }}
-            onPress={() => setModalAddAddress(false)}
-          />
-          <View
-            style={{
-              // paddingTop: Metrics.addHeader,
-              alignSelf: 'center',
-              width: Metrics.screenWidth,
-              height: Metrics.screenHeight * 0.85,
-              backgroundColor: Colors.light,
-              backdropColor: 'red',
-              borderTopRightRadius: 10,
-              borderTopLeftRadius: 10,
-            }}>
-            <AddAddress
-              addAddress={() => setModalAddAddress(true)}
-              closeAddAddress={() => setModalAddAddress(false)}
-            />
-          </View>
-        </>
+        <AddAddress
+          addAddress={() => setModalAddAddress(true)}
+          closeAddAddress={() => setModalAddAddress(false)}
+          setModalCart={setModalCart}
+        />
       </ModalApp>
 
       {/* Modals close */}

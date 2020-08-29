@@ -11,18 +11,24 @@ import {Colors, Fonts, Metrics} from '../../themes';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
-import Modal from 'react-native-modal';
-import MyTextInput from '../../components/MyTextInput';
 import {validateCoverage} from '../../helpers/GeoHelper';
 
 import Utilities from '../../utilities';
 import {updateProfile} from '../../flux/auth/actions';
 import {StoreContext} from '../../flux';
+import Geocode from 'react-geocode';
+import ModalApp from '../../components/ModalApp';
+import EnableCoverage from './EnableCoverage';
+import NoEnableCoverage from './NoEnableCoverage';
 
-const AddAddress = () => {
-  const {state /* authDispatch */} = useContext(StoreContext);
-  const {auth} = state;
+const AddAddress = (props) => {
+  const {closeAddAddress} = props;
+  const APIKEY = 'AIzaSyArVhfk_wHVACPwunlCi1VP9EUgYZcnFpQ';
+  const {state, authDispatch} = useContext(StoreContext);
+  const {auth, util} = state;
   const {user} = auth;
+  const {coverageZones} = util;
+  console.log('coverageZones ==>', coverageZones);
 
   const mapStyle = require('../../config/mapStyle.json');
   const screen = Dimensions.get('window');
@@ -57,29 +63,14 @@ const AddAddress = () => {
   const checkCoverage = (latitude, longitude) => {
     let coverage = validateCoverage(latitude, longitude, coverageZones);
 
-    setIsCoverage({
-      isCoverage: coverage ? addresStatus.coverage : addresStatus.noCoverage,
-    });
+    setIsCoverage(coverage ? addresStatus.coverage : addresStatus.noCoverage);
+
+    console.log('coverage=>', isCoverage);
   };
 
-  const saveAddress = async (props) => {
-    const {closeAddAddress} = props;
-
-    const address_components = googleAddress.address_components;
-    let components = {};
-    address_components.map((value, index) => {
-      value.types.map((value2, index2) => {
-        components[value2] = value.long_name;
-        if (value2 === 'country') {
-          components.country_id = value.short_name;
-        }
-        if (value2 === 'administrative_area_level_1') {
-          components.state_code = value.short_name;
-        }
-      });
-    });
-
-    console.log('components', components);
+  const saveAddress = () => {
+    const address_components = googleAddress.formatted_address;
+    console.log('address_components ==>', address_components);
 
     let item = {
       type: buildType,
@@ -87,541 +78,247 @@ const AddAddress = () => {
       addressDetail: addressDetail,
       notesAddress: notesAddress,
       coordinates: {
-        latitude: googleAddress.geometry.location.lat,
-        longitude: googleAddress.geometry.location.lng,
+        latitude: coordinate.latitude,
+        longitude: coordinate.longitude,
       },
       formattedAddress: googleAddress.formatted_address,
       idAddress: googleAddress.id,
       id: Utilities.create_UUID(),
       vicinity: googleAddress.vicinity,
       url: googleAddress.url,
-      ...components,
     };
+
     let address = [...user.address, item];
 
-    console.log('address', address);
+    console.log('address ==>', address);
 
-    await updateProfile(address, 'address');
+    updateProfile(address, 'address', authDispatch);
 
     setIsCoverage(addresStatus.searching);
-    closeAddAddress();
+    closeAddAddress(false);
+  };
+
+  const updateLocation = (data, details) => {
+    Geocode.setApiKey(APIKEY);
+    Geocode.setLanguage('es');
+    Geocode.setRegion('co');
+    Geocode.enableDebug();
+
+    console.log('data ==>', data);
+    setGoogleAddress(details);
+    const addressSerch = details.formatted_address;
+
+    Geocode.fromAddress(addressSerch).then(
+      (response) => {
+        const {lat, lng} = response.results[0].geometry.location;
+        console.log('location =>', lat, lng);
+        setCoordinate({
+          latitude: lat,
+          longitude: lng,
+        });
+      },
+      (error) => {
+        console.error(error);
+      },
+    );
+  };
+  const closeModalCoverage = (data) => {
+    if (!data) {
+      setIsCoverage(addresStatus.searching);
+    } else {
+      setIsCoverage(addresStatus.searching);
+    }
   };
   return (
-    <View style={styles.container}>
-      <View style={styles.contentContainer}>
-        <View style={styles.containerAddress}>
-          <GooglePlacesAutocomplete
-            placeholder={'Escribe tu direccion (ej: carrera 33 #10-20)'}
-            minLength={4} // minimum length of text to search
-            autoFocus={false}
-            returnKeyType={'search'} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
-            keyboardAppearance={'light'} // Can be left out for default keyboardAppearance https://facebook.github.io/react-native/docs/textinput.html#keyboardappearance
-            listViewDisplayed={false} // true/false/undefined
-            fetchDetails={true}
-            renderDescription={(row) => row.description} // custom description render
-            onPress={(data, details = null) => {
-              console.log(data, details);
+    <>
+      <View
+        style={{
+          position: 'absolute',
+          width: '90%',
+          justifyContent: 'center',
+          bottom: 100,
+          zIndex: 10000,
+          alignSelf: 'center',
+        }}>
+        <GooglePlacesAutocomplete
+          placeholder={'Escribe tu direccion (ej: carrera 33 #10-20)'}
+          autoFocus={false}
+          returnKeyType={'search'} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
+          keyboardAppearance={'light'} // Can be left out for default keyboardAppearance https://facebook.github.io/react-native/docs/textinput.html#keyboardappearance
+          listViewDisplayed={false} // true/false/undefined
+          fetchDetails={true}
+          renderDescription={(row) => row.description} // custom description render
+          onPress={(data, details = null) => updateLocation(data, details)}
+          query={{
+            // available options: https://developers.google.com/places/web-service/autocomplete
+            key: APIKEY,
+            language: 'es', // language of the results
+            types: 'geocode', // default: 'geocode'
+            components: 'country:co',
+            location: '6.2690007,-75.734792',
+            radius: '55000', //15 km
+            strictbounds: true,
+          }}
+          styles={{
+            textInputContainer: {
+              backgroundColor: 'white',
+              width: '100%',
 
-              let userCoordinate = {
-                latitude: details.geometry.location.lat,
-                longitude: details.geometry.location.lng,
-              };
+              borderRadius: 10,
+              borderTopColor: 'white',
+              borderBottomColor: 'white',
+              shadowColor: '#000',
+              shadowOffset: {
+                width: 0,
+                height: 2,
+              },
+              shadowOpacity: 0.25,
+              shadowRadius: 3.84,
 
-              setGoogleAddress(details);
-              setCoordinate(userCoordinate);
-            }}
-            getDefaultValue={() => ''}
-            query={{
-              // available options: https://developers.google.com/places/web-service/autocomplete
-              key: 'AIzaSyBX9OXlxkA18EWnRrg6bzgWuQkHbTVx1aI',
-              language: 'es', // language of the results
-              types: 'geocode', // default: 'geocode'
-              components: 'country:co',
-              location: '6.2690007,-75.734792',
-              radius: '55000', //15 km
-              strictbounds: true,
-            }}
-            styles={{
-              textInputContainer: {
-                width: '100%',
-                height: 55,
-                borderTopWidth: 0,
-                borderBottomWidth: 0,
-                backgroundColor: Colors.light,
-              },
-              poweredContainer: {
-                height: 30,
-                borderBottomLeftRadius: Metrics.borderRadius,
-                borderBottomRightRadius: Metrics.borderRadius,
-              },
-              powered: {width: 100, height: 50},
-              textInput: {
-                height: 40,
-                backgroundColor: Colors.textInputBg,
-              },
-              row: {
-                padding: 5,
-                height: 30,
-                flexDirection: 'row',
-                backgroundColor: Colors.light,
-              },
-              description: {
-                fontWeight: '400',
-              },
-              predefinedPlacesDescription: {
-                color: '#1faadb',
-              },
-            }}
-            currentLocation={false} // Will add a 'Current location' button at the top of the predefined places list
-            currentLocationLabel={'Mi ubicacion actual'}
-            nearbyPlacesAPI={'GooglePlacesSearch'} // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
-            GoogleReverseGeocodingQuery={
-              {
-                // available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro
-              }
+              elevation: 5,
+            },
+            poweredContainer: {
+              height: 30,
+              borderBottomLeftRadius: Metrics.borderRadius,
+              borderBottomRightRadius: Metrics.borderRadius,
+            },
+            powered: {width: 100, height: 50},
+
+            row: {
+              padding: 5,
+              height: 30,
+              flexDirection: 'row',
+              backgroundColor: Colors.light,
+            },
+            description: {
+              fontWeight: '400',
+            },
+            predefinedPlacesDescription: {
+              color: '#1faadb',
+            },
+          }}
+          currentLocation={false} // Will add a 'Current location' button at the top of the predefined places list
+          currentLocationLabel={'Mi ubicacion actual'}
+          nearbyPlacesAPI={'GooglePlacesSearch'} // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
+          GoogleReverseGeocodingQuery={
+            {
+              // available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro
             }
-            GooglePlacesSearchQuery={{
-              // available options for GooglePlacesSearch API : https://developers.google.com/places/web-service/search
-              rankby: 'distance',
-              type: 'cafe',
-            }}
-            GooglePlacesDetailsQuery={{
-              // available options for GooglePlacesDetails API : https://developers.google.com/places/web-service/details
-              fields: 'formatted_address',
-            }}
-            filterReverseGeocodingByTypes={[
-              'locality',
-              'administrative_area_level_3',
-            ]} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
-            debounce={200} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
-          />
-        </View>
-        <View
+          }
+          GooglePlacesSearchQuery={{
+            // available options for GooglePlacesSearch API : https://developers.google.com/places/web-service/search
+            rankby: 'distance',
+            type: 'cafe',
+          }}
+          GooglePlacesDetailsQuery={{
+            // available options for GooglePlacesDetails API : https://developers.google.com/places/web-service/details
+            fields: 'formatted_address',
+          }}
+          filterReverseGeocodingByTypes={[
+            'locality',
+            'administrative_area_level_3',
+          ]}
+          // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
+          debounce={200} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
+        />
+      </View>
+      <View style={{height: Metrics.header * 16.5}}>
+        <MapView
+          provider={PROVIDER_GOOGLE} // remove if not using Google Maps
           style={{
             width: Metrics.screenWidth,
-            flex: 1,
+            height: Metrics.screenHeight,
+          }}
+          customMapStyle={mapStyle}
+          mapPadding={{
+            bottom: 10,
+          }}
+          initialRegion={{
+            latitude: 6.2458077,
+            longitude: -75.5680703,
+            latitudeDelta: LATITUDE_DELTA,
+            longitudeDelta: LONGITUDE_DELTA,
+          }}
+          region={{
+            latitude: coordinate.latitude,
+            longitude: coordinate.longitude,
+            latitudeDelta: 0.00001,
+            longitudeDelta: 0.00001 * ASPECT_RATIO,
           }}>
-          <View
-            style={{
-              flex: 1,
-              marginBottom: 60 + Metrics.addFooter - 10,
-              justifyContent: 'flex-end',
-              alignItems: 'center',
+          <Marker.Animated
+            coordinate={{
+              latitude: coordinate.latitude,
+              longitude: coordinate.longitude,
             }}>
-            <MapView
-              provider={PROVIDER_GOOGLE} // remove if not using Google Maps
-              style={{
-                ...StyleSheet.absoluteFillObject,
-              }}
-              customMapStyle={mapStyle}
-              mapPadding={{
-                bottom: 10,
-              }}
-              initialRegion={{
-                latitude: 6.2458077,
-                longitude: -75.5680703,
-                latitudeDelta: LATITUDE_DELTA,
-                longitudeDelta: LONGITUDE_DELTA,
-              }}
-              region={{
-                latitude: coordinate.latitude,
-                longitude: coordinate.longitude,
-                latitudeDelta: 0.00001,
-                longitudeDelta: 0.00001 * ASPECT_RATIO,
-              }}>
-              <Marker.Animated
-                coordinate={{
-                  latitude: coordinate.latitude,
-                  longitude: coordinate.longitude,
-                }}>
-                <Icon
-                  name={'map-marker-alt'}
-                  size={30}
-                  color={Colors.client.primaryColor}
-                />
-              </Marker.Animated>
-            </MapView>
-          </View>
-        </View>
-        <TouchableOpacity
-          disabled={!googleAddress}
-          onPress={() =>
-            checkCoverage(
-              googleAddress.geometry.location.lat,
-              googleAddress.geometry.location.lng,
-            )
-          }
-          style={[
-            styles.btnContainer,
-            {
-              position: 'absolute',
-              bottom: 0,
-              backgroundColor: googleAddress
-                ? Colors.client.primaryColor
-                : Colors.gray,
-            },
-          ]}>
-          <Text
-            style={Fonts.style.bold(Colors.light, Fonts.size.medium, 'center')}>
-            {'Verificar Cobertura'}
-          </Text>
-        </TouchableOpacity>
+            <Icon
+              name={'map-marker-alt'}
+              size={30}
+              color={Colors.client.primaryColor}
+            />
+          </Marker.Animated>
+        </MapView>
       </View>
 
-      <Modal // noCoverage
-        isVisible={isCoverage === addresStatus.noCoverage}
-        style={{}}
-        animationIn={'slideInRight'}
-        animationOut={'slideOutRight'}
-        backdropColor={Colors.pinkMask(0.8)}
-        onBackdropPress={() => setIsCoverage(addresStatus.searching)}>
-        <View
-          style={{
-            alignSelf: 'center',
-            width: Metrics.screenWidth * 0.6,
-            backgroundColor: Colors.light,
-            backdropColor: 'red',
-            borderRadius: 10,
-          }}>
-          <View
-            style={{
-              alignSelf: 'center',
-              width: Metrics.screenWidth * 0.6,
-              backgroundColor: Colors.light,
-              backdropColor: 'red',
-              borderRadius: 10,
-            }}>
-            <Text
-              style={[
-                Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center'),
-                {marginVertical: 10},
-              ]}>
-              {'Lo Sentimos'}
-            </Text>
-            <Text
-              style={Fonts.style.regular(
-                Colors.dark,
-                Fonts.size.medium,
-                'center',
-              )}>
-              {'La dirección ingresada no tiene cobertura.'}
-            </Text>
+      <TouchableOpacity
+        disabled={!googleAddress}
+        onPress={() => checkCoverage(coordinate.latitude, coordinate.longitude)}
+        style={[
+          styles.btnContainer,
+          {
+            position: 'absolute',
+            bottom: 0,
+            backgroundColor: googleAddress
+              ? Colors.client.primaryColor
+              : Colors.gray,
+          },
+        ]}>
+        <Text
+          style={Fonts.style.bold(Colors.light, Fonts.size.medium, 'center')}>
+          {'Verificar Cobertura'}
+        </Text>
 
-            <View
-              style={{
-                width: '90%',
-                alignSelf: 'center',
-                marginVertical: 5,
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-              }}>
-              <TouchableOpacity
-                onPress={() => setNotifyCoverage(!notifyCoverage)}>
-                {notifyCoverage ? (
-                  <Icon
-                    name={'toggle-on'}
-                    size={25}
-                    color={Colors.client.primaryColor}
-                  />
-                ) : (
-                  <Icon name={'toggle-off'} size={25} color={Colors.gray} />
-                )}
-              </TouchableOpacity>
-              <View
-                style={{
-                  flex: 1,
-
-                  marginHorizontal: 5,
-                }}>
-                <Text
-                  style={Fonts.style.regular(
-                    Colors.dark,
-                    Fonts.size.small,
-                    'left',
-                    0,
-                  )}>
-                  Notificarme cuando tenga cobertura
-                </Text>
-              </View>
-            </View>
-          </View>
-
-          <TouchableOpacity
-            onPress={() => {
-              setIsCoverage(false);
-            }}
-            style={{
-              alignSelf: 'center',
-              width: '100%',
-              paddingVertical: 10,
-              marginTop: 10,
-              backgroundColor: Colors.client.primaryColor,
-              borderBottomLeftRadius: 10,
-              borderBottomRightRadius: 10,
-            }}>
-            <Text
-              style={Fonts.style.bold(
-                Colors.light,
-                Fonts.size.medium,
-                'center',
-              )}>
-              {'Continuar'}
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </Modal>
-
-      <Modal // coverage
-        isVisible={isCoverage === addresStatus.coverage}
-        style={{}}
-        animationIn={'slideInRight'}
-        animationOut={'slideOutRight'}
-        backdropColor={Colors.pinkMask(0.8)}
-        onBackdropPress={() => setIsCoverage(addresStatus.searching)}>
-        <View style={{justifyContent: 'center', alignItems: 'center'}}>
-          <View
-            style={{
-              alignSelf: 'center',
-              position: 'absolute',
-              width: Metrics.screenWidth * 0.8,
-              backgroundColor: Colors.light,
-              backdropColor: 'red',
-              borderRadius: 10,
-            }}>
-            <View
-              style={{
-                alignSelf: 'center',
-                width: Metrics.screenWidth * 0.8,
-                backgroundColor: Colors.light,
-                backdropColor: 'red',
-                borderRadius: 10,
-              }}>
-              <Text
-                style={[
-                  Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center'),
-                  {marginVertical: 10},
-                ]}>
-                {'Completa tu direccón'}
-              </Text>
-              <MapView
-                provider={PROVIDER_GOOGLE} // remove if not using Google Maps
-                style={{
-                  width: Metrics.screenWidth * 0.8,
-                  height: Metrics.screenWidth * 0.4,
-                }}
-                customMapStyle={mapStyle}
-                initialRegion={{
-                  latitude: 6.2458077,
-                  longitude: -75.5680703,
-                  latitudeDelta: LATITUDE_DELTA,
-                  longitudeDelta: LONGITUDE_DELTA,
-                }}
-                region={{
-                  latitude: coordinate.latitude,
-                  longitude: coordinate.longitude,
-                  latitudeDelta: 0.00001,
-                  longitudeDelta: 0.00001 * ASPECT_RATIO,
-                }}>
-                <Marker.Animated
-                  coordinate={{
-                    latitude: coordinate.latitude,
-                    longitude: coordinate.longitude,
-                  }}>
-                  <Icon
-                    name={'map-marker-alt'}
-                    size={30}
-                    color={Colors.client.primaryColor}
-                  />
-                </Marker.Animated>
-              </MapView>
-              <Text
-                style={[
-                  Fonts.style.regular(Colors.dark, Fonts.size.medium, 'center'),
-                  {marginVertical: 10},
-                ]}>
-                <Icon
-                  name={'map-marker-alt'}
-                  size={15}
-                  color={Colors.client.primaryColor}
-                />
-                {googleAddress && googleAddress.formatted_address
-                  ? googleAddress.formatted_address
-                  : ''}
-              </Text>
-
-              <View style={styles.itemAddressContainer}>
-                <TouchableOpacity
-                  onPress={() => setBuildType(0)}
-                  style={[
-                    styles.itemAddress,
-                    {
-                      backgroundColor:
-                        buildType === 0
-                          ? Colors.client.primaryColor
-                          : Colors.gray,
-                    },
-                  ]}>
-                  <Text
-                    style={[
-                      Fonts.style.bold(
-                        Colors.snow,
-                        Fonts.size.medium,
-                        'center',
-                      ),
-                      {marginVertical: 5},
-                    ]}>
-                    CASA
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => setBuildType(1)}
-                  style={[
-                    styles.itemAddress,
-                    {
-                      backgroundColor:
-                        buildType === 1
-                          ? Colors.client.primaryColor
-                          : Colors.gray,
-                    },
-                  ]}>
-                  <Text
-                    style={[
-                      Fonts.style.bold(
-                        Colors.snow,
-                        Fonts.size.medium,
-                        'center',
-                      ),
-                      {marginVertical: 5},
-                    ]}>
-                    OFICINA
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => setBuildType(2)}
-                  style={[
-                    styles.itemAddress,
-                    {
-                      backgroundColor:
-                        buildType === 2
-                          ? Colors.client.primaryColor
-                          : Colors.gray,
-                    },
-                  ]}>
-                  <Text
-                    style={[
-                      Fonts.style.bold(
-                        Colors.snow,
-                        Fonts.size.medium,
-                        'center',
-                      ),
-                      {marginVertical: 5},
-                    ]}>
-                    HOTEL
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => setBuildType(3)}
-                  style={[
-                    styles.itemAddress,
-                    {
-                      backgroundColor:
-                        buildType === 3
-                          ? Colors.client.primaryColor
-                          : Colors.gray,
-                    },
-                  ]}>
-                  <Text
-                    style={[
-                      Fonts.style.bold(
-                        Colors.snow,
-                        Fonts.size.medium,
-                        'center',
-                      ),
-                      {marginVertical: 5},
-                    ]}>
-                    OTRO
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-            <View
-              style={{width: '90%', alignSelf: 'center', marginVertical: 10}}>
-              <Text
-                style={[
-                  Fonts.style.bold(Colors.dark, Fonts.size.small, 'left'),
-                  {marginVertical: 5},
-                ]}>
-                Complementos
-              </Text>
-              <MyTextInput
-                pHolder={'bloque/Apartamento/habitación/Piso'}
-                text={addressDetail}
-                multiLine={false}
-                onChangeText={(text) => setAddressDetail(text)}
-                secureText={false}
-                textContent={'emailAddress'}
-                autoCapitalize={'none'}
-              />
-            </View>
-
-            <View
-              style={{width: '90%', alignSelf: 'center', marginVertical: 10}}>
-              <Text
-                style={[
-                  Fonts.style.bold(Colors.dark, Fonts.size.small, 'left'),
-                  {marginVertical: 5},
-                ]}>
-                Detalles complementarios
-              </Text>
-              <MyTextInput
-                pHolder={
-                  'Puntos de referencia, indicaciones especiales u otros'
-                }
-                text={notesAddress}
-                multiLine={true}
-                onChangeText={(text) => setNotesAddress(text)}
-                secureText={false}
-                textContent={'none'}
-                autoCapitalize={'none'}
-              />
-            </View>
-
-            <TouchableOpacity
-              onPress={() => saveAddress()}
-              style={{
-                alignSelf: 'center',
-                width: '100%',
-                paddingVertical: 10,
-                backgroundColor: Colors.client.primaryColor,
-                borderBottomLeftRadius: 10,
-                borderBottomRightRadius: 10,
-              }}>
-              <Text
-                style={Fonts.style.bold(
-                  Colors.light,
-                  Fonts.size.medium,
-                  'center',
-                )}>
-                {'Guardar'}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-    </View>
+        {/* Modals */}
+      </TouchableOpacity>
+      <ModalApp // false coverage
+        open={isCoverage === addresStatus.noCoverage}
+        setOpen={closeModalCoverage}>
+        <NoEnableCoverage
+          notifyCoverage={notifyCoverage}
+          setIsCoverage={setIsCoverage}
+          setNotifyCoverage={setNotifyCoverage}
+        />
+      </ModalApp>
+      <ModalApp // true coverage
+        open={isCoverage === addresStatus.coverage}
+        setOpen={closeModalCoverage}>
+        <EnableCoverage
+          mapStyle={mapStyle}
+          LATITUDE_DELTA={LATITUDE_DELTA}
+          LONGITUDE_DELTA={LONGITUDE_DELTA}
+          ASPECT_RATIO={ASPECT_RATIO}
+          buildType={buildType}
+          addressDetail={addressDetail}
+          setAddressDetail={setAddressDetail}
+          coordinate={coordinate}
+          setBuildType={setBuildType}
+          saveAddress={saveAddress}
+          googleAddress={googleAddress}
+          setNotesAddress={setNotesAddress}
+        />
+      </ModalApp>
+      {/* Modals */}
+    </>
   );
 };
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 0,
     width: Metrics.screenWidth,
-
     justifyContent: 'center',
     alignItems: 'center',
   },
   itemTitleContainer: {
     marginVertical: 5,
-
     width: Metrics.screenWidth * 0.9,
     alignSelf: 'center',
   },
@@ -633,7 +330,6 @@ const styles = StyleSheet.create({
   },
   itemAddress: {
     flex: 1,
-
     borderRadius: Metrics.borderRadius,
     marginHorizontal: 2.5,
     alignSelf: 'center',

@@ -13,13 +13,16 @@ import {Metrics, Fonts, ApplicationStyles, Colors, Alert} from '../../themes';
 import {updateProfile} from '../../flux/auth/actions';
 import {validateCoverage} from '../../helpers/GeoHelper';
 import {getCoverage} from '../../flux/util/actions';
+import {useNavigation} from '@react-navigation/native';
 
 const Address = (props) => {
-  const {addAddressState, closeModal} = props;
+  const {closeModal, setModalCart, setModalAddAddress} = props;
 
   const {authDispatch, state} = useContext(StoreContext);
   const {auth} = state;
   const {user} = auth;
+
+  const navigation = useNavigation();
 
   const selectAddress = async (address) => {
     const {latitude, longitude} = address.coordinates;
@@ -56,9 +59,15 @@ const Address = (props) => {
     }
   };
 
+  const changeScreen = () => {
+    closeModal(false);
+    setModalCart(false);
+    setModalAddAddress(true); 
+  };
+
   return (
-    <View style={styles.container}>
-      <ScrollView style={styles.contentContainer}>
+    <View>
+      <ScrollView>
         <View style={styles.headerContainer}>
           <View opacity={0.0} style={ApplicationStyles.separatorLine} />
           <Text style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
@@ -110,7 +119,7 @@ const Address = (props) => {
         )}
 
         <TouchableOpacity
-          onPress={() => addAddressState()}
+          onPress={() => changeScreen()}
           style={styles.productContainer}>
           <Text
             style={Fonts.style.bold(
