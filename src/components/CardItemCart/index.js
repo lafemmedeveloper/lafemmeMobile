@@ -1,11 +1,17 @@
 import React from 'react';
-import {View, Text, Image, ActivityIndicator, StyleSheet} from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  ActivityIndicator,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 import StarRating from 'react-native-star-rating';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
 import {Fonts, Colors, ApplicationStyles, Metrics} from '../../themes';
 import {minToHours} from '../../helpers/MomentHelper';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 import moment from 'moment';
 
 export default (data) => {
@@ -184,8 +190,8 @@ const styles = StyleSheet.create({
   deleteContainer: {
     flex: 1,
     paddingHorizontal: 5,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: 'flex-end',
+    alignItems: 'flex-end',
   },
   textInput: {
     width: Metrics.screenWidth * 0.8,

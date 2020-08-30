@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import {
   View,
   Text,
@@ -20,11 +20,12 @@ import Geocode from 'react-geocode';
 import ModalApp from '../../components/ModalApp';
 import EnableCoverage from './EnableCoverage';
 import NoEnableCoverage from './NoEnableCoverage';
+import {getCoverage} from '../../flux/util/actions';
 
 const AddAddress = (props) => {
   const {closeAddAddress} = props;
   const APIKEY = 'AIzaSyArVhfk_wHVACPwunlCi1VP9EUgYZcnFpQ';
-  const {state, authDispatch} = useContext(StoreContext);
+  const {state, authDispatch, utilDispatch} = useContext(StoreContext);
   const {auth, util} = state;
   const {user} = auth;
   const {coverageZones} = util;
@@ -59,6 +60,9 @@ const AddAddress = (props) => {
     latitude: 6.2458077,
     longitude: -75.5680703,
   });
+  useEffect(() => {
+    getCoverage('Medellín', utilDispatch);
+  }, []);
 
   const checkCoverage = (latitude, longitude) => {
     let coverage = validateCoverage(latitude, longitude, coverageZones);

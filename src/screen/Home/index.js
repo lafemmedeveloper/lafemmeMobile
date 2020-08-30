@@ -52,9 +52,10 @@ const Home = () => {
         setModalAddress(true);
       }
     } else {
-      setModalAddress(true);
+      setModalAuth(true);
     }
   };
+
   const addAddressState = () => {
     setIsModalCart(false);
     setModalAddAddress(true);
@@ -99,7 +100,7 @@ const Home = () => {
         </ScrollView>
       </View>
 
-      {user && user.cart.length > 0 && (
+      {user && user.cart && (
         <View
           style={{
             width: Metrics.screenWidth,
@@ -112,11 +113,16 @@ const Home = () => {
             key={'CartFooter'}
             title={'Completar orden'}
             servicesNumber={
-              user && user.cart && user.cart ? user.cart.length : 0
+              user && user.cart && user.cart.services
+                ? user.cart.services.length
+                : 0
             }
             servicesTotal={
-              user && user.cart && user.cart.length > 0
-                ? _.sumBy(user.cart, 'total')
+              user &&
+              user.cart &&
+              user.cart.services &&
+              user.cart.services.length > 0
+                ? _.sumBy(user.cart.services, 'total')
                 : 0
             }
             onAction={() => setModalCart(true)}

@@ -12,11 +12,11 @@ const HandleAddOns = (props) => {
     countItems,
     selectAddons,
     countableAddOrRemove,
-    selectAddonGuest,
     guestList,
     addonsGuest,
     addonsList,
     product,
+    selectAddonGuest,
   } = props;
   return (
     <>
@@ -321,11 +321,11 @@ const HandleAddOns = (props) => {
 
                 {!data.isCountAddon &&
                   addonsList.findIndex((i) => i.id === data.id) !== -1 &&
-                  guestList.map((item, indexItem) => {
+                  guestList.map((item) => {
                     return (
                       <TouchableOpacity
                         key={item.id}
-                        onPress={() => selectAddonGuest(data, item, indexItem)}
+                        onPress={() => selectAddonGuest(data, item)}
                         style={{
                           width: Metrics.screenWidth * 0.8,
                           alignSelf: 'flex-end',

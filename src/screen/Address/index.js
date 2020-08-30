@@ -1,36 +1,36 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {
   View,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 
 import {StoreContext} from '../../flux';
 import CardItemAddress from '../../components/CartItemAddress';
-import {Metrics, Fonts, ApplicationStyles, Colors, Alert} from '../../themes';
+import {Metrics, Fonts, ApplicationStyles, Colors} from '../../themes';
 import {updateProfile} from '../../flux/auth/actions';
 import {validateCoverage} from '../../helpers/GeoHelper';
 import {getCoverage} from '../../flux/util/actions';
-import {useNavigation} from '@react-navigation/native';
 
 const Address = (props) => {
   const {closeModal, setModalCart, setModalAddAddress} = props;
 
-  const {authDispatch, state} = useContext(StoreContext);
-  const {auth} = state;
+  const {authDispatch, state, utilDispatch} = useContext(StoreContext);
+  const {auth, util} = state;
   const {user} = auth;
+  const {coverageZones} = util;
 
-  const navigation = useNavigation();
+  useEffect(() => {
+    getCoverage('Medellín', utilDispatch);
+  }, []);
 
   const selectAddress = async (address) => {
     const {latitude, longitude} = address.coordinates;
 
-    console.log('address', address);
-
-    console.log('address', latitude, longitude, getCoverage());
-    let coverage = validateCoverage(latitude, longitude, getCoverage());
+    let coverage = validateCoverage(latitude, longitude, coverageZones);
 
     if (coverage) {
       await updateProfile({...user.cart, address}, 'cart', authDispatch);
@@ -38,7 +38,7 @@ const Address = (props) => {
     } else {
       Alert.alert(
         'Lo sentimos',
-        'Ya no tenemos combertura en esta zona, selecciona otra dirección para continuar.',
+        'Ya no tenemos cobertura en esta zona, selecciona otra dirección para continuar.',
       );
     }
   };
@@ -62,7 +62,7 @@ const Address = (props) => {
   const changeScreen = () => {
     closeModal(false);
     setModalCart(false);
-    setModalAddAddress(true); 
+    setModalAddAddress(true);
   };
 
   return (
@@ -78,7 +78,7 @@ const Address = (props) => {
 
         {user &&
           user.address &&
-          user.address.map((item, index) => {
+          user.address.map((item) => {
             return (
               <CardItemAddress
                 key={item.id}

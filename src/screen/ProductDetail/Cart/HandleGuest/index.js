@@ -19,7 +19,7 @@ const HandleGuest = (props) => {
         style={Fonts.style.semiBold(Colors.dark, Fonts.size.medium, 'left', 1)}>
         {'Invitados'}
       </Text>
-      {guest.map((data, index) => {
+      {guest.map((data) => {
         return (
           <TouchableOpacity
             key={data.id}

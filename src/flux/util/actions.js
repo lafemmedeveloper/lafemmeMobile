@@ -49,36 +49,49 @@ export const topicPush = (topic, notification, data) => {
   });
 };
 export const getCoverage = async (city, dispatch) => {
-  const coverageZones = await firestore()
-    .collection('coverageZones')
-    .get()
-    .then('isActive', '===', true)
-    .then('city', '===', city);
+  try {
+    setLoading(true, dispatch);
+    const cityEnable = city ? city : 'Medellin';
+    const coverageZones = await firestore()
+      .collection('coverageZones')
+      .get()
+      .then('isActive', '===', true)
+      .then('city', '===', cityEnable);
 
-  const data = coverageZones.docs.map((doc) => {
-    const item = doc.data();
-    return {
-      ...item,
-      id: doc.id,
-    };
-  });
-
-  return dispatch({type: GET_COVERAGE, payload: data});
+    const data = coverageZones.docs.map((doc) => {
+      const item = doc.data();
+      return {
+        ...item,
+        id: doc.id,
+      };
+    });
+    dispatch({type: GET_COVERAGE, payload: data});
+    setLoading(false, dispatch);
+  } catch (error) {
+    setLoading(false, dispatch);
+    console.log('error getCoverage =>', error);
+  }
 };
 
 export const getOrders = () => (dispatch, getStore) => {
-  const ordersRef = firestore()
-    .collection('orders')
-    .where('client.uid', '==', getStore().currentUser.auth.uid);
-  ordersRef.orderBy('createDate', 'desc');
-  let listOrders = [];
-  ordersRef.onSnapshot((orders) => {
-    listOrders = orders.docs.map((item) => {
-      return {
-        id: item.id,
-        ...item.data(),
-      };
+  try {
+    setLoading(true, dispatch);
+    const ordersRef = firestore()
+      .collection('orders')
+      .where('client.uid', '==', getStore().currentUser.auth.uid);
+    ordersRef.orderBy('createDate', 'desc');
+    let listOrders = [];
+    ordersRef.onSnapshot((orders) => {
+      listOrders = orders.docs.map((item) => {
+        return {
+          id: item.id,
+          ...item.data(),
+        };
+      });
+      return dispatch({type: GET_ORDERS, payload: listOrders});
     });
-    return dispatch({type: GET_ORDERS, payload: listOrders});
-  });
+    setLoading(false, dispatch);
+  } catch (error) {
+    console.log('error getOrders ==>', getOrders);
+  }
 };

@@ -154,7 +154,7 @@ const CartScreen = (props) => {
     user.cart.notes;
 
   return (
-    <View>
+    <View style={{height: 650}}>
       <View style={styles.headerContainer}>
         <View opacity={0.0} style={ApplicationStyles.separatorLine} />
         <Image

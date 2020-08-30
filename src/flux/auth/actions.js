@@ -59,54 +59,7 @@ export const signOff = async (dispatch) => {
     setLoading(false, dispatch);
   }
 };
-export const addGuestDb = async (data, dispatch) => {
-  const {user, guestUser} = data;
-  try {
-    setLoading(true, dispatch);
-    const ref = firestore().collection('users').doc(user.uid);
 
-    await ref.set({guest: [...user.guest, guestUser]}, {merge: true});
-
-    await setUser(user.uid, dispatch);
-
-    setLoading(false, dispatch);
-  } catch (error) {
-    console.log(error);
-    setLoading(false, dispatch);
-  }
-};
-
-export const updateUser = async (data, dispatch) => {
-  const currentUser = auth().currentUser;
-  try {
-    setLoading(true, dispatch);
-    const ref = firestore().collection('users').doc(currentUser.uid);
-
-    await ref.set({guest: data}, {merge: true});
-
-    await setUser(currentUser.uid, dispatch);
-
-    setLoading(false, dispatch);
-  } catch (error) {
-    console.log(error);
-    setLoading(false, dispatch);
-  }
-};
-export const setUserCart = async (data, user, dispatch) => {
-  try {
-    const currentUser = auth().currentUser;
-    setLoading(true, dispatch);
-    const ref = firestore().collection('users').doc(currentUser.uid);
-    console.log('cart:', [data]);
-    ref.set({cart: [...user.cart, data]}, {merge: true});
-    await setUser(currentUser.uid, dispatch);
-
-    setLoading(false, dispatch);
-  } catch (error) {
-    console.log(error);
-    setLoading(false, dispatch);
-  }
-};
 export const updateProfile = async (data, typeData, dispatch) => {
   const currentUser = auth().currentUser;
   try {
