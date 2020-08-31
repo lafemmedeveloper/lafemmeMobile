@@ -19,11 +19,11 @@ import {StoreContext} from '../../flux';
 import CardItemCart from '../../components/CardItemCart';
 import FieldCartConfig from '../../components/FieldCartConfig';
 import {formatDate, getDate} from '../../helpers/MomentHelper';
-import DatePicker from 'react-native-datepicker';
 import _ from 'lodash';
 import ModalApp from '../../components/ModalApp';
 import AppConfig from '../../config/AppConfig';
 import {topicPush, getCoverage} from '../../flux/util/actions';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 const CartScreen = (props) => {
   const {setModalCart, setModalAddress} = props;
@@ -36,8 +36,16 @@ const CartScreen = (props) => {
   const [date, setDate] = useState(getDate(1));
   const [notes, setNotes] = useState('');
   const [modalnote, setModalnote] = useState(false);
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
-  console.log('date ==>', date);
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
+
+  const handleConfirm = (date) => {
+    console.warn('A date has been picked: ', date);
+    hideDatePicker();
+  };
 
   useEffect(() => {
     observeUser(authDispatch);
@@ -56,16 +64,6 @@ const CartScreen = (props) => {
     }
   };
 
-  const updateDate = async (date) => {
-    console.log(date);
-
-    try {
-      updateProfile({...user.cart, date}, 'cart', authDispatch);
-      setDate({date});
-    } catch (err) {
-      console.log('updateDate:error', err);
-    }
-  };
   const removeCartItem = async (id) => {
     let services = user.cart.services;
 
@@ -152,6 +150,13 @@ const CartScreen = (props) => {
     user.cart.date &&
     user.cart.services.length > 0 &&
     user.cart.notes;
+  console.log('isDatePickerVisible =>', isDatePickerVisible);
+
+  const handleDateValue = (date) => {
+    console.log('date =>', date);
+    //setDate({date});
+    // updateProfile({...user.cart, date}, 'cart', authDispatch);
+  };
 
   return (
     <View style={{height: 650}}>
@@ -303,6 +308,7 @@ const CartScreen = (props) => {
               />
             </TouchableOpacity>
             {/* date */}
+
             <View style={styles.itemTitleContainer}>
               <Text
                 style={Fonts.style.regular(
@@ -322,7 +328,7 @@ const CartScreen = (props) => {
                 </Text>
               </Text>
             </View>
-            <View>
+            <TouchableOpacity onPress={() => setDatePickerVisibility(true)}>
               <FieldCartConfig
                 key={'date'}
                 textSecondary={''}
@@ -330,6 +336,18 @@ const CartScreen = (props) => {
                 textActive={`${formatDate(user.cart.date, 'dddd, LLL')}`}
                 textInactive={'+ Selecciona la fecha del servicio'}
                 icon={'calendar'}
+              />
+            </TouchableOpacity>
+            <View>
+              <DateTimePickerModal
+                isVisible={isDatePickerVisible}
+                mode="date"
+                onConfirm={handleConfirm}
+                onCancel={hideDatePicker}
+                is24Hour={false}
+                isDarkModeEnabled={true}
+                locale="es"
+                onChange={(date) => handleDateValue(date)}
               />
 
               <View
@@ -340,57 +358,8 @@ const CartScreen = (props) => {
                   height: '100%',
                   flex: 1,
                   backgroundColor: 'red',
-                }}>
-                <DatePicker
-                  date={user.cart.date}
-                  locale={'es'}
-                  showIcon={false}
-                  confirmBtnText={'Confirmar'}
-                  cancelBtnText={'Cancelar'}
-                  minDate={moment(new Date())
-                    .add(1, 'hour')
-                    .format('YYYY-MM-DD HH:mm')}
-                  maxDate={moment(new Date())
-                    .add(30, 'days')
-                    .format('YYYY-MM-DD  HH:mm')}
-                  placeholder={'text'}
-                  mode={'datetime'}
-                  format={'YYYY-MM-DD HH:mm'}
-                  customStyles={{
-                    dateInput: {
-                      borderWidth: 0,
-                      right: 30,
-                    },
-                    dateText: {
-                      marginTop: 10,
-                      color: 'red',
-                      fontSize: 16,
-                      fontFamily: Fonts.type.regular,
-                    },
-                    placeholderText: {
-                      color: 'blue',
-                      fontSize: 16,
-                      width: '100%',
-                      fontFamily: Fonts.type.regular,
-                      justifyContent: 'center',
-                      flex: 1,
-                      textAlign: 'center',
-                      flexDirection: 'row',
-                      marginTop: 9,
-                      left: 20,
-                    },
-                  }}
-                  onDateChange={(date) => updateDate(date)}
-                  placeholderTextColor={'purple'}
-                  underlineColorAndroid={'rgba(0,0,0,0)'}
-                  is24Hour={true}
-                  androidMode="spinner"
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                  }}
-                />
-              </View>
+                }}
+              />
             </View>
             {/* endDate */}
 
@@ -404,7 +373,7 @@ const CartScreen = (props) => {
                 {'Comentarios'}
               </Text>
             </View>
-            <TouchableOpacity onPress={() => console.log('active')}>
+            <TouchableOpacity onPress={() => setModalnote(true)}>
               <FieldCartConfig
                 key={'comments'}
                 textSecondary={''}
