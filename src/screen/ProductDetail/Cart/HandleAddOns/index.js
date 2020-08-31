@@ -1,9 +1,9 @@
 import React from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
-import {Metrics, Colors, Fonts, ApplicationStyles} from 'App/themes';
+import {Metrics, Colors, Fonts, ApplicationStyles} from '../../../../themes';
 import Utilities from '../../../../utilities';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import TitleValue from 'App/components/TitleValue';
+import TitleValue from '../../../../components/TitleValue';
 
 const HandleAddOns = (props) => {
   const {
@@ -12,11 +12,11 @@ const HandleAddOns = (props) => {
     countItems,
     selectAddons,
     countableAddOrRemove,
-    selectAddonGuest,
     guestList,
     addonsGuest,
     addonsList,
     product,
+    selectAddonGuest,
   } = props;
   return (
     <>
@@ -321,11 +321,11 @@ const HandleAddOns = (props) => {
 
                 {!data.isCountAddon &&
                   addonsList.findIndex((i) => i.id === data.id) !== -1 &&
-                  guestList.map((item, indexItem) => {
+                  guestList.map((item) => {
                     return (
                       <TouchableOpacity
                         key={item.id}
-                        onPress={() => selectAddonGuest(data, item, indexItem)}
+                        onPress={() => selectAddonGuest(data, item)}
                         style={{
                           width: Metrics.screenWidth * 0.8,
                           alignSelf: 'flex-end',

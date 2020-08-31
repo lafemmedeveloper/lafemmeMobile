@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, Alert} from 'react-native';
-import {Metrics, Colors, Fonts} from 'App/themes';
+import {Metrics, Colors, Fonts} from '../../../../themes';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Utilities from '../../../../utilities';
 
@@ -19,7 +19,7 @@ const HandleGuest = (props) => {
         style={Fonts.style.semiBold(Colors.dark, Fonts.size.medium, 'left', 1)}>
         {'Invitados'}
       </Text>
-      {guest.map((data, index) => {
+      {guest.map((data) => {
         return (
           <TouchableOpacity
             key={data.id}

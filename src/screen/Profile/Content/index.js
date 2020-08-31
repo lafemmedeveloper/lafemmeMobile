@@ -8,9 +8,9 @@ import {
   Image,
 } from 'react-native';
 
-import {Colors, Fonts, Images} from 'App/themes';
+import {Colors, Fonts, Images} from '../../../themes';
 import styles from './styles';
-import ItemProfile from 'App/components/ItemProfile';
+import ItemProfile from '../../../components/ItemProfile';
 import {signOff} from '../../../flux/auth/actions';
 
 const Content = (props) => {

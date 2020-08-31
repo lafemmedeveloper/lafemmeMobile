@@ -1,4 +1,4 @@
-import {Metrics, Colors, Fonts} from 'App/themes';
+import {Metrics, Colors, Fonts} from '../../../themes';
 
 export default {
   container: {

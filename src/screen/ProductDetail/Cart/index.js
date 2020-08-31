@@ -1,15 +1,15 @@
 import React, {useState, useContext} from 'react';
-import {View, Text, ScrollView, TouchableOpacity} from 'react-native';
-import {Metrics, Colors, Fonts, ApplicationStyles} from 'App/themes';
-import Utilities from 'App/utilities';
-import ModalApp from 'App/components/ModalApp';
+import {View, Text, ScrollView, TouchableOpacity, Keyboard} from 'react-native';
+import {Metrics, Colors, Fonts, ApplicationStyles} from '../../../themes';
+import Utilities from '../../../utilities';
+import ModalApp from '../../../components/ModalApp';
 import FormGuest from './FormGuest';
-import {addGuestDb, updateUser, setUserCart} from 'App/flux/auth/actions';
+import {updateProfile} from '../../../flux/auth/actions';
 import _ from 'lodash';
 import {minToHours} from '../../../helpers/MomentHelper';
 import {useNavigation} from '@react-navigation/native';
 
-import {StoreContext} from 'App/flux';
+import {StoreContext} from '../../../flux';
 import HandleGuest from './HandleGuest';
 import HandleAddOns from './HandleAddOns';
 import HandleResume from './HandleResume';
@@ -49,9 +49,14 @@ const Cart = (props) => {
   const [experts, setExperts] = useState(modelExpert);
   const [showModalService, setShowModalService] = useState(false);
 
-  const addGuest = () => {
+  const addGuest = async () => {
     const guestUser = Object.assign(formGuest, {id: Utilities.create_UUID()});
-    addGuestDb({user, guestUser}, authDispatch);
+
+    let data = [...guest, guestUser];
+    await updateProfile(data, 'guest', authDispatch);
+
+    Keyboard.dismiss();
+
     setGuestModal(false);
     setFormGuest(initial_state);
   };
@@ -63,7 +68,7 @@ const Cart = (props) => {
     if (index !== -1) {
       data = [...guest.slice(0, index), ...guest.slice(index + 1)];
 
-      updateUser(data, authDispatch);
+      await updateProfile(data, 'guest', authDispatch);
     }
   };
 
@@ -88,6 +93,7 @@ const Cart = (props) => {
 
     setGuestList(data);
   };
+
   const selectAddons = (item) => {
     let data = addonsList;
     const index = addonsList
@@ -146,7 +152,9 @@ const Cart = (props) => {
     setAddonsListCount([_addonsList]);
   };
 
-  const selectAddonGuest = (addonSelected, guest, indexItem) => {
+  const selectAddonGuest = (addonSelected, guest) => {
+    console.log('addonSelected =>', addonSelected);
+    console.log('guest =>', guest);
     let item = {
       addonId: addonSelected.id,
       addOnPrice: addonSelected.price,
@@ -175,8 +183,15 @@ const Cart = (props) => {
     setAddonsGuest(data);
   };
 
-  const sendItemCart = (item) => {
-    setUserCart(item, user, authDispatch);
+  const sendItemCart = async (item) => {
+    let old = user.cart.services ? user.cart.services : [];
+
+    let services = [...old, item];
+
+    console.log('services', services);
+
+    await updateProfile({...user.cart, services}, 'cart', authDispatch);
+
     setShowModalService(false);
     setExperts({});
     navigation.navigate('Home');
@@ -202,12 +217,14 @@ const Cart = (props) => {
 
   return (
     <>
-      <ScrollView style={ApplicationStyles.scrollCart}>
+      <ScrollView>
         <View
           style={{
             width: Metrics.screenWidth,
             alignSelf: 'center',
-            backgroundColor: 'white',
+            backgroundColor: Colors.light,
+            borderTopLeftRadius: 20,
+            borderTopRightRadius: 20,
           }}>
           <View style={{height: 20, zIndex: 999}} />
           <View //description

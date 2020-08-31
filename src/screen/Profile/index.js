@@ -1,7 +1,7 @@
 import React, {useContext} from 'react';
 
-import {StoreContext} from 'App/flux';
-import ButtonLogin from 'App/components/ButtonLogin';
+import {StoreContext} from '../../flux';
+import ButtonLogin from '../../components/ButtonLogin';
 import Content from './Content';
 
 const Profile = () => {

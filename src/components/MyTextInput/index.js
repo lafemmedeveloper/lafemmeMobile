@@ -2,7 +2,7 @@ import React from 'react';
 import {TextInput} from 'react-native';
 
 import styles from './styles';
-import {Colors} from 'App/themes';
+import {Colors} from '../../themes';
 
 export default (data) => {
   return (

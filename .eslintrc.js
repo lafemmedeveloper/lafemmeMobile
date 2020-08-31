@@ -6,5 +6,6 @@ module.exports = {
     'no-shadow': 0,
     'no-unused-vars': 'error',
     'react-hooks/exhaustive-deps': 'warn',
+    'react-native/no-unused-styles': 'warn',
   },
 };

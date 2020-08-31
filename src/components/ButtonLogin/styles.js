@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import {Colors, Metrics} from 'App/themes';
+import {Colors, Metrics} from '../../themes';
 
 export default StyleSheet.create({
   root: {padding: 20, minHeight: 300},

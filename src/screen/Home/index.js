@@ -1,18 +1,25 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {View, ScrollView} from 'react-native';
 import styles from './styles';
-import ExpandHome from 'App/components/ExpandHome';
-import {Metrics, ApplicationStyles, Images} from 'App/themes';
-import {StoreContext} from 'App/flux';
-import {getServices} from 'App/flux/services/actions';
+import ExpandHome from '../../components/ExpandHome';
+import {Metrics, ApplicationStyles, Images} from '../../themes';
+import {StoreContext} from '../../flux';
+import {getServices} from '../../flux/services/actions';
 import {useNavigation} from '@react-navigation/native';
-import ModalApp from 'App/components/ModalApp';
+import ModalApp from '../../components/ModalApp';
 import Login from '../Login';
 import {observeUser} from '../../flux/auth/actions';
 import BannerScroll from '../../components/BannerScroll';
 import Gallery from '../Gallery';
+import CartFooter from '../../components/CartFooter';
+import _ from 'lodash';
+import CartScreen from '../CartScreen';
+import Address from '../Address';
+import AddAddress from '../AddAddress';
 
 const Home = () => {
+  const TIME_SET = 500;
+
   const navigation = useNavigation();
   const {state, serviceDispatch, authDispatch, utilDispatch} = useContext(
     StoreContext,
@@ -32,15 +39,36 @@ const Home = () => {
   const {services} = service;
   const [modalAuth, setModalAuth] = useState(false);
   const [modalInspo, setModalInspo] = useState(false);
+  const [modalCart, setModalCart] = useState(false);
+  const [modalAddress, setModalAddress] = useState(false);
+  const [isModalCart, setIsModalCart] = useState(false);
+  const [modalAddAddress, setModalAddAddress] = useState(false);
 
   const selectService = (product) => {
     if (user !== null) {
-      navigation.navigate('ProductDetail', {product, user, authDispatch});
+      if (user && user.cart && user.cart.address) {
+        navigation.navigate('ProductDetail', {product, user});
+      } else {
+        setModalAddress(true);
+      }
     } else {
       setModalAuth(true);
     }
   };
 
+  const addAddressState = () => {
+    setIsModalCart(false);
+    setModalAddAddress(true);
+  };
+  const closeModal = () => {
+    setModalAddress(false);
+
+    if (isModalCart) {
+      setTimeout(function () {
+        modalCart(true);
+      }, TIME_SET);
+    }
+  };
   return (
     <>
       <View style={styles.container}>
@@ -71,6 +99,38 @@ const Home = () => {
           )}
         </ScrollView>
       </View>
+
+      {user && user.cart && (
+        <View
+          style={{
+            width: Metrics.screenWidth,
+            height: 50,
+            bottom: 0,
+            backgroundColor: 'transparet',
+            position: 'absolute',
+          }}>
+          <CartFooter
+            key={'CartFooter'}
+            title={'Completar orden'}
+            servicesNumber={
+              user && user.cart && user.cart.services
+                ? user.cart.services.length
+                : 0
+            }
+            servicesTotal={
+              user &&
+              user.cart &&
+              user.cart.services &&
+              user.cart.services.length > 0
+                ? _.sumBy(user.cart.services, 'total')
+                : 0
+            }
+            onAction={() => setModalCart(true)}
+          />
+        </View>
+      )}
+
+      {/* Modals */}
       <ModalApp open={modalAuth} setOpen={setModalAuth}>
         <Login setModalAuth={setModalAuth} />
       </ModalApp>
@@ -82,6 +142,32 @@ const Home = () => {
           setModalInspo={setModalInspo}
         />
       </ModalApp>
+
+      <ModalApp open={modalCart} setOpen={setModalCart}>
+        <CartScreen
+          setModalCart={setModalCart}
+          setModalAddress={setModalAddress}
+        />
+      </ModalApp>
+
+      <ModalApp open={modalAddress} setOpen={setModalAddress}>
+        <Address
+          addAddressState={addAddressState}
+          closeModal={closeModal}
+          setModalAddAddress={setModalAddAddress}
+          setModalCart={setModalCart}
+        />
+      </ModalApp>
+
+      <ModalApp open={modalAddAddress} setOpen={setModalAddAddress}>
+        <AddAddress
+          addAddress={() => setModalAddAddress(true)}
+          closeAddAddress={() => setModalAddAddress(false)}
+          setModalCart={setModalCart}
+        />
+      </ModalApp>
+
+      {/* Modals close */}
     </>
   );
 };

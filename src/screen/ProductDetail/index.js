@@ -1,8 +1,7 @@
 import React from 'react';
-import {View, TouchableOpacity, ScrollView} from 'react-native';
+import {View, TouchableOpacity, ScrollView, StyleSheet} from 'react-native';
 import FastImage from 'react-native-fast-image';
-import styles from './styles';
-import {Metrics, Colors, ApplicationStyles} from 'App/themes';
+import {Metrics, Colors} from '../../themes';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Cart from './Cart';
 
@@ -38,16 +37,26 @@ const ProductDetail = (props) => {
         </TouchableOpacity>
       </View>
       <ScrollView style={styles.container}>
-        <View style={[styles.header, ApplicationStyles.shadownClient]}>
-          <FastImage
-            style={styles.imageProduct}
-            source={{
-              uri: product.imageUrl,
-              priority: FastImage.priority.normal,
-            }}
-            resizeMode={FastImage.resizeMode.cover}
-          />
-        </View>
+        <FastImage
+          style={styles.imageProduct}
+          source={{
+            uri: product.imageUrl,
+            priority: FastImage.priority.normal,
+          }}
+          resizeMode={FastImage.resizeMode.cover}
+        />
+        <View
+          style={{
+            backgroundColor: 'white',
+            zIndex: 10000,
+            height: 40,
+            width: '100%',
+            borderTopRightRadius: 20,
+            borderTopLeftRadius: 20,
+            position: 'absolute',
+            top: 260,
+          }}
+        />
         <Cart product={product} dispatch={authDispatch} />
       </ScrollView>
     </>
@@ -55,3 +64,42 @@ const ProductDetail = (props) => {
 };
 
 export default ProductDetail;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    width: Metrics.screenWidth,
+    height: Metrics.screenHeight,
+  },
+  imageProduct: {
+    width: Metrics.screenWidth,
+    height: Metrics.screenWidth / 1.5,
+    resizeMode: 'cover',
+  },
+  containerBack: {
+    marginLeft: 20,
+    backgroundColor: 'white',
+    height: 30,
+    width: 30,
+    flex: 0,
+    borderRadius: 15,
+    justifyContent: 'center',
+    marginTop: 20,
+  },
+  contImage: {
+    width: Metrics.screenWidth,
+    height: Metrics.screenWidth / 1.5,
+    resizeMode: 'cover',
+    position: 'absolute',
+    bottom: 10,
+    justifyContent: 'flex-end',
+    marginHorizontal: 10,
+  },
+  header: {
+    zIndex: 1000,
+    width: Metrics.screenWidth,
+    height: Metrics.screenWidth / 1.5,
+    resizeMode: 'cover',
+  },
+  borrar: {},
+});

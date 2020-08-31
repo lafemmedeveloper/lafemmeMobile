@@ -3,7 +3,8 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {NavigationContainer} from '@react-navigation/native';
 import TabBottom from './TabBottom';
 
-import ProductDetail from 'App/screen/ProductDetail';
+import ProductDetail from '../../screen/ProductDetail';
+import AddAddress from '../../screen/AddAddress';
 
 const Stack = createStackNavigator();
 
@@ -21,6 +22,13 @@ const Router = () => {
         <Stack.Screen
           name="ProductDetail"
           component={ProductDetail}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="AddAddress"
+          component={AddAddress}
           options={{
             headerShown: false,
           }}

@@ -7,10 +7,10 @@ import {
   Alert,
   ActivityIndicator,
 } from 'react-native';
-import {Colors, Metrics, Fonts} from 'App/themes';
+import {Colors, Metrics, Fonts} from '../../themes';
 import moment from 'moment';
 import auth from '@react-native-firebase/auth';
-import {saveUser} from 'App/flux/auth/actions';
+import {saveUser} from '../../flux/auth/actions';
 
 const Register = (props) => {
   const {
@@ -39,13 +39,15 @@ const Register = (props) => {
           email,
           firstName: name,
           lastName: lastName,
+          numberOfServices: 0,
           phone: currentUser.phoneNumber,
           uid: currentUser.uid,
           role: 'client',
           tyc: moment(new Date()).format('LLLL'),
           guest: [],
-          rating: 5,
+          rating: 5.0,
           cart: null,
+          address: [],
         };
         setActivityLoading(false);
         setDb(data);

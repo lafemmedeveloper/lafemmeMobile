@@ -36,7 +36,5 @@ export const validateCoverage = (latitude, longitude, coverageZones) => {
     }
   }
 
-  console.log('=>isCoverage', isCoverage);
-
   return isCoverage;
 };

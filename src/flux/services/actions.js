@@ -12,7 +12,6 @@ export const setLoading = (loading, dispatch) => {
   dispatch({type: LOADING, payload: loading});
 };
 export const getServices = async (dispatch) => {
-  console.log('se ejecuta services');
   try {
     const services = await firestore()
       .collection('services')

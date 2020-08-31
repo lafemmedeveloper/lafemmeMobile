@@ -6,10 +6,16 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
-import {Metrics, Colors, Fonts, ApplicationStyles, Images} from 'App/themes';
+import {
+  Metrics,
+  Colors,
+  Fonts,
+  ApplicationStyles,
+  Images,
+} from '../../../../themes';
 import {ScrollView} from 'react-native-gesture-handler';
-import TitleValue from 'App/components/TitleValue';
-import Utilities from 'App/utilities';
+import TitleValue from '../../../../components/TitleValue';
+import Utilities from '../../../../utilities';
 import _ from 'lodash';
 import {minToHours} from '../../../../helpers/MomentHelper';
 

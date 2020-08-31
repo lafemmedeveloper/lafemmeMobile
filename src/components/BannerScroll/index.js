@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
 
 import styles from './styles';
-import {ApplicationStyles, Colors, Fonts} from 'App/themes';
+import {ApplicationStyles, Colors, Fonts} from '../../themes';
 import FastImage from 'react-native-fast-image';
 
 export default (data) => {

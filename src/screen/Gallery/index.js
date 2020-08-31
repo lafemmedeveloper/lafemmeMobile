@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {ScrollView} from 'react-native';
-import {getGallery} from 'App/flux/util/actions';
-import GalleryItem from 'App/components/GalleryItem';
+import {getGallery} from '../../flux/util/actions';
+import GalleryItem from '../../components/GalleryItem';
 
 const Gallery = (props) => {
   console.log('props=>', props);
