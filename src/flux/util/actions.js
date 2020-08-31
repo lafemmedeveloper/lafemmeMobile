@@ -4,9 +4,14 @@ import {
   LOADING,
   GET_COVERAGE,
   GET_ORDERS,
+  DEVICE_INFO,
+  GET_EXPERT_ACTIVE_ORDERS,
+  GET_EXPERT_OPEN_ORDERS,
 } from './types';
 
 import firestore from '@react-native-firebase/firestore';
+import DeviceInfo from 'react-native-device-info';
+import auth from '@react-native-firebase/auth';
 
 export const handleError = (dispatch) => {
   dispatch({type: HANDLE_ERROR, payload: true});
@@ -74,11 +79,12 @@ export const getCoverage = async (city, dispatch) => {
 };
 
 export const getOrders = () => (dispatch, getStore) => {
+  let uid = auth().currentUser.uid;
   try {
     setLoading(true, dispatch);
     const ordersRef = firestore()
       .collection('orders')
-      .where('client.uid', '==', getStore().currentUser.auth.uid);
+      .where('client.uid', '==', uid);
     ordersRef.orderBy('createDate', 'desc');
     let listOrders = [];
     ordersRef.onSnapshot((orders) => {
@@ -94,4 +100,76 @@ export const getOrders = () => (dispatch, getStore) => {
   } catch (error) {
     console.log('error getOrders ==>', getOrders);
   }
+};
+
+export const getDeviceInfo = (dispatch) => {
+  return new Promise((resolve) => {
+    let deviceInfo = {};
+
+    try {
+      deviceInfo.bundleId = DeviceInfo.getBundleId();
+      deviceInfo.buildNumber = DeviceInfo.getBuildNumber();
+      deviceInfo.version = DeviceInfo.getVersion();
+      deviceInfo.readableVersion = DeviceInfo.getReadableVersion();
+
+      let bundleSplit = deviceInfo.bundleId.split('.');
+      let bundleType = bundleSplit[2];
+
+      if (bundleType === 'client' || bundleType === 'clientstaging') {
+        deviceInfo.appType = 'client';
+      } else if (bundleType === 'expert' || bundleType === 'expertstaging') {
+        deviceInfo.appType = 'expert';
+      }
+      return resolve(dispatch({type: DEVICE_INFO, payload: deviceInfo}));
+    } catch (e) {
+      console.log('Trouble getting device info ', e);
+    }
+  });
+};
+
+export const getExpertActiveOrders = (dispatch) => {
+  console.log('===> getExpertActiveOrders');
+  let uid = auth().currentUser.uid;
+
+  let ordersRef = firestore()
+    .collection('orders')
+    .where('status', '>=', 1)
+    .where('status', '<=', 4);
+
+  ordersRef.where('experts', 'array-contains', uid);
+
+  let listOrders = [];
+
+  ordersRef.onSnapshot((orders) => {
+    console.log('=> orders', orders);
+
+    listOrders = orders.docs.map((item) => {
+      return {
+        id: item.id,
+        ...item.data(),
+      };
+    });
+    dispatch({type: GET_EXPERT_ACTIVE_ORDERS, payload: listOrders});
+  });
+};
+export const getExpertOpenOrders = () => (dispatch) => {
+  let expertActivities = 'manicure';
+
+  let ordersRef = firestore()
+    .collection('orders')
+    .where('status', '==', 0)
+    .where('servicesType', 'array-contains-any', expertActivities);
+  ordersRef.orderBy('createDate', 'desc');
+
+  let listOrders = [];
+
+  ordersRef.onSnapshot((orders) => {
+    listOrders = orders.docs.map((item) => {
+      return {
+        id: item.id,
+        ...item.data(),
+      };
+    });
+    return dispatch({type: GET_EXPERT_OPEN_ORDERS, payload: listOrders});
+  });
 };

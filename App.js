@@ -1,9 +1,9 @@
 import React from 'react';
-import {Text} from 'react-native';
 
 import DeviceInfo from 'react-native-device-info';
 import Config from 'react-native-config';
 import Router from './src/config/Router';
+import RouterExpert from './src/config/RouterExpert';
 import Store from './src/flux';
 
 let bundleId = DeviceInfo.getBundleId();
@@ -14,7 +14,7 @@ const App = () => {
   return (
     <>
       <Store>
-        {bundleId === 'com.femme.client' ? <Router /> : <Text>expert</Text>}
+        {bundleId === 'com.femme.client' ? <Router /> : <RouterExpert />}
       </Store>
     </>
   );
