@@ -62,11 +62,9 @@ const getDeviceInfo = (state, action) => {
   return {...state, deviceInfo: action.payload};
 };
 const getExpertActiveOrders = (state, action) => {
-  let expertActiveOrders = _.orderBy(action.payload, 'date', 'des');
-
   return {
     ...state,
-    expertOpenOrders: expertActiveOrders,
+    expertActiveOrders: action.payload,
   };
 };
 const getExpertOpenOrders = (state, action) => {

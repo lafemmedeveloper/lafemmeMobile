@@ -1,25 +1,54 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useContext, useState} from 'react';
 import {Text, View, ScrollView, StyleSheet} from 'react-native';
 import {Colors, Fonts, Metrics, ApplicationStyles} from '../../themes';
 import ServiceItemBanner from '../../components/ServiceItemBanner';
 import ExpertDealOffer from '../../components/ExpertDealOffer';
 import {StoreContext} from '../../flux';
-import {getExpertActiveOrders} from '../../flux/util/actions';
+import {Switch} from 'react-native-gesture-handler';
+import firestore from '@react-native-firebase/firestore';
+import {setUser} from '../../flux/auth/actions';
 
 const HomeExpert = () => {
-  const {state, utilReducer} = useContext(StoreContext);
+  const {state, authDispatch} = useContext(StoreContext);
   const {auth, util} = state;
   const {user} = auth;
   const {expertActiveOrders, expertOpenOrders, deviceInfo} = util;
   const appType = deviceInfo;
 
-  useEffect(() => {
-    getExpertActiveOrders(utilReducer);
-  }, []);
+  const [isEnabled, setIsEnabled] = useState(user.isEnabled);
 
+  const toggleSwitch = async () => {
+    setIsEnabled((previousState) => !previousState);
+    try {
+      await firestore().collection('users').doc(user.uid).set(
+        {
+          isEnabled: isEnabled,
+        },
+        {merge: true},
+      );
+      await setUser(user.uid, authDispatch);
+    } catch (error) {
+      console.log('error toggleSwitch => ', error);
+    }
+  };
+  console.log('isenable =>', user.isEnabled);
   return (
     <View style={styles.container}>
-      {expertActiveOrders.length > 0 ? (
+      <View style={styles.containerButton}>
+        <Text
+          style={Fonts.style.semiBold(Colors.dark, Fonts.size.h6, 'center')}>
+          Activo
+        </Text>
+
+        <Switch
+          trackColor={{false: '#dbdbdb', true: '#dbdbdb'}}
+          thumbColor={user.isEnabled ? Colors.expert.primaryColor : '#f4f3f4'}
+          ios_backgroundColor="#3e3e3e"
+          onValueChange={toggleSwitch}
+          value={user.isEnabled}
+        />
+      </View>
+      {expertActiveOrders && expertActiveOrders.length > 0 ? (
         <ServiceItemBanner
           item={expertActiveOrders[0]}
           appType={appType}
@@ -28,7 +57,7 @@ const HomeExpert = () => {
       ) : (
         <View style={{marginTop: Metrics.addHeader}} />
       )}
-      {expertOpenOrders.length > 0 ? (
+      {expertOpenOrders && expertOpenOrders.length > 0 ? (
         <ScrollView
           style={[ApplicationStyles.scrollHomeExpert, {flex: 1}]}
           bounces={true}>
@@ -36,6 +65,16 @@ const HomeExpert = () => {
             console.log(item);
             return (
               <View key={item.id}>
+                <View style={styles.containerButton}>
+                  <Switch
+                    trackColor={{false: '#767577', true: '#81b0ff'}}
+                    thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
+                    ios_backgroundColor="#3e3e3e"
+                    onValueChange={toggleSwitch}
+                    value={isEnabled}
+                  />
+                </View>
+
                 <ExpertDealOffer
                   order={item}
                   user={user}
@@ -110,6 +149,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: Metrics.screenHeight,
     width: Metrics.screenWidth,
+  },
+  containerButton: {
+    position: 'absolute',
+    zIndex: 2000,
+    flexDirection: 'row',
+    display: 'flex',
+    marginTop: 40,
+    alignSelf: 'flex-end',
+    right: 20,
   },
 });
 

@@ -78,15 +78,17 @@ export const getCoverage = async (city, dispatch) => {
   }
 };
 
-export const getOrders = () => (dispatch, getStore) => {
-  let uid = auth().currentUser.uid;
+export const getOrders = () => (dispatch) => {
+  const uid = auth().currentUser.uid;
   try {
     setLoading(true, dispatch);
     const ordersRef = firestore()
       .collection('orders')
       .where('client.uid', '==', uid);
     ordersRef.orderBy('createDate', 'desc');
+
     let listOrders = [];
+
     ordersRef.onSnapshot((orders) => {
       listOrders = orders.docs.map((item) => {
         return {
@@ -98,7 +100,7 @@ export const getOrders = () => (dispatch, getStore) => {
     });
     setLoading(false, dispatch);
   } catch (error) {
-    console.log('error getOrders ==>', getOrders);
+    console.log('error getOrders ==>', error);
   }
 };
 
@@ -128,29 +130,26 @@ export const getDeviceInfo = (dispatch) => {
 };
 
 export const getExpertActiveOrders = (dispatch) => {
-  console.log('===> getExpertActiveOrders');
-  let uid = auth().currentUser.uid;
+  try {
+    let ordersRef = firestore().collection('orders').where('status', '<=', 4);
 
-  let ordersRef = firestore()
-    .collection('orders')
-    .where('status', '>=', 1)
-    .where('status', '<=', 4);
+    let listOrders = [];
 
-  ordersRef.where('experts', 'array-contains', uid);
+    ordersRef.onSnapshot((orders) => {
+      console.log('=> orders', orders);
 
-  let listOrders = [];
-
-  ordersRef.onSnapshot((orders) => {
-    console.log('=> orders', orders);
-
-    listOrders = orders.docs.map((item) => {
-      return {
-        id: item.id,
-        ...item.data(),
-      };
+      listOrders = orders.docs.map((item) => {
+        return {
+          id: item.id,
+          ...item.data(),
+        };
+      });
+      console.log('listOrders=>', listOrders);
+      dispatch({type: GET_EXPERT_ACTIVE_ORDERS, payload: listOrders});
     });
-    dispatch({type: GET_EXPERT_ACTIVE_ORDERS, payload: listOrders});
-  });
+  } catch (error) {
+    console.log('error getExpertActiveOrders =>', error);
+  }
 };
 export const getExpertOpenOrders = () => (dispatch) => {
   let expertActivities = 'manicure';
