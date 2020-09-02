@@ -6,6 +6,7 @@ import TabBottom from './TabBottom';
 import {observeUser} from '../../flux/auth/actions';
 import {StoreContext} from '../../flux';
 import LoginExpert from '../../screenExpert/LoginExpert';
+import NoImage from '../../screenExpert/NoImage';
 
 const Stack = createStackNavigator();
 
@@ -22,10 +23,10 @@ const Router = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        {user ? (
+        {user != null ? (
           <Stack.Screen
-            name="TabBottom"
-            component={TabBottom}
+            name={user.imageUrl ? 'TabBottom' : 'NoImage'}
+            component={user.imageUrl ? TabBottom : NoImage}
             options={{
               headerShown: false,
             }}

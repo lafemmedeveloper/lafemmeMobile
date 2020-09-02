@@ -1,59 +1,68 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {Colors, Images} from '../../../themes';
 import {Image} from 'react-native';
 import HomeExpert from '../../../screenExpert/HomeExpert';
 import HistoryExpert from '../../../screenExpert/HistoryExpert';
 import ProfileExpert from '../../../screenExpert/ProfileExpert';
+import Loading from '../../../components/Loading';
+import {StoreContext} from '../../../flux';
 
 const Tab = createBottomTabNavigator();
 
 export default function TabBottom() {
+  const {state} = useContext(StoreContext);
+  const {auth} = state;
+  const {loading} = auth;
+
   return (
-    <Tab.Navigator
-      tabBarOptions={{
-        activeTintColor: Colors.expert.primaryColor,
-      }}>
-      <Tab.Screen
-        name="Home"
-        component={HomeExpert}
-        options={{
-          tabBarLabel: 'Inicio',
-          tabBarIcon: ({color}) => (
-            <Image
-              style={[styles.icon, {tintColor: color}]}
-              source={Images.pin}
-            />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Ordenes"
-        component={HistoryExpert}
-        options={{
-          tabBarLabel: 'Mis Servicios',
-          tabBarIcon: ({color}) => (
-            <Image
-              style={[styles.icon, {tintColor: color}]}
-              source={Images.menuAppoiment}
-            />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Profile"
-        component={ProfileExpert}
-        options={{
-          tabBarLabel: 'Perfil',
-          tabBarIcon: ({color}) => (
-            <Image
-              style={[styles.icon, {tintColor: color}]}
-              source={Images.menuUser}
-            />
-          ),
-        }}
-      />
-    </Tab.Navigator>
+    <>
+      <Loading type={'expert'} loading={loading} />
+      <Tab.Navigator
+        tabBarOptions={{
+          activeTintColor: Colors.expert.primaryColor,
+        }}>
+        <Tab.Screen
+          name="Home"
+          component={HomeExpert}
+          options={{
+            tabBarLabel: 'Inicio',
+            tabBarIcon: ({color}) => (
+              <Image
+                style={[styles.icon, {tintColor: color}]}
+                source={Images.pin}
+              />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Ordenes"
+          component={HistoryExpert}
+          options={{
+            tabBarLabel: 'Mis Servicios',
+            tabBarIcon: ({color}) => (
+              <Image
+                style={[styles.icon, {tintColor: color}]}
+                source={Images.menuAppoiment}
+              />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Profile"
+          component={ProfileExpert}
+          options={{
+            tabBarLabel: 'Perfil',
+            tabBarIcon: ({color}) => (
+              <Image
+                style={[styles.icon, {tintColor: color}]}
+                source={Images.menuUser}
+              />
+            ),
+          }}
+        />
+      </Tab.Navigator>
+    </>
   );
 }
 const styles = {

@@ -31,7 +31,7 @@ const Content = (props) => {
       >
         <View // Image profile
         >
-          {user.imageUrl ? (
+          {user.imageUrl && (
             <View style={styles.imageProfile}>
               <FastImage
                 style={styles.containerImage}
@@ -57,8 +57,6 @@ const Content = (props) => {
                 <Text> {`Ranting: ${user.rating}`}</Text>
               </View>
             </View>
-          ) : (
-            <Text>chao</Text>
           )}
         </View>
         <View //items

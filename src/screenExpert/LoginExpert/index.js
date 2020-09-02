@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import {
   Text,
   View,
@@ -6,13 +6,19 @@ import {
   TouchableOpacity,
   StyleSheet,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import {Images, Colors, Fonts, Metrics} from '../../themes';
-import auth from '@react-native-firebase/auth';
-
 import MyTextInput from '../../components/MyTextInput';
+import Loading from '../../components/Loading';
+import {StoreContext} from '../../flux';
+import {Login} from '../../flux/auth/actions';
 
 const LoginExpert = () => {
+  const {state, authDispatch} = useContext(StoreContext);
+  const {auth} = state;
+  const {loading} = auth;
+
   const [email, setEmail] = useState('jesusprobando1expert@gmail.com');
   const [password, setPassword] = useState('123456');
 
@@ -20,65 +26,66 @@ const LoginExpert = () => {
     if (email === '' || password === '') {
       Alert.alert('Ups', 'Todos los campos son necesarios');
     } else {
-      try {
-        const currentUser = await auth().signInWithEmailAndPassword(
-          email,
-          password,
-        );
-        console.log('currentUser =>', currentUser);
-      } catch (error) {
-        console.log('error login expert =>', error);
-      }
+      await Login(email, password, authDispatch);
     }
   };
+  console.log('loading => login', loading);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.contentContainer}>
-        <Image
-          style={{width: 100, height: 100, resizeMode: 'contain'}}
-          source={Images.logoExpert}
-        />
+    <>
+      <Loading type={'expert'} loading={loading} />
+      <View style={styles.container}>
+        <View style={styles.contentContainer}>
+          <Image
+            style={{width: 100, height: 100, resizeMode: 'contain'}}
+            source={Images.logoExpert}
+          />
 
-        <Text
-          style={[
-            Fonts.style.regular(Colors.dark, Fonts.size.h6, 'center'),
-            {marginVertical: 20},
-          ]}>
-          {'Iniciar Sesión'}
-        </Text>
-
-        <MyTextInput
-          pHolder={'Correo electrónico'}
-          text={email}
-          onChangeText={(text) => setEmail(text)}
-          secureText={false}
-          textContent={'emailAddress'}
-          autoCapitalize={'none'}
-        />
-        <MyTextInput
-          pHolder={'Contraseña'}
-          text={password}
-          onChangeText={(text) => setPassword(text)}
-          secureText={true}
-          textContent={'password'}
-          autoCapitalize={'none'}
-        />
-        <TouchableOpacity
-          onPress={() => handleLogin()}
-          style={[
-            styles.btnContainer,
-            {
-              backgroundColor: Colors.expert.secondaryColor,
-            },
-          ]}>
           <Text
-            style={Fonts.style.bold(Colors.light, Fonts.size.medium, 'center')}>
-            {'Iniciar sesión'}
+            style={[
+              Fonts.style.regular(Colors.dark, Fonts.size.h6, 'center'),
+              {marginVertical: 20},
+            ]}>
+            {'Iniciar Sesión'}
+            {loading && <ActivityIndicator />}
           </Text>
-        </TouchableOpacity>
+
+          <MyTextInput
+            pHolder={'Correo electrónico'}
+            text={email}
+            onChangeText={(text) => setEmail(text)}
+            secureText={false}
+            textContent={'emailAddress'}
+            autoCapitalize={'none'}
+          />
+          <MyTextInput
+            pHolder={'Contraseña'}
+            text={password}
+            onChangeText={(text) => setPassword(text)}
+            secureText={true}
+            textContent={'password'}
+            autoCapitalize={'none'}
+          />
+          <TouchableOpacity
+            onPress={() => handleLogin()}
+            style={[
+              styles.btnContainer,
+              {
+                backgroundColor: Colors.expert.secondaryColor,
+              },
+            ]}>
+            <Text
+              style={Fonts.style.bold(
+                Colors.light,
+                Fonts.size.medium,
+                'center',
+              )}>
+              {'Iniciar sesión'}
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </>
   );
 };
 

@@ -27,7 +27,7 @@ const getUser = (state, action) => {
     user: action.payload,
   };
 };
-const delUser = (state, action) => {
+const delUser = (state) => {
   return {
     ...state,
     user: null,
