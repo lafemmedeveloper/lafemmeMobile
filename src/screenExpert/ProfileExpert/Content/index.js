@@ -35,7 +35,7 @@ const Content = (props) => {
             <View style={styles.imageProfile}>
               <FastImage
                 style={styles.containerImage}
-                source={{uri: user.imageUrl}}
+                source={{uri: user.imageUrl.medium}}
                 resizeMode={FastImage.resizeMode.cover}
               />
               <View style={styles.containerRating}>

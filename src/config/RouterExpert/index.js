@@ -18,20 +18,34 @@ const Router = () => {
     observeUser(authDispatch);
   }, []);
 
-  console.log('user expert =>', user);
-
-  return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        {user != null ? (
-          <Stack.Screen
-            name={user.imageUrl ? 'TabBottom' : 'NoImage'}
-            component={user.imageUrl ? TabBottom : NoImage}
-            options={{
-              headerShown: false,
-            }}
-          />
-        ) : (
+  if (user) {
+    return (
+      <NavigationContainer>
+        <Stack.Navigator>
+          {user.imageUrl ? (
+            <Stack.Screen
+              name={'TabBottom'}
+              component={TabBottom}
+              options={{
+                headerShown: false,
+              }}
+            />
+          ) : (
+            <Stack.Screen
+              name={'NoImage'}
+              component={NoImage}
+              options={{
+                headerShown: false,
+              }}
+            />
+          )}
+        </Stack.Navigator>
+      </NavigationContainer>
+    );
+  } else {
+    return (
+      <NavigationContainer>
+        <Stack.Navigator>
           <Stack.Screen
             name="Login expert"
             component={LoginExpert}
@@ -39,10 +53,10 @@ const Router = () => {
               headerShown: false,
             }}
           />
-        )}
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
+        </Stack.Navigator>
+      </NavigationContainer>
+    );
+  }
 };
 
 export default Router;
