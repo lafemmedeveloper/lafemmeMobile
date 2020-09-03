@@ -18,7 +18,7 @@ import {getServices} from '../../flux/services/actions';
 import {StoreContext} from '../../flux';
 import CardItemCart from '../../components/CardItemCart';
 import FieldCartConfig from '../../components/FieldCartConfig';
-import {formatDate, getDate} from '../../helpers/MomentHelper';
+import {formatDate} from '../../helpers/MomentHelper';
 import _ from 'lodash';
 import ModalApp from '../../components/ModalApp';
 import AppConfig from '../../config/AppConfig';
@@ -32,20 +32,15 @@ const CartScreen = (props) => {
   );
   const {auth} = state;
   const {user} = auth;
-
-  const [date, setDate] = useState(getDate(1));
+  const currentDay = new Date();
+  console.log('currentDay =>', currentDay);
+  const [dateCalendar, setDateCalendar] = useState('');
+  const [time, setTime] = useState('');
   const [notes, setNotes] = useState('');
   const [modalnote, setModalnote] = useState(false);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-
-  const hideDatePicker = () => {
-    setDatePickerVisibility(false);
-  };
-
-  const handleConfirm = (date) => {
-    console.warn('A date has been picked: ', date);
-    hideDatePicker();
-  };
+  const [isTimePickerVisible, setIsTimePickerVisible] = useState(false);
+  console.log('moment =>', moment(new Date()).format('YYYY-MM-DD HH:mm:ss'));
 
   useEffect(() => {
     observeUser(authDispatch);
@@ -104,7 +99,7 @@ const CartScreen = (props) => {
 
           let notification = {
             title: 'Nueva orden de servicio La Femme',
-            body: `-Cuándo: ${moment(data.date, 'YYYY-MM-DD HH:mm:ss').format(
+            body: `-Cuándo: ${moment(data.date, 'HH:HH').format(
               'LLL',
             )}.\n-Dónde: ${data.address.locality}-${
               data.address.neighborhood
@@ -145,6 +140,29 @@ const CartScreen = (props) => {
     getCoverage('Medellín', utilDispatch);
   }, []);
 
+  const handleConfirmDate = (date) => {
+    const handleDate = moment(date).format('YYYY-MM-DD');
+    console.log('handleDate =>', handleDate);
+    setDateCalendar(handleDate);
+    setDatePickerVisibility(false);
+    setIsTimePickerVisible(true);
+  };
+
+  const hideDatePicker = () => {
+    setIsTimePickerVisible(false);
+    setDatePickerVisibility(false);
+  };
+  const handleConfirmTime = async (hour) => {
+    const dateTime = moment(hour).format('HH:mm:ss');
+    setTime(dateTime);
+    console.log('date hour handleTime =>', dateTime);
+    const date = `${dateCalendar} ${dateTime}`;
+
+    // console.log('insert ==>', {...user.cart, date}, 'cart');
+
+    await updateProfile({...user.cart, date}, 'cart', authDispatch);
+  };
+
   let isCompleted =
     user.cart.address &&
     user.cart.date &&
@@ -152,11 +170,8 @@ const CartScreen = (props) => {
     user.cart.notes;
   console.log('isDatePickerVisible =>', isDatePickerVisible);
 
-  const handleDateValue = (date) => {
-    console.log('date =>', date);
-    //setDate({date});
-    // updateProfile({...user.cart, date}, 'cart', authDispatch);
-  };
+  console.log('value data ==>', dateCalendar);
+  console.log('value time ==>', time);
 
   return (
     <View style={{height: 650}}>
@@ -342,12 +357,40 @@ const CartScreen = (props) => {
               <DateTimePickerModal
                 isVisible={isDatePickerVisible}
                 mode="date"
-                onConfirm={handleConfirm}
+                onConfirm={handleConfirmDate}
+                onCancel={hideDatePicker}
+                is24Hour={true}
+                isDarkModeEnabled={true}
+                locale="es_ES"
+                headerTextIOS="Elige un a Fecha de reserva"
+                cancelTextIOS="Cancelar"
+                confirmTextIOS="Confirmar"
+              />
+
+              <View
+                opacity={0.0}
+                style={{
+                  position: 'absolute',
+
+                  width: '100%',
+                  height: '100%',
+                  flex: 1,
+                  backgroundColor: 'red',
+                }}
+              />
+            </View>
+            <View>
+              <DateTimePickerModal
+                isVisible={isTimePickerVisible}
+                mode="time"
+                onConfirm={handleConfirmTime}
                 onCancel={hideDatePicker}
                 is24Hour={false}
+                form
                 isDarkModeEnabled={true}
-                locale="es"
-                onChange={(date) => handleDateValue(date)}
+                locale="es_co"
+                format="HH:mm:ss"
+                headerTextIOS="Elige un Hora de reserva"
               />
 
               <View
@@ -356,6 +399,7 @@ const CartScreen = (props) => {
                   position: 'absolute',
                   width: '100%',
                   height: '100%',
+
                   flex: 1,
                   backgroundColor: 'red',
                 }}
@@ -404,6 +448,7 @@ const CartScreen = (props) => {
 
             let hoursServices = [];
 
+            // for (user.cart.services)
             for (let i = 0; i < user.cart.services.length; i++) {
               if (i === 0) {
                 hoursServices = [...hoursServices, user.cart.date];
@@ -417,7 +462,7 @@ const CartScreen = (props) => {
               }
             }
 
-            console.log('hoursServices', hoursServices);
+            console.log('hoursServices ==>', hoursServices);
             if (isCompleted) {
               console.log('isCompleted');
               let data = {
@@ -429,7 +474,7 @@ const CartScreen = (props) => {
                   phone: user.phone,
                   rating: user.rating,
                 },
-                createDate: firestore.FieldValue.serverTimestamp(),
+                createDate: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
                 cartId: Utilities.create_CARTID(),
                 status: 0,
                 hoursServices,
