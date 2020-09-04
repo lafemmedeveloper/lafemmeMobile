@@ -9,7 +9,7 @@ const NoEnableCoverage = (props) => {
     setIsCoverage,
     setNotifyCoverage,
     currentLocationActive,
-    googleDetail,
+    googleAddress,
   } = props;
   return (
     <>
@@ -45,7 +45,7 @@ const NoEnableCoverage = (props) => {
               Fonts.size.medium,
               'center',
             )}>
-            {`La dirección ${googleDetail} no tiene cobertura. `}
+            {`La dirección ${googleAddress} no tiene cobertura. `}
           </Text>
         )}
 

@@ -50,9 +50,10 @@ const AddAddress = (props) => {
     hotel: 2,
     otro: 3,
   };
-
+  const [url, setUrl] = useState('');
   const [googleAddress, setGoogleAddress] = useState(null);
   const [googleDetail, setGoogleDetail] = useState(null);
+  const [name, setName] = useState(null);
   const [isCoverage, setIsCoverage] = useState(addresStatus.searching);
   const [notifyCoverage, setNotifyCoverage] = useState(true);
   const [buildType, setBuildType] = useState(locationType.house);
@@ -76,26 +77,25 @@ const AddAddress = (props) => {
   };
 
   const saveAddress = async () => {
-    const address_components = googleAddress.formatted_address;
-    console.log('address_components ==>', address_components);
-
     let item = {
       type: buildType,
-      name: googleDetail,
-      addressDetail: addressDetail,
+      name,
+      administrative_area_level_1: googleDetail.administrative_area_level_1,
+      administrative_area_level_2: googleDetail.administrative_area_level_2,
+      neighborhood: googleDetail.neighborhood,
+      country: googleDetail.country,
+      addressDetail,
       notesAddress: notesAddress,
-      coordinates: {
-        latitude: coordinate.latitude,
-        longitude: coordinate.longitude,
-      },
-      formattedAddress: googleDetail,
-
+      locality: googleDetail.locality,
+      coordinates: coordinate,
+      formattedAddress: googleAddress,
       id: Utilities.create_UUID(),
+      url,
     };
 
     let address = [...user.address, item];
 
-    console.log('saveAddress address ==>', address);
+    console.log('=== saveAddress address ==>', address);
     await updateProfile(address, 'address', authDispatch);
 
     setIsCoverage(addresStatus.searching);
@@ -103,23 +103,30 @@ const AddAddress = (props) => {
   };
 
   const updateLocation = async (data, details) => {
-    console.log('data ==>', data);
-    console.log('details ==>', details);
+    const {structured_formatting} = data;
+    const {main_text} = structured_formatting;
+
     Geocode.setApiKey(APIKEY);
     Geocode.setLanguage('es');
     Geocode.setRegion('co');
     Geocode.enableDebug();
 
     const addressSerch = details.formatted_address;
-    setGoogleDetail(addressSerch);
 
+    setGoogleAddress(addressSerch);
+
+    setName(main_text);
     await Geocode.fromAddress(addressSerch).then(
       (response) => {
         const dataResponse = response.results[0];
-        setGoogleAddress(dataResponse);
+        //  setGoogleAddress(dataResponse);
         console.log('response =>', response);
         const {lat, lng} = dataResponse.geometry.location;
         console.log('location =>', lat, lng);
+        activeApi({
+          latitude: lat,
+          longitude: lng,
+        });
         setCoordinate({
           latitude: lat,
           longitude: lng,
@@ -136,6 +143,66 @@ const AddAddress = (props) => {
     } else {
       setIsCoverage(addresStatus.searching);
     }
+  };
+
+  const activeApi = async (coordinates) => {
+    const res = await fetch(
+      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${coordinates.latitude},${coordinates.longitude}&key=${APIKEY}`,
+    );
+
+    console.log('res activeApi==>', res);
+    setUrl(res.url);
+    const json = await res.json();
+    console.log('json ==>', json.results);
+    if (json.status !== 'OK') {
+      throw new Error(`Geocode error: ${json.status}`);
+    } else {
+      filterResultsByTypes(json.results, [
+        'locality',
+        'neighborhood',
+        'political',
+        'administrative_area_level_3',
+        'administrative_area_level_2',
+        'administrative_area_level_1',
+      ]);
+    }
+  };
+
+  const filterResultsByTypes = (unfilteredResults, types) => {
+    const results = [];
+    for (let i = 0; i < unfilteredResults.length; i++) {
+      let found = false;
+
+      for (let j = 0; j < types.length; j++) {
+        if (unfilteredResults[i].types.indexOf(types[j]) !== -1) {
+          found = true;
+          break;
+        }
+      }
+
+      if (found === true) {
+        results.push(unfilteredResults[i]);
+      }
+    }
+
+    let data = {};
+    if (results.length > 0) {
+      for (
+        let index = 0;
+        index < results[0].address_components.length;
+        index++
+      ) {
+        let doc = results[0].address_components[index];
+        let key = doc.types[0];
+        let value = doc.long_name;
+        let item = {[key]: value};
+
+        data = {...data, ...item};
+      }
+    }
+
+    console.log('data filterResultsByTypes ===>', data);
+    setGoogleDetail(data);
   };
   console.log('googleAddress ==> exit', googleAddress);
   console.log('googleDetail ==> exit', googleDetail);
@@ -160,6 +227,8 @@ const AddAddress = (props) => {
             marginRight: 10,
           }}>
           <ButtonCoordinates
+            activeApi={activeApi}
+            setName={setName}
             setCoordinate={setCoordinate}
             APIKEY={APIKEY}
             checkCoverage={checkCoverage}
@@ -323,7 +392,7 @@ const AddAddress = (props) => {
           notifyCoverage={notifyCoverage}
           setIsCoverage={setIsCoverage}
           setNotifyCoverage={setNotifyCoverage}
-          googleDetail={googleDetail}
+          googleAddress={googleAddress}
           setCurrentLocationActive={setCurrentLocationActive}
         />
       </ModalApp>

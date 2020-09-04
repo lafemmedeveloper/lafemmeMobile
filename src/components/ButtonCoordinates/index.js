@@ -10,18 +10,15 @@ const ButtonCoordinates = (props) => {
     setCoordinate,
     APIKEY,
     checkCoverage,
-    setGoogleDetail,
     setGoogleAddress,
     setCurrentLocationActive,
+    activeApi,
+    setName,
   } = props;
 
   const [activeCoor, setActiveCoor] = useState(null);
 
   const updateCoordinate = () => {
-    Geocode.setApiKey(APIKEY);
-    Geocode.setLanguage('es');
-    Geocode.setRegion('co');
-    Geocode.enableDebug();
     Geolocation.getCurrentPosition((info) => activeLocation(info));
   };
 
@@ -30,28 +27,35 @@ const ButtonCoordinates = (props) => {
     setActiveCoor(info);
     fullState(info);
   };
-  const fullState = (info) => {
+  const fullState = async (info) => {
+    Geocode.setApiKey(APIKEY);
+    Geocode.setLanguage('es');
+    Geocode.setRegion('co');
+    Geocode.enableDebug();
+
     setCurrentLocationActive(true);
     setCoordinate({
       latitude: info.coords.latitude,
       longitude: info.coords.longitude,
     });
 
-    Geocode.fromLatLng(info.coords.latitude, info.coords.longitude).then(
-      (response) => {
-        setGoogleAddress(response);
+    await Geocode.fromLatLng(info.coords.latitude, info.coords.longitude).then(
+      async (response) => {
         console.log('response ==> fullState', response);
 
         const address = response.results[0].formatted_address;
-        console.log('address ==>', address);
-        setGoogleDetail(address);
+        setGoogleAddress(address);
+        setName(address);
+        await activeApi({
+          latitude: info.coords.latitude,
+          longitude: info.coords.longitude,
+        });
+        checkCoverage(info.coords.latitude, info.coords.longitude);
       },
       (error) => {
         console.error('error fullState==>', error);
       },
     );
-
-    checkCoverage(info.coords.latitude, info.coords.longitude);
   };
 
   console.log('activeCoor =>', activeCoor);
