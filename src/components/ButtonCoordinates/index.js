@@ -1,27 +1,61 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {StyleSheet, TouchableOpacity} from 'react-native';
 import {Colors} from '../../themes';
-import GetLocation from 'react-native-get-location';
+import Geolocation from '@react-native-community/geolocation';
+import Geocode from 'react-geocode';
 
-const ButtonCoordinates = async () => {
+const ButtonCoordinates = (props) => {
+  const {
+    setCoordinate,
+    APIKEY,
+    checkCoverage,
+    setGoogleDetail,
+    setGoogleAddress,
+    setCurrentLocationActive,
+  } = props;
+
+  const [activeCoor, setActiveCoor] = useState(null);
+
   const updateCoordinate = () => {
-    try {
-      GetLocation.getCurrentPosition({
-        enableHighAccuracy: true,
-        timeout: 15000,
-      })
-        .then((location) => {
-          console.log('location ==>', location);
-        })
-        .catch((error) => {
-          const {code, message} = error;
-          console.warn('error updateCoordinate => code', error, message, code);
-        });
-    } catch (error) {
-      console.log('error');
-    }
+    Geocode.setApiKey(APIKEY);
+    Geocode.setLanguage('es');
+    Geocode.setRegion('co');
+    Geocode.enableDebug();
+    Geolocation.getCurrentPosition((info) => activeLocation(info));
   };
+
+  const activeLocation = async (info) => {
+    console.log('info =>', info);
+    setActiveCoor(info);
+    fullState(info);
+  };
+  const fullState = (info) => {
+    setCurrentLocationActive(true);
+    setCoordinate({
+      latitude: info.coords.latitude,
+      longitude: info.coords.longitude,
+    });
+
+    Geocode.fromLatLng(info.coords.latitude, info.coords.longitude).then(
+      (response) => {
+        setGoogleAddress(response);
+        console.log('response ==> fullState', response);
+
+        const address = response.results[0].formatted_address;
+        console.log('address ==>', address);
+        setGoogleDetail(address);
+      },
+      (error) => {
+        console.error('error fullState==>', error);
+      },
+    );
+
+    checkCoverage(info.coords.latitude, info.coords.longitude);
+  };
+
+  console.log('activeCoor =>', activeCoor);
+
   return (
     <>
       <TouchableOpacity

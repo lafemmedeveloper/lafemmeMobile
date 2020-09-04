@@ -21,6 +21,8 @@ const EnableCoverage = (props) => {
     googleAddress,
     notesAddress,
     setNotesAddress,
+    currentLocationActive,
+    googleDetail,
   } = props;
   return (
     <>
@@ -71,20 +73,35 @@ const EnableCoverage = (props) => {
               />
             </Marker.Animated>
           </MapView>
-          <Text
-            style={[
-              Fonts.style.regular(Colors.dark, Fonts.size.medium, 'center'),
-              {marginVertical: 10},
-            ]}>
-            <Icon
-              name={'map-marker-alt'}
-              size={15}
-              color={Colors.client.primaryColor}
-            />
-            {googleAddress && googleAddress.formatted_address
-              ? googleAddress.formatted_address
-              : ''}
-          </Text>
+          {currentLocationActive ? (
+            <Text
+              style={[
+                Fonts.style.regular(Colors.dark, Fonts.size.medium, 'center'),
+                {marginVertical: 10},
+              ]}>
+              <Icon
+                name={'map-marker-alt'}
+                size={15}
+                color={Colors.client.primaryColor}
+              />
+              {googleDetail && googleDetail ? googleDetail : ''}
+            </Text>
+          ) : (
+            <Text
+              style={[
+                Fonts.style.regular(Colors.dark, Fonts.size.medium, 'center'),
+                {marginVertical: 10},
+              ]}>
+              <Icon
+                name={'map-marker-alt'}
+                size={15}
+                color={Colors.client.primaryColor}
+              />
+              {googleAddress && googleAddress.formatted_address
+                ? googleAddress.formatted_address
+                : ''}
+            </Text>
+          )}
 
           <View style={styles.itemAddressContainer}>
             <TouchableOpacity

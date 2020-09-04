@@ -7,7 +7,7 @@ import {Fonts, Colors, Metrics} from '../../themes';
 import AppConfig from '../../config/AppConfig';
 
 export default (data) => {
-  const {formattedAddress, type, addressDetail, pets, id} = data.data;
+  const {formattedAddress, type, addressDetail, id} = data.data;
 
   return (
     <TouchableOpacity
@@ -29,33 +29,6 @@ export default (data) => {
         }
       </TouchableOpacity>
       <View style={styles.productContainer}>
-        <Text style={Fonts.style.bold(Colors.dark, Fonts.size.medium, 'left')}>
-          {AppConfig.locationType[type]}{' '}
-          {pets === 0 || pets == null ? null : (
-            <>
-              {pets !== 0 && pets < 3 ? (
-                <Icon
-                  name={AppConfig.petsType[pets]}
-                  size={12}
-                  color={Colors.client.primaryColor}
-                />
-              ) : (
-                <>
-                  <Icon
-                    name={'dog'}
-                    size={12}
-                    color={Colors.client.primaryColor}
-                  />{' '}
-                  <Icon
-                    name={'cat'}
-                    size={12}
-                    color={Colors.client.primaryColor}
-                  />
-                </>
-              )}
-            </>
-          )}
-        </Text>
         <Text
           style={Fonts.style.regular(Colors.dark, Fonts.size.small, 'left')}>
           <Icon name={'map-marker-alt'} size={10} color={Colors.gray} />{' '}

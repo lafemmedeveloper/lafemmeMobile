@@ -58,6 +58,7 @@ const AddAddress = (props) => {
   const [buildType, setBuildType] = useState(locationType.house);
   const [addressDetail, setAddressDetail] = useState('');
   const [notesAddress, setNotesAddress] = useState('');
+  const [currentLocationActive, setCurrentLocationActive] = useState(false);
   const [coordinate, setCoordinate] = useState({
     latitude: 6.2458077,
     longitude: -75.5680703,
@@ -74,31 +75,28 @@ const AddAddress = (props) => {
     console.log('coverage=>', isCoverage);
   };
 
-  const saveAddress = () => {
+  const saveAddress = async () => {
     const address_components = googleAddress.formatted_address;
     console.log('address_components ==>', address_components);
 
     let item = {
       type: buildType,
-      name: googleAddress.name,
+      name: googleDetail,
       addressDetail: addressDetail,
       notesAddress: notesAddress,
       coordinates: {
         latitude: coordinate.latitude,
         longitude: coordinate.longitude,
       },
-      formattedAddress: googleDetail.formatted_address,
-      idAddress: googleAddress.place_id,
+      formattedAddress: googleDetail,
+
       id: Utilities.create_UUID(),
-      vicinity: googleAddress.vicinity,
-      url: googleAddress.url,
     };
 
     let address = [...user.address, item];
 
-    console.log('address ==>', address);
-    console.log('address == >', address);
-    //updateProfile(address, 'address', authDispatch);
+    console.log('saveAddress address ==>', address);
+    await updateProfile(address, 'address', authDispatch);
 
     setIsCoverage(addresStatus.searching);
     closeAddAddress(false);
@@ -114,6 +112,7 @@ const AddAddress = (props) => {
 
     const addressSerch = details.formatted_address;
     setGoogleDetail(addressSerch);
+
     await Geocode.fromAddress(addressSerch).then(
       (response) => {
         const dataResponse = response.results[0];
@@ -138,14 +137,15 @@ const AddAddress = (props) => {
       setIsCoverage(addresStatus.searching);
     }
   };
-
   console.log('googleAddress ==> exit', googleAddress);
+  console.log('googleDetail ==> exit', googleDetail);
+  console.log('currentLocationActive =>', currentLocationActive);
   return (
     <>
       <View
         style={{
           position: 'absolute',
-          width: '100%',
+          width: '90%',
           bottom: 100,
           zIndex: 5,
           // backgroundColor: 'green',
@@ -159,10 +159,17 @@ const AddAddress = (props) => {
             zIndex: 6,
             marginRight: 10,
           }}>
-          <ButtonCoordinates />
+          <ButtonCoordinates
+            setCoordinate={setCoordinate}
+            APIKEY={APIKEY}
+            checkCoverage={checkCoverage}
+            setGoogleDetail={setGoogleDetail}
+            setGoogleAddress={setGoogleAddress}
+            setCurrentLocationActive={setCurrentLocationActive}
+          />
         </View>
         <GooglePlacesAutocomplete
-          placeholder={'Escribe tu direccion (ej: carrera 33 #10-20)'}
+          placeholder={'Buscar direccion (ej: carrera 33 #10-20)'}
           autoFocus={false}
           returnKeyType={'search'} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
           keyboardAppearance={'light'} // Can be left out for default keyboardAppearance https://facebook.github.io/react-native/docs/textinput.html#keyboardappearance
@@ -170,6 +177,7 @@ const AddAddress = (props) => {
           fetchDetails={true}
           renderDescription={(row) => row.description} // custom description render
           onPress={(data, details = null) => updateLocation(data, details)}
+          value="hola"
           query={{
             // available options: https://developers.google.com/places/web-service/autocomplete
             key: APIKEY,
@@ -183,7 +191,7 @@ const AddAddress = (props) => {
           styles={{
             textInputContainer: {
               backgroundColor: 'white',
-              width: '90%',
+              width: '95%',
               marginRight: 10,
               marginLeft: 10,
               borderRadius: 10,
@@ -219,7 +227,7 @@ const AddAddress = (props) => {
               color: '#1faadb',
             },
           }}
-          currentLocation={false} // Will add a 'Current location' button at the top of the predefined places list
+          currentLocation={true} // Will add a 'Current location' button at the top of the predefined places list
           currentLocationLabel={'Mi ubicacion actual'}
           nearbyPlacesAPI={'GooglePlacesSearch'} // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
           GoogleReverseGeocodingQuery={
@@ -245,6 +253,13 @@ const AddAddress = (props) => {
         />
       </View>
       <View style={{height: Metrics.header * 16.5}}>
+        <Text
+          style={[
+            Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center'),
+            {marginBottom: 10},
+          ]}>
+          {' Agregar una direccion'}
+        </Text>
         <MapView
           provider={PROVIDER_GOOGLE} // remove if not using Google Maps
           style={{
@@ -308,12 +323,15 @@ const AddAddress = (props) => {
           notifyCoverage={notifyCoverage}
           setIsCoverage={setIsCoverage}
           setNotifyCoverage={setNotifyCoverage}
+          googleDetail={googleDetail}
+          setCurrentLocationActive={setCurrentLocationActive}
         />
       </ModalApp>
       <ModalApp // true coverage
         open={isCoverage === addresStatus.coverage}
         setOpen={closeModalCoverage}>
         <EnableCoverage
+          googleDetail={googleDetail}
           mapStyle={mapStyle}
           LATITUDE_DELTA={LATITUDE_DELTA}
           LONGITUDE_DELTA={LONGITUDE_DELTA}
@@ -326,6 +344,7 @@ const AddAddress = (props) => {
           saveAddress={saveAddress}
           googleAddress={googleAddress}
           setNotesAddress={setNotesAddress}
+          currentLocationActive={currentLocationActive}
         />
       </ModalApp>
       {/* Modals */}

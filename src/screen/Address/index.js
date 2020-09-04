@@ -52,10 +52,14 @@ const Address = (props) => {
       address = [...address.slice(0, index), ...address.slice(index + 1)];
 
       if (user.cart.address != null && user.cart.address.id === id) {
-        await updateProfile({...user.cart, address: null}, 'cart');
+        await updateProfile(
+          {...user.cart, address: null},
+          'cart',
+          authDispatch,
+        );
       }
 
-      await updateProfile(address, 'address');
+      await updateProfile(address, 'address', authDispatch);
     }
   };
 

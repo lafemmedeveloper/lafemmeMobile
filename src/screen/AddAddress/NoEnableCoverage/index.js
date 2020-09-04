@@ -4,7 +4,13 @@ import {Metrics, Colors, Fonts} from '../../../themes';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
 const NoEnableCoverage = (props) => {
-  const {notifyCoverage, setIsCoverage, setNotifyCoverage} = props;
+  const {
+    notifyCoverage,
+    setIsCoverage,
+    setNotifyCoverage,
+    currentLocationActive,
+    googleDetail,
+  } = props;
   return (
     <>
       <View
@@ -23,10 +29,25 @@ const NoEnableCoverage = (props) => {
           ]}>
           {'Lo Sentimos'}
         </Text>
-        <Text
-          style={Fonts.style.regular(Colors.dark, Fonts.size.medium, 'center')}>
-          {'La dirección ingresada no tiene cobertura.'}
-        </Text>
+        {currentLocationActive ? (
+          <Text
+            style={Fonts.style.regular(
+              Colors.dark,
+              Fonts.size.medium,
+              'center',
+            )}>
+            {'La dirección ingresada no tiene cobertura.'}
+          </Text>
+        ) : (
+          <Text
+            style={Fonts.style.regular(
+              Colors.dark,
+              Fonts.size.medium,
+              'center',
+            )}>
+            {`La dirección ${googleDetail} no tiene cobertura. `}
+          </Text>
+        )}
 
         <View
           style={{
