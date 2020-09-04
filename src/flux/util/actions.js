@@ -77,10 +77,10 @@ export const getCoverage = async (city, dispatch) => {
     console.log('error getCoverage =>', error);
   }
 };
-
-export const getOrders = () => (dispatch) => {
+export const getOrders = (dispatch) => {
   const uid = auth().currentUser.uid;
   try {
+    console.log('<=== Active getOrder functions ===>');
     setLoading(true, dispatch);
     const ordersRef = firestore()
       .collection('orders')
@@ -96,6 +96,7 @@ export const getOrders = () => (dispatch) => {
           ...item.data(),
         };
       });
+      console.log('listOrders =>', listOrders);
       return dispatch({type: GET_ORDERS, payload: listOrders});
     });
     setLoading(false, dispatch);

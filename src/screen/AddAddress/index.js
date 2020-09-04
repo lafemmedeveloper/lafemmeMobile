@@ -21,6 +21,7 @@ import ModalApp from '../../components/ModalApp';
 import EnableCoverage from './EnableCoverage';
 import NoEnableCoverage from './NoEnableCoverage';
 import {getCoverage} from '../../flux/util/actions';
+import ButtonCoordinates from '../../components/ButtonCoordinates';
 
 const AddAddress = (props) => {
   const {closeAddAddress} = props;
@@ -51,6 +52,7 @@ const AddAddress = (props) => {
   };
 
   const [googleAddress, setGoogleAddress] = useState(null);
+  const [googleDetail, setGoogleDetail] = useState(null);
   const [isCoverage, setIsCoverage] = useState(addresStatus.searching);
   const [notifyCoverage, setNotifyCoverage] = useState(true);
   const [buildType, setBuildType] = useState(locationType.house);
@@ -85,8 +87,8 @@ const AddAddress = (props) => {
         latitude: coordinate.latitude,
         longitude: coordinate.longitude,
       },
-      formattedAddress: googleAddress.formatted_address,
-      idAddress: googleAddress.id,
+      formattedAddress: googleDetail.formatted_address,
+      idAddress: googleAddress.place_id,
       id: Utilities.create_UUID(),
       vicinity: googleAddress.vicinity,
       url: googleAddress.url,
@@ -95,26 +97,29 @@ const AddAddress = (props) => {
     let address = [...user.address, item];
 
     console.log('address ==>', address);
-
-    updateProfile(address, 'address', authDispatch);
+    console.log('address == >', address);
+    //updateProfile(address, 'address', authDispatch);
 
     setIsCoverage(addresStatus.searching);
     closeAddAddress(false);
   };
 
-  const updateLocation = (data, details) => {
+  const updateLocation = async (data, details) => {
+    console.log('data ==>', data);
+    console.log('details ==>', details);
     Geocode.setApiKey(APIKEY);
     Geocode.setLanguage('es');
     Geocode.setRegion('co');
     Geocode.enableDebug();
 
-    console.log('data ==>', data);
-    setGoogleAddress(details);
     const addressSerch = details.formatted_address;
-
-    Geocode.fromAddress(addressSerch).then(
+    setGoogleDetail(addressSerch);
+    await Geocode.fromAddress(addressSerch).then(
       (response) => {
-        const {lat, lng} = response.results[0].geometry.location;
+        const dataResponse = response.results[0];
+        setGoogleAddress(dataResponse);
+        console.log('response =>', response);
+        const {lat, lng} = dataResponse.geometry.location;
         console.log('location =>', lat, lng);
         setCoordinate({
           latitude: lat,
@@ -122,7 +127,7 @@ const AddAddress = (props) => {
         });
       },
       (error) => {
-        console.error(error);
+        console.error('error updateLocation =>', error);
       },
     );
   };
@@ -133,17 +138,29 @@ const AddAddress = (props) => {
       setIsCoverage(addresStatus.searching);
     }
   };
+
+  console.log('googleAddress ==> exit', googleAddress);
   return (
     <>
       <View
         style={{
           position: 'absolute',
-          width: '90%',
-          justifyContent: 'center',
+          width: '100%',
           bottom: 100,
-          zIndex: 10000,
+          zIndex: 5,
+          // backgroundColor: 'green',
+          justifyContent: 'space-between',
           alignSelf: 'center',
+          flexDirection: 'row-reverse',
         }}>
+        <View
+          style={{
+            //backgroundColor: 'red',
+            zIndex: 6,
+            marginRight: 10,
+          }}>
+          <ButtonCoordinates />
+        </View>
         <GooglePlacesAutocomplete
           placeholder={'Escribe tu direccion (ej: carrera 33 #10-20)'}
           autoFocus={false}
@@ -166,8 +183,9 @@ const AddAddress = (props) => {
           styles={{
             textInputContainer: {
               backgroundColor: 'white',
-              width: '100%',
-
+              width: '90%',
+              marginRight: 10,
+              marginLeft: 10,
               borderRadius: 10,
               borderTopColor: 'white',
               borderBottomColor: 'white',

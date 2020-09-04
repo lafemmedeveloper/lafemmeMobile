@@ -16,6 +16,8 @@ import _ from 'lodash';
 import CartScreen from '../CartScreen';
 import Address from '../Address';
 import AddAddress from '../AddAddress';
+import Header from '../../components/Header';
+import {getOrders} from '../../flux/util/actions';
 
 const Home = () => {
   const TIME_SET = 500;
@@ -25,18 +27,18 @@ const Home = () => {
     StoreContext,
   );
   const {service, auth, util} = state;
+
   const {user} = auth;
+  const {services} = service;
+  const {deviceInfo, orders} = util;
   console.log('usuario current=>', user);
 
-  useEffect(() => {
-    observeUser(authDispatch);
-  }, []);
+  const appType = deviceInfo;
 
   useEffect(() => {
-    getServices(serviceDispatch);
+    activefuntionsFlux();
   }, []);
 
-  const {services} = service;
   const [modalAuth, setModalAuth] = useState(false);
   const [modalInspo, setModalInspo] = useState(false);
   const [modalCart, setModalCart] = useState(false);
@@ -44,6 +46,11 @@ const Home = () => {
   const [isModalCart, setIsModalCart] = useState(false);
   const [modalAddAddress, setModalAddAddress] = useState(false);
 
+  async function activefuntionsFlux() {
+    observeUser(authDispatch);
+    await getServices(serviceDispatch);
+    getOrders(utilDispatch);
+  }
   const selectService = (product) => {
     if (user !== null) {
       if (user && user.cart && user.cart.address) {
@@ -69,10 +76,22 @@ const Home = () => {
       }, TIME_SET);
     }
   };
+
+  console.log('orders =>', orders);
   return (
     <>
       <View style={styles.container}>
-        {/*   <Header title={'Agrega una dirección'} user={user} /> */}
+        <Header
+          appType={appType}
+          title={'Agrega una dirección'}
+          iconL={null}
+          iconR={null}
+          user={user}
+          ordersActive={orders.length}
+          selectAddress={() => setModalAddress(true)}
+          onActionL={() => {}}
+          onActionR={() => {}}
+        />
         <ScrollView
           style={[ApplicationStyles.scrollHome, {marginTop: Metrics.header}]}
           bounces={true}>
