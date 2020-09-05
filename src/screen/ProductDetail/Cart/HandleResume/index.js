@@ -47,7 +47,7 @@ const HandleResume = (props) => {
 
   let data = {
     name: product.name,
-    servicesType: Utilities.slugify(product.name),
+    servicesType: product.slug,
     clients: gList,
     id: Utilities.create_UUID(),
     addons: addonsGuest,

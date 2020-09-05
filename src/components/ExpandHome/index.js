@@ -16,7 +16,7 @@ export default (dta) => {
 
   const [opacity, onChangeOpacity] = React.useState(new Animated.Value(0));
 
-  const {data} = dta;
+  const {data, slug} = dta;
   const {products, addOns} = data;
 
   let sortedProduct = _.sortBy(products, 'order');
@@ -95,7 +95,7 @@ export default (dta) => {
                     (o) => o.idProduct === product.id,
                   );
 
-                  dta.selectService({...product, addOns: result});
+                  dta.selectService({...product, addOns: result, slug});
                 }}>
                 {index !== 0 && (
                   <Animated.View

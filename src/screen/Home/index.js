@@ -98,11 +98,13 @@ const Home = () => {
           {services &&
             services.length > 0 &&
             services.map((data) => {
+              console.log('serch service ===>', data);
               return (
                 <ExpandHome
                   key={data.id}
                   data={data}
                   image={{uri: data.imageUrl}}
+                  slug={data.slug}
                   selectService={(data) => selectService(data)}
                 />
               );
