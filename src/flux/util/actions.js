@@ -152,13 +152,13 @@ export const getExpertActiveOrders = (dispatch) => {
     console.log('error getExpertActiveOrders =>', error);
   }
 };
-export const getExpertOpenOrders = () => (dispatch) => {
-  let expertActivities = 'manicure';
-
+export const getExpertOpenOrders = (activity, dispatch) => {
+  console.log('activity =>', activity);
+  console.log('====getExpertOpenOrders====');
   let ordersRef = firestore()
     .collection('orders')
     .where('status', '==', 0)
-    .where('servicesType', 'array-contains-any', expertActivities);
+    .where('servicesType', 'array-contains-any', activity);
   ordersRef.orderBy('createDate', 'desc');
 
   let listOrders = [];

@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import {Text, View, ScrollView, StyleSheet} from 'react-native';
 import {Colors, Fonts, Metrics, ApplicationStyles} from '../../themes';
 import ServiceItemBanner from '../../components/ServiceItemBanner';
@@ -7,14 +7,21 @@ import {StoreContext} from '../../flux';
 import {Switch} from 'react-native-gesture-handler';
 import firestore from '@react-native-firebase/firestore';
 import {setUser, setLoading} from '../../flux/auth/actions';
+import {getExpertOpenOrders} from '../../flux/util/actions';
 
 const HomeExpert = () => {
-  const {state, authDispatch} = useContext(StoreContext);
+  const {state, authDispatch, utilDispatch} = useContext(StoreContext);
   const {auth, util} = state;
   const {user, loading} = auth;
   const {expertActiveOrders, expertOpenOrders, deviceInfo} = util;
   const appType = deviceInfo;
-
+  console.log('state util =>', util);
+  useEffect(() => {
+    if (user) {
+      const {activity} = user;
+      getExpertOpenOrders(activity, utilDispatch);
+    }
+  }, []);
   const [isEnabled, setIsEnabled] = useState(user && user.isEnabled);
 
   const toggleSwitch = async () => {

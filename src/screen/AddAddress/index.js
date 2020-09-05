@@ -296,7 +296,7 @@ const AddAddress = (props) => {
               color: '#1faadb',
             },
           }}
-          currentLocation={true} // Will add a 'Current location' button at the top of the predefined places list
+          currentLocation={false} // Will add a 'Current location' button at the top of the predefined places list
           currentLocationLabel={'Mi ubicacion actual'}
           nearbyPlacesAPI={'GooglePlacesSearch'} // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
           GoogleReverseGeocodingQuery={

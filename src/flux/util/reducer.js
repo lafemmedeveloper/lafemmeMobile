@@ -17,6 +17,7 @@ export const INITIAL_STATE_UTIL = {
   gallery: null,
   coverageZones: [],
   orders: [],
+  history: [],
   deviceInfo: {
     bundleId: null,
     buildNumber: null,
@@ -53,9 +54,16 @@ const getCoverage = (state, action) => {
   };
 };
 const getOrder = (state, action) => {
+  let orders = _.filter(action.payload, (o) => o.status <= 3);
+  let history = _.filter(action.payload, (o) => o.status > 3);
+
+  orders = _.orderBy(orders, 'date', 'des');
+  history = _.orderBy(history, 'date', 'asc');
+
   return {
     ...state,
-    orders: action.payload,
+    orders,
+    history,
   };
 };
 const getDeviceInfo = (state, action) => {

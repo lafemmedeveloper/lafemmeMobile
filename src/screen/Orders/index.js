@@ -1,8 +1,8 @@
 import React, {useContext} from 'react';
-import {Text} from 'react-native';
 
 import {StoreContext} from '../../flux';
 import ButtonLogin from '../../components/ButtonLogin';
+import Content from './Content';
 
 const Orders = () => {
   const {state} = useContext(StoreContext);
@@ -11,7 +11,7 @@ const Orders = () => {
   if (!user) {
     return <ButtonLogin />;
   } else {
-    return <Text>si ahi</Text>;
+    return <Content />;
   }
 };
 
