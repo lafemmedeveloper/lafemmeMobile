@@ -46,6 +46,7 @@ const HandleResume = (props) => {
   ];
 
   let data = {
+    experts: null,
     name: product.name,
     servicesType: product.slug,
     clients: gList,
@@ -57,7 +58,6 @@ const HandleResume = (props) => {
     totalAddons: addOnPrice + addOnCountPrice,
     total:
       product.price * (guestList.length + 1) + addOnPrice + addOnCountPrice,
-    experts: experts,
   };
 
   return (

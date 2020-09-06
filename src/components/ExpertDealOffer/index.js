@@ -3,27 +3,24 @@ import {
   View,
   Image,
   Text,
-  TouchableOpacity,
-  ActivityIndicator,
   StyleSheet,
-  Alert,
   Dimensions,
+  TouchableOpacity,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {formatDate} from '../../helpers/MomentHelper';
-import moment from 'moment';
-import StarRating from 'react-native-star-rating';
 
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
-import {ApplicationStyles, Colors, Fonts, Images, Metrics} from '../../themes';
+import {Colors, Fonts, Images, Metrics} from '../../themes';
 import Utilities from '../../utilities';
 import AppConfig from '../../config/AppConfig';
+
 const mapStyle = require('../../config/mapStyle.json');
 
 const screen = Dimensions.get('window');
 const ASPECT_RATIO = screen.width * 0.8 - 500 / screen.height;
 
-export default ({order, onSwipe}) => {
+export default ({order, assingExpert, dispatch, user}) => {
   return (
     <View style={styles.cellContainer}>
       <View style={styles.contentContainer}>
@@ -58,12 +55,12 @@ export default ({order, onSwipe}) => {
               size={12}
               color={Colors.expert.primaryColor}
             />{' '}
-            {formatDate(order.day, 'ddd, LL')}
+            {formatDate(order.date, 'ddd, LL')}
           </Text>
           <Text
             style={Fonts.style.regular(Colors.dark, Fonts.size.small, 'left')}>
             <Icon name={'clock'} size={12} color={Colors.expert.primaryColor} />{' '}
-            {formatDate(moment(order.hour, 'HH:mm'), 'h:mm a')}
+            {formatDate(order.date, 'h:mm a')}
           </Text>
         </View>
         <View
@@ -173,214 +170,45 @@ export default ({order, onSwipe}) => {
                 </Text>
               </Text>
             </Text>
-
-            <Text
-              numberOfLines={1}
-              style={Fonts.style.regular(
-                Colors.gray,
-                Fonts.size.small,
-                'left',
-              )}>
-              Expertos:{' '}
-              <Text
-                numberOfLines={1}
-                style={Fonts.style.bold(
-                  Colors.expert.primaryColor,
-                  Fonts.size.small,
-                  'center',
-                )}>
-                {item.experts.length}
-              </Text>
-            </Text>
-
-            {item.experts.length > 0 &&
-              item.experts.map((expert, idex) => {
-                return (
-                  <View
-                    key={idex}
-                    style={[
-                      styles.container,
-                      styles.containerBottom,
-                      ApplicationStyles.shadownClient,
-                    ]}>
-                    {expert.id == null ? (
-                      <View
-                        style={{
-                          width: '100%',
-                          flexDirection: 'row',
-                          alignContent: 'center',
-                          alignItems: 'center',
-                          justifyContent: 'space-between',
-                        }}>
-                        <View
-                          style={{
-                            width: 40,
-                            height: 40,
-                            borderRadius: 20,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            backgroundColor: Colors.expert.secondaryColor,
-                            marginRight: 10,
-                          }}>
-                          <ActivityIndicator
-                            size={'small'}
-                            color={Colors.light}
-                          />
-                        </View>
-                        <Text
-                          style={Fonts.style.regular(
-                            Colors.dark,
-                            Fonts.size.small,
-                            'left',
-                          )}>
-                          {'Buscando Experto...'}
-                        </Text>
-                        <TouchableOpacity
-                          style={{
-                            backgroundColor: Colors.dark,
-                            borderRadius: Metrics.borderRadius,
-                            paddingHorizontal: 5,
-                            paddingVertical: 2.5,
-                          }}
-                          onPress={() => {
-                            Alert.alert(
-                              'Aplicar a servicio',
-                              'Realmente deseas aplicar a este servio\n\nRecuerda que no puedes cancelar y si tienes alguna novedad la debes reportar con la administracion',
-                              [
-                                {
-                                  text: 'No solicitar',
-                                  onPress: () => console.log('Cancel Pressed'),
-                                  style: 'cancel',
-                                },
-                                {
-                                  text: 'Solicitar',
-                                  onPress: () => {
-                                    console.log('Solicitar');
-                                    onSwipe();
-                                  },
-                                },
-                              ],
-                              {cancelable: false},
-                            );
-                          }}>
-                          <Text
-                            style={Fonts.style.bold(
-                              Colors.expert.primaryColor,
-                              Fonts.size.small,
-                              'left',
-                            )}>
-                            Solicitar
-                          </Text>
-                        </TouchableOpacity>
-                      </View>
-                    ) : (
-                      <Image
-                        source={{uri: expert.thumbnail}}
-                        style={{
-                          width: 40,
-                          height: 40,
-                          borderRadius: 20,
-                          marginRight: 10,
-                        }}
-                      />
-                    )}
-                    <View style={{flex: 1}}>
-                      <Text
-                        style={Fonts.style.bold(
-                          Colors.dark,
-                          Fonts.size.small,
-                          'left',
-                        )}>
-                        {expert.firstName} {expert.lastName}
-                      </Text>
-                      {expert.ranking && (
-                        <View style={{width: 300, flexDirection: 'row'}}>
-                          <StarRating
-                            disabled={true}
-                            maxStars={5}
-                            rating={expert.ranking ? expert.ranking : 5}
-                            starSize={15}
-                            emptyStarColor={Colors.gray}
-                            fullStarColor={Colors.expert.primaryColor}
-                          />
-                          <Text
-                            style={Fonts.style.regular(
-                              Colors.dark,
-                              Fonts.size.small,
-                              'left',
-                            )}>
-                            {' '}
-                            {expert.ranking}
-                          </Text>
-                        </View>
-                      )}
-                    </View>
-                  </View>
-                );
-              })}
           </View>
         );
       })}
 
-      <MapView
-        pointerEvents={'none'}
-        provider={PROVIDER_GOOGLE} // remove if not using Google Maps
-        style={styles.mapView}
-        customMapStyle={mapStyle}
-        region={{
-          latitude: order.address.coordinates.latitude,
-          longitude: order.address.coordinates.longitude,
-          latitudeDelta: 0.00001,
-          longitudeDelta: 0.0001 * ASPECT_RATIO,
-        }}>
-        <Marker.Animated
-          coordinate={{
-            latitude: order.address.coordinates.latitude,
-            longitude: order.address.coordinates.longitude,
-          }}>
-          <Icon
-            name={'map-marker-alt'}
-            size={30}
-            color={Colors.expert.primaryColor}
-          />
-        </Marker.Animated>
-      </MapView>
+      <View>
+        <TouchableOpacity
+          style={styles.btnContainer}
+          onPress={() => assingExpert(user, order, dispatch)}>
+          <Text
+            style={Fonts.style.bold(Colors.light, Fonts.size.medium, 'center')}>
+            Tomar <Icon name={'arrow-right'} size={15} color={Colors.light} />
+          </Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  btnContainer: {
     flex: 0,
+    height: 40,
+    width: Metrics.contentWidth,
     alignSelf: 'center',
-    width: '95%',
-  },
-  cancelBtn: {
-    flex: 1,
+    borderRadius: Metrics.borderRadius,
     marginVertical: 20,
-    borderRadius: Metrics.textInBr,
-    alignSelf: 'center',
-    flexDirection: 'row',
+    backgroundColor: Colors.expert.secondaryColor,
     justifyContent: 'center',
-    marginHorizontal: 0,
-    backgroundColor: Colors.textInputBg,
-    paddingHorizontal: 20,
-    paddingVertical: 2,
-  },
-
-  containerBottom: {
-    flex: 0,
-    marginVertical: 5,
-    borderRadius: Metrics.textInBr,
-    alignSelf: 'center',
-    flexDirection: 'row',
-
-    backgroundColor: Colors.textInputBg,
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-    width: '80%',
-    justifyContent: 'flex-start',
     alignItems: 'center',
+
+    shadowColor: Colors.dark,
+    shadowOffset: {
+      width: 2,
+      height: 1,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 1,
+
+    elevation: 5,
   },
   mapView: {
     width: '100%',
@@ -393,12 +221,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     justifyContent: 'center',
   },
-  starts: {
-    width: 100,
-    alignSelf: 'center',
-    marginVertical: 5,
-  },
-  swipe: {flex: 0, marginTop: 10},
+
   cellContainer: {
     backgroundColor: Colors.light,
     justifyContent: 'center',

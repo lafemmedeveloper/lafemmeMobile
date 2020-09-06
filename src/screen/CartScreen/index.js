@@ -479,6 +479,7 @@ const CartScreen = (props) => {
                 status: 0,
                 hoursServices,
                 date: `${user.cart.date}`,
+                hour: `${user.cart.hour}`,
                 servicesType,
                 ...user.cart,
               };

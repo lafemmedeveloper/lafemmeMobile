@@ -1,13 +1,12 @@
 import React, {useContext, useState, useEffect} from 'react';
-import {Text, View, ScrollView, StyleSheet} from 'react-native';
+import {Text, View, ScrollView, StyleSheet, Switch} from 'react-native';
 import {Colors, Fonts, Metrics, ApplicationStyles} from '../../themes';
 import ServiceItemBanner from '../../components/ServiceItemBanner';
 import ExpertDealOffer from '../../components/ExpertDealOffer';
 import {StoreContext} from '../../flux';
-import {Switch} from 'react-native-gesture-handler';
 import firestore from '@react-native-firebase/firestore';
 import {setUser, setLoading} from '../../flux/auth/actions';
-import {getExpertOpenOrders} from '../../flux/util/actions';
+import {getExpertOpenOrders, assingExpert} from '../../flux/util/actions';
 
 const HomeExpert = () => {
   const {state, authDispatch, utilDispatch} = useContext(StoreContext);
@@ -15,13 +14,14 @@ const HomeExpert = () => {
   const {user, loading} = auth;
   const {expertActiveOrders, expertOpenOrders, deviceInfo} = util;
   const appType = deviceInfo;
-  console.log('state util =>', util);
+
   useEffect(() => {
     if (user) {
       const {activity} = user;
       getExpertOpenOrders(activity, utilDispatch);
     }
   }, []);
+
   const [isEnabled, setIsEnabled] = useState(user && user.isEnabled);
 
   const toggleSwitch = async () => {
@@ -42,6 +42,7 @@ const HomeExpert = () => {
       console.log('error toggleSwitch => ', error);
     }
   };
+
   console.log('loading home =>', loading);
   return (
     <>
@@ -83,41 +84,14 @@ const HomeExpert = () => {
           <ScrollView
             style={[ApplicationStyles.scrollHomeExpert, {flex: 1}]}
             bounces={true}>
-            {expertOpenOrders.map((item, index) => {
-              console.log(item);
+            {expertOpenOrders.map((item) => {
               return (
                 <View key={item.id}>
-                  <View style={styles.containerButton}>
-                    <Switch
-                      trackColor={{false: '#dbdbdb', true: '#dbdbdb'}}
-                      thumbColor={
-                        user.isEnabled ? Colors.expert.primaryColor : '#f4f3f4'
-                      }
-                      ios_backgroundColor="#3e3e3e"
-                      onValueChange={toggleSwitch}
-                      value={user.isEnabled}
-                    />
-                  </View>
-
                   <ExpertDealOffer
                     order={item}
                     user={user}
-                    onSwipe={() => {
-                      let expertData = {
-                        coordinates: {
-                          latitude: 6.2458007,
-                          longitude: -75.5680003,
-                        },
-                        id: user.id,
-                        ranking: user.ranking,
-                        lastName: user.lastName,
-                        firstName: user.firstName,
-                        image: user.pics.image,
-                        thumbnail: user.pics.thumbnail,
-                      };
-
-                      assignExpert(item.id, index, expertData);
-                    }}
+                    dispatch={utilDispatch}
+                    assingExpert={assingExpert}
                   />
                 </View>
               );

@@ -12,6 +12,7 @@ import {
 import firestore from '@react-native-firebase/firestore';
 import DeviceInfo from 'react-native-device-info';
 import auth from '@react-native-firebase/auth';
+import {or} from 'react-native-reanimated';
 
 export const handleError = (dispatch) => {
   dispatch({type: HANDLE_ERROR, payload: true});
@@ -153,8 +154,6 @@ export const getExpertActiveOrders = (dispatch) => {
   }
 };
 export const getExpertOpenOrders = (activity, dispatch) => {
-  console.log('activity =>', activity);
-  console.log('====getExpertOpenOrders====');
   let ordersRef = firestore()
     .collection('orders')
     .where('status', '==', 0)
@@ -172,4 +171,17 @@ export const getExpertOpenOrders = (activity, dispatch) => {
     });
     return dispatch({type: GET_EXPERT_OPEN_ORDERS, payload: listOrders});
   });
+};
+
+export const assingExpert = (user, order, dispatch) => {
+  try {
+    console.log(user, order, dispatch);
+    let services = order.services;
+    services.map((item) => {
+      let expert = item.experts;
+      console.log('expert ==>', expert);
+    });
+  } catch (error) {
+    console.error('assingExpert ==>', error);
+  }
 };
