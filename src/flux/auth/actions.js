@@ -25,22 +25,32 @@ export const saveUser = async (data, dispatch) => {
 };
 
 export const observeUser = (dispatch) => {
-  auth().onAuthStateChanged(function (user) {
-    if (user) {
-      setUser(user.uid, dispatch);
-    }
-  });
+  try {
+    setLoading(true, dispatch);
+    auth().onAuthStateChanged(function (user) {
+      if (user) {
+        setUser(user.uid, dispatch);
+      }
+    });
+    setLoading(false, dispatch);
+  } catch (error) {
+    setLoading(false, dispatch);
+    console.log('error observeUser =>', error);
+  }
 };
 export const setUser = async (data, dispatch) => {
   let result = firestore().collection('users').doc(data);
   await result
     .get()
     .then((doc) => {
+      setLoading(false, dispatch);
       if (!doc.exists) {
         console.log('No such document!');
+        setLoading(false, dispatch);
       } else {
         const currentUserDb = doc.data();
         dispatch({type: GET_USER, payload: currentUserDb});
+        setLoading(false, dispatch);
       }
     })
     .catch((error) => {
@@ -51,8 +61,9 @@ export const setUser = async (data, dispatch) => {
 export const signOff = async (dispatch) => {
   try {
     setLoading(true, dispatch);
+
     await auth().signOut();
-    dispatch({type: DEL_USER});
+    await dispatch({type: DEL_USER});
     setLoading(false, dispatch);
   } catch (error) {
     console.log(error);
@@ -63,6 +74,7 @@ export const signOff = async (dispatch) => {
 export const updateProfile = async (data, typeData, dispatch) => {
   const currentUser = auth().currentUser;
   try {
+    setLoading(true, dispatch);
     const userRef = firestore().collection('users').doc(currentUser.uid);
     await userRef.set(
       {
@@ -72,7 +84,41 @@ export const updateProfile = async (data, typeData, dispatch) => {
     );
 
     setUser(currentUser.uid, dispatch);
+    setLoading(false, dispatch);
   } catch (error) {
+    setLoading(false, dispatch);
     console.log('error', error);
+  }
+};
+export const Login = async (email, password, dispatch) => {
+  try {
+    setLoading(true, dispatch);
+    const currentUser = await auth().signInWithEmailAndPassword(
+      email,
+      password,
+    );
+    console.log('currentUser =>', currentUser);
+    setLoading(true, dispatch);
+  } catch (error) {
+    setLoading(false, dispatch);
+    console.log('error login expert =>', error);
+  }
+};
+
+export const updatePhoto = async (url, dispatch) => {
+  try {
+    setLoading(true, dispatch);
+    const currentUser = auth().currentUser;
+    await currentUser.updateProfile({
+      photoURL: url,
+    });
+    const ref = firestore().collection('users').doc(currentUser.uid);
+    await ref.set({imageUrl: url}, {merge: true});
+    setUser(currentUser.uid, dispatch);
+    setLoading(false, dispatch);
+  } catch (error) {
+    setLoading(false, dispatch);
+
+    console.log('error updatePhoto=>', error);
   }
 };

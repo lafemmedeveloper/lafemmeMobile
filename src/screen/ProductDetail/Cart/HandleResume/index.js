@@ -23,7 +23,6 @@ const HandleResume = (props) => {
   const {
     guestList,
     countItems,
-    experts,
     product,
     addOnPrice,
     user,
@@ -47,7 +46,7 @@ const HandleResume = (props) => {
 
   let data = {
     name: product.name,
-    servicesType: Utilities.slugify(product.name),
+    servicesType: product.slug,
     clients: gList,
     id: Utilities.create_UUID(),
     addons: addonsGuest,
@@ -57,7 +56,6 @@ const HandleResume = (props) => {
     totalAddons: addOnPrice + addOnCountPrice,
     total:
       product.price * (guestList.length + 1) + addOnPrice + addOnCountPrice,
-    experts: experts,
   };
 
   return (
@@ -278,8 +276,8 @@ const HandleResume = (props) => {
               'center',
               1,
             )}>
-            {minToHours(timeTotal)} - {experts.length}
-            {experts.length === 1 ? 'Experto' : 'Expertos'}
+            {minToHours(timeTotal)} - {1}
+            {'Experto'}
           </Text>
           <View opacity={0.25} style={ApplicationStyles.separatorLine} />
           <View opacity={0.25} style={ApplicationStyles.separatorLine} />

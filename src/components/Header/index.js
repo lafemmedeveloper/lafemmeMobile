@@ -16,7 +16,7 @@ export default (data) => {
           style={[
             styles.contentC,
             ApplicationStyles.centerContent,
-            {flexDirection: 'row'},s
+            {flexDirection: 'row'},
           ]}>
           {data.user &&
           data.user.cart &&
@@ -24,9 +24,7 @@ export default (data) => {
           data.user.cart.address.name ? (
             <TouchableOpacity
               style={{alignItems: 'center', justifyContent: 'center'}}
-              onPress={() => {
-                selectAddress();
-              }}>
+              onPress={() => selectAddress()}>
               <Text
                 numberOfLines={2}
                 style={[
@@ -61,9 +59,7 @@ export default (data) => {
           ) : (
             <TouchableOpacity
               style={{alignItems: 'center', justifyContent: 'center'}}
-              onPress={() => {
-                selectAddress();
-              }}>
+              onPress={() => selectAddress()}>
               <Text
                 style={Fonts.style.regular(
                   Colors.client.primaryColor,

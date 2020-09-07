@@ -4,9 +4,14 @@ import {
   LOADING,
   GET_COVERAGE,
   GET_ORDERS,
+  DEVICE_INFO,
+  GET_EXPERT_ACTIVE_ORDERS,
+  GET_EXPERT_OPEN_ORDERS,
 } from './types';
 
 import firestore from '@react-native-firebase/firestore';
+import DeviceInfo from 'react-native-device-info';
+import auth from '@react-native-firebase/auth';
 
 export const handleError = (dispatch) => {
   dispatch({type: HANDLE_ERROR, payload: true});
@@ -72,15 +77,18 @@ export const getCoverage = async (city, dispatch) => {
     console.log('error getCoverage =>', error);
   }
 };
-
-export const getOrders = () => (dispatch, getStore) => {
+export const getOrders = (dispatch) => {
+  const uid = auth().currentUser.uid;
   try {
+    console.log('<=== Active getOrder functions ===>');
     setLoading(true, dispatch);
     const ordersRef = firestore()
       .collection('orders')
-      .where('client.uid', '==', getStore().currentUser.auth.uid);
+      .where('client.uid', '==', uid);
     ordersRef.orderBy('createDate', 'desc');
+
     let listOrders = [];
+
     ordersRef.onSnapshot((orders) => {
       listOrders = orders.docs.map((item) => {
         return {
@@ -88,10 +96,100 @@ export const getOrders = () => (dispatch, getStore) => {
           ...item.data(),
         };
       });
+      console.log('listOrders =>', listOrders);
       return dispatch({type: GET_ORDERS, payload: listOrders});
     });
     setLoading(false, dispatch);
   } catch (error) {
-    console.log('error getOrders ==>', getOrders);
+    console.log('error getOrders ==>', error);
+  }
+};
+
+export const getDeviceInfo = (dispatch) => {
+  return new Promise((resolve) => {
+    let deviceInfo = {};
+
+    try {
+      deviceInfo.bundleId = DeviceInfo.getBundleId();
+      deviceInfo.buildNumber = DeviceInfo.getBuildNumber();
+      deviceInfo.version = DeviceInfo.getVersion();
+      deviceInfo.readableVersion = DeviceInfo.getReadableVersion();
+
+      let bundleSplit = deviceInfo.bundleId.split('.');
+      let bundleType = bundleSplit[2];
+
+      if (bundleType === 'client' || bundleType === 'clientstaging') {
+        deviceInfo.appType = 'client';
+      } else if (bundleType === 'expert' || bundleType === 'expertstaging') {
+        deviceInfo.appType = 'expert';
+      }
+      return resolve(dispatch({type: DEVICE_INFO, payload: deviceInfo}));
+    } catch (e) {
+      console.log('Trouble getting device info ', e);
+    }
+  });
+};
+
+export const getExpertActiveOrders = (dispatch) => {
+  try {
+    let ordersRef = firestore().collection('orders').where('status', '<=', 4);
+
+    let listOrders = [];
+
+    ordersRef.onSnapshot((orders) => {
+      console.log('=> orders', orders);
+
+      listOrders = orders.docs.map((item) => {
+        return {
+          id: item.id,
+          ...item.data(),
+        };
+      });
+      console.log('listOrders=>', listOrders);
+      dispatch({type: GET_EXPERT_ACTIVE_ORDERS, payload: listOrders});
+    });
+  } catch (error) {
+    console.log('error getExpertActiveOrders =>', error);
+  }
+};
+export const getExpertOpenOrders = (activity, dispatch) => {
+  let ordersRef = firestore()
+    .collection('orders')
+    .where('status', '==', 0)
+    .where('servicesType', 'array-contains-any', activity);
+  ordersRef.orderBy('createDate', 'desc');
+
+  let listOrders = [];
+
+  ordersRef.onSnapshot((orders) => {
+    listOrders = orders.docs.map((item) => {
+      return {
+        id: item.id,
+        ...item.data(),
+      };
+    });
+    return dispatch({type: GET_EXPERT_OPEN_ORDERS, payload: listOrders});
+  });
+};
+
+export const assingExpert = async (user, order, dispatch) => {
+  try {
+    console.log(user, order, dispatch);
+    console.log('order ===>', order);
+    console.log('order ===>', order);
+
+    const expert = user;
+
+    const ref = firestore().collection('orders').doc(order.id);
+    await ref.set(
+      {
+        status: 1,
+
+        expert,
+      },
+      {merge: true},
+    );
+  } catch (error) {
+    console.error('assingExpert ==>', error);
   }
 };

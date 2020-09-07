@@ -71,6 +71,7 @@ const EnableCoverage = (props) => {
               />
             </Marker.Animated>
           </MapView>
+
           <Text
             style={[
               Fonts.style.regular(Colors.dark, Fonts.size.medium, 'center'),
@@ -81,9 +82,7 @@ const EnableCoverage = (props) => {
               size={15}
               color={Colors.client.primaryColor}
             />
-            {googleAddress && googleAddress.formatted_address
-              ? googleAddress.formatted_address
-              : ''}
+            {googleAddress}
           </Text>
 
           <View style={styles.itemAddressContainer}>
