@@ -7,12 +7,12 @@ import {
   DEVICE_INFO,
   GET_EXPERT_ACTIVE_ORDERS,
   GET_EXPERT_OPEN_ORDERS,
+  GET_COORDINATE,
 } from './types';
 
 import firestore from '@react-native-firebase/firestore';
 import DeviceInfo from 'react-native-device-info';
 import auth from '@react-native-firebase/auth';
-import {or} from 'react-native-reanimated';
 
 export const handleError = (dispatch) => {
   dispatch({type: HANDLE_ERROR, payload: true});
@@ -173,14 +173,23 @@ export const getExpertOpenOrders = (activity, dispatch) => {
   });
 };
 
-export const assingExpert = (user, order, dispatch) => {
+export const assingExpert = async (user, order, dispatch) => {
   try {
     console.log(user, order, dispatch);
-    let services = order.services;
-    services.map((item) => {
-      let expert = item.experts;
-      console.log('expert ==>', expert);
-    });
+    console.log('order ===>', order);
+    console.log('order ===>', order);
+
+    const expert = user;
+
+    const ref = firestore().collection('orders').doc(order.id);
+    await ref.set(
+      {
+        status: 1,
+
+        expert,
+      },
+      {merge: true},
+    );
   } catch (error) {
     console.error('assingExpert ==>', error);
   }

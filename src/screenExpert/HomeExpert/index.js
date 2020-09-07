@@ -5,8 +5,10 @@ import ServiceItemBanner from '../../components/ServiceItemBanner';
 import ExpertDealOffer from '../../components/ExpertDealOffer';
 import {StoreContext} from '../../flux';
 import firestore from '@react-native-firebase/firestore';
-import {setUser, setLoading} from '../../flux/auth/actions';
+import {setUser, setLoading, updateProfile} from '../../flux/auth/actions';
 import {getExpertOpenOrders, assingExpert} from '../../flux/util/actions';
+
+import Geolocation from '@react-native-community/geolocation';
 
 const HomeExpert = () => {
   const {state, authDispatch, utilDispatch} = useContext(StoreContext);
@@ -14,15 +16,16 @@ const HomeExpert = () => {
   const {user, loading} = auth;
   const {expertActiveOrders, expertOpenOrders, deviceInfo} = util;
   const appType = deviceInfo;
-
   useEffect(() => {
     if (user) {
       const {activity} = user;
       getExpertOpenOrders(activity, utilDispatch);
+      currentCoordinate();
     }
   }, []);
 
   const [isEnabled, setIsEnabled] = useState(user && user.isEnabled);
+  const [coordinate, setCoordinate] = useState(null);
 
   const toggleSwitch = async () => {
     try {
@@ -42,8 +45,24 @@ const HomeExpert = () => {
       console.log('error toggleSwitch => ', error);
     }
   };
+  const currentCoordinate = () => {
+    Geolocation.getCurrentPosition((info) =>
+      setCoordinate({
+        latitude: info.coords.latitude,
+        longitude: info.coords.longitude,
+      }),
+    );
+  };
+
+  useEffect(() => {
+    if (coordinate) {
+      updateProfile(coordinate, 'coordinate', authDispatch);
+    }
+  }, [coordinate]);
 
   console.log('loading home =>', loading);
+
+  console.log('coordinate home =>', coordinate);
   return (
     <>
       <View style={styles.container}>
@@ -84,9 +103,9 @@ const HomeExpert = () => {
           <ScrollView
             style={[ApplicationStyles.scrollHomeExpert, {flex: 1}]}
             bounces={true}>
-            {expertOpenOrders.map((item) => {
+            {expertOpenOrders.map((item, index) => {
               return (
-                <View key={item.id}>
+                <View key={index}>
                   <ExpertDealOffer
                     order={item}
                     user={user}

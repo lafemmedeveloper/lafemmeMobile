@@ -23,7 +23,6 @@ const HandleResume = (props) => {
   const {
     guestList,
     countItems,
-    experts,
     product,
     addOnPrice,
     user,
@@ -46,7 +45,6 @@ const HandleResume = (props) => {
   ];
 
   let data = {
-    experts: null,
     name: product.name,
     servicesType: product.slug,
     clients: gList,
@@ -278,8 +276,8 @@ const HandleResume = (props) => {
               'center',
               1,
             )}>
-            {minToHours(timeTotal)} - {experts.length}
-            {experts.length === 1 ? 'Experto' : 'Expertos'}
+            {minToHours(timeTotal)} - {1}
+            {'Experto'}
           </Text>
           <View opacity={0.25} style={ApplicationStyles.separatorLine} />
           <View opacity={0.25} style={ApplicationStyles.separatorLine} />

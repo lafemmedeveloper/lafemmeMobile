@@ -75,7 +75,7 @@ const CartScreen = (props) => {
     try {
       firestore()
         .collection('orders')
-        .doc()
+        .doc(data.id)
         .set(data)
         .then(function () {
           console.log('order:Created');
@@ -153,12 +153,11 @@ const CartScreen = (props) => {
     setDatePickerVisibility(false);
   };
   const handleConfirmTime = async (hour) => {
+    console.log('hour ===>', hour);
     const dateTime = moment(hour).format('HH:mm:ss');
     setTime(dateTime);
     console.log('date hour handleTime =>', dateTime);
     const date = `${dateCalendar} ${dateTime}`;
-
-    // console.log('insert ==>', {...user.cart, date}, 'cart');
 
     await updateProfile({...user.cart, date}, 'cart', authDispatch);
   };
@@ -466,6 +465,8 @@ const CartScreen = (props) => {
             if (isCompleted) {
               console.log('isCompleted');
               let data = {
+                id: Utilities.create_UUID(),
+                expert: null,
                 client: {
                   uid: user.uid,
                   firstName: user.firstName,
@@ -479,7 +480,6 @@ const CartScreen = (props) => {
                 status: 0,
                 hoursServices,
                 date: `${user.cart.date}`,
-                hour: `${user.cart.hour}`,
                 servicesType,
                 ...user.cart,
               };

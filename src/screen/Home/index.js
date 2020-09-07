@@ -31,7 +31,10 @@ const Home = () => {
   const {user} = auth;
   const {services} = service;
   const {deviceInfo, orders} = util;
-  console.log('usuario current=>', user);
+  console.log(
+    'usuario current=>',
+    user ? user : '=========User is Empty============',
+  );
 
   const appType = deviceInfo;
 
@@ -54,7 +57,7 @@ const Home = () => {
   const selectService = (product) => {
     if (user !== null) {
       if (user && user.cart && user.cart.address) {
-        navigation.navigate('ProductDetail', {product, user});
+        navigation.navigate('ProductDetail', {product});
       } else {
         setModalAddress(true);
       }
@@ -98,7 +101,6 @@ const Home = () => {
           {services &&
             services.length > 0 &&
             services.map((data) => {
-              console.log('serch service ===>', data);
               return (
                 <ExpandHome
                   key={data.id}
