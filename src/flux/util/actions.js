@@ -7,7 +7,6 @@ import {
   DEVICE_INFO,
   GET_EXPERT_ACTIVE_ORDERS,
   GET_EXPERT_OPEN_ORDERS,
-  GET_COORDINATE,
 } from './types';
 
 import firestore from '@react-native-firebase/firestore';

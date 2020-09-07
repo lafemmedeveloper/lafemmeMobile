@@ -7,13 +7,16 @@ import HistoryExpert from '../../../screenExpert/HistoryExpert';
 import ProfileExpert from '../../../screenExpert/ProfileExpert';
 import Loading from '../../../components/Loading';
 import {StoreContext} from '../../../flux';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const Tab = createBottomTabNavigator();
 
 export default function TabBottom() {
   const {state} = useContext(StoreContext);
-  const {auth} = state;
+  const {auth, util} = state;
   const {loading} = auth;
+  const {expertOpenOrders} = util;
+  console.log('orders ==>', expertOpenOrders);
 
   return (
     <>
@@ -22,19 +25,31 @@ export default function TabBottom() {
         tabBarOptions={{
           activeTintColor: Colors.expert.primaryColor,
         }}>
-        <Tab.Screen
-          name="Home"
-          component={HomeExpert}
-          options={{
-            tabBarLabel: 'Inicio',
-            tabBarIcon: ({color}) => (
-              <Image
-                style={[styles.icon, {tintColor: color}]}
-                source={Images.pin}
-              />
-            ),
-          }}
-        />
+        {expertOpenOrders.length > 0 ? (
+          <Tab.Screen
+            name="Home"
+            component={HomeExpert}
+            options={{
+              tabBarLabel: 'Ordenes',
+              tabBarIcon: ({color}) => (
+                <Icon name={'time-outline'} size={25} color={color} />
+              ),
+              tabBarBadge: expertOpenOrders.length,
+            }}
+          />
+        ) : (
+          <Tab.Screen
+            name="Home"
+            component={HomeExpert}
+            options={{
+              tabBarLabel: 'Ordenes',
+              tabBarIcon: ({color}) => (
+                <Icon name={'time-outline'} size={25} color={color} />
+              ),
+            }}
+          />
+        )}
+
         <Tab.Screen
           name="Ordenes"
           component={HistoryExpert}

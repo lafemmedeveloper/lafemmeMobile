@@ -1,14 +1,15 @@
 import React, {useContext, useState, useEffect} from 'react';
-import {Text, View, ScrollView, StyleSheet, Switch} from 'react-native';
-import {Colors, Fonts, Metrics, ApplicationStyles} from '../../themes';
+import {View, ScrollView, StyleSheet} from 'react-native';
+import {Colors, Metrics, ApplicationStyles} from '../../themes';
 import ServiceItemBanner from '../../components/ServiceItemBanner';
 import ExpertDealOffer from '../../components/ExpertDealOffer';
 import {StoreContext} from '../../flux';
-import firestore from '@react-native-firebase/firestore';
-import {setUser, setLoading, updateProfile} from '../../flux/auth/actions';
+import {updateProfile} from '../../flux/auth/actions';
 import {getExpertOpenOrders, assingExpert} from '../../flux/util/actions';
 
 import Geolocation from '@react-native-community/geolocation';
+import NoOrders from './NoOrders';
+import HeaderExpert from './HeaderExpert';
 
 const HomeExpert = () => {
   const {state, authDispatch, utilDispatch} = useContext(StoreContext);
@@ -18,33 +19,17 @@ const HomeExpert = () => {
   const appType = deviceInfo;
   useEffect(() => {
     if (user) {
-      const {activity} = user;
-      getExpertOpenOrders(activity, utilDispatch);
+      const {activity, isEnabled} = user;
+
       currentCoordinate();
+      if (isEnabled) {
+        getExpertOpenOrders(activity, utilDispatch);
+      }
     }
   }, []);
 
-  const [isEnabled, setIsEnabled] = useState(user && user.isEnabled);
   const [coordinate, setCoordinate] = useState(null);
 
-  const toggleSwitch = async () => {
-    try {
-      setLoading(true, authDispatch);
-      setIsEnabled((previousState) => !previousState);
-
-      await firestore().collection('users').doc(user.uid).set(
-        {
-          isEnabled: isEnabled,
-        },
-        {merge: true},
-      );
-      await setUser(user.uid, authDispatch);
-      setLoading(false, authDispatch);
-    } catch (error) {
-      setLoading(false, authDispatch);
-      console.log('error toggleSwitch => ', error);
-    }
-  };
   const currentCoordinate = () => {
     Geolocation.getCurrentPosition((info) =>
       setCoordinate({
@@ -66,30 +51,7 @@ const HomeExpert = () => {
   return (
     <>
       <View style={styles.container}>
-        <View style={styles.containerButton}>
-          {user && (
-            <>
-              <Text
-                style={Fonts.style.semiBold(
-                  Colors.dark,
-                  Fonts.size.h6,
-                  'center',
-                )}>
-                Activo
-              </Text>
-
-              <Switch
-                trackColor={{false: '#dbdbdb', true: '#dbdbdb'}}
-                thumbColor={
-                  user.isEnabled ? Colors.expert.primaryColor : '#f4f3f4'
-                }
-                ios_backgroundColor="#3e3e3e"
-                onValueChange={toggleSwitch}
-                value={user.isEnabled}
-              />
-            </>
-          )}
-        </View>
+        <HeaderExpert user={user} dispatch={authDispatch} />
         {expertActiveOrders && expertActiveOrders.length > 0 ? (
           <ServiceItemBanner
             item={expertActiveOrders[0]}
@@ -117,32 +79,7 @@ const HomeExpert = () => {
             })}
           </ScrollView>
         ) : (
-          <View
-            style={{
-              flex: 1,
-              paddingHorizontal: 30,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-            <Text
-              style={Fonts.style.semiBold(
-                Colors.dark,
-                Fonts.size.h6,
-                'center',
-              )}>
-              {'No hay ordenes actualmente'}
-            </Text>
-            <Text
-              style={Fonts.style.regular(
-                Colors.dark,
-                Fonts.size.medium,
-                'center',
-              )}>
-              {
-                'Este pendiente de las notificaciones que te avisaremos cuando tengamos nuevos clientes'
-              }
-            </Text>
-          </View>
+          <NoOrders user={user} />
         )}
       </View>
     </>
@@ -154,16 +91,6 @@ const styles = StyleSheet.create({
     width: Metrics.screenWidth,
     height: Metrics.screenHeight,
     backgroundColor: Colors.backgroundColor,
-  },
-
-  containerButton: {
-    position: 'absolute',
-    zIndex: 2000,
-    flexDirection: 'row',
-    display: 'flex',
-    marginTop: 40,
-    alignSelf: 'flex-end',
-    right: 20,
   },
 });
 

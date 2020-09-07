@@ -449,7 +449,7 @@ const NoImage = () => {
 };
 const styles = StyleSheet.create({
   container: {flex: 1, justifyContent: 'center', alignItems: 'center'},
-  image: {width: 100, height: 100, alignSelf: 'center'},
+  image: {width: 220, height: 100, alignSelf: 'center'},
   contImage: {marginVertical: 20},
   btnContainer: {
     flex: 0,
