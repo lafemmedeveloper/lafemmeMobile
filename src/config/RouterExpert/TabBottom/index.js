@@ -15,8 +15,8 @@ export default function TabBottom() {
   const {state} = useContext(StoreContext);
   const {auth, util} = state;
   const {loading} = auth;
-  const {expertOpenOrders} = util;
-  console.log('orders ==>', expertOpenOrders);
+  const {expertActiveOrders} = util;
+  console.log('orders ==>', expertActiveOrders);
 
   return (
     <>
@@ -25,7 +25,7 @@ export default function TabBottom() {
         tabBarOptions={{
           activeTintColor: Colors.expert.primaryColor,
         }}>
-        {expertOpenOrders.length > 0 ? (
+        {expertActiveOrders.length > 0 ? (
           <Tab.Screen
             name="Home"
             component={HomeExpert}
@@ -34,7 +34,7 @@ export default function TabBottom() {
               tabBarIcon: ({color}) => (
                 <Icon name={'time-outline'} size={25} color={color} />
               ),
-              tabBarBadge: expertOpenOrders.length,
+              tabBarBadge: expertActiveOrders.length,
             }}
           />
         ) : (

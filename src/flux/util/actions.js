@@ -131,26 +131,31 @@ export const getDeviceInfo = (dispatch) => {
 };
 
 export const getExpertActiveOrders = (dispatch) => {
-  try {
-    let ordersRef = firestore().collection('orders').where('status', '<=', 4);
+  // let expertActivities = getStore().currentUser.user.expertActivities;
+  console.log('===> getExpertActiveOrders');
+  const uid = auth().currentUser.uid;
+  console.log(' getStore().currentUser.auth.uid', uid);
 
-    let listOrders = [];
+  let ordersRef = firestore()
+    .collection('orders')
+    .where('status', '>=', 1)
+    .where('status', '<=', 4);
 
-    ordersRef.onSnapshot((orders) => {
-      console.log('=> orders', orders);
+  ordersRef.where('experts.uid', '==', uid);
 
-      listOrders = orders.docs.map((item) => {
-        return {
-          id: item.id,
-          ...item.data(),
-        };
-      });
-      console.log('listOrders=>', listOrders);
-      dispatch({type: GET_EXPERT_ACTIVE_ORDERS, payload: listOrders});
+  let listOrders = [];
+
+  ordersRef.onSnapshot((orders) => {
+    console.log('=> orders', orders);
+
+    listOrders = orders.docs.map((item) => {
+      return {
+        id: item.id,
+        ...item.data(),
+      };
     });
-  } catch (error) {
-    console.log('error getExpertActiveOrders =>', error);
-  }
+    return dispatch({type: GET_EXPERT_OPEN_ORDERS, payload: listOrders});
+  });
 };
 export const getExpertOpenOrders = (activity, dispatch) => {
   let ordersRef = firestore()
@@ -168,7 +173,7 @@ export const getExpertOpenOrders = (activity, dispatch) => {
         ...item.data(),
       };
     });
-    return dispatch({type: GET_EXPERT_OPEN_ORDERS, payload: listOrders});
+    return dispatch({type: GET_EXPERT_ACTIVE_ORDERS, payload: listOrders});
   });
 };
 
@@ -178,14 +183,14 @@ export const assingExpert = async (user, order, dispatch) => {
     console.log('order ===>', order);
     console.log('order ===>', order);
 
-    const expert = user;
+    const experts = user;
 
     const ref = firestore().collection('orders').doc(order.id);
     await ref.set(
       {
         status: 1,
 
-        expert,
+        experts,
       },
       {merge: true},
     );

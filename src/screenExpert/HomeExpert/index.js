@@ -5,7 +5,12 @@ import ServiceItemBanner from '../../components/ServiceItemBanner';
 import ExpertDealOffer from '../../components/ExpertDealOffer';
 import {StoreContext} from '../../flux';
 import {updateProfile} from '../../flux/auth/actions';
-import {getExpertOpenOrders, assingExpert} from '../../flux/util/actions';
+import {
+  getExpertOpenOrders,
+  assingExpert,
+  getDeviceInfo,
+  getExpertActiveOrders,
+} from '../../flux/util/actions';
 
 import Geolocation from '@react-native-community/geolocation';
 import NoOrders from './NoOrders';
@@ -15,18 +20,23 @@ const HomeExpert = () => {
   const {state, authDispatch, utilDispatch} = useContext(StoreContext);
   const {auth, util} = state;
   const {user, loading} = auth;
-  const {expertActiveOrders, expertOpenOrders, deviceInfo} = util;
-  const appType = deviceInfo;
+  const {expertActiveOrders, deviceInfo} = util;
+
+  console.log('appType =>', appType);
   useEffect(() => {
+    getDeviceInfo(utilDispatch);
     if (user) {
       const {activity, isEnabled} = user;
 
       currentCoordinate();
+      getExpertActiveOrders(utilDispatch);
+
       if (isEnabled) {
         getExpertOpenOrders(activity, utilDispatch);
       }
     }
   }, []);
+  const appType = deviceInfo;
 
   const [coordinate, setCoordinate] = useState(null);
 
@@ -52,20 +62,12 @@ const HomeExpert = () => {
     <>
       <View style={styles.container}>
         <HeaderExpert user={user} dispatch={authDispatch} />
+
         {expertActiveOrders && expertActiveOrders.length > 0 ? (
-          <ServiceItemBanner
-            item={expertActiveOrders[0]}
-            appType={appType}
-            onPress={() => {}}
-          />
-        ) : (
-          <View style={{marginTop: Metrics.addHeader}} />
-        )}
-        {expertOpenOrders && expertOpenOrders.length > 0 ? (
           <ScrollView
             style={[ApplicationStyles.scrollHomeExpert, {flex: 1}]}
             bounces={true}>
-            {expertOpenOrders.map((item, index) => {
+            {expertActiveOrders.map((item, index) => {
               return (
                 <View key={index}>
                   <ExpertDealOffer

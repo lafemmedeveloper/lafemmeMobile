@@ -26,6 +26,8 @@ export const INITIAL_STATE_UTIL = {
     readableVersion: null,
   },
   expertOpenOrders: [],
+  expertHistoryOrders: [],
+  expertActiveOrders: [],
 };
 
 const setLoading = (state, action) => {
