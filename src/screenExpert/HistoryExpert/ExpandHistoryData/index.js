@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {View, Image, Text, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
-import {Colors, Fonts, Images, Metrics} from '../../../themes';
+import {Colors, Fonts, Images} from '../../../themes';
 
 import AppConfig from '../../../config/AppConfig';
 
