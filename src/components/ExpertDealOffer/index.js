@@ -210,12 +210,6 @@ const styles = StyleSheet.create({
 
     elevation: 5,
   },
-  mapView: {
-    width: '100%',
-    height: 120,
-    borderRadius: Metrics.borderRadius,
-    marginTop: 10,
-  },
   contentText: {
     flex: 1,
     marginHorizontal: 10,
