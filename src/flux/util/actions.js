@@ -198,3 +198,39 @@ export const assingExpert = async (user, order, dispatch) => {
     console.error('assingExpert ==>', error);
   }
 };
+export const sendCoordinate = async (user, order, dispatch) => {
+  try {
+    console.log(user, order, dispatch);
+    console.log('order ===>', order);
+    console.log('order ===>', order);
+
+    const experts = user;
+
+    const ref = firestore().collection('orders').doc(order.id);
+    await ref.set(
+      {
+        experts,
+      },
+      {merge: true},
+    );
+  } catch (error) {
+    console.error('assingExpert ==>', error);
+  }
+};
+export const updateStatus = async (status, id, dispatch) => {
+  try {
+    setLoading(true, dispatch);
+    const ref = firestore().collection('orders').doc(id);
+    await ref.set(
+      {
+        status: status,
+      },
+      {merge: true},
+    );
+    setLoading(false, dispatch);
+  } catch (error) {
+    setLoading(false, dispatch);
+
+    console.error('assingExpert ==>', error);
+  }
+};

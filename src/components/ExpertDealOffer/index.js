@@ -1,24 +1,11 @@
 import React from 'react';
-import {
-  View,
-  Image,
-  Text,
-  StyleSheet,
-  Dimensions,
-  TouchableOpacity,
-} from 'react-native';
+import {View, Image, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {formatDate} from '../../helpers/MomentHelper';
 
-import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import {Colors, Fonts, Images, Metrics} from '../../themes';
 import Utilities from '../../utilities';
 import AppConfig from '../../config/AppConfig';
-
-const mapStyle = require('../../config/mapStyle.json');
-
-const screen = Dimensions.get('window');
-const ASPECT_RATIO = screen.width * 0.8 - 500 / screen.height;
 
 export default ({order, assingExpert, dispatch, user}) => {
   return (

@@ -1,7 +1,6 @@
 import React, {useContext, useState, useEffect} from 'react';
 import {View, ScrollView, StyleSheet} from 'react-native';
 import {Colors, Metrics, ApplicationStyles} from '../../themes';
-import ServiceItemBanner from '../../components/ServiceItemBanner';
 import ExpertDealOffer from '../../components/ExpertDealOffer';
 import {StoreContext} from '../../flux';
 import {updateProfile} from '../../flux/auth/actions';
@@ -36,6 +35,7 @@ const HomeExpert = () => {
       }
     }
   }, []);
+
   const appType = deviceInfo;
 
   const [coordinate, setCoordinate] = useState(null);
