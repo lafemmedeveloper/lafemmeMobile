@@ -74,7 +74,7 @@ const HistoryExpert = () => {
         </ScrollView>
       </View>
       <ModalApp open={modalDetail} setOpen={setModalDetail}>
-        <DetailModal order={detailOrder} />
+        <DetailModal order={detailOrder} setModalDetail={setModalDetail} />
       </ModalApp>
     </>
   );

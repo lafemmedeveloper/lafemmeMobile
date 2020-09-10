@@ -25,6 +25,7 @@ import {
 } from '../../../flux/util/actions';
 import Loading from '../../../components/Loading';
 import {StoreContext} from '../../../flux';
+import firestore from '@react-native-firebase/firestore';
 
 const DetailModal = (props) => {
   const {state, authDispatch, utilDispatch} = useContext(StoreContext);
@@ -43,7 +44,7 @@ const DetailModal = (props) => {
   // };//const {expertActiveOrders, deviceInfo} = util;
   const mapStyle = require('../../../config/mapStyle.json');
 
-  const {order} = props;
+  const {order, setModalDetail} = props;
   const {client, services, cartId} = order;
   const {address} = order;
 
@@ -51,17 +52,7 @@ const DetailModal = (props) => {
   const ASPECT_RATIO = screen.width * 0.8 - 500 / screen.height;
 
   useEffect(() => {
-    setLoading(true, utilDispatch);
     countdown(order.date);
-    if (order.status === 2) {
-      setInterval(() => {
-        currentCoordinate();
-      }, 10000);
-
-      setLoading(false, utilDispatch);
-    }
-
-    setLoading(false, utilDispatch);
   }, []);
 
   const [menuIndex, setMenuIndex] = useState(0);
@@ -100,38 +91,54 @@ const DetailModal = (props) => {
     }, 1000);
   };
 
-  const onRut = async () => {
+  const onRut = async (number) => {
+    console.log('status ==>', number);
     if (!activeStatus) {
       Alert.alert('Ups', `Aun faltan : ${dateCount} para continuar`);
     } else {
-      await updateStatus(2, order.id, utilDispatch);
-    }
-  };
-
-  const currentCoordinate = () => {
-    Geolocation.getCurrentPosition((info) =>
-      updateProfile(
-        {
-          latitude: info.coords.latitude,
-          longitude: info.coords.longitude,
-        },
-        'coordinate',
-        authDispatch,
-      ),
-    );
-
-    console.log('coordinate =====>', coordinate);
-  };
-
-  const sendLocation = async () => {
-    currentCoordinate();
-    if (order.status === 2) {
       try {
-        sendCoordinate(user, order, utilDispatch);
+        setLoading(true, utilDispatch);
+        const ref = firestore().collection('orders').doc(order.id);
+        await ref.set(
+          {
+            status: number,
+          },
+          {merge: true},
+        );
+
+        setLoading(false, utilDispatch);
+
+        setModalDetail(false);
       } catch (error) {
-        console.log('error sendLocation =>', error);
+        setLoading(false, utilDispatch);
+
+        console.log('error onRut', error);
       }
     }
+  };
+
+  const changeStatus = (status) => {
+    Alert.alert(
+      'Hola',
+      'Estas seguro(a) que quieres cambiar de estado.',
+      [
+        {
+          text: 'Si',
+          onPress: () => {
+            onRut(status);
+          },
+        },
+        {
+          text: 'Cancelar',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+      ],
+      {cancelable: true},
+    );
+  };
+  const sendLocation = () => {
+    console.log('hello');
   };
 
   return (
@@ -151,8 +158,8 @@ const DetailModal = (props) => {
           region={{
             latitude: order.address.coordinates.latitude,
             longitude: order.address.coordinates.longitude,
-            latitudeDelta: 0.00001,
-            longitudeDelta: 0.0001 * ASPECT_RATIO,
+            latitudeDelta: 0.00002,
+            longitudeDelta: 0.0002 * ASPECT_RATIO,
           }}>
           <Marker.Animated
             coordinate={{
@@ -489,37 +496,46 @@ const DetailModal = (props) => {
             </View>
           )}
         </ScrollView>
-        <TouchableOpacity onPress={() => onRut()} style={[styles.btnContainer]}>
-          <View style={styles.conText}>
-            {order.status === 1 && (
-              <Text
-                style={[
-                  Fonts.style.bold(Colors.light, Fonts.size.medium),
-                  {alignItems: 'center'},
-                ]}>
-                Colocarme en ruta
-              </Text>
-            )}
-            {order.status === 2 && (
-              <Text
-                style={[
-                  Fonts.style.bold(Colors.light, Fonts.size.medium),
-                  {alignItems: 'center'},
-                ]}>
-                Colocarme en servicio
-              </Text>
-            )}
-            {order.status === 3 && (
-              <Text
-                style={[
-                  Fonts.style.bold(Colors.light, Fonts.size.medium),
-                  {alignItems: 'center'},
-                ]}>
-                Finalizando servicio
-              </Text>
-            )}
-          </View>
-        </TouchableOpacity>
+
+        {order.status === 1 && (
+          <TouchableOpacity
+            onPress={() => changeStatus(2)}
+            style={[styles.btnContainer]}>
+            <Text
+              style={[
+                Fonts.style.bold(Colors.light, Fonts.size.medium),
+                {alignSelf: 'center'},
+              ]}>
+              Colocarme en ruta
+            </Text>
+          </TouchableOpacity>
+        )}
+        {order.status === 2 && (
+          <TouchableOpacity
+            onPress={() => changeStatus(3)}
+            style={[styles.btnContainer]}>
+            <Text
+              style={[
+                Fonts.style.bold(Colors.light, Fonts.size.medium),
+                {alignSelf: 'center'},
+              ]}>
+              Colocarme en servicio
+            </Text>
+          </TouchableOpacity>
+        )}
+        {order.status === 3 && (
+          <TouchableOpacity
+            onPress={() => changeStatus(4)}
+            style={[styles.btnContainer]}>
+            <Text
+              style={[
+                Fonts.style.bold(Colors.light, Fonts.size.medium),
+                {alignSelf: 'center'},
+              ]}>
+              Finalizando servicio
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
     </>
   );
@@ -555,6 +571,7 @@ const styles = StyleSheet.create({
   contDetail: {
     paddingTop: 20,
     marginBottom: -100,
+    height: 300,
   },
   contExpand: {
     marginLeft: 50,
@@ -574,16 +591,10 @@ const styles = StyleSheet.create({
   },
   btnContainer: {
     backgroundColor: Colors.expert.primaryColor,
-    height: 60,
-    width: '100%',
-    borderTopRightRadius: 15,
-    borderTopLeftRadius: 15,
-    bottom: -35,
-  },
-  conText: {
+    height: 40,
+    width: '90%',
+    borderRadius: 10,
     alignSelf: 'center',
-    flexDirection: 'column',
-    flex: 1,
     justifyContent: 'center',
   },
 });

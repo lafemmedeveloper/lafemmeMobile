@@ -198,23 +198,22 @@ export const assingExpert = async (user, order, dispatch) => {
     console.error('assingExpert ==>', error);
   }
 };
-export const sendCoordinate = async (user, order, dispatch) => {
+export const sendCoordinate = async (data, typeData, dispatch) => {
+  const currentUser = auth().currentUser;
   try {
-    console.log(user, order, dispatch);
-    console.log('order ===>', order);
-    console.log('order ===>', order);
-
-    const experts = user;
-
-    const ref = firestore().collection('orders').doc(order.id);
-    await ref.set(
+    setLoading(true, dispatch);
+    const userRef = firestore().collection('users').doc(currentUser.uid);
+    await userRef.set(
       {
-        experts,
+        [typeData]: data,
       },
       {merge: true},
     );
+
+    setLoading(false, dispatch);
   } catch (error) {
-    console.error('assingExpert ==>', error);
+    setLoading(false, dispatch);
+    console.log('error', error);
   }
 };
 export const updateStatus = async (status, id, dispatch) => {
@@ -223,7 +222,7 @@ export const updateStatus = async (status, id, dispatch) => {
     const ref = firestore().collection('orders').doc(id);
     await ref.set(
       {
-        status: status,
+        status,
       },
       {merge: true},
     );
@@ -231,6 +230,6 @@ export const updateStatus = async (status, id, dispatch) => {
   } catch (error) {
     setLoading(false, dispatch);
 
-    console.error('assingExpert ==>', error);
+    console.error('updateStatus ==>', error);
   }
 };

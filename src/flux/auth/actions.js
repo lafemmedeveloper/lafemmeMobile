@@ -83,7 +83,7 @@ export const updateProfile = async (data, typeData, dispatch) => {
       {merge: true},
     );
 
-    setUser(currentUser.uid, dispatch);
+    await setUser(currentUser.uid, dispatch);
     setLoading(false, dispatch);
   } catch (error) {
     setLoading(false, dispatch);
