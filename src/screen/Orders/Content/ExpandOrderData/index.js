@@ -1,17 +1,55 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, Image, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
-import {Colors, Fonts, Images} from '../../themes';
+import {Colors, Fonts, Images} from '../../../../themes';
 
-import AppConfig from '../../config/AppConfig';
+import AppConfig from '../../../../config/AppConfig';
 
 import moment from 'moment';
 
 export default (dta) => {
   const {order, appType, activeDetailModal} = dta;
 
+  useEffect(() => {
+    countdown(order.date);
+  }, []);
+
   const currentService = moment(order.date).format('dd,ll');
+  const [dateCount, setDateCount] = useState('');
+
+  const getRemainingTime = (deadline) => {
+    let now = new Date(),
+      remainTime = (new Date(deadline) - now + 1000) / 1000,
+      remainSeconds = ('0' + Math.floor(remainTime % 60)).slice(-2),
+      remainMinutes = ('0' + Math.floor((remainTime / 60) % 60)).slice(-2),
+      remainHours = ('0' + Math.floor((remainTime / 3600) % 24)).slice(-2),
+      remainDays = Math.floor(remainTime / (3600 * 24));
+
+    return {
+      remainSeconds,
+      remainMinutes,
+      remainHours,
+      remainDays,
+      remainTime,
+    };
+  };
+
+  const countdown = (deadline) => {
+    const timerUpdate = setInterval(() => {
+      let t = getRemainingTime(deadline);
+      setDateCount(
+        `${t.remainDays}d:${t.remainHours}h:${t.remainMinutes}m:${t.remainSeconds}s`,
+      );
+      if (t.remainTime <= 1) {
+        clearInterval(timerUpdate);
+        activeStatus(true);
+      }
+    }, 1000);
+  };
+  const activeStatus = (data) => {
+    console.log('Data activeStatus ==>', data);
+  };
 
   return (
     <>
@@ -55,6 +93,15 @@ export default (dta) => {
               color={Colors[appType].primaryColor}
             />{' '}
             {currentService}
+          </Text>
+          <Text
+            style={Fonts.style.regular(Colors.dark, Fonts.size.small, 'left')}>
+            <Icon
+              name={'running'}
+              size={12}
+              color={Colors[appType].primaryColor}
+            />{' '}
+            Faltan {dateCount}
           </Text>
         </View>
         <View

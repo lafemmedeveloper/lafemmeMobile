@@ -4,7 +4,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import TabBottom from './TabBottom';
 
 import ProductDetail from '../../screen/ProductDetail';
-import AddAddress from '../../screen/AddAddress';
+import OrderDetail from '../../screen/OrderDetail';
 
 const Stack = createStackNavigator();
 
@@ -27,8 +27,8 @@ const Router = () => {
           }}
         />
         <Stack.Screen
-          name="AddAddress"
-          component={AddAddress}
+          name="OrderDetail"
+          component={OrderDetail}
           options={{
             headerShown: false,
           }}

@@ -1,18 +1,15 @@
-import React, {useContext, useState} from 'react';
-import {Text, View, StyleSheet, Image, TouchableOpacity} from 'react-native';
-import {
-  Fonts,
-  Colors,
-  Images,
-  ApplicationStyles,
-  Metrics,
-} from '../../../themes';
+import React, {useContext, useState, Fragment} from 'react';
+import {Text, View, StyleSheet} from 'react-native';
+import {Metrics} from '../../../themes';
 import {StoreContext} from '../../../flux';
 import {ScrollView} from 'react-native-gesture-handler';
 import ExpandOrderData from '../../ExpandOrderData';
-import ExpandHistoryData from '../../ExpandHistoryData';
+import Header from './Header';
+import ModalApp from '../../../components/ModalApp';
+import {useNavigation} from '@react-navigation/native';
 
 const Content = () => {
+  const navigation = useNavigation();
   const {state /*  serviceDispatch, authDispatch */} = useContext(StoreContext);
 
   const {auth, util} = state;
@@ -20,197 +17,68 @@ const Content = () => {
   const {user} = auth;
   const {orders, history} = util;
 
-  const [toggleType, settoggleType] = useState(0);
+  const [menuIndex, setMenuIndex] = useState(0);
+  const [modalDetail, setModalDetail] = useState(false);
 
-  console.log('orders ==> Content', orders);
-  const cancelOrder = () => {
-    console.log('cancel ordeer');
+  const activeDetailModal = (order) => {
+    navigation.navigate('OrderDetail', order);
   };
+
   return (
-    <View style={styles.container}>
-      <View style={styles.headerContainer}>
-        <View opacity={0.0} style={ApplicationStyles.separatorLine} />
-        <Image
-          source={Images.billResume}
-          style={{
-            width: 40,
-            height: 40,
-            resizeMode: 'contain',
-            alignSelf: 'center',
-            marginBottom: 10,
-          }}
+    <>
+      <View style={styles.container}>
+        <Header
+          title={'Mi Agenda'}
+          menuIndex={menuIndex}
+          user={user}
+          ordersActive={orders.length}
+          onAction={(pos) => setMenuIndex(pos)}
+          onActionR={() => {}}
         />
-        <Text
-          style={[
-            Fonts.style.semiBold(Colors.dark, Fonts.size.h6, 'center'),
-            {marginBottom: 10},
-          ]}>
-          {'Mis servicios'}
-        </Text>
-      </View>
-      <View
-        style={{
-          width: Metrics.screenWidth * 0.9,
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignSelf: 'center',
-        }}>
-        <TouchableOpacity
-          onPress={() => settoggleType(0)}
-          style={[
-            styles.headerBtn,
-            {
-              backgroundColor:
-                toggleType === 0
-                  ? Colors.client.primaryColor
-                  : Colors.disabledBtn,
-            },
-          ]}>
-          <Text
-            style={Fonts.style.semiBold(
-              toggleType === 0 ? Colors.light : Colors.dark,
-              Fonts.size.medium,
-              'center',
-            )}>
-            {'Próximos Servicios'}
-          </Text>
-        </TouchableOpacity>
-        <View style={{width: 5}} />
-        <TouchableOpacity
-          onPress={() => settoggleType(1)}
-          style={[
-            styles.headerBtn,
-            {
-              backgroundColor:
-                toggleType === 1
-                  ? Colors.client.primaryColor
-                  : Colors.disabledBtn,
-            },
-          ]}>
-          <Text
-            style={Fonts.style.semiBold(
-              toggleType === 1 ? Colors.light : Colors.dark,
-              Fonts.size.medium,
-              'center',
-            )}>
-            {'Historial'}
-          </Text>
-        </TouchableOpacity>
-      </View>
-      <ScrollView style={styles.contentContainer}>
-        {toggleType === 0 &&
-          orders.map((item, index) => {
-            return (
-              <View key={item.id}>
-                <ExpandOrderData
-                  user={user}
-                  order={item}
-                  cancelOrder={(orderId) => cancelOrder(orderId)}
-                />
 
-                {index < orders.length - 1 && (
-                  <View opacity={0.0} style={ApplicationStyles.separatorLine} />
-                )}
-              </View>
-            );
-          })}
-        {toggleType === 1 &&
-          history.map((item) => {
-            return (
-              <View key={item.id}>
-                <ExpandHistoryData order={item} appType={'client'} />
-              </View>
-            );
-          })}
-
-        {toggleType === 0 && orders.length === 0 && (
-          <View style={styles.containerNoUSer}>
-            <Text
-              style={Fonts.style.semiBold(
-                Colors.dark,
-                Fonts.size.h6,
-                'center',
-              )}>
-              {'Ups...'}
-            </Text>
-            <View style={{height: 10}} />
-            <Text
-              style={Fonts.style.regular(
-                Colors.dark,
-                Fonts.size.medium,
-                'center',
-              )}>
-              {'No encontramos ordenes activas en nuestro sistema'}
-            </Text>
-          </View>
-        )}
-
-        {toggleType === 1 && history.length === 0 && (
-          <View style={styles.containerNoUSer}>
-            <Text
-              style={Fonts.style.semiBold(
-                Colors.dark,
-                Fonts.size.h6,
-                'center',
-              )}>
-              {'Ups...'}
-            </Text>
-            <View style={{height: 10}} />
-            <Text
-              style={Fonts.style.regular(
-                Colors.dark,
-                Fonts.size.medium,
-                'center',
-              )}>
-              {'No encontramos ordenes pasadas en nuestro sistema'}
-            </Text>
-          </View>
-        )}
-
-        <View
+        <ScrollView
           style={{
-            width: Metrics.screenWidth * 0.9,
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-            alignSelf: 'center',
-            marginVertical: 20,
+            flex: 1,
+            width: Metrics.screenWidth,
+            height: '100%',
+            marginTop: 40 + Metrics.addHeader,
+            paddingTop: 40,
           }}>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate('Home');
-            }}
-            style={[
-              styles.btnGeneric,
-              {
-                backgroundColor: Colors.client.primaryColor,
-                flex: 0,
-                paddingHorizontal: 20,
-              },
-            ]}>
-            <Text
-              style={Fonts.style.semiBold(
-                Colors.light,
-                Fonts.size.medium,
-                'center',
-              )}>
-              {'Crear nuevo servicio'}
-            </Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={{height: Metrics.addFooter + 20}} />
-      </ScrollView>
-    </View>
+          <>
+            {menuIndex === 0 &&
+              orders.length > 0 &&
+              orders.map((item, index) => {
+                return (
+                  <View style={{marginBottom: 10}} key={index}>
+                    <ExpandOrderData
+                      activeDetailModal={activeDetailModal}
+                      order={item}
+                      appType={'client'}
+                    />
+                  </View>
+                );
+              })}
+            {menuIndex === 1 &&
+              history.length > 0 &&
+              history.map((item, index) => {
+                return (
+                  <Fragment key={index}>
+                    <ExpandOrderData order={item} appType={'client'} />
+                  </Fragment>
+                );
+              })}
+          </>
+        </ScrollView>
+      </View>
+      <ModalApp open={modalDetail} setOpen={setModalDetail}>
+        <Text>Hello</Text>
+      </ModalApp>
+    </>
   );
 };
 const styles = StyleSheet.create({
-  contentContainer: {
-    backgroundColor: Colors.light,
-    marginHorizontal: 5,
-    padding: 10,
-    marginTop: 5,
-    borderRadius: 10,
-    flexDirection: 'row',
+  container: {
+    flex: 1,
   },
 });
 
