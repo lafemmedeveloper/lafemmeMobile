@@ -27,7 +27,7 @@ export default (data) => {
         <View>
           <Text
             style={Fonts.style.regular(Colors.dark, Fonts.size.small, 'left')}>
-            Experta: {item.expertName} Cliente: {item.clientName}
+            Expert: {item.expertName} Cliente: {item.clientName}
           </Text>
 
           <Text
@@ -42,7 +42,7 @@ export default (data) => {
         </View>
       </View>
       <FastImage
-        source={{uri: item.imageUrl}}
+        source={{uri: item.imageUrl.giant}}
         style={{
           width: Metrics.screenWidth * 0.9,
           height: Metrics.screenWidth * 0.9,

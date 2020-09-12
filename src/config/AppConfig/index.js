@@ -4,9 +4,10 @@ export default {
     1: 'Preparando Servicio',
     2: 'En Ruta',
     3: 'En servicio',
-    4: 'Esperando Calificacion',
-    5: 'Finalizado',
-    6: 'Cancelado',
+    4: 'Servicio finalizado',
+    5: 'Esperando Calificacion',
+    6: 'Finalizado',
+    7: 'Cancelado',
   },
 
   gender: ['Mujer', 'Hombre'],

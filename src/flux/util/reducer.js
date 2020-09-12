@@ -57,8 +57,8 @@ const getCoverage = (state, action) => {
   };
 };
 const getOrder = (state, action) => {
-  let orders = _.filter(action.payload, (o) => o.status <= 3);
-  let history = _.filter(action.payload, (o) => o.status > 3);
+  let orders = _.filter(action.payload, (o) => o.status <= 4);
+  let history = _.filter(action.payload, (o) => o.status > 4);
 
   orders = _.orderBy(orders, 'date', 'des');
   history = _.orderBy(history, 'date', 'asc');

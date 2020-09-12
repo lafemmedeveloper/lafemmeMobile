@@ -222,7 +222,7 @@ export const updateStatus = async (status, id, dispatch) => {
     const ref = firestore().collection('orders').doc(id);
     await ref.set(
       {
-        status,
+        status: status,
       },
       {merge: true},
     );
@@ -231,5 +231,18 @@ export const updateStatus = async (status, id, dispatch) => {
     setLoading(false, dispatch);
 
     console.error('updateStatus ==>', error);
+  }
+};
+
+export const addImageGallery = async (data, id, dispatch) => {
+  try {
+    setLoading(true, dispatch);
+    const userRef = firestore().collection('gallery').doc(id);
+    await userRef.set(data);
+
+    setLoading(false, dispatch);
+  } catch (error) {
+    setLoading(false, dispatch);
+    console.log('error', error);
   }
 };

@@ -1,46 +1,36 @@
-import React, {useState, useContext, useEffect} from 'react';
+import React, {useState} from 'react';
 import {
+  Alert,
   Text,
   View,
-  Image,
   StyleSheet,
   TouchableOpacity,
-  Alert,
+  Image,
 } from 'react-native';
-import {Images, Fonts, Colors, Metrics} from '../../themes';
-import {StoreContext} from '../../flux';
-import Icon from 'react-native-vector-icons/FontAwesome5';
 
 import ImagePicker from 'react-native-image-picker';
 import ImageResizer from 'react-native-image-resizer';
-import Utilities from '../../utilities';
+import utilities from '../../../../../utilities';
+import {Colors, Fonts} from '../../../../../themes';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 import {firebase} from '@react-native-firebase/storage';
-import {signOff, updateProfile, setLoading} from '../../flux/auth/actions';
-import Loading from '../../components/Loading';
 
-const options = {
-  title: 'Selecciona o toma una imagen',
-  storageOptions: {
-    skipBackup: true,
-    path: 'images',
-  },
-};
-const modelState = {
-  images: [],
-};
-const NoImage = () => {
-  const {state, authDispatch} = useContext(StoreContext);
-  const {auth} = state;
-  const {user, loading} = auth;
-  const [name, setName] = useState('');
+const ModalPhoto = (props) => {
+  const {updateUser, utilDispatch, user, setLoading, close} = props;
+  const options = {
+    title: 'Selecciona o toma una imagen',
+    storageOptions: {
+      skipBackup: true,
+      path: 'images',
+    },
+  };
+  const modelState = {
+    images: [],
+  };
 
   const [value, setValue] = useState(modelState);
   const [imageUri, setImageUri] = useState(null);
-  const [imgSource, setImgSource] = useState('');
-
-  useEffect(() => {
-    setName(user.firstName);
-  }, []);
+  const [imgSource, setImgSource] = useState(null);
 
   const pickImage = () => {
     //setLoading(true);
@@ -63,12 +53,12 @@ const NoImage = () => {
     console.log('imageUri ==>', imageUri);
     const ext = imageUri.split('.').pop(); // Extract image extension
     console.log('ext ==>', ext);
-    const filename = `${Utilities.create_UUID()}.${ext}`; // Generate unique name
+    const filename = `${utilities.create_UUID()}.${ext}`; // Generate unique name
     setValue({...value, uploading: true});
     await prepareImage(user.uid, filename);
   };
   const prepareImage = async (uid, filename) => {
-    setLoading(true, authDispatch);
+    setLoading(true, utilDispatch);
     let picture = {
       thumbnail: null,
       small: null,
@@ -119,12 +109,12 @@ const NoImage = () => {
                 setValue(state);
               },
               (error) => {
-                setLoading(false, authDispatch);
+                setLoading(false, utilDispatch);
                 Alert.alert('Sorry, Try again.', error);
               },
             );
         } catch (error) {
-          setLoading(false, authDispatch);
+          setLoading(false, utilDispatch);
           console.log('err', error);
         }
       })
@@ -177,13 +167,13 @@ const NoImage = () => {
               },
             );
         } catch (error) {
-          setLoading(false, authDispatch);
+          setLoading(false, utilDispatch);
           console.log('err', error);
         }
       })
       .catch((error) => {
         console.log('error', error);
-        setLoading(false, authDispatch);
+        setLoading(false, utilDispatch);
       });
     ImageResizer.createResizedImage(x, 256, 256, 'JPEG', 30, 0)
       .then((RES) => {
@@ -230,12 +220,12 @@ const NoImage = () => {
               },
             );
         } catch (error) {
-          setLoading(false, authDispatch);
+          setLoading(false, utilDispatch);
           console.log('err', error);
         }
       })
       .catch((error) => {
-        setLoading(false, authDispatch);
+        setLoading(false, utilDispatch);
         console.log('error', error);
       });
     ImageResizer.createResizedImage(x, 512, 512, 'JPEG', 30, 0)
@@ -284,16 +274,17 @@ const NoImage = () => {
             );
         } catch (error) {
           console.log('err', error);
-          setLoading(false, authDispatch);
+          setLoading(false, utilDispatch);
         }
       })
       .catch((error) => {
         console.log('error', error);
-        setLoading(false, authDispatch);
+        setLoading(false, utilDispatch);
       });
     ImageResizer.createResizedImage(x, 1024, 1024, 'JPEG', 30, 0)
       .then((RES) => {
-        console.log('RES 1000', RES);
+        console.log('RES 1024', RES);
+
         try {
           firebase
             .storage()
@@ -341,144 +332,72 @@ const NoImage = () => {
       })
       .catch((error) => {
         console.log('error', error);
-        setLoading(false, authDispatch);
+        setLoading(false, utilDispatch);
       });
+
+    close(false);
   };
 
-  const updateUser = async (picture) => {
-    await updateProfile({...picture}, 'imageUrl', authDispatch);
-  };
-  console.log('image source =>', imgSource);
-  console.log('image imageUri =>', imageUri);
-  const validateImage = async () => {
-    if (imgSource === '') {
-      Alert.alert('Ups!', 'Es necesario tu foto de perfil');
-    } else {
-      await uploadImage();
-    }
-  };
+  console.log('value ==>', value);
+
   return (
-    <>
-      <Loading type={'expert'} loading={loading} />
-      <View
-        style={{
-          position: 'absolute',
-          zIndex: 1000,
-          top: 10,
-          justifyContent: 'flex-end',
-          flexDirection: 'row',
-          right: 20,
-        }}>
-        <TouchableOpacity onPress={() => signOff(authDispatch)}>
-          <Text
-            style={Fonts.style.bold(
-              Colors.expert.primaryColor,
-              Fonts.size.h6,
-              'center',
-            )}>
-            {'Cerrar sesion'}{' '}
-            <Icon
-              name={'power-off'}
-              size={15}
-              color={Colors.expert.primaryColor}
-            />
-          </Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.container}>
-        <View style={styles.contContainer}>
-          <Text
-            style={Fonts.style.semiBold(Colors.gray, Fonts.size.h6, 'center')}>
-            Hola,{' '}
-            <Text
-              style={Fonts.style.semiBold(
-                Colors.dark,
-                Fonts.size.h6,
-                'center',
-              )}>
-              {`${name}`}
-            </Text>
-          </Text>
+    <View style={styles.container}>
+      <Icon
+        name={'images'}
+        color={Colors.client.primaryColor}
+        size={40}
+        style={{alignSelf: 'center', marginVertical: 20}}
+      />
+      <Text style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
+        {'Galeria '}
+      </Text>
 
-          <Text
-            style={Fonts.style.semiBold(Colors.gray, Fonts.size.h6, 'center')}>
-            Completa tu foto de perfil para continuar
-          </Text>
-          <View style={styles.contImage}>
-            <Image
-              style={styles.image}
-              source={imgSource ? imgSource : Images.upload}
-            />
-          </View>
+      <Text
+        style={[
+          Fonts.style.light(Colors.data, Fonts.size.small, 'center'),
+          {marginHorizontal: 50, marginBottom: 20},
+        ]}>
+        {'Agrega foto de tus servicios para que otros usuarios puedan verlo'}
+      </Text>
 
-          <TouchableOpacity onPress={() => pickImage()}>
+      <View style={styles.logic}>
+        {imgSource && <Image source={imgSource} style={styles.img} />}
+        {imgSource ? (
+          <TouchableOpacity style={styles.btn} onPress={() => uploadImage()}>
             <Text
-              style={Fonts.style.bold(
-                Colors.expert.primaryColor,
-                Fonts.size.h6,
-                'center',
-              )}>
-              {'Tomar o cargar foto'}{' '}
-              <Icon
-                name={'camera'}
-                size={15}
-                color={Colors.expert.primaryColor}
-              />
+              style={[
+                Fonts.style.bold(Colors.light, Fonts.size.input, 'center'),
+              ]}>
+              {'Subir'}
             </Text>
           </TouchableOpacity>
-        </View>
+        ) : (
+          <TouchableOpacity style={styles.btn} onPress={() => pickImage()}>
+            <Text
+              style={[
+                Fonts.style.bold(Colors.light, Fonts.size.input, 'center'),
+              ]}>
+              {'Abrir camara o galleria'}
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
-      <TouchableOpacity
-        onPress={() => validateImage()}
-        style={[
-          styles.btnContainer,
-          {
-            backgroundColor: Colors.expert.secondaryColor,
-          },
-        ]}>
-        <Text
-          style={Fonts.style.bold(Colors.light, Fonts.size.medium, 'center')}>
-          {'Continuar'}{' '}
-          <Icon name={'arrow-right'} size={15} color={Colors.light} />
-        </Text>
-      </TouchableOpacity>
-    </>
+    </View>
   );
 };
 const styles = StyleSheet.create({
-  container: {flex: 1, justifyContent: 'center', alignItems: 'center'},
-  image: {width: 220, height: 100, alignSelf: 'center'},
-  contImage: {marginVertical: 20},
-  btnContainer: {
-    flex: 0,
+  container: {height: '80%', marginTop: 20},
+  btn: {
+    backgroundColor: Colors.client.primaryColor,
+    width: '90%',
     height: 40,
-    width: Metrics.contentWidth,
     alignSelf: 'center',
-    borderRadius: Metrics.borderRadius,
-    marginVertical: 20,
-
     justifyContent: 'center',
     alignItems: 'center',
-
-    shadowColor: Colors.dark,
-    shadowOffset: {
-      width: 2,
-      height: 1,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 1,
-
-    elevation: 5,
-  },
-  contContainer: {
-    backgroundColor: Colors.light,
-    paddingHorizontal: 10,
-    paddingVertical: 60,
     borderRadius: 10,
   },
-  logout: {
-    marginTop: 20,
-  },
-});
+  logic: {justifyContent: 'center', alignItems: 'center', flex: 1},
 
-export default NoImage;
+  img: {resizeMode: 'contain', height: 100, width: 100, marginVertical: 20},
+});
+export default ModalPhoto;
