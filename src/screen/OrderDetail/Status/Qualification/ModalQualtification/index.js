@@ -19,7 +19,7 @@ import {
 const ModalQualtification = (props) => {
   const {utilDispatch} = useContext(StoreContext);
 
-  const {expert, orderId, close, goBack} = props;
+  const {expert, orderId, close} = props;
   const [note, setNote] = useState('');
   const [rating, setRating] = useState(5);
   const changeStatus = async (status) => {
@@ -29,11 +29,10 @@ const ModalQualtification = (props) => {
     const result = (rating + expert.rating) / 2;
     if (rating < 5) {
       try {
-        await expertRating(expert.uid, result, utilDispatch);
-        updateNote(orderId, note, utilDispatch);
-        changeStatus(6);
+        await activeExpertChange(result);
 
-        close(false);
+        changeStatus(6);
+        await close(false);
       } catch (error) {
         console.log('error sendRanting=>', error);
       }
@@ -42,12 +41,15 @@ const ModalQualtification = (props) => {
         await expertRating(expert.uid, result, utilDispatch);
         changeStatus(6);
 
-        close(false);
+        await close(false);
       } catch (error) {
         console.log('error sendRanting < 5 =>', error);
       }
     }
-    goBack();
+  };
+  const activeExpertChange = async (result) => {
+    await expertRating(expert.uid, result, utilDispatch);
+    await updateNote(orderId, note, utilDispatch);
   };
 
   return (

@@ -28,16 +28,16 @@ const OrderDetail = (props) => {
 
   const {util} = state;
 
-  const {orders} = util;
+  const {ordersAll} = util;
   const [orderUser, setOrderUser] = useState(null);
 
   const {goBack} = navigation;
 
   useEffect(() => {
-    const currentOrder = orders.filter((item) => item.id === params.id)[0];
+    const currentOrder = ordersAll.filter((item) => item.id === params.id)[0];
 
     setOrderUser(currentOrder);
-  }, [orders]);
+  }, [ordersAll]);
   return (
     <>
       <View style={styles.container}>
@@ -89,14 +89,17 @@ const OrderDetail = (props) => {
 
             {orderUser.experts && <ExpertCall expert={orderUser.experts} />}
             <View style={styles.cont}>
-              <View style={orderUser.status >= 4 ? styles.step4 : styles.step}>
-                <StepIndicator
-                  customStyles={customStyles}
-                  currentPosition={orderUser.status}
-                  direction={'vertical'}
-                  stepCount={4}
-                />
-              </View>
+              {orderUser.status < 6 && (
+                <View
+                  style={orderUser.status >= 4 ? styles.step4 : styles.step}>
+                  <StepIndicator
+                    customStyles={customStyles}
+                    currentPosition={orderUser.status}
+                    direction={'vertical'}
+                    stepCount={4}
+                  />
+                </View>
+              )}
 
               <View style={styles.containerPosition}>
                 <Status

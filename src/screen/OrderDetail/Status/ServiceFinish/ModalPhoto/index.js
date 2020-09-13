@@ -23,7 +23,6 @@ const ModalPhoto = (props) => {
     setLoading,
     close,
     changeStatus,
-    goBack,
   } = props;
   const options = {
     title: 'Selecciona o toma una imagen',
@@ -346,7 +345,6 @@ const ModalPhoto = (props) => {
       await close(false);
 
       changeStatus(5);
-      goBack();
     } catch (error) {
       console.log('error prepareImage => ', error);
     }

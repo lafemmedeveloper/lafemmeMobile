@@ -7,6 +7,7 @@ import OnRoute from './OnRoute';
 import OnService from './OnService';
 import Qualification from './Qualification';
 import ServiceFinish from './ServiceFinish';
+import Finish from './Finish';
 
 const Status = (props) => {
   const {status, id, goBack, expert, orderId} = props;
@@ -31,7 +32,7 @@ const Status = (props) => {
       return <Qualification id={orderId} expert={expert} goBack={goBack} />;
 
     case 6:
-      return <SerchExpert />;
+      return <Finish />;
 
     default:
       return <Text>Hello world</Text>;

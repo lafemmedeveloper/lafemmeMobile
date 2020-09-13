@@ -28,6 +28,7 @@ export const INITIAL_STATE_UTIL = {
   expertOpenOrders: [],
   expertHistoryOrders: [],
   expertActiveOrders: [],
+  ordersAll: [],
 };
 
 const setLoading = (state, action) => {
@@ -62,11 +63,13 @@ const getOrder = (state, action) => {
 
   orders = _.orderBy(orders, 'date', 'des');
   history = _.orderBy(history, 'date', 'asc');
+  const ordersAll = _.orderBy(action.payload, 'date', 'asc');
 
   return {
     ...state,
     orders,
     history,
+    ordersAll,
   };
 };
 const getDeviceInfo = (state, action) => {
