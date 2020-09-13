@@ -16,7 +16,15 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import {firebase} from '@react-native-firebase/storage';
 
 const ModalPhoto = (props) => {
-  const {updateUser, utilDispatch, user, setLoading, close} = props;
+  const {
+    updateUser,
+    utilDispatch,
+    user,
+    setLoading,
+    close,
+    changeStatus,
+    goBack,
+  } = props;
   const options = {
     title: 'Selecciona o toma una imagen',
     storageOptions: {
@@ -67,275 +75,281 @@ const ModalPhoto = (props) => {
       giant: null,
     };
     let x = imageUri;
-
-    ImageResizer.createResizedImage(x, 56, 56, 'JPEG', 30, 0)
-      .then((RES) => {
-        console.log('RES 1000', RES);
-        try {
-          firebase
-            .storage()
-            .ref(`users/${uid}/thumbnail@${filename}`)
-            .putFile(RES.path)
-            .on(
-              firebase.storage.TaskEvent.STATE_CHANGED,
-              (snapshot) => {
-                let state = {};
-                state = {
-                  ...state,
-                  progress:
-                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100, // Calculate progress percentage
-                };
-                console.log('snapshot', snapshot);
-                if (snapshot.state === firebase.storage.TaskState.SUCCESS) {
-                  let allImages = value.images;
-                  allImages.push(snapshot.downloadURL);
+    try {
+      ImageResizer.createResizedImage(x, 56, 56, 'JPEG', 30, 0)
+        .then((RES) => {
+          console.log('RES 1000', RES);
+          try {
+            firebase
+              .storage()
+              .ref(`users/${uid}/thumbnail@${filename}`)
+              .putFile(RES.path)
+              .on(
+                firebase.storage.TaskEvent.STATE_CHANGED,
+                (snapshot) => {
+                  let state = {};
                   state = {
                     ...state,
-                    uploading: false,
-                    progress: 0,
-                    images: allImages,
+                    progress:
+                      (snapshot.bytesTransferred / snapshot.totalBytes) * 100, // Calculate progress percentage
                   };
+                  console.log('snapshot', snapshot);
+                  if (snapshot.state === firebase.storage.TaskState.SUCCESS) {
+                    let allImages = value.images;
+                    allImages.push(snapshot.downloadURL);
+                    state = {
+                      ...state,
+                      uploading: false,
+                      progress: 0,
+                      images: allImages,
+                    };
 
-                  firebase
-                    .storage()
-                    .ref(`users/${uid}/thumbnail@${filename}`)
-                    .getDownloadURL()
-                    .then((url) => {
-                      console.log('url:_large', url);
-                      picture = {...picture, thumbnail: url};
-                      updateUser(picture);
-                    });
-                }
-                setValue(state);
-              },
-              (error) => {
-                setLoading(false, utilDispatch);
-                Alert.alert('Sorry, Try again.', error);
-              },
-            );
-        } catch (error) {
+                    firebase
+                      .storage()
+                      .ref(`users/${uid}/thumbnail@${filename}`)
+                      .getDownloadURL()
+                      .then((url) => {
+                        console.log('url:_large', url);
+                        picture = {...picture, thumbnail: url};
+                        updateUser(picture);
+                      });
+                  }
+                  setValue(state);
+                },
+                (error) => {
+                  setLoading(false, utilDispatch);
+                  Alert.alert('Sorry, Try again.', error);
+                },
+              );
+          } catch (error) {
+            setLoading(false, utilDispatch);
+            console.log('err', error);
+          }
+        })
+        .catch((error) => {
+          console.log('error', error);
+        });
+
+      ImageResizer.createResizedImage(x, 128, 128, 'JPEG', 30, 0)
+        .then((RES) => {
+          console.log('RES 1000', RES);
+          try {
+            firebase
+              .storage()
+              .ref(`users/${uid}/small@${filename}`)
+              .putFile(RES.path)
+              .on(
+                firebase.storage.TaskEvent.STATE_CHANGED,
+                (snapshot) => {
+                  let state = {};
+                  state = {
+                    ...state,
+                    progress:
+                      (snapshot.bytesTransferred / snapshot.totalBytes) * 100, // Calculate progress percentage
+                  };
+                  console.log('snapshot', snapshot);
+                  if (snapshot.state === firebase.storage.TaskState.SUCCESS) {
+                    let allImages = value.images;
+                    allImages.push(snapshot.downloadURL);
+                    state = {
+                      ...state,
+                      uploading: false,
+                      progress: 0,
+                      images: allImages,
+                    };
+
+                    firebase
+                      .storage()
+                      .ref(`users/${uid}/small@${filename}`)
+                      .getDownloadURL()
+                      .then((url) => {
+                        console.log('url:small', url);
+                        picture = {...picture, small: url};
+                        updateUser(picture);
+                      });
+                  }
+                  setValue(state);
+                },
+                (error) => {
+                  Alert.alert('Sorry, Try again.', error);
+                },
+              );
+          } catch (error) {
+            setLoading(false, utilDispatch);
+            console.log('err', error);
+          }
+        })
+        .catch((error) => {
+          console.log('error', error);
           setLoading(false, utilDispatch);
-          console.log('err', error);
-        }
-      })
-      .catch((error) => {
-        console.log('error', error);
-      });
-
-    ImageResizer.createResizedImage(x, 128, 128, 'JPEG', 30, 0)
-      .then((RES) => {
-        console.log('RES 1000', RES);
-        try {
-          firebase
-            .storage()
-            .ref(`users/${uid}/small@${filename}`)
-            .putFile(RES.path)
-            .on(
-              firebase.storage.TaskEvent.STATE_CHANGED,
-              (snapshot) => {
-                let state = {};
-                state = {
-                  ...state,
-                  progress:
-                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100, // Calculate progress percentage
-                };
-                console.log('snapshot', snapshot);
-                if (snapshot.state === firebase.storage.TaskState.SUCCESS) {
-                  let allImages = value.images;
-                  allImages.push(snapshot.downloadURL);
+        });
+      ImageResizer.createResizedImage(x, 256, 256, 'JPEG', 30, 0)
+        .then((RES) => {
+          console.log('RES 1000', RES);
+          try {
+            firebase
+              .storage()
+              .ref(`users/${uid}/medium@${filename}`)
+              .putFile(RES.path)
+              .on(
+                firebase.storage.TaskEvent.STATE_CHANGED,
+                (snapshot) => {
+                  let state = {};
                   state = {
                     ...state,
-                    uploading: false,
-                    progress: 0,
-                    images: allImages,
+                    progress:
+                      (snapshot.bytesTransferred / snapshot.totalBytes) * 100, // Calculate progress percentage
                   };
+                  console.log('snapshot', snapshot);
+                  if (snapshot.state === firebase.storage.TaskState.SUCCESS) {
+                    let allImages = value.images;
+                    allImages.push(snapshot.downloadURL);
+                    state = {
+                      ...state,
+                      uploading: false,
+                      progress: 0,
+                      images: allImages,
+                    };
 
-                  firebase
-                    .storage()
-                    .ref(`users/${uid}/small@${filename}`)
-                    .getDownloadURL()
-                    .then((url) => {
-                      console.log('url:small', url);
-                      picture = {...picture, small: url};
-                      updateUser(picture);
-                    });
-                }
-                setValue(state);
-              },
-              (error) => {
-                Alert.alert('Sorry, Try again.', error);
-              },
-            );
-        } catch (error) {
+                    firebase
+                      .storage()
+                      .ref(`users/${uid}/medium@${filename}`)
+                      .getDownloadURL()
+                      .then((url) => {
+                        console.log('url:medium', url);
+                        picture = {...picture, medium: url};
+                        updateUser(picture);
+                      });
+                  }
+                  setValue(state);
+                },
+                (error) => {
+                  Alert.alert('Sorry, Try again.', error);
+                },
+              );
+          } catch (error) {
+            setLoading(false, utilDispatch);
+            console.log('err', error);
+          }
+        })
+        .catch((error) => {
           setLoading(false, utilDispatch);
-          console.log('err', error);
-        }
-      })
-      .catch((error) => {
-        console.log('error', error);
-        setLoading(false, utilDispatch);
-      });
-    ImageResizer.createResizedImage(x, 256, 256, 'JPEG', 30, 0)
-      .then((RES) => {
-        console.log('RES 1000', RES);
-        try {
-          firebase
-            .storage()
-            .ref(`users/${uid}/medium@${filename}`)
-            .putFile(RES.path)
-            .on(
-              firebase.storage.TaskEvent.STATE_CHANGED,
-              (snapshot) => {
-                let state = {};
-                state = {
-                  ...state,
-                  progress:
-                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100, // Calculate progress percentage
-                };
-                console.log('snapshot', snapshot);
-                if (snapshot.state === firebase.storage.TaskState.SUCCESS) {
-                  let allImages = value.images;
-                  allImages.push(snapshot.downloadURL);
+          console.log('error', error);
+        });
+      ImageResizer.createResizedImage(x, 512, 512, 'JPEG', 30, 0)
+        .then((RES) => {
+          console.log('RES 1000', RES);
+          try {
+            firebase
+              .storage()
+              .ref(`users/${uid}/big@${filename}`)
+              .putFile(RES.path)
+              .on(
+                firebase.storage.TaskEvent.STATE_CHANGED,
+                (snapshot) => {
+                  let state = {};
                   state = {
                     ...state,
-                    uploading: false,
-                    progress: 0,
-                    images: allImages,
+                    progress:
+                      (snapshot.bytesTransferred / snapshot.totalBytes) * 100, // Calculate progress percentage
                   };
+                  console.log('snapshot', snapshot);
+                  if (snapshot.state === firebase.storage.TaskState.SUCCESS) {
+                    let allImages = value.images;
+                    allImages.push(snapshot.downloadURL);
+                    state = {
+                      ...state,
+                      uploading: false,
+                      progress: 0,
+                      images: allImages,
+                    };
 
-                  firebase
-                    .storage()
-                    .ref(`users/${uid}/medium@${filename}`)
-                    .getDownloadURL()
-                    .then((url) => {
-                      console.log('url:medium', url);
-                      picture = {...picture, medium: url};
-                      updateUser(picture);
-                    });
-                }
-                setValue(state);
-              },
-              (error) => {
-                Alert.alert('Sorry, Try again.', error);
-              },
-            );
-        } catch (error) {
+                    firebase
+                      .storage()
+                      .ref(`users/${uid}/big@${filename}`)
+                      .getDownloadURL()
+                      .then((url) => {
+                        console.log('url:big', url);
+                        picture = {...picture, big: url};
+                        updateUser(picture);
+                      });
+                  }
+                  setValue(state);
+                },
+                (error) => {
+                  Alert.alert('Sorry, Try again.', error);
+                },
+              );
+          } catch (error) {
+            console.log('err', error);
+            setLoading(false, utilDispatch);
+          }
+        })
+        .catch((error) => {
+          console.log('error', error);
           setLoading(false, utilDispatch);
-          console.log('err', error);
-        }
-      })
-      .catch((error) => {
-        setLoading(false, utilDispatch);
-        console.log('error', error);
-      });
-    ImageResizer.createResizedImage(x, 512, 512, 'JPEG', 30, 0)
-      .then((RES) => {
-        console.log('RES 1000', RES);
-        try {
-          firebase
-            .storage()
-            .ref(`users/${uid}/big@${filename}`)
-            .putFile(RES.path)
-            .on(
-              firebase.storage.TaskEvent.STATE_CHANGED,
-              (snapshot) => {
-                let state = {};
-                state = {
-                  ...state,
-                  progress:
-                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100, // Calculate progress percentage
-                };
-                console.log('snapshot', snapshot);
-                if (snapshot.state === firebase.storage.TaskState.SUCCESS) {
-                  let allImages = value.images;
-                  allImages.push(snapshot.downloadURL);
+        });
+      ImageResizer.createResizedImage(x, 1024, 1024, 'JPEG', 30, 0)
+        .then((RES) => {
+          console.log('RES 1024', RES);
+
+          try {
+            firebase
+              .storage()
+              .ref(`users/${uid}/giant@${filename}`)
+              .putFile(RES.path)
+              .on(
+                firebase.storage.TaskEvent.STATE_CHANGED,
+                (snapshot) => {
+                  let state = {};
                   state = {
                     ...state,
-                    uploading: false,
-                    progress: 0,
-                    images: allImages,
+                    progress:
+                      (snapshot.bytesTransferred / snapshot.totalBytes) * 100, // Calculate progress percentage
                   };
+                  console.log('snapshot', snapshot);
+                  if (snapshot.state === firebase.storage.TaskState.SUCCESS) {
+                    let allImages = value.images;
+                    allImages.push(snapshot.downloadURL);
+                    state = {
+                      ...state,
+                      uploading: false,
+                      progress: 0,
+                      images: allImages,
+                    };
 
-                  firebase
-                    .storage()
-                    .ref(`users/${uid}/big@${filename}`)
-                    .getDownloadURL()
-                    .then((url) => {
-                      console.log('url:big', url);
-                      picture = {...picture, big: url};
-                      updateUser(picture);
-                    });
-                }
-                setValue(state);
-              },
-              (error) => {
-                Alert.alert('Sorry, Try again.', error);
-              },
-            );
-        } catch (error) {
-          console.log('err', error);
+                    firebase
+                      .storage()
+                      .ref(`users/${uid}/giant@${filename}`)
+                      .getDownloadURL()
+                      .then((url) => {
+                        console.log('url:giant', url);
+                        picture = {...picture, giant: url};
+                        updateUser(picture);
+                      });
+                  }
+                  setValue(state);
+                },
+                (error) => {
+                  Alert.alert('Sorry, Try again.', error);
+                },
+              );
+          } catch (error) {
+            console.log('err', error);
+          }
+        })
+        .catch((error) => {
+          console.log('error', error);
           setLoading(false, utilDispatch);
-        }
-      })
-      .catch((error) => {
-        console.log('error', error);
-        setLoading(false, utilDispatch);
-      });
-    ImageResizer.createResizedImage(x, 1024, 1024, 'JPEG', 30, 0)
-      .then((RES) => {
-        console.log('RES 1024', RES);
+        });
 
-        try {
-          firebase
-            .storage()
-            .ref(`users/${uid}/giant@${filename}`)
-            .putFile(RES.path)
-            .on(
-              firebase.storage.TaskEvent.STATE_CHANGED,
-              (snapshot) => {
-                let state = {};
-                state = {
-                  ...state,
-                  progress:
-                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100, // Calculate progress percentage
-                };
-                console.log('snapshot', snapshot);
-                if (snapshot.state === firebase.storage.TaskState.SUCCESS) {
-                  let allImages = value.images;
-                  allImages.push(snapshot.downloadURL);
-                  state = {
-                    ...state,
-                    uploading: false,
-                    progress: 0,
-                    images: allImages,
-                  };
+      await close(false);
 
-                  firebase
-                    .storage()
-                    .ref(`users/${uid}/giant@${filename}`)
-                    .getDownloadURL()
-                    .then((url) => {
-                      console.log('url:giant', url);
-                      picture = {...picture, giant: url};
-                      updateUser(picture);
-                    });
-                }
-                setValue(state);
-              },
-              (error) => {
-                Alert.alert('Sorry, Try again.', error);
-              },
-            );
-        } catch (error) {
-          console.log('err', error);
-        }
-      })
-      .catch((error) => {
-        console.log('error', error);
-        setLoading(false, utilDispatch);
-      });
-
-    close(false);
+      changeStatus(5);
+      goBack();
+    } catch (error) {
+      console.log('error prepareImage => ', error);
+    }
   };
 
   console.log('value ==>', value);

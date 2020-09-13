@@ -9,7 +9,7 @@ import Qualification from './Qualification';
 import ServiceFinish from './ServiceFinish';
 
 const Status = (props) => {
-  const {status, id, goBack} = props;
+  const {status, id, goBack, expert, orderId} = props;
 
   switch (status) {
     case 0:
@@ -28,7 +28,10 @@ const Status = (props) => {
       return <ServiceFinish id={id} goBack={goBack} />;
 
     case 5:
-      return <Qualification id={id} />;
+      return <Qualification id={orderId} expert={expert} goBack={goBack} />;
+
+    case 6:
+      return <SerchExpert />;
 
     default:
       return <Text>Hello world</Text>;

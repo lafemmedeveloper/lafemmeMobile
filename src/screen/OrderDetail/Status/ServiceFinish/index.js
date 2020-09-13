@@ -9,7 +9,6 @@ import {
   setLoading,
   updateStatus,
 } from '../../../../flux/util/actions';
-import utilities from '../../../../utilities';
 import moment from 'moment';
 import ModalApp from '../../../../components/ModalApp';
 import ModalPhoto from './ModalPhoto';
@@ -40,7 +39,6 @@ const ServiceFinish = (props) => {
 
   const changeStatus = async (status) => {
     await updateStatus(status, orderId.id, utilDispatch);
-    goBack();
   };
 
   const updateUser = async (picture) => {
@@ -58,6 +56,7 @@ const ServiceFinish = (props) => {
       date: moment().format(),
       imageUrl: images,
       service: orderId.servicesType,
+      isApproved: false,
     };
     await addImageGallery(dataExpert, id, utilDispatch);
   };
@@ -126,6 +125,8 @@ const ServiceFinish = (props) => {
           user={user}
           setLoading={setLoading}
           close={setModalOpen}
+          goBack={goBack}
+          changeStatus={changeStatus}
         />
       </ModalApp>
     </>

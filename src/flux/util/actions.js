@@ -246,3 +246,38 @@ export const addImageGallery = async (data, id, dispatch) => {
     console.log('error', error);
   }
 };
+export const expertRating = async (uid, rating, dispatch) => {
+  try {
+    setLoading(true, dispatch);
+    const userRef = firestore().collection('users').doc(uid);
+    await userRef.set(
+      {
+        rating,
+      },
+      {merge: true},
+    );
+
+    setLoading(false, dispatch);
+  } catch (error) {
+    setLoading(false, dispatch);
+    console.log('error', error);
+  }
+};
+
+export const updateNote = async (id, note, dispatch) => {
+  try {
+    setLoading(true, dispatch);
+    const userRef = firestore().collection('users').doc(id);
+    await userRef.set(
+      {
+        noteQualtification: note,
+      },
+      {merge: true},
+    );
+
+    setLoading(false, dispatch);
+  } catch (error) {
+    setLoading(false, dispatch);
+    console.log('error', error);
+  }
+};

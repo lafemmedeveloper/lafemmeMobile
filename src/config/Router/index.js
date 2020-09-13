@@ -5,6 +5,7 @@ import TabBottom from './TabBottom';
 
 import ProductDetail from '../../screen/ProductDetail';
 import OrderDetail from '../../screen/OrderDetail';
+import OrderHistory from '../../screen/OrderHistory';
 
 const Stack = createStackNavigator();
 
@@ -29,6 +30,13 @@ const Router = () => {
         <Stack.Screen
           name="OrderDetail"
           component={OrderDetail}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="OrderHistory"
+          component={OrderHistory}
           options={{
             headerShown: false,
           }}

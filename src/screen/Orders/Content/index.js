@@ -1,11 +1,10 @@
 import React, {useContext, useState, Fragment} from 'react';
-import {Text, View, StyleSheet} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import {Metrics} from '../../../themes';
 import {StoreContext} from '../../../flux';
 import {ScrollView} from 'react-native-gesture-handler';
 import ExpandOrderData from '../../ExpandOrderData';
 import Header from './Header';
-import ModalApp from '../../../components/ModalApp';
 import {useNavigation} from '@react-navigation/native';
 
 const Content = () => {
@@ -18,7 +17,6 @@ const Content = () => {
   const {orders, history} = util;
 
   const [menuIndex, setMenuIndex] = useState(0);
-  const [modalDetail, setModalDetail] = useState(false);
 
   const activeDetailModal = (order) => {
     navigation.navigate('OrderDetail', order);
@@ -63,16 +61,17 @@ const Content = () => {
               history.map((item, index) => {
                 return (
                   <Fragment key={index}>
-                    <ExpandOrderData order={item} appType={'client'} />
+                    <ExpandOrderData
+                      activeDetailModal={activeDetailModal}
+                      order={item}
+                      appType={'client'}
+                    />
                   </Fragment>
                 );
               })}
           </>
         </ScrollView>
       </View>
-      <ModalApp open={modalDetail} setOpen={setModalDetail}>
-        <Text>Hello</Text>
-      </ModalApp>
     </>
   );
 };

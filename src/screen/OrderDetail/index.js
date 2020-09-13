@@ -24,7 +24,7 @@ const OrderDetail = (props) => {
   const {route, navigation} = props;
   const {params} = route;
 
-  const {state /*  serviceDispatch, authDispatch */} = useContext(StoreContext);
+  const {state} = useContext(StoreContext);
 
   const {util} = state;
 
@@ -34,26 +34,10 @@ const OrderDetail = (props) => {
   const {goBack} = navigation;
 
   useEffect(() => {
-    const currentOrder = orders.filter(
-      (item) => item.cartId === params.cartId,
-    )[0];
+    const currentOrder = orders.filter((item) => item.id === params.id)[0];
 
     setOrderUser(currentOrder);
   }, [orders]);
-
-  /*   const label = [
-    'Buscando Expertos',
-    'Preparando Servicio',
-    'En Ruta',
-    'En servicio',
-  ]; */
-  const labels = [
-    'Cart',
-    'Delivery Address',
-    'Order Summary',
-    'Payment Method',
-  ];
-
   return (
     <>
       <View style={styles.container}>
@@ -71,6 +55,19 @@ const OrderDetail = (props) => {
                   latitudeDelta: 0.00002,
                   longitudeDelta: 0.0002 * ASPECT_RATIO,
                 }}>
+                {orderUser.experts && (
+                  <Marker.Animated
+                    coordinate={{
+                      latitude: orderUser.experts.coordinate.latitude,
+                      longitude: orderUser.experts.coordinate.longitude,
+                    }}>
+                    <Icon
+                      name={'map-marker-alt'}
+                      size={30}
+                      color={Colors.expert.primaryColor}
+                    />
+                  </Marker.Animated>
+                )}
                 <Marker.Animated
                   coordinate={{
                     latitude: orderUser.address.coordinates.latitude,
@@ -90,15 +87,10 @@ const OrderDetail = (props) => {
               </View>
             </View>
 
-            {orderUser.experts && (
-              <View>
-                <ExpertCall expert={orderUser.experts} />
-              </View>
-            )}
+            {orderUser.experts && <ExpertCall expert={orderUser.experts} />}
             <View style={styles.cont}>
-              <View style={orderUser.status !== 4 ? styles.step : styles.step4}>
+              <View style={orderUser.status >= 4 ? styles.step4 : styles.step}>
                 <StepIndicator
-                  label={labels}
                   customStyles={customStyles}
                   currentPosition={orderUser.status}
                   direction={'vertical'}
@@ -111,18 +103,9 @@ const OrderDetail = (props) => {
                   status={orderUser.status}
                   id={params.cartId}
                   goBack={goBack}
+                  expert={orderUser.experts}
+                  orderId={orderUser.id}
                 />
-                {/*     <Text
-                  style={[
-                    Fonts.style.bold(
-                      Colors.client.primaryColor,
-                      Fonts.size.h6,
-                      'center',
-                    ),
-                    {marginVertical: 10},
-                  ]}>
-                  {'Detalle de la orden'}
-                </Text> */}
               </View>
             </View>
           </>
