@@ -1,12 +1,13 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-
+import {Fonts, Colors} from '../../../../themes';
 const Finish = () => {
   return (
     <>
-      <Text>Ordern finalizada</Text>
       <View style={styles.container}>
-        <Text>hello finish</Text>
+        <Text style={Fonts.style.regular(Colors.dark, Fonts.size.h6, 'left')}>
+          {'Orden finalizada'}
+        </Text>
       </View>
     </>
   );

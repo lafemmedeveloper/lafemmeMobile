@@ -8,6 +8,7 @@ import OnService from './OnService';
 import Qualification from './Qualification';
 import ServiceFinish from './ServiceFinish';
 import Finish from './Finish';
+import Cancelled from './Cancelled';
 
 const Status = (props) => {
   const {status, id, goBack, expert, orderId} = props;
@@ -33,6 +34,10 @@ const Status = (props) => {
 
     case 6:
       return <Finish />;
+
+    case 7:
+    case 8:
+      return <Cancelled />;
 
     default:
       return <Text>Hello world</Text>;

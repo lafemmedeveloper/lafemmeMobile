@@ -13,8 +13,11 @@ export default (dta) => {
   const [animationItem, onChangeanimationItem] = React.useState(
     new Animated.Value(0),
   );
+  console.log('onChangeanimation =>', onChangeanimation);
+  console.log('onChangeanimationItem =>', onChangeanimationItem);
 
   const [opacity, onChangeOpacity] = React.useState(new Animated.Value(0));
+  console.log('Animation =>', onChangeOpacity);
 
   const {data, slug} = dta;
   const {products, addOns} = data;

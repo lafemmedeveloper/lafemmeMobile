@@ -1,13 +1,5 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  Image,
-  ActivityIndicator,
-  StyleSheet,
-  TouchableOpacity,
-} from 'react-native';
-import StarRating from 'react-native-star-rating';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
 import {Fonts, Colors, ApplicationStyles, Metrics} from '../../themes';
@@ -16,6 +8,7 @@ import moment from 'moment';
 
 export default (data) => {
   const {name, id, duration, clients, experts} = data.data;
+  console.log('experts =>', experts);
   const {dateOrder} = data;
 
   return (
