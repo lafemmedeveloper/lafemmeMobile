@@ -16,32 +16,16 @@ import ButtonMaps from './ButtonMaps';
 import ExpandDetail from '../ExpandDetail';
 import moment from 'moment';
 import utilities from '../../../utilities';
-import Geolocation from '@react-native-community/geolocation';
-import {updateProfile} from '../../../flux/auth/actions';
-import {
-  sendCoordinate,
-  updateStatus,
-  setLoading,
-} from '../../../flux/util/actions';
+import {setLoading} from '../../../flux/util/actions';
 import Loading from '../../../components/Loading';
 import {StoreContext} from '../../../flux';
 import firestore from '@react-native-firebase/firestore';
 
 const DetailModal = (props) => {
-  const {state, authDispatch, utilDispatch} = useContext(StoreContext);
-  const {auth, util} = state;
-  const {user} = auth;
+  const {state, utilDispatch} = useContext(StoreContext);
+  const {util} = state;
   const {loading} = util;
 
-  // const orderStatusStr = {
-  //   0: 'Buscando Expertos',
-  //   1: 'Preparando Servicio',
-  //   2: 'En Ruta',
-  //   3: 'En servicio',
-  //   4: 'Esperando Calificacion',
-  //   5: 'Finalizado',
-  //   6: 'Cancelado',
-  // };//const {expertActiveOrders, deviceInfo} = util;
   const mapStyle = require('../../../config/mapStyle.json');
 
   const {order, setModalDetail} = props;
@@ -58,7 +42,6 @@ const DetailModal = (props) => {
   const [menuIndex, setMenuIndex] = useState(0);
   const [dateCount, setDateCount] = useState('');
   const [activeStatus, setActiveStatus] = useState(false);
-  const [coordinate, setCoordinate] = useState({});
 
   const getRemainingTime = (deadline) => {
     let now = new Date(),
@@ -495,47 +478,47 @@ const DetailModal = (props) => {
               </Text>
             </View>
           )}
-        </ScrollView>
 
-        {order.status === 1 && (
-          <TouchableOpacity
-            onPress={() => changeStatus(2)}
-            style={[styles.btnContainer]}>
-            <Text
-              style={[
-                Fonts.style.bold(Colors.light, Fonts.size.medium),
-                {alignSelf: 'center'},
-              ]}>
-              Colocarme en ruta
-            </Text>
-          </TouchableOpacity>
-        )}
-        {order.status === 2 && (
-          <TouchableOpacity
-            onPress={() => changeStatus(3)}
-            style={[styles.btnContainer]}>
-            <Text
-              style={[
-                Fonts.style.bold(Colors.light, Fonts.size.medium),
-                {alignSelf: 'center'},
-              ]}>
-              Colocarme en servicio
-            </Text>
-          </TouchableOpacity>
-        )}
-        {order.status === 3 && (
-          <TouchableOpacity
-            onPress={() => changeStatus(4)}
-            style={[styles.btnContainer]}>
-            <Text
-              style={[
-                Fonts.style.bold(Colors.light, Fonts.size.medium),
-                {alignSelf: 'center'},
-              ]}>
-              Finalizando servicio
-            </Text>
-          </TouchableOpacity>
-        )}
+          {order.status === 1 && (
+            <TouchableOpacity
+              onPress={() => changeStatus(2)}
+              style={[styles.btnContainer]}>
+              <Text
+                style={[
+                  Fonts.style.bold(Colors.light, Fonts.size.medium),
+                  {alignSelf: 'center'},
+                ]}>
+                Colocarme en ruta
+              </Text>
+            </TouchableOpacity>
+          )}
+          {order.status === 2 && (
+            <TouchableOpacity
+              onPress={() => changeStatus(3)}
+              style={[styles.btnContainer]}>
+              <Text
+                style={[
+                  Fonts.style.bold(Colors.light, Fonts.size.medium),
+                  {alignSelf: 'center'},
+                ]}>
+                Colocarme en servicio
+              </Text>
+            </TouchableOpacity>
+          )}
+          {order.status === 3 && (
+            <TouchableOpacity
+              onPress={() => changeStatus(4)}
+              style={[styles.btnContainer]}>
+              <Text
+                style={[
+                  Fonts.style.bold(Colors.light, Fonts.size.medium),
+                  {alignSelf: 'center'},
+                ]}>
+                Finalizando servicio
+              </Text>
+            </TouchableOpacity>
+          )}
+        </ScrollView>
       </View>
     </>
   );
@@ -571,7 +554,6 @@ const styles = StyleSheet.create({
   contDetail: {
     paddingTop: 20,
     marginBottom: -100,
-    height: 300,
   },
   contExpand: {
     marginLeft: 50,

@@ -9,6 +9,7 @@ import {
   GET_EXPERT_ACTIVE_ORDERS,
   GET_EXPERT_OPEN_ORDERS,
   GET_COORDINATE,
+  GET_EXPERT_ORDER_HISTORY,
 } from './types';
 import _ from 'lodash';
 
@@ -97,6 +98,12 @@ const getCoordinate = (state, action) => {
     coordinate: action.payload,
   };
 };
+const getOrderHistory = (state, action) => {
+  return {
+    ...state,
+    expertHistoryOrders: action.payload,
+  };
+};
 
 export default createReducer(INITIAL_STATE_UTIL, {
   [LOADING]: setLoading,
@@ -108,4 +115,5 @@ export default createReducer(INITIAL_STATE_UTIL, {
   [GET_EXPERT_ACTIVE_ORDERS]: getExpertActiveOrders,
   [GET_EXPERT_OPEN_ORDERS]: getExpertOpenOrders,
   [GET_COORDINATE]: getCoordinate,
+  [GET_EXPERT_ORDER_HISTORY]: getOrderHistory,
 });

@@ -9,6 +9,7 @@ import {
   assingExpert,
   getDeviceInfo,
   getExpertActiveOrders,
+  getExpertHistoryOrders,
 } from '../../flux/util/actions';
 
 import Geolocation from '@react-native-community/geolocation';
@@ -29,6 +30,7 @@ const HomeExpert = () => {
 
       currentCoordinate();
       getExpertActiveOrders(utilDispatch);
+      getExpertHistoryOrders(utilDispatch);
 
       if (isEnabled) {
         getExpertOpenOrders(activity, utilDispatch);

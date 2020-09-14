@@ -7,6 +7,7 @@ import {
   DEVICE_INFO,
   GET_EXPERT_ACTIVE_ORDERS,
   GET_EXPERT_OPEN_ORDERS,
+  GET_EXPERT_ORDER_HISTORY,
 } from './types';
 
 import firestore from '@react-native-firebase/firestore';
@@ -131,7 +132,6 @@ export const getDeviceInfo = (dispatch) => {
 };
 
 export const getExpertActiveOrders = (dispatch) => {
-  // let expertActivities = getStore().currentUser.user.expertActivities;
   console.log('===> getExpertActiveOrders');
   const uid = auth().currentUser.uid;
   console.log(' getStore().currentUser.auth.uid', uid);
@@ -139,7 +139,7 @@ export const getExpertActiveOrders = (dispatch) => {
   let ordersRef = firestore()
     .collection('orders')
     .where('status', '>=', 1)
-    .where('status', '<=', 4);
+    .where('status', '<=', 5);
 
   ordersRef.where('experts.uid', '==', uid);
 
@@ -155,6 +155,30 @@ export const getExpertActiveOrders = (dispatch) => {
       };
     });
     return dispatch({type: GET_EXPERT_OPEN_ORDERS, payload: listOrders});
+  });
+};
+export const getExpertHistoryOrders = (dispatch) => {
+  console.log('===> getExpertActiveOrders');
+  const uid = auth().currentUser.uid;
+  console.log(' getStore().currentUser.auth.uid', uid);
+
+  let ordersRef = firestore().collection('orders').where('status', '>=', 5);
+
+  ordersRef.where('experts.uid', '==', uid);
+
+  let listOrders = [];
+
+  ordersRef.onSnapshot((orders) => {
+    console.log('=> orders', orders);
+
+    listOrders = orders.docs.map((item) => {
+      return {
+        id: item.id,
+        ...item.data(),
+      };
+    });
+    console.log('listOrders =>', listOrders);
+    return dispatch({type: GET_EXPERT_ORDER_HISTORY, payload: listOrders});
   });
 };
 export const getExpertOpenOrders = (activity, dispatch) => {

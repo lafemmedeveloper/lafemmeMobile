@@ -66,7 +66,11 @@ const HistoryExpert = () => {
               expertHistoryOrders.map((item, index) => {
                 return (
                   <Fragment key={index}>
-                    <ExpandHistoryData order={item} appType={'expert'} />
+                    <ExpandHistoryData
+                      activeDetailModal={activeDetailModal}
+                      order={item}
+                      appType={'expert'}
+                    />
                   </Fragment>
                 );
               })}
