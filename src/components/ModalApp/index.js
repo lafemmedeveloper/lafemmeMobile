@@ -13,18 +13,20 @@ export default (data) => {
   const appType = deviceInfo;
   console.log('appType =>', appType);
   return (
-    <Modal
-      isVisible={open}
-      onBackdropPress={() => setOpen(false)}
-      backdropColor={
-        appType.appType === 'expert'
-          ? Colors.expert.primaryColor
-          : Colors.pinkMask(0.75)
-      }
-      style={styles.Modal}>
-      <View style={styles.musk} />
-      <View style={styles.container}>{children}</View>
-    </Modal>
+    <>
+      <Modal
+        isVisible={open}
+        onBackdropPress={() => setOpen(false)}
+        backdropColor={
+          appType.appType === 'expert'
+            ? Colors.expert.primaryColor
+            : Colors.pinkMask(0.75)
+        }
+        style={styles.Modal}>
+        <View style={styles.musk} />
+        <View style={styles.container}>{children}</View>
+      </Modal>
+    </>
   );
 };
 
@@ -33,7 +35,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderTopEndRadius: 12,
     borderTopStartRadius: 12,
-    paddingTop: 20,
   },
   Modal: {
     flex: 1,
@@ -45,7 +46,7 @@ const styles = StyleSheet.create({
     height: 5,
     width: 30,
     borderRadius: 4,
-    zIndex: 10,
+    zIndex: 1,
     alignSelf: 'center',
     marginBottom: -15,
   },

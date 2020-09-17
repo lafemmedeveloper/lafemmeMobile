@@ -1,8 +1,7 @@
 import React from 'react';
-import {View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {WaveIndicator} from 'react-native-indicators';
-import styles from './styles';
-import {Colors} from '../../themes';
+import {Colors, Metrics} from '../../themes';
 
 export default (data) => {
   const {type, loading} = data;
@@ -27,3 +26,11 @@ export default (data) => {
     return null;
   }
 };
+const styles = StyleSheet.create({
+  container: {
+    width: Metrics.screenWidth,
+    height: Metrics.screenHeight,
+    position: 'absolute',
+    zIndex: 50000,
+  },
+});

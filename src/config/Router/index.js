@@ -9,31 +9,33 @@ const Stack = createStackNavigator();
 
 const Router = () => {
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
-          name="Home"
-          component={TabBottom}
-          options={{
-            headerShown: false,
-          }}
-        />
-        <Stack.Screen
-          name="ProductDetail"
-          component={ProductDetail}
-          options={{
-            headerShown: false,
-          }}
-        />
-        <Stack.Screen
-          name="OrderDetail"
-          component={OrderDetail}
-          options={{
-            headerShown: false,
-          }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen
+            name="Home"
+            component={TabBottom}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="ProductDetail"
+            component={ProductDetail}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="OrderDetail"
+            component={OrderDetail}
+            options={{
+              headerShown: false,
+            }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </>
   );
 };
 

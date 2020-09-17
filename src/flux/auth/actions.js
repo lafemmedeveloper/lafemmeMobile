@@ -122,3 +122,17 @@ export const updatePhoto = async (url, dispatch) => {
     console.log('error updatePhoto=>', error);
   }
 };
+
+export const updateProfileItem = async (newData, uid, dispatch) => {
+  try {
+    setLoading(true, dispatch);
+
+    const ref = firestore().collection('users').doc(uid);
+    await ref.set(newData, {merge: true});
+    await setUser(uid, dispatch);
+    setLoading(false, dispatch);
+  } catch (error) {
+    console.log('error updateProfileItem =>', error);
+    setLoading(false, dispatch);
+  }
+};
