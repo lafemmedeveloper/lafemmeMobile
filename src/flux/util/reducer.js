@@ -9,6 +9,7 @@ import {
   GET_EXPERT_ACTIVE_ORDERS,
   GET_EXPERT_OPEN_ORDERS,
   GET_COORDINATE,
+  GET_EXPERT_ORDER_HISTORY,
 } from './types';
 import _ from 'lodash';
 
@@ -26,6 +27,9 @@ export const INITIAL_STATE_UTIL = {
     readableVersion: null,
   },
   expertOpenOrders: [],
+  expertHistoryOrders: [],
+  expertActiveOrders: [],
+  ordersAll: [],
 };
 
 const setLoading = (state, action) => {
@@ -55,16 +59,18 @@ const getCoverage = (state, action) => {
   };
 };
 const getOrder = (state, action) => {
-  let orders = _.filter(action.payload, (o) => o.status <= 3);
-  let history = _.filter(action.payload, (o) => o.status > 3);
+  let orders = _.filter(action.payload, (o) => o.status <= 5);
+  let history = _.filter(action.payload, (o) => o.status > 5);
 
   orders = _.orderBy(orders, 'date', 'des');
   history = _.orderBy(history, 'date', 'asc');
+  const ordersAll = _.orderBy(action.payload, 'date', 'asc');
 
   return {
     ...state,
     orders,
     history,
+    ordersAll,
   };
 };
 const getDeviceInfo = (state, action) => {
@@ -92,6 +98,12 @@ const getCoordinate = (state, action) => {
     coordinate: action.payload,
   };
 };
+const getOrderHistory = (state, action) => {
+  return {
+    ...state,
+    expertHistoryOrders: action.payload,
+  };
+};
 
 export default createReducer(INITIAL_STATE_UTIL, {
   [LOADING]: setLoading,
@@ -103,4 +115,5 @@ export default createReducer(INITIAL_STATE_UTIL, {
   [GET_EXPERT_ACTIVE_ORDERS]: getExpertActiveOrders,
   [GET_EXPERT_OPEN_ORDERS]: getExpertOpenOrders,
   [GET_COORDINATE]: getCoordinate,
+  [GET_EXPERT_ORDER_HISTORY]: getOrderHistory,
 });

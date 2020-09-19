@@ -12,7 +12,7 @@ const colors = {
   lightGray: '#D3D3D3',
   light: '#fff',
   textInputBg: '#f7f7f8',
-
+  start: '#F7DD00',
   backgroundColor: '#FAF9FF',
 
   disabledBtn: '#EFEFEF',
@@ -23,6 +23,8 @@ const colors = {
     '#7bdaa9',
     '#e58f18',
     '#a1e518',
+    '#ff7d6c',
+    '#f24c88',
     '#FF0000',
     '#FF0000',
   ],

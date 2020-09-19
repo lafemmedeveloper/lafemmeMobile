@@ -6,7 +6,6 @@ export default StyleSheet.create({
     width: Metrics.screenWidth,
     height: Metrics.screenHeight,
     position: 'absolute',
-    zIndex: 1000,
-    flex: 1,
+    zIndex: 10000,
   },
 });

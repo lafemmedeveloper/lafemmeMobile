@@ -466,7 +466,7 @@ const CartScreen = (props) => {
               console.log('isCompleted');
               let data = {
                 id: Utilities.create_UUID(),
-                expert: null,
+                experts: null,
                 client: {
                   uid: user.uid,
                   firstName: user.firstName,

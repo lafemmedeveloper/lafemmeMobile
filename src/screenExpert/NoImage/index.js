@@ -346,9 +346,7 @@ const NoImage = () => {
   };
 
   const updateUser = async (picture) => {
-    //setLoading(true);
     await updateProfile({...picture}, 'imageUrl', authDispatch);
-    //setLoading(false);
   };
   console.log('image source =>', imgSource);
   console.log('image imageUri =>', imageUri);

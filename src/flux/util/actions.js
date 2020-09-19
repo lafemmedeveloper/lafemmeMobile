@@ -7,6 +7,7 @@ import {
   DEVICE_INFO,
   GET_EXPERT_ACTIVE_ORDERS,
   GET_EXPERT_OPEN_ORDERS,
+  GET_EXPERT_ORDER_HISTORY,
 } from './types';
 
 import firestore from '@react-native-firebase/firestore';
@@ -131,26 +132,54 @@ export const getDeviceInfo = (dispatch) => {
 };
 
 export const getExpertActiveOrders = (dispatch) => {
-  try {
-    let ordersRef = firestore().collection('orders').where('status', '<=', 4);
+  console.log('===> getExpertActiveOrders');
+  const uid = auth().currentUser.uid;
+  console.log(' getStore().currentUser.auth.uid', uid);
 
-    let listOrders = [];
+  let ordersRef = firestore()
+    .collection('orders')
+    .where('status', '>=', 1)
+    .where('status', '<=', 5);
 
-    ordersRef.onSnapshot((orders) => {
-      console.log('=> orders', orders);
+  ordersRef.where('experts.uid', '==', uid);
 
-      listOrders = orders.docs.map((item) => {
-        return {
-          id: item.id,
-          ...item.data(),
-        };
-      });
-      console.log('listOrders=>', listOrders);
-      dispatch({type: GET_EXPERT_ACTIVE_ORDERS, payload: listOrders});
+  let listOrders = [];
+
+  ordersRef.onSnapshot((orders) => {
+    console.log('=> orders', orders);
+
+    listOrders = orders.docs.map((item) => {
+      return {
+        id: item.id,
+        ...item.data(),
+      };
     });
-  } catch (error) {
-    console.log('error getExpertActiveOrders =>', error);
-  }
+    return dispatch({type: GET_EXPERT_OPEN_ORDERS, payload: listOrders});
+  });
+};
+export const getExpertHistoryOrders = (dispatch) => {
+  console.log('===> getExpertActiveOrders');
+  const uid = auth().currentUser.uid;
+  console.log(' getStore().currentUser.auth.uid', uid);
+
+  let ordersRef = firestore().collection('orders').where('status', '>=', 5);
+
+  ordersRef.where('experts.uid', '==', uid);
+
+  let listOrders = [];
+
+  ordersRef.onSnapshot((orders) => {
+    console.log('=> orders', orders);
+
+    listOrders = orders.docs.map((item) => {
+      return {
+        id: item.id,
+        ...item.data(),
+      };
+    });
+    console.log('listOrders =>', listOrders);
+    return dispatch({type: GET_EXPERT_ORDER_HISTORY, payload: listOrders});
+  });
 };
 export const getExpertOpenOrders = (activity, dispatch) => {
   let ordersRef = firestore()
@@ -168,7 +197,7 @@ export const getExpertOpenOrders = (activity, dispatch) => {
         ...item.data(),
       };
     });
-    return dispatch({type: GET_EXPERT_OPEN_ORDERS, payload: listOrders});
+    return dispatch({type: GET_EXPERT_ACTIVE_ORDERS, payload: listOrders});
   });
 };
 
@@ -178,18 +207,101 @@ export const assingExpert = async (user, order, dispatch) => {
     console.log('order ===>', order);
     console.log('order ===>', order);
 
-    const expert = user;
+    const experts = user;
 
     const ref = firestore().collection('orders').doc(order.id);
     await ref.set(
       {
         status: 1,
 
-        expert,
+        experts,
       },
       {merge: true},
     );
   } catch (error) {
     console.error('assingExpert ==>', error);
+  }
+};
+export const sendCoordinate = async (data, typeData, dispatch) => {
+  const currentUser = auth().currentUser;
+  try {
+    setLoading(true, dispatch);
+    const userRef = firestore().collection('users').doc(currentUser.uid);
+    await userRef.set(
+      {
+        [typeData]: data,
+      },
+      {merge: true},
+    );
+
+    setLoading(false, dispatch);
+  } catch (error) {
+    setLoading(false, dispatch);
+    console.log('error', error);
+  }
+};
+export const updateStatus = async (status, id, dispatch) => {
+  try {
+    setLoading(true, dispatch);
+    const ref = firestore().collection('orders').doc(id);
+    await ref.set(
+      {
+        status: status,
+      },
+      {merge: true},
+    );
+    setLoading(false, dispatch);
+  } catch (error) {
+    setLoading(false, dispatch);
+
+    console.error('updateStatus ==>', error);
+  }
+};
+
+export const addImageGallery = async (data, id, dispatch) => {
+  try {
+    setLoading(true, dispatch);
+    const userRef = firestore().collection('gallery').doc(id);
+    await userRef.set(data);
+
+    setLoading(false, dispatch);
+  } catch (error) {
+    setLoading(false, dispatch);
+    console.log('error', error);
+  }
+};
+export const expertRating = async (uid, rating, dispatch) => {
+  try {
+    setLoading(true, dispatch);
+    const userRef = firestore().collection('users').doc(uid);
+    await userRef.set(
+      {
+        rating,
+      },
+      {merge: true},
+    );
+
+    setLoading(false, dispatch);
+  } catch (error) {
+    setLoading(false, dispatch);
+    console.log('error', error);
+  }
+};
+
+export const updateNote = async (id, note, dispatch) => {
+  try {
+    setLoading(true, dispatch);
+    const userRef = firestore().collection('users').doc(id);
+    await userRef.set(
+      {
+        noteQualtification: note,
+      },
+      {merge: true},
+    );
+
+    setLoading(false, dispatch);
+  } catch (error) {
+    setLoading(false, dispatch);
+    console.log('error', error);
   }
 };

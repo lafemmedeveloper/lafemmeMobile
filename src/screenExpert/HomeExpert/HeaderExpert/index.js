@@ -7,7 +7,7 @@ import {setUser, setLoading} from '../../../flux/auth/actions';
 const HeaderExpert = (props) => {
   const {user, dispatch} = props;
   console.log('user ===>', user);
-  const {imageUrl} = user;
+  const {imageUrl = ''} = user;
   const toggleSwitch = async () => {
     try {
       setLoading(true, dispatch);
@@ -30,7 +30,12 @@ const HeaderExpert = (props) => {
     <>
       <View style={styles.container}>
         <View style={{alignSelf: 'center'}}>
-          <Image source={{uri: imageUrl.medium}} style={styles.image} />
+          {user && (
+            <Image
+              source={{uri: user ? imageUrl.medium : ''}}
+              style={styles.image}
+            />
+          )}
         </View>
         <Text
           style={[
