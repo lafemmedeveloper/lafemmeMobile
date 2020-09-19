@@ -3,10 +3,10 @@ import {Text, View, Switch, StyleSheet, Image} from 'react-native';
 import {Fonts, Colors} from '../../../themes';
 import firestore from '@react-native-firebase/firestore';
 import {setUser, setLoading} from '../../../flux/auth/actions';
+import {Images} from '../../../themes';
 
 const HeaderExpert = (props) => {
   const {user, dispatch} = props;
-  console.log('user ===>', user);
   const {imageUrl = ''} = user;
   const toggleSwitch = async () => {
     try {
@@ -37,14 +37,18 @@ const HeaderExpert = (props) => {
             />
           )}
         </View>
-        <Text
-          style={[
-            Fonts.style.semiBold(Colors.dark, Fonts.size.medium),
-            {alignSelf: 'center'},
-          ]}>
-          {user.isEnabled ? 'Activo' : 'Activate para recibir ordenes'}
-        </Text>
-        <View style={{alignSelf: 'center', marginRight: 10}}>
+        <View>
+          <Image
+            style={{width: 100, height: 50, resizeMode: 'contain'}}
+            source={Images.logoExpertText}
+          />
+        </View>
+        <View
+          style={{
+            alignSelf: 'center',
+            marginRight: 10,
+            flexDirection: 'column',
+          }}>
           <Switch
             trackColor={{false: '#dbdbdb', true: '#dbdbdb'}}
             thumbColor={user.isEnabled ? Colors.expert.primaryColor : '#f4f3f4'}
@@ -52,6 +56,13 @@ const HeaderExpert = (props) => {
             onValueChange={toggleSwitch}
             value={user.isEnabled}
           />
+          <Text
+            style={[
+              Fonts.style.semiBold(Colors.dark, Fonts.size.medium),
+              {alignSelf: 'center'},
+            ]}>
+            {user.isEnabled ? 'Activo' : 'Inactivo'}
+          </Text>
         </View>
       </View>
     </>
@@ -59,7 +70,7 @@ const HeaderExpert = (props) => {
 };
 
 const styles = StyleSheet.create({
-  image: {width: 40, height: 40, borderRadius: 20, marginLeft: 10},
+  image: {width: 50, height: 50, borderRadius: 25, marginLeft: 10},
   container: {
     paddingVertical: 10,
     backgroundColor: Colors.light,

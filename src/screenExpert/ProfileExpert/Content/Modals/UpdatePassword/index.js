@@ -17,6 +17,7 @@ import auth from '@react-native-firebase/auth';
 const UpdatePassword = () => {
   const [passwordCurrent, setPasswordCurrent] = useState('');
   const [newPassword, setNewPassword] = useState('');
+  const [newPasswordConfirm, setNewPasswordConfirm] = useState('');
   const [loading, setLoading] = useState(false);
 
   const reauthenticate = () => {
@@ -32,6 +33,8 @@ const UpdatePassword = () => {
 
     if (newPassword === '' || passwordCurrent === '') {
       Alert.alert('Ups...', 'Completa o verifica los datos para continuar');
+    } else if (newPassword !== newPasswordConfirm) {
+      Alert.alert('Ups...', 'Las contraseñas ingresadas con coinciden');
     } else {
       setLoading(true);
       await reauthenticate(passwordCurrent)
@@ -46,19 +49,26 @@ const UpdatePassword = () => {
               );
 
               setNewPassword('');
+              setNewPasswordConfirm('');
               setPasswordCurrent('');
               setLoading(false);
             })
             .catch((error) => {
               console.log('error ==>', error);
               setLoading(false);
-              Alert.alert('Ups...', 'Algo salio mal');
+              Alert.alert(
+                'Ups...',
+                'Algo salio mal, intentalo de nuevo mas adelante.',
+              );
             });
         })
         .catch((error) => {
           console.log('error ==>', error);
           setLoading(false);
-          Alert.alert('Ups...', 'Algo salio mal');
+          Alert.alert(
+            'Ups...',
+            'Algo salio mal, intentalo de nuevo mas adelante.',
+          );
         });
     }
   };
@@ -101,6 +111,15 @@ const UpdatePassword = () => {
           text={newPassword}
           multiLine={false}
           onChangeText={(text) => setNewPassword(text)}
+          secureText={true}
+          textContent={'password'}
+          autoCapitalize={'none'}
+        />
+        <MyTextInput
+          pHolder={'Confirma la nueva contraseña'}
+          text={newPasswordConfirm}
+          multiLine={false}
+          onChangeText={(text) => setNewPasswordConfirm(text)}
           secureText={true}
           textContent={'password'}
           autoCapitalize={'none'}

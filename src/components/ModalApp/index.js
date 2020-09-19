@@ -1,17 +1,15 @@
 import React, {useContext} from 'react';
 import {Colors} from '../../themes';
 import Modal from 'react-native-modal';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import {StoreContext} from '../../flux';
 
-export default (data) => {
-  const {open, children, setOpen} = data;
+export default ({open, children, setOpen}) => {
   const {state} = useContext(StoreContext);
   const {util} = state;
   const {deviceInfo} = util;
 
   const appType = deviceInfo;
-  console.log('appType =>', appType);
   return (
     <>
       <Modal
@@ -23,7 +21,7 @@ export default (data) => {
             : Colors.pinkMask(0.75)
         }
         style={styles.Modal}>
-        <View style={styles.musk} />
+        <TouchableOpacity style={styles.musk} onPress={() => setOpen(false)} />
         <View style={styles.container}>{children}</View>
       </Modal>
     </>
@@ -35,6 +33,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderTopEndRadius: 12,
     borderTopStartRadius: 12,
+    overflow: 'hidden',
   },
   Modal: {
     flex: 1,
@@ -46,8 +45,9 @@ const styles = StyleSheet.create({
     height: 5,
     width: 30,
     borderRadius: 4,
-    zIndex: 1,
     alignSelf: 'center',
     marginBottom: -15,
+    top: 0,
+    zIndex: 100,
   },
 });

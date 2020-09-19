@@ -9,8 +9,8 @@ export default (data) => {
     <View style={[styles.container, ApplicationStyles.shadownClient]}>
       <View style={styles.addHeader}>
         <Text
-          style={[Fonts.style.regular(Colors.dark, Fonts.size.h6, 'center')]}>
-          Mi Balance{'\n'}
+          style={Fonts.style.semiBold(Colors.dark, Fonts.size.h6, 'center')}>
+          Mi Balance
         </Text>
       </View>
       <View style={[styles.content]}>

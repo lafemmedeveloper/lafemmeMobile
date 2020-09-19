@@ -13,19 +13,9 @@ const NoOrders = () => {
       }}>
       <View
         style={{
-          backgroundColor: 'white',
           alignItems: 'center',
           paddingVertical: 50,
           borderRadius: 10,
-          shadowColor: '#000',
-          shadowOffset: {
-            width: 0,
-            height: 2,
-          },
-          shadowOpacity: 0.25,
-          shadowRadius: 3.84,
-
-          elevation: 5,
         }}>
         <Image
           style={{width: 62, height: 100, marginTop: -20, marginBottom: 20}}

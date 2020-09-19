@@ -710,7 +710,7 @@ const Content = (props) => {
         <View style={{height: '90%'}}>
           <WebView
             WebView={true}
-            source={{uri: 'https://www.weflow.me/terminosycondiciones'}}
+            source={{uri: 'https://lafemme.com.co/terminos-y-condiciones/'}}
             startInLoadingState={true}
             style={{
               width: Metrics.screenWidth,

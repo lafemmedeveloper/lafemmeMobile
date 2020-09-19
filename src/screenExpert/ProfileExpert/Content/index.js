@@ -19,8 +19,9 @@ import UpdatePassword from './Modals/UpdatePassword';
 import WebView from 'react-native-webview';
 
 const Content = (props) => {
-  const {state, dispatch} = props;
+  const {state, dispatch, deviceInfo} = props;
   const {user} = state;
+  console.log('props', props);
 
   const [modalPassword, setModalPassword] = useState(false);
   const [tyc, seTyc] = useState(false);
@@ -29,7 +30,7 @@ const Content = (props) => {
   const logout = () => {
     Alert.alert(
       'Oye!',
-      'Realmente deseas cerrar sesion.',
+      'Realmente deseas cerrar sesión.',
       [
         {
           text: 'Cerrar',
@@ -72,12 +73,15 @@ const Content = (props) => {
                   {user && (
                     <>
                       <Text
-                        style={Fonts.style.regular(
-                          Colors.dark,
-                          Fonts.size.small,
-                          'center',
-                        )}>
-                        {'Calificacion '}
+                        style={[
+                          Fonts.style.regular(
+                            Colors.dark,
+                            Fonts.size.small,
+                            'center',
+                          ),
+                          {marginTop: 2.5},
+                        ]}>
+                        {'Calificación '} {user.rating}
                       </Text>
 
                       <StarRating
@@ -87,7 +91,7 @@ const Content = (props) => {
                         starSize={15}
                         emptyStarColor={Colors.gray}
                         fullStarColor={Colors.start}
-                        halfStarColor={Colors.expert.primaryColor}
+                        halfStarColor={Colors.gray}
                       />
                     </>
                   )}
@@ -105,7 +109,7 @@ const Content = (props) => {
                   {user &&
                     user.activity.map((item, index) => {
                       return (
-                        <View key={index}>
+                        <View key={index} style={{marginVertical: 2.5}}>
                           <Text style={styles.activity}>{item}</Text>
                         </View>
                       );
@@ -139,10 +143,10 @@ const Content = (props) => {
             />
             <ItemProfile
               arrow={true}
-              title={'Galeria Inspo'}
+              title={'Galería INSPO'}
               icon={'images'}
               action={() => {
-                console.log('Galeria ');
+                console.log('Galería ');
               }}
               decorationLine={true}
             />
@@ -151,7 +155,7 @@ const Content = (props) => {
               title={'Comparte La Femme con tus amigos'}
               icon={'paper-plane'}
               action={() => {
-                console.log('cerrar Sesion');
+                console.log('cerrar Sesión');
               }}
               decorationLine={true}
             />
@@ -163,7 +167,7 @@ const Content = (props) => {
               title={'Califica tu experiencia'}
               icon={'star'}
               action={() => {
-                console.log('cerrar Sesion');
+                console.log('cerrar Sesión');
               }}
               decorationLine={true}
             />
@@ -213,12 +217,12 @@ const Content = (props) => {
                 Fonts.size.small,
                 'center',
               )}>
-              {'deviceInfo.readableVersion'}
+              {deviceInfo.readableVersion}
             </Text>
             <TouchableOpacity
               onPress={() => {
                 Linking.openURL(
-                  `whatsapp://send?text=Me interesa contactar al desarrollador de La Femme &phone=+573106873181`,
+                  'whatsapp://send?text=Me interesa contactar al desarrollador de La Femme &phone=+573106873181',
                 );
               }}
               style={{marginVertical: 20}}>
@@ -250,8 +254,8 @@ const Content = (props) => {
         <View style={{height: '90%'}}>
           <WebView
             WebView={true}
-            source={{uri: 'https://www.weflow.me/terminosycondiciones'}}
-            renderLoading={this.renderLoadingView}
+            source={{uri: 'https://lafemme.com.co/terminos-y-condiciones/'}}
+            // renderLoading={this.renderLoadingView}
             startInLoadingState={true}
             style={{
               width: Metrics.screenWidth,

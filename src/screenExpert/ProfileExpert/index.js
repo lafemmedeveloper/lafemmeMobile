@@ -5,13 +5,15 @@ import Content from './Content';
 
 const ProfileExpert = () => {
   const {state, authDispatch} = useContext(StoreContext);
-  const {auth} = state;
+  const {auth, util} = state;
   const {user} = auth;
-  console.log('form user =>', user);
+  const {deviceInfo} = util;
   if (!user) {
     return <Text> no ahi foto</Text>;
   } else {
-    return <Content state={auth} dispatch={authDispatch} />;
+    return (
+      <Content state={auth} dispatch={authDispatch} deviceInfo={deviceInfo} />
+    );
   }
 };
 
