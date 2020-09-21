@@ -30,6 +30,7 @@ export const INITIAL_STATE_UTIL = {
   expertHistoryOrders: [],
   expertActiveOrders: [],
   ordersAll: [],
+  nextOrder: [],
 };
 
 const setLoading = (state, action) => {
@@ -88,6 +89,7 @@ const getExpertOpenOrders = (state, action) => {
   return {
     ...state,
     expertOpenOrders,
+    nextOrder: [expertOpenOrders[0]],
   };
 };
 const getCoordinate = (state, action) => {
