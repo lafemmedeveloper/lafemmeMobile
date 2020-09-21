@@ -12,9 +12,6 @@ import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
 import {Colors, Fonts, ApplicationStyles, Metrics} from '../../../themes';
-import ButtonMaps from './ButtonMaps';
-import ExpandDetail from '../ExpandDetail';
-import moment from 'moment';
 import utilities from '../../../utilities';
 import {setLoading} from '../../../flux/util/actions';
 import Loading from '../../../components/Loading';
@@ -39,7 +36,6 @@ const DetailModal = (props) => {
     countdown(order.date);
   }, []);
 
-  const [menuIndex, setMenuIndex] = useState(0);
   const [dateCount, setDateCount] = useState('');
   const [activeStatus, setActiveStatus] = useState(false);
 
@@ -120,295 +116,286 @@ const DetailModal = (props) => {
       {cancelable: true},
     );
   };
-  const sendLocation = () => {
-    console.log('hello');
-  };
 
   return (
     <>
       <Loading type={'expert'} loading={loading} />
 
       <View style={styles.container}>
-        <View style={styles.contButtonMap}>
-          <ButtonMaps goLocation={sendLocation} />
-        </View>
-
-        <MapView
-          pointerEvents={'none'}
-          provider={PROVIDER_GOOGLE} // remove if not using Google Maps
-          style={styles.mapView}
-          customMapStyle={mapStyle}
-          region={{
-            latitude: order.address.coordinates.latitude,
-            longitude: order.address.coordinates.longitude,
-            latitudeDelta: 0.00002,
-            longitudeDelta: 0.0002 * ASPECT_RATIO,
-          }}>
-          <Marker.Animated
-            coordinate={{
-              latitude: order.address.coordinates.latitude,
-              longitude: order.address.coordinates.longitude,
-            }}>
-            <Icon
-              name={'map-marker-alt'}
-              size={30}
-              color={Colors.client.primaryColor}
-            />
-          </Marker.Animated>
-          <Marker
-            coordinate={{
-              latitude: order.experts.coordinate.latitude,
-              longitude: order.experts.coordinate.longitude,
-            }}>
-            <Icon
-              name={'map-marker-alt'}
-              size={30}
-              color={Colors.expert.primaryColor}
-            />
-          </Marker>
-        </MapView>
-
-        <View style={styles.bordered} />
-        <Text
-          style={[
-            Fonts.style.regular(Colors.dark, Fonts.size.h5, 'left'),
-            {marginLeft: 20, paddingTop: 35},
-          ]}>
-          {'Detalle de la orden'}{' '}
+        <Icon
+          name={'running'}
+          size={30}
+          color={Colors.expert.primaryColor}
+          style={{alignSelf: 'center'}}
+        />
+        <Text style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
+          {'Resumen de la Ordén'}{' '}
           <Text
             style={[
-              Fonts.style.regular(
+              Fonts.style.bold(
                 Colors.expert.primaryColor,
                 Fonts.size.h6,
-                'left',
+                'center',
               ),
-              {marginLeft: 20},
             ]}>
             {cartId}
           </Text>
         </Text>
+        {/*    <View style={styles.contButtonMap}>
+          <ButtonMaps goLocation={sendLocation} />
+        </View> */}
 
-        <ScrollView style={styles.contDetail}>
-          {/* Container */}
+        <ScrollView style={{marginTop: 20}}>
+          <TouchableOpacity onPress={() => console.log('ir map')}>
+            <MapView
+              pointerEvents={'none'}
+              provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+              style={styles.mapView}
+              customMapStyle={mapStyle}
+              region={{
+                latitude: order.address.coordinates.latitude,
+                longitude: order.address.coordinates.longitude,
+                latitudeDelta: 0.00002,
+                longitudeDelta: 0.0002 * ASPECT_RATIO,
+              }}>
+              <Marker.Animated
+                coordinate={{
+                  latitude: order.address.coordinates.latitude,
+                  longitude: order.address.coordinates.longitude,
+                }}>
+                <Icon
+                  name={'map-marker-alt'}
+                  size={30}
+                  color={Colors.client.primaryColor}
+                />
+              </Marker.Animated>
+              <Marker
+                coordinate={{
+                  latitude: order.experts.coordinate.latitude,
+                  longitude: order.experts.coordinate.longitude,
+                }}>
+                <Icon
+                  name={'map-marker-alt'}
+                  size={30}
+                  color={Colors.expert.primaryColor}
+                />
+              </Marker>
+            </MapView>
+          </TouchableOpacity>
+          <View style={{marginTop: 20}}>
+            <Text
+              style={[
+                Fonts.style.bold(Colors.dark, Fonts.size.medium, 'left'),
+                {marginLeft: 20},
+              ]}>
+              Dirección de entrega
+            </Text>
+            <Text
+              style={[
+                Fonts.style.regular(Colors.dark, Fonts.size.medium, 'left'),
+                {marginLeft: 20},
+              ]}>
+              {address.name}
+            </Text>
+            <Text
+              style={[
+                Fonts.style.bold(Colors.dark, Fonts.size.medium, 'left'),
+                {marginLeft: 20},
+              ]}>
+              Nota de entrega
+            </Text>
+            <Text
+              style={[
+                Fonts.style.regular(Colors.dark, Fonts.size.medium, 'left'),
+                {marginLeft: 20},
+              ]}>
+              {address.notesAddress}
+            </Text>
+            <View opacity={0.25} style={styles.separatorLineMini} />
 
-          <ExpandDetail
-            title={'Detalle de direccion'}
-            icon={'map-marker-alt'}
-            action={() => {
-              setMenuIndex(menuIndex === 1 ? 0 : 1);
-            }}
-          />
+            <Text
+              style={[
+                Fonts.style.bold(Colors.dark, Fonts.size.medium, 'left'),
+                {marginLeft: 20},
+              ]}>
+              Cliente
+            </Text>
+            <Text
+              style={[
+                Fonts.style.regular(Colors.dark, Fonts.size.medium, 'left'),
+                {marginLeft: 20},
+              ]}>
+              {`${client.firstName} ${client.lastName}`}
+            </Text>
+            <Text
+              style={[
+                Fonts.style.bold(Colors.dark, Fonts.size.medium, 'left'),
+                {marginLeft: 20},
+              ]}>
+              Télefono
+            </Text>
+            <Text
+              style={[
+                Fonts.style.regular(Colors.dark, Fonts.size.medium, 'left'),
+                {marginLeft: 20},
+              ]}>
+              {client.phone}
+            </Text>
+            <View opacity={0.25} style={ApplicationStyles.separatorLine} />
 
-          {menuIndex === 1 && (
-            <View style={styles.contExpand}>
-              <Text
-                style={[
-                  Fonts.style.regular(Colors.dark, Fonts.size.medium, 'left'),
-                  {marginLeft: 20},
-                ]}>
-                Entregar en: {address.name}
-              </Text>
-              <Text
-                style={[
-                  Fonts.style.regular(Colors.dark, Fonts.size.medium, 'left'),
-                  {marginLeft: 20},
-                ]}>
-                Barrio: {address.neighborhood}
-              </Text>
-              <Text
-                style={[
-                  Fonts.style.regular(Colors.dark, Fonts.size.medium, 'left'),
-                  {marginLeft: 20},
-                ]}>
-                Nota: {address.notesAddress}
-              </Text>
-            </View>
-          )}
+            {services &&
+              services.map((item, index) => {
+                const {name, clients, addOnsCount, addons} = item;
+                console.log('addons =========>', addons);
 
-          <View opacity={0.25} style={ApplicationStyles.separatorLine} />
+                return (
+                  <Fragment key={index}>
+                    <Text
+                      style={[
+                        Fonts.style.bold(
+                          Colors.dark,
+                          Fonts.size.medium,
+                          'left',
+                        ),
+                        {marginLeft: 20},
+                      ]}>
+                      Producto
+                    </Text>
+                    <Text
+                      style={[
+                        Fonts.style.regular(
+                          Colors.dark,
+                          Fonts.size.medium,
+                          'left',
+                        ),
+                        {marginLeft: 20},
+                      ]}>
+                      {name}
+                    </Text>
+                    <Text
+                      style={[
+                        Fonts.style.bold(
+                          Colors.dark,
+                          Fonts.size.medium,
+                          'left',
+                        ),
+                        {marginLeft: 20},
+                      ]}>
+                      Clientes o invitados
+                    </Text>
 
-          <ExpandDetail
-            title={'Detalle del cliente'}
-            icon={'user-alt'}
-            action={() => {
-              setMenuIndex(menuIndex === 2 ? 0 : 2);
-            }}
-          />
-          {menuIndex === 2 && (
-            <View style={styles.contExpand}>
-              <Text
-                style={[
-                  Fonts.style.regular(Colors.dark, Fonts.size.medium, 'left'),
-                  {marginLeft: 20},
-                ]}>
-                Preguntar por: {`${client.firstName} ${client.lastName}`}
-              </Text>
-            </View>
-          )}
+                    <Text
+                      style={[
+                        Fonts.style.regular(
+                          Colors.dark,
+                          Fonts.size.medium,
+                          'left',
+                        ),
+                        {marginLeft: 20},
+                      ]}>
+                      {clients.length}
+                    </Text>
 
-          <View opacity={0.25} style={ApplicationStyles.separatorLine} />
-          <ExpandDetail
-            title={'Detalle del servicio'}
-            icon={'border-all'}
-            action={() => {
-              setMenuIndex(menuIndex === 3 ? 0 : 3);
-            }}
-          />
-          {menuIndex === 3 && (
-            <View style={styles.contExpand}>
-              {services &&
-                services.map((item, index) => {
-                  const {name, clients, addOnsCount, addons} = item;
-                  console.log('addons =========>', addons);
+                    <View opacity={0.25} style={styles.separatorLineMini} />
 
-                  return (
-                    <Fragment key={index}>
+                    <Text
+                      style={[
+                        Fonts.style.bold(
+                          Colors.dark,
+                          Fonts.size.medium,
+                          'left',
+                        ),
+                        {marginLeft: 20},
+                      ]}>
+                      Adicionales comunes
+                    </Text>
+                    {addons.length > 0 ? (
+                      addons.map((dataAddon) => {
+                        const {addonName, id} = dataAddon;
+                        console.log('name ', dataAddon);
+                        return (
+                          <Fragment key={id}>
+                            <Text
+                              style={[
+                                Fonts.style.regular(
+                                  Colors.dark,
+                                  Fonts.size.medium,
+                                  'left',
+                                ),
+                                {marginLeft: 20},
+                              ]}>
+                              {addonName}{' '}
+                            </Text>
+                          </Fragment>
+                        );
+                      })
+                    ) : (
                       <Text
                         style={[
                           Fonts.style.regular(
                             Colors.dark,
                             Fonts.size.medium,
-                            'center',
+                            'left',
                           ),
-                          {marginLeft: 20},
+                          {marginLeft: 20, marginTop: 10},
                         ]}>
-                        Producto: {name}
+                        No ahi adiciones comunes
                       </Text>
-                      <Text
-                        style={[
-                          Fonts.style.regular(
-                            Colors.dark,
-                            Fonts.size.medium,
-                            'center',
-                          ),
-                          {marginLeft: 20},
-                        ]}>
-                        Para: {clients.length} Personas
-                      </Text>
-                      <View opacity={0.25} style={styles.separatorLineMini} />
-
-                      <Text
-                        style={[
-                          Fonts.style.regular(
-                            Colors.dark,
-                            Fonts.size.medium,
-                            'center',
-                          ),
-                          {marginVertical: 10},
-                        ]}>
-                        Addicionales comunes
-                      </Text>
-                      {addons.length > 0 ? (
-                        addons.map((dataAddon) => {
-                          const {addonName, id} = dataAddon;
-                          console.log('name ', dataAddon);
-                          return (
-                            <Fragment key={id}>
+                    )}
+                    <View opacity={0.25} style={styles.separatorLineMini} />
+                    <Text
+                      style={[
+                        Fonts.style.bold(
+                          Colors.dark,
+                          Fonts.size.medium,
+                          'left',
+                        ),
+                        {marginLeft: 20},
+                      ]}>
+                      Addicionales contable
+                    </Text>
+                    {addOnsCount.length > 0 ? (
+                      addOnsCount.map((addonCount) => {
+                        const {name, count, id} = addonCount;
+                        return (
+                          <Fragment key={id}>
+                            <Text
+                              style={[
+                                Fonts.style.regular(
+                                  Colors.dark,
+                                  Fonts.size.medium,
+                                  'left',
+                                ),
+                                {marginLeft: 20},
+                              ]}>
+                              Adiconal: {name}{' '}
                               <Text
                                 style={[
-                                  Fonts.style.regular(
+                                  Fonts.style.bold(
                                     Colors.dark,
                                     Fonts.size.medium,
-                                    'center',
+                                    'left',
                                   ),
                                   {marginLeft: 20},
                                 ]}>
-                                Adicional: {addonName}
+                                X{' '}
+                                <Text
+                                  style={[
+                                    Fonts.style.regular(
+                                      Colors.dark,
+                                      Fonts.size.medium,
+                                      'left',
+                                    ),
+                                    {marginLeft: 20},
+                                  ]}>
+                                  {count}
+                                </Text>
                               </Text>
-                            </Fragment>
-                          );
-                        })
-                      ) : (
-                        <Text
-                          style={[
-                            Fonts.style.regular(
-                              Colors.dark,
-                              Fonts.size.medium,
-                              'center',
-                            ),
-                            {marginLeft: 20},
-                          ]}>
-                          No ahi adiciones comunes
-                        </Text>
-                      )}
-                      <View opacity={0.25} style={styles.separatorLineMini} />
-
-                      <Text
-                        style={[
-                          Fonts.style.regular(
-                            Colors.dark,
-                            Fonts.size.medium,
-                            'center',
-                          ),
-                          {marginVertical: 10},
-                        ]}>
-                        Addicionales contable
-                      </Text>
-                      {addOnsCount.length > 0 ? (
-                        addOnsCount.map((addonCount) => {
-                          const {name, count, id} = addonCount;
-                          return (
-                            <Fragment key={id}>
-                              <Text
-                                style={[
-                                  Fonts.style.regular(
-                                    Colors.dark,
-                                    Fonts.size.medium,
-                                    'center',
-                                  ),
-                                  {marginLeft: 20},
-                                ]}>
-                                Addiconal: {name}
-                              </Text>
-                              <Text
-                                style={[
-                                  Fonts.style.regular(
-                                    Colors.dark,
-                                    Fonts.size.medium,
-                                    'center',
-                                  ),
-                                  {marginLeft: 20},
-                                ]}>
-                                Cantidad: {count}
-                              </Text>
-                            </Fragment>
-                          );
-                        })
-                      ) : (
-                        <Text
-                          style={[
-                            Fonts.style.regular(
-                              Colors.dark,
-                              Fonts.size.medium,
-                              'center',
-                            ),
-                            {marginLeft: 20},
-                          ]}>
-                          No ahi adiciones contables
-                        </Text>
-                      )}
-                    </Fragment>
-                  );
-                })}
-            </View>
-          )}
-          <View opacity={0.25} style={ApplicationStyles.separatorLine} />
-
-          <ExpandDetail
-            title={'Detalle de como cobrar'}
-            icon={'money-bill-wave'}
-            action={() => {
-              setMenuIndex(menuIndex === 4 ? 0 : 4);
-            }}
-          />
-          {menuIndex === 4 && (
-            <View style={styles.contExpand}>
-              {services &&
-                services.map((item, index) => {
-                  const {duration, total, totalAddons, totalServices} = item;
-
-                  return (
-                    <Fragment key={index}>
+                            </Text>
+                          </Fragment>
+                        );
+                      })
+                    ) : (
                       <Text
                         style={[
                           Fonts.style.regular(
@@ -416,109 +403,162 @@ const DetailModal = (props) => {
                             Fonts.size.medium,
                             'left',
                           ),
-                          {marginLeft: 20},
+                          {marginLeft: 20, marginVertical: 10},
                         ]}>
-                        duracion : {duration} mins
+                        No ahi adiciones comunes
                       </Text>
+                    )}
+                  </Fragment>
+                );
+              })}
+            <View opacity={0.25} style={styles.separatorLineMini} />
 
-                      <Text
-                        style={[
-                          Fonts.style.regular(
-                            Colors.dark,
-                            Fonts.size.medium,
-                            'left',
-                          ),
-                          {marginLeft: 20},
-                        ]}>
-                        SubTotal : {utilities.formatCOP(totalServices)}
-                      </Text>
-                      <Text
-                        style={[
-                          Fonts.style.regular(
-                            Colors.dark,
-                            Fonts.size.medium,
-                            'left',
-                          ),
-                          {marginLeft: 20},
-                        ]}>
-                        Adiciones : {utilities.formatCOP(totalAddons)}
-                      </Text>
-                      <Text
-                        style={[
-                          Fonts.style.regular(
-                            Colors.dark,
-                            Fonts.size.medium,
-                            'left',
-                          ),
-                          {marginLeft: 20},
-                        ]}>
-                        total de servicios: {utilities.formatCOP(total)}
-                      </Text>
-                    </Fragment>
-                  );
-                })}
-            </View>
-          )}
-          <View opacity={0.25} style={ApplicationStyles.separatorLine} />
-          <ExpandDetail
-            title={'Agenda'}
-            icon={'calendar'}
-            action={() => {
-              setMenuIndex(menuIndex === 5 ? 0 : 5);
-            }}
-          />
-          {menuIndex === 5 && (
-            <View style={styles.contExpand}>
-              <Text
-                style={[
-                  Fonts.style.regular(Colors.dark, Fonts.size.medium, 'left'),
-                  {marginLeft: 20},
-                ]}>
-                Fecha: {moment(order.date).format('llll')}
-              </Text>
-            </View>
-          )}
+            <Text
+              style={[
+                Fonts.style.bold(Colors.dark, Fonts.size.medium, 'left'),
+                {marginLeft: 20},
+              ]}>
+              Resumen a cobrar
+            </Text>
+            {services &&
+              services.map((item, index) => {
+                const {duration, total, totalAddons, totalServices} = item;
 
-          {order.status === 1 && (
-            <TouchableOpacity
-              onPress={() => changeStatus(2)}
-              style={[styles.btnContainer]}>
-              <Text
-                style={[
-                  Fonts.style.bold(Colors.light, Fonts.size.medium),
-                  {alignSelf: 'center'},
-                ]}>
-                Colocarme en ruta
-              </Text>
-            </TouchableOpacity>
-          )}
-          {order.status === 2 && (
-            <TouchableOpacity
-              onPress={() => changeStatus(3)}
-              style={[styles.btnContainer]}>
-              <Text
-                style={[
-                  Fonts.style.bold(Colors.light, Fonts.size.medium),
-                  {alignSelf: 'center'},
-                ]}>
-                Colocarme en servicio
-              </Text>
-            </TouchableOpacity>
-          )}
-          {order.status === 3 && (
-            <TouchableOpacity
-              onPress={() => changeStatus(4)}
-              style={[styles.btnContainer]}>
-              <Text
-                style={[
-                  Fonts.style.bold(Colors.light, Fonts.size.medium),
-                  {alignSelf: 'center'},
-                ]}>
-                Finalizando servicio
-              </Text>
-            </TouchableOpacity>
-          )}
+                return (
+                  <Fragment key={index}>
+                    <Text
+                      style={[
+                        Fonts.style.regular(
+                          Colors.dark,
+                          Fonts.size.medium,
+                          'left',
+                        ),
+                        {marginLeft: 20},
+                      ]}>
+                      Duracion :{' '}
+                      <Text
+                        style={[
+                          Fonts.style.bold(
+                            Colors.dark,
+                            Fonts.size.medium,
+                            'left',
+                          ),
+                          {marginLeft: 20},
+                        ]}>
+                        {duration} mins
+                      </Text>
+                    </Text>
+
+                    <Text
+                      style={[
+                        Fonts.style.regular(
+                          Colors.dark,
+                          Fonts.size.medium,
+                          'left',
+                        ),
+                        {marginLeft: 20},
+                      ]}>
+                      SubTotal :{' '}
+                      <Text
+                        style={[
+                          Fonts.style.bold(
+                            Colors.dark,
+                            Fonts.size.medium,
+                            'left',
+                          ),
+                          {marginLeft: 20},
+                        ]}>
+                        {utilities.formatCOP(totalServices)}
+                      </Text>
+                    </Text>
+                    <Text
+                      style={[
+                        Fonts.style.regular(
+                          Colors.dark,
+                          Fonts.size.medium,
+                          'left',
+                        ),
+                        {marginLeft: 20},
+                      ]}>
+                      Adiciones :{' '}
+                      <Text
+                        style={[
+                          Fonts.style.bold(
+                            Colors.dark,
+                            Fonts.size.medium,
+                            'left',
+                          ),
+                          {marginLeft: 20},
+                        ]}>
+                        {utilities.formatCOP(totalAddons)}
+                      </Text>
+                    </Text>
+                    <Text
+                      style={[
+                        Fonts.style.regular(
+                          Colors.dark,
+                          Fonts.size.medium,
+                          'left',
+                        ),
+                        {marginLeft: 20},
+                      ]}>
+                      Total de servicios:{' '}
+                      <Text
+                        style={[
+                          Fonts.style.bold(
+                            Colors.dark,
+                            Fonts.size.medium,
+                            'left',
+                          ),
+                          {marginLeft: 20},
+                        ]}>
+                        {utilities.formatCOP(total)}
+                      </Text>
+                    </Text>
+                  </Fragment>
+                );
+              })}
+          </View>
         </ScrollView>
+        {order.status === 1 && (
+          <TouchableOpacity
+            onPress={() => changeStatus(2)}
+            style={[styles.btnContainer]}>
+            <Text
+              style={[
+                Fonts.style.bold(Colors.light, Fonts.size.medium),
+                {alignSelf: 'center'},
+              ]}>
+              Colocarme en ruta
+            </Text>
+          </TouchableOpacity>
+        )}
+        {order.status === 2 && (
+          <TouchableOpacity
+            onPress={() => changeStatus(3)}
+            style={[styles.btnContainer]}>
+            <Text
+              style={[
+                Fonts.style.bold(Colors.light, Fonts.size.medium),
+                {alignSelf: 'center'},
+              ]}>
+              Colocarme en servicio
+            </Text>
+          </TouchableOpacity>
+        )}
+        {order.status === 3 && (
+          <TouchableOpacity
+            onPress={() => changeStatus(4)}
+            style={[styles.btnContainer]}>
+            <Text
+              style={[
+                Fonts.style.bold(Colors.light, Fonts.size.medium),
+                {alignSelf: 'center'},
+              ]}>
+              Finalizando servicio
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
     </>
   );
@@ -526,46 +566,15 @@ const DetailModal = (props) => {
 
 const styles = StyleSheet.create({
   container: {
-    height: '95%',
+    height: Metrics.screenHeight - 100,
+    paddingTop: 40,
   },
   mapView: {
     width: '100%',
     height: 200,
   },
-  contButtonMap: {
-    position: 'absolute',
-    flex: 0,
-    justifyContent: 'flex-end',
-    zIndex: 20,
-    alignSelf: 'flex-end',
-    top: 50,
-    right: 20,
-  },
-  bordered: {
-    backgroundColor: Colors.light,
-    width: '100%',
-    height: 30,
-    zIndex: 30,
-    borderTopRightRadius: 40,
-    borderTopLeftRadius: 40,
-    position: 'absolute',
-    marginTop: 170,
-  },
-  contDetail: {
-    paddingTop: 20,
-    marginBottom: -100,
-  },
-  contExpand: {
-    marginLeft: 50,
-    marginVertical: 20,
-    backgroundColor: Colors.background,
-
-    padding: 10,
-    borderRadius: 10,
-    width: '80%',
-  },
   separatorLineMini: {
-    width: Metrics.screenWidth * 0.5,
+    width: Metrics.screenWidth * 0.9,
     alignSelf: 'center',
     height: 0.5,
     backgroundColor: Colors.dark,
@@ -578,6 +587,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignSelf: 'center',
     justifyContent: 'center',
+    marginVertical: 20,
   },
 });
 

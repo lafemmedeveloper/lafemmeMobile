@@ -1,6 +1,6 @@
-import React, {useContext, useState, useEffect} from 'react';
-import {View, ScrollView, StyleSheet} from 'react-native';
-import {Colors, Metrics, ApplicationStyles} from '../../themes';
+import React, {useContext, useState, useEffect, Fragment} from 'react';
+import {View, ScrollView, StyleSheet, Text} from 'react-native';
+import {Colors, Metrics, ApplicationStyles, Fonts} from '../../themes';
 import ExpertDealOffer from '../../components/ExpertDealOffer';
 import {StoreContext} from '../../flux';
 import {updateProfile} from '../../flux/auth/actions';
@@ -15,12 +15,18 @@ import {
 import Geolocation from '@react-native-community/geolocation';
 import NoOrders from './NoOrders';
 import HeaderExpert from './HeaderExpert';
+import ModalApp from '../../components/ModalApp';
+import DetailModal from '../HistoryExpert/DetailModal';
+import NextOrder from '../NextOrder';
 
 const HomeExpert = () => {
   const {state, authDispatch, utilDispatch} = useContext(StoreContext);
   const {auth, util} = state;
   const {user, loading} = auth;
-  const {expertActiveOrders, deviceInfo} = util;
+  const {expertActiveOrders, deviceInfo, nextOrder} = util;
+
+  const [modalDetail, setModalDetail] = useState(false);
+  const [detailOrder, setDetailOrder] = useState(null);
 
   console.log('appType =>', appType);
   useEffect(() => {
@@ -59,16 +65,40 @@ const HomeExpert = () => {
 
   console.log('loading home =>', loading);
 
-  console.log('coordinate home =>', coordinate);
+  console.log('nextOrder=>', typeof nextOrder);
+  const activeDetailModal = (order) => {
+    setDetailOrder(order);
+    setModalDetail(true);
+  };
   return (
     <>
       <View style={styles.container}>
         <HeaderExpert user={user} dispatch={authDispatch} />
+        {nextOrder &&
+          nextOrder.length > 0 &&
+          nextOrder.map((item, index) => {
+            return (
+              <Fragment key={index}>
+                <NextOrder
+                  activeDetailModal={activeDetailModal}
+                  order={item}
+                  appType={'expert'}
+                />
+              </Fragment>
+            );
+          })}
 
         {expertActiveOrders && expertActiveOrders.length > 0 ? (
           <ScrollView
             style={[ApplicationStyles.scrollHomeExpert, {flex: 1}]}
             bounces={true}>
+            <Text
+              style={[
+                Fonts.style.bold(Colors.dark, Fonts.size.h6, 'left'),
+                {marginVertical: 20, marginLeft: 20},
+              ]}>
+              {`Tienes una ordén ${expertActiveOrders.length} disponible`}
+            </Text>
             {expertActiveOrders.map((item, index) => {
               return (
                 <View key={index}>
@@ -86,6 +116,9 @@ const HomeExpert = () => {
           <NoOrders user={user} />
         )}
       </View>
+      <ModalApp open={modalDetail} setOpen={setModalDetail}>
+        <DetailModal order={detailOrder} setModalDetail={setModalDetail} />
+      </ModalApp>
     </>
   );
 };

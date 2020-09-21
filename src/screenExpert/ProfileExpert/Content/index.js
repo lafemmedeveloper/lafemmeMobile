@@ -91,7 +91,7 @@ const Content = (props) => {
                         starSize={15}
                         emptyStarColor={Colors.gray}
                         fullStarColor={Colors.start}
-                        halfStarColor={Colors.gray}
+                        halfStarColor={Colors.start}
                       />
                     </>
                   )}
