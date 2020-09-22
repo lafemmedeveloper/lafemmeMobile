@@ -1,4 +1,3 @@
-/* eslint-disable no-shadow */
 /* eslint-disable no-bitwise */
 export default {
   create_UUID: () => {
@@ -18,7 +17,7 @@ export default {
     console.log(`%c${title}: ${value}`, `color: ${color};`);
     return null;
   },
-  create_CARTID: () => {
+  create_CartId: () => {
     let date = new Date().getTime();
     const uuid = 'xxxxxx'.replace(/[xy]/g, function (c) {
       const r = (date + Math.random() * 16) % 16 | 0;
@@ -47,8 +46,8 @@ export default {
       .trim()
       .toLowerCase()
       .replace(/\s+/g, '-')
-      .replace(/[^\w\-]+/g, '')
-      .replace(/\-\-+/g, '-')
+      .replace(/[^\w-]+/g, '')
+      .replace(/--+/g, '-')
       .replace(/^-+/, '')
       .replace(/-+$/, '');
   },

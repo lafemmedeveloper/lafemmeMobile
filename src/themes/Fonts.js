@@ -1,13 +1,3 @@
-import Colors from './Colors';
-import Metrics from './Metrics';
-
-const type = {
-  light: 'OpenSans-Light',
-  regular: 'OpenSans-Regular',
-  bold: 'OpenSans-Bold',
-  semiBold: 'OpenSans-SemiBold',
-};
-
 const size = {
   bigTitle: 50,
   h1: 38,
@@ -25,25 +15,25 @@ const size = {
 
 const style = {
   bold: (color, fontSize, align) => ({
-    fontFamily: type.bold,
+    fontWeight: 'bold',
     color: color,
     fontSize,
     textAlign: align,
   }),
   semiBold: (color, fontSize, align) => ({
-    fontFamily: type.semiBold,
+    fontWeight: '700',
     color: color,
     fontSize,
     textAlign: align,
   }),
   regular: (color, fontSize, align) => ({
-    fontFamily: type.regular,
+    fontWeight: 'normal',
     color: color,
     fontSize,
     textAlign: align,
   }),
   underline: (color, fontSize, align) => ({
-    fontFamily: type.regular,
+    fontWeight: 'normal',
     textDecorationLine: 'underline',
     color: color,
     fontSize,
@@ -51,7 +41,7 @@ const style = {
   }),
 
   light: (color, fontSize, align) => ({
-    fontFamily: type.light,
+    fontWeight: '500',
     color: color,
     fontSize,
     textAlign: align,
@@ -59,7 +49,6 @@ const style = {
 };
 
 export default {
-  type,
   size,
   style,
 };

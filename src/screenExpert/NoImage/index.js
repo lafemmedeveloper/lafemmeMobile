@@ -40,7 +40,7 @@ const NoImage = () => {
 
   useEffect(() => {
     setName(user.firstName);
-  }, []);
+  }, [user.firstName]);
 
   const pickImage = () => {
     //setLoading(true);
@@ -49,7 +49,7 @@ const NoImage = () => {
         console.log('Ups...', 'You cancelled image picker 😟');
         //setLoading(false);
       } else if (response.error) {
-        Alert.alert('Ups...', 'And error occured: ', response.error);
+        Alert.alert('Ups...', 'And error occurred: ', response.error);
         // setLoading(false);
       } else {
         const source = {uri: response.uri};
@@ -376,7 +376,7 @@ const NoImage = () => {
               Fonts.size.h6,
               'center',
             )}>
-            {'Cerrar sesion'}{' '}
+            {'Cerrar sesión'}{' '}
             <Icon
               name={'power-off'}
               size={15}

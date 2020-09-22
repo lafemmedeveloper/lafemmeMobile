@@ -38,7 +38,7 @@ const AddAddress = (props) => {
   const LATITUDE_DELTA = 0.0003;
   const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
-  let addresStatus = {
+  let addressStatus = {
     searching: 0,
     coverage: 1,
     noCoverage: 2,
@@ -54,7 +54,7 @@ const AddAddress = (props) => {
   const [googleAddress, setGoogleAddress] = useState(null);
   const [googleDetail, setGoogleDetail] = useState(null);
   const [name, setName] = useState(null);
-  const [isCoverage, setIsCoverage] = useState(addresStatus.searching);
+  const [isCoverage, setIsCoverage] = useState(addressStatus.searching);
   const [notifyCoverage, setNotifyCoverage] = useState(true);
   const [buildType, setBuildType] = useState(locationType.house);
   const [addressDetail, setAddressDetail] = useState('');
@@ -66,12 +66,12 @@ const AddAddress = (props) => {
   });
   useEffect(() => {
     getCoverage('Medellín', utilDispatch);
-  }, []);
+  }, [utilDispatch]);
 
   const checkCoverage = (latitude, longitude) => {
     let coverage = validateCoverage(latitude, longitude, coverageZones);
 
-    setIsCoverage(coverage ? addresStatus.coverage : addresStatus.noCoverage);
+    setIsCoverage(coverage ? addressStatus.coverage : addressStatus.noCoverage);
 
     console.log('coverage=>', isCoverage);
   };
@@ -98,7 +98,7 @@ const AddAddress = (props) => {
     console.log('=== saveAddress address ==>', address);
     await updateProfile(address, 'address', authDispatch);
 
-    setIsCoverage(addresStatus.searching);
+    setIsCoverage(addressStatus.searching);
     closeAddAddress(false);
   };
 
@@ -139,9 +139,9 @@ const AddAddress = (props) => {
   };
   const closeModalCoverage = (data) => {
     if (!data) {
-      setIsCoverage(addresStatus.searching);
+      setIsCoverage(addressStatus.searching);
     } else {
-      setIsCoverage(addresStatus.searching);
+      setIsCoverage(addressStatus.searching);
     }
   };
 
@@ -297,7 +297,7 @@ const AddAddress = (props) => {
             },
           }}
           currentLocation={false} // Will add a 'Current location' button at the top of the predefined places list
-          currentLocationLabel={'Mi ubicacion actual'}
+          currentLocationLabel={'Mi ubicación actual'}
           nearbyPlacesAPI={'GooglePlacesSearch'} // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
           GoogleReverseGeocodingQuery={
             {
@@ -386,7 +386,7 @@ const AddAddress = (props) => {
         {/* Modals */}
       </TouchableOpacity>
       <ModalApp // false coverage
-        open={isCoverage === addresStatus.noCoverage}
+        open={isCoverage === addressStatus.noCoverage}
         setOpen={closeModalCoverage}>
         <NoEnableCoverage
           notifyCoverage={notifyCoverage}
@@ -397,7 +397,7 @@ const AddAddress = (props) => {
         />
       </ModalApp>
       <ModalApp // true coverage
-        open={isCoverage === addresStatus.coverage}
+        open={isCoverage === addressStatus.coverage}
         setOpen={closeModalCoverage}>
         <EnableCoverage
           googleDetail={googleDetail}
@@ -509,16 +509,6 @@ const styles = StyleSheet.create({
     marginVertical: 20,
   },
 
-  welcome: {
-    fontFamily: Fonts.type.base,
-    color: Colors.dark,
-    marginVertical: 10,
-    marginHorizontal: 20,
-    fontSize: Fonts.size.h6,
-    textAlignVertical: 'center',
-    textAlign: 'center',
-  },
-
   descriptorContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -527,14 +517,14 @@ const styles = StyleSheet.create({
 
   selectorText: {
     marginHorizontal: 20,
-    fontFamily: Fonts.type.bold,
+    fontWeight: 'bold',
     color: Colors.dark,
     fontSize: Fonts.size.medium,
     textAlignVertical: 'center',
     textAlign: 'center',
   },
   btnText: {
-    fontFamily: Fonts.type.bold,
+    fontWeight: 'bold',
     color: Colors.dark,
     fontSize: Fonts.size.medium,
     textAlignVertical: 'center',

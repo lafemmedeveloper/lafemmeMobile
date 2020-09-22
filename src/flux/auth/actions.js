@@ -93,6 +93,8 @@ export const updateProfile = async (data, typeData, dispatch) => {
 export const Login = async (email, password, dispatch) => {
   try {
     setLoading(true, dispatch);
+
+    console.log('Login =>');
     const currentUser = await auth().signInWithEmailAndPassword(
       email,
       password,

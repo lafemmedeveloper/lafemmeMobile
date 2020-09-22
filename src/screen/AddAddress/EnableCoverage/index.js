@@ -309,16 +309,6 @@ const styles = StyleSheet.create({
     marginVertical: 20,
   },
 
-  welcome: {
-    fontFamily: Fonts.type.base,
-    color: Colors.dark,
-    marginVertical: 10,
-    marginHorizontal: 20,
-    fontSize: Fonts.size.h6,
-    textAlignVertical: 'center',
-    textAlign: 'center',
-  },
-
   descriptorContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -327,14 +317,14 @@ const styles = StyleSheet.create({
 
   selectorText: {
     marginHorizontal: 20,
-    fontFamily: Fonts.type.bold,
+    fontWeight: 'bold',
     color: Colors.dark,
     fontSize: Fonts.size.medium,
     textAlignVertical: 'center',
     textAlign: 'center',
   },
   btnText: {
-    fontFamily: Fonts.type.bold,
+    fontWeight: 'bold',
     color: Colors.dark,
     fontSize: Fonts.size.medium,
     textAlignVertical: 'center',
