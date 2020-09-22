@@ -687,7 +687,7 @@ const Content = (props) => {
         </View>
       </ModalApp>
       <ModalApp open={galleryModal} setOpen={setGalleryModal}>
-        <GalleryExpert user={user} />
+        <GalleryExpert user={user} services={activity} />
       </ModalApp>
     </>
   );
@@ -717,3 +717,4 @@ const styles = StyleSheet.create({
   },
 });
 export default Content;
+

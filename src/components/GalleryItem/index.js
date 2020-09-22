@@ -22,12 +22,12 @@ export default (data) => {
         }}>
         <FastImage
           source={{uri: item.expertImage}}
-          style={{width: 50, height: 50, borderRadius: 20, marginRight: 10}}
+          style={{width: 50, height: 50, borderRadius: 25, marginRight: 10}}
         />
         <View>
           <Text
             style={Fonts.style.regular(Colors.dark, Fonts.size.small, 'left')}>
-            Expert: {item.expertName} Cliente: {item.clientName}
+            Expert: {item.expertName}
           </Text>
 
           <Text
