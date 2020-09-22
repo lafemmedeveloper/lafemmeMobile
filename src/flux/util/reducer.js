@@ -10,13 +10,14 @@ import {
   GET_EXPERT_OPEN_ORDERS,
   GET_COORDINATE,
   GET_EXPERT_ORDER_HISTORY,
+  GET_NAME_SERVICE,
 } from './types';
 import _ from 'lodash';
 
 export const INITIAL_STATE_UTIL = {
   loading: false,
   error: false,
-  gallery: null,
+  gallery: [],
   coverageZones: [],
   orders: [],
   history: [],
@@ -31,6 +32,7 @@ export const INITIAL_STATE_UTIL = {
   expertActiveOrders: [],
   ordersAll: [],
   nextOrder: [],
+  activity: [],
 };
 
 const setLoading = (state, action) => {
@@ -106,6 +108,12 @@ const getOrderHistory = (state, action) => {
     expertHistoryOrders: action.payload,
   };
 };
+const getNameService = (state, action) => {
+  return {
+    ...state,
+    activity: [...state.activity, action.payload],
+  };
+};
 
 export default createReducer(INITIAL_STATE_UTIL, {
   [LOADING]: setLoading,
@@ -118,4 +126,5 @@ export default createReducer(INITIAL_STATE_UTIL, {
   [GET_EXPERT_OPEN_ORDERS]: getExpertOpenOrders,
   [GET_COORDINATE]: getCoordinate,
   [GET_EXPERT_ORDER_HISTORY]: getOrderHistory,
+  [GET_NAME_SERVICE]: getNameService,
 });

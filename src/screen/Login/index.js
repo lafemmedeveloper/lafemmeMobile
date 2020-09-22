@@ -21,7 +21,7 @@ const Login = (props) => {
   const {setModalAuth} = props;
   const {authDispatch, state} = useContext(StoreContext);
 
-  console.log('state=>', state);
+  // console.log('state=>', state);
   const initialState = {
     country: {
       cca2: 'CO',

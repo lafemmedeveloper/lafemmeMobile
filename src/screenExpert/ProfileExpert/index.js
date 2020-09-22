@@ -12,7 +12,12 @@ const ProfileExpert = () => {
     return <Text> no ahi foto</Text>;
   } else {
     return (
-      <Content state={auth} dispatch={authDispatch} deviceInfo={deviceInfo} />
+      <Content
+        state={auth}
+        util={util}
+        dispatch={authDispatch}
+        deviceInfo={deviceInfo}
+      />
     );
   }
 };

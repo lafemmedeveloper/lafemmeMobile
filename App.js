@@ -11,11 +11,12 @@ console.disableYellowBox = true;
 const App = () => {
   console.log('==> Config:', Config);
   console.log('==> bundleId:', bundleId);
+
+  const isClient =
+    bundleId === 'com.femme.client' || bundleId === 'com.femme.clientstaging';
   return (
     <>
-      <Store>
-        {bundleId === 'com.femme.client' ? <Router /> : <RouterExpert />}
-      </Store>
+      <Store>{isClient ? <Router /> : <RouterExpert />}</Store>
     </>
   );
 };

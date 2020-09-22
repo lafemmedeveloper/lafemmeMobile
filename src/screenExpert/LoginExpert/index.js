@@ -19,7 +19,7 @@ const LoginExpert = () => {
   const {auth} = state;
   const {loading} = auth;
 
-  const [email, setEmail] = useState('eglis@gmail.com');
+  const [email, setEmail] = useState('expert@gmail.com');
   const [password, setPassword] = useState('123456');
 
   const handleLogin = async () => {

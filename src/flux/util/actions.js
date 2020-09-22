@@ -8,6 +8,7 @@ import {
   GET_EXPERT_ACTIVE_ORDERS,
   GET_EXPERT_OPEN_ORDERS,
   GET_EXPERT_ORDER_HISTORY,
+  GET_NAME_SERVICE,
 } from './types';
 
 import firestore from '@react-native-firebase/firestore';
@@ -263,7 +264,7 @@ export const addImageGallery = async (data, id, dispatch) => {
     setLoading(true, dispatch);
     const userRef = firestore().collection('gallery').doc(id);
     await userRef.set(data);
-
+    await getGallery(dispatch);
     setLoading(false, dispatch);
   } catch (error) {
     setLoading(false, dispatch);
@@ -303,5 +304,40 @@ export const updateNote = async (id, note, dispatch) => {
   } catch (error) {
     setLoading(false, dispatch);
     console.log('error', error);
+  }
+};
+export const activeNameSlug = async (activity, dispatch) => {
+  console.log('activity', activity);
+
+  try {
+    const ref = await firestore().collection('services').get();
+
+    const data = ref.docs.map((doc) => {
+      const item = doc.data();
+      return {
+        ...item,
+        id: doc.id,
+      };
+    });
+    activity.forEach((element) => {
+      const result = data.filter((item) => item.slug === element);
+      dispatch({type: GET_NAME_SERVICE, payload: result});
+    });
+
+    setLoading(false, dispatch);
+  } catch (error) {
+    console.log('activeNameSlug error', error);
+  }
+};
+
+export const onDeleteGallery = async (id, dispatch) => {
+  setLoading(true, dispatch);
+  try {
+    setLoading(false, dispatch);
+    await firestore().collection('gallery').doc(id).delete();
+    await getGallery(dispatch);
+    setLoading(false, dispatch);
+  } catch (error) {
+    console.log('onDeleteGallery error', error);
   }
 };

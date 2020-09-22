@@ -37,23 +37,23 @@ const CartScreen = (props) => {
   const [dateCalendar, setDateCalendar] = useState('');
   const [time, setTime] = useState('');
   const [notes, setNotes] = useState('');
-  const [modalnote, setModalnote] = useState(false);
+  const [modalNote, setModalNote] = useState(false);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [isTimePickerVisible, setIsTimePickerVisible] = useState(false);
   console.log('moment =>', moment(new Date()).format('YYYY-MM-DD HH:mm:ss'));
 
   useEffect(() => {
     observeUser(authDispatch);
-  }, []);
+  }, [authDispatch]);
 
   useEffect(() => {
     getServices(serviceDispatch);
-  }, []);
+  }, [serviceDispatch]);
 
   const updateNotes = async (notes) => {
     try {
       updateProfile({...user.cart, notes}, 'cart', authDispatch);
-      setModalnote(false);
+      setModalNote(false);
     } catch (err) {
       console.log('updateNotes:error', err);
     }
@@ -138,7 +138,7 @@ const CartScreen = (props) => {
 
   useEffect(() => {
     getCoverage('Medellín', utilDispatch);
-  }, []);
+  }, [utilDispatch]);
 
   const handleConfirmDate = (date) => {
     const handleDate = moment(date).format('YYYY-MM-DD');
@@ -192,7 +192,7 @@ const CartScreen = (props) => {
 
         <Text
           style={Fonts.style.light(Colors.data, Fonts.size.small, 'center')}>
-          {'Agrega los servicios segun el orden que deseas recibirlos.'}
+          {'Agrega los servicios según el orden que deseas recibirlos.'}
         </Text>
         <View opacity={0.0} style={ApplicationStyles.separatorLine} />
       </View>
@@ -298,7 +298,7 @@ const CartScreen = (props) => {
                   Fonts.size.medium,
                   'left',
                 )}>
-                {'Ubicacion del servicio'}
+                {'Ubicación del servicio'}
               </Text>
             </View>
             <TouchableOpacity onPress={() => setModalAddress(true)}>
@@ -416,7 +416,7 @@ const CartScreen = (props) => {
                 {'Comentarios'}
               </Text>
             </View>
-            <TouchableOpacity onPress={() => setModalnote(true)}>
+            <TouchableOpacity onPress={() => setModalNote(true)}>
               <FieldCartConfig
                 key={'comments'}
                 textSecondary={''}
@@ -476,7 +476,7 @@ const CartScreen = (props) => {
                   rating: user.rating,
                 },
                 createDate: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
-                cartId: Utilities.create_CARTID(),
+                cartId: Utilities.create_CartId(),
                 status: 0,
                 hoursServices,
                 date: `${user.cart.date}`,
@@ -506,7 +506,7 @@ const CartScreen = (props) => {
           </Text>
         </TouchableOpacity>
       </View>
-      <ModalApp open={modalnote} setOpen={setModalnote}>
+      <ModalApp open={modalNote} setOpen={setModalNote}>
         <TouchableOpacity
           style={{
             alignSelf: 'center',
@@ -518,7 +518,7 @@ const CartScreen = (props) => {
             height: 4,
             borderRadius: 2.5,
           }}
-          onPress={() => setModalnote(false)}
+          onPress={() => setModalNote(false)}
         />
 
         <TextInput
@@ -568,15 +568,8 @@ const CartScreen = (props) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    width: Metrics.screenWidth,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   itemTitleContainer: {
     marginVertical: 5,
-
     width: Metrics.screenWidth * 0.9,
     alignSelf: 'center',
   },
@@ -608,10 +601,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'center',
   },
-  contentContainer: {
-    flex: 1,
-    width: Metrics.screenWidth,
-  },
+
   footerContainer: {
     flex: 0,
     flexDirection: 'row',
@@ -620,70 +610,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'center',
   },
-  loading: {
-    backgroundColor: Colors.loader,
-    position: 'absolute',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: Metrics.screenHeight,
-    width: Metrics.screenWidth,
-    zIndex: 2000,
-  },
-  logo: {
-    width: Metrics.screenWidth * 0.4,
-    height: Metrics.screenWidth * 0.4,
-    resizeMode: 'contain',
-    marginTop: 10,
-  },
-  selectorContainer: {
-    flex: 0,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginVertical: 20,
-  },
 
-  welcome: {
-    fontFamily: Fonts.type.base,
-    color: Colors.dark,
-    marginVertical: 10,
-    marginHorizontal: 20,
-    fontSize: Fonts.size.h6,
-    textAlignVertical: 'center',
-    textAlign: 'center',
-  },
-
-  descriptorContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-
-  selectorText: {
-    marginHorizontal: 20,
-    fontFamily: Fonts.type.bold,
-    color: Colors.dark,
-    fontSize: Fonts.size.medium,
-    textAlignVertical: 'center',
-    textAlign: 'center',
-  },
-  btnText: {
-    fontFamily: Fonts.type.bold,
-    color: Colors.dark,
-    fontSize: Fonts.size.medium,
-    textAlignVertical: 'center',
-    textAlign: 'center',
-  },
-
-  btnRegisterLogin: {
-    flex: 0,
-    width: Metrics.screenWidth / 2,
-    height: 40,
-    marginVertical: Metrics.addFooter * 2,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   btnContainer: {
     flex: 0,
     height: 60 + Metrics.addFooter,
@@ -705,13 +632,6 @@ const styles = StyleSheet.create({
     shadowRadius: 1,
 
     elevation: 5,
-  },
-  linearGradient: {
-    flex: 1,
-    width: Metrics.screenWidth,
-    height: Metrics.screenHeight,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
 });
 export default CartScreen;
