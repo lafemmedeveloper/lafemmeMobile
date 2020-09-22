@@ -17,7 +17,7 @@ import CartScreen from '../CartScreen';
 import Address from '../Address';
 import AddAddress from '../AddAddress';
 import Header from '../../components/Header';
-import {getOrders} from '../../flux/util/actions';
+import {getGallery, getOrders} from '../../flux/util/actions';
 
 const Home = () => {
   const TIME_SET = 500;
@@ -40,6 +40,7 @@ const Home = () => {
 
   useEffect(() => {
     activefuntionsFlux();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const [modalAuth, setModalAuth] = useState(false);
@@ -53,6 +54,8 @@ const Home = () => {
     observeUser(authDispatch);
     await getServices(serviceDispatch);
     getOrders(utilDispatch);
+
+    getGallery(utilDispatch);
   }
   const selectService = (product) => {
     if (user !== null) {
@@ -159,11 +162,7 @@ const Home = () => {
       </ModalApp>
 
       <ModalApp open={modalInspo} setOpen={setModalInspo}>
-        <Gallery
-          state={util}
-          dispatch={utilDispatch}
-          setModalInspo={setModalInspo}
-        />
+        <Gallery />
       </ModalApp>
 
       <ModalApp open={modalCart} setOpen={setModalCart}>

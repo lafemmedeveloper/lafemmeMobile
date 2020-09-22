@@ -1,18 +1,15 @@
-import React, {useEffect} from 'react';
+import React, {useContext} from 'react';
 import {ScrollView} from 'react-native';
-import {getGallery} from '../../flux/util/actions';
 import GalleryItem from '../../components/GalleryItem';
+import {StoreContext} from '../../flux';
 
-const Gallery = (props) => {
-  console.log('props=>', props);
-  const {dispatch, state} = props;
-  const {gallery} = state;
-  useEffect(() => {
-    getGallery(dispatch);
-  }, []);
+const Gallery = () => {
+  const {state} = useContext(StoreContext);
+  const {util} = state;
+  const {gallery} = util;
 
   return (
-    <ScrollView style={{flex: 0, height: '90%'}}>
+    <ScrollView style={{flex: 0, height: '90%', marginTop: 25}}>
       {gallery &&
         gallery.length &&
         gallery.map((item, index) => {

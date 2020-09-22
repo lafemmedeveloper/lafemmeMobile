@@ -40,7 +40,7 @@ const GalleryExpert = (props) => {
   const modelState = {
     images: [],
   };
-  const {user} = props;
+  const {user, services} = props;
   const {state, utilDispatch} = useContext(StoreContext);
   const {util} = state;
   const {gallery, loading} = util;
@@ -50,15 +50,17 @@ const GalleryExpert = (props) => {
   const [value, setValue] = useState(modelState);
   const [imageUri, setImageUri] = useState(null);
   const [uploadModal, setUploadModal] = useState(false);
+  const [imageSource, setImageSource] = useState(null);
+  const [serviceName, setServiceName] = useState('');
 
   useEffect(() => {
     getGallery(utilDispatch);
-  }, []);
+  }, [utilDispatch]);
   useEffect(() => {
     let insert = gallery.filter((i) => i.expertUid === user.uid);
 
     setGalleryUid(insert);
-  }, [gallery]);
+  }, [gallery, user.uid]);
 
   const pickImage = () => {
     ImagePicker.showImagePicker(options, async (response) => {
@@ -67,10 +69,9 @@ const GalleryExpert = (props) => {
       } else if (response.error) {
         Alert.alert('Ups...', 'And error occured: ', response.error);
       } else {
+        const source = {uri: response.uri};
+        setImageSource(source);
         await setImageUri(response.uri);
-        if (imageUri) {
-          uploadImage();
-        }
       }
     });
   };
@@ -376,12 +377,15 @@ const GalleryExpert = (props) => {
       imageUrl: images,
       isApproved: false,
       id: user.uid,
+      service: serviceName,
     };
     await addImageGallery(dataExpert, dataExpert.id, utilDispatch);
+    setImageSource(null);
+    setServiceName('');
   };
 
-  const deletePhoto = (id) => {
-    onDeleteGallery(id, utilDispatch);
+  const deletePhoto = async (id) => {
+    await onDeleteGallery(id, utilDispatch);
   };
 
   return (
@@ -404,22 +408,6 @@ const GalleryExpert = (props) => {
               _.orderBy(item, item.date, 'desc');
               return (
                 <View key={item.id}>
-                  <View style={styles.contA}>
-                    <View
-                      style={
-                        item.isApproved ? styles.approved : styles.noApproved
-                      }>
-                      <Text
-                        style={[
-                          Fonts.style.regular(
-                            item.isApproved ? Colors.light : Colors.dark,
-                            Fonts.size.small,
-                          ),
-                        ]}>
-                        {item.isApproved ? 'Aprobado' : 'No Aprobado'}
-                      </Text>
-                    </View>
-                  </View>
                   <View>
                     <FastImage
                       style={styles.img}
@@ -437,8 +425,31 @@ const GalleryExpert = (props) => {
                       ]}>
                       {moment(item.date).format('ll')}
                     </Text>
+                    <Text
+                      style={[
+                        Fonts.style.bold(Colors.dark, Fonts.size.medium),
+                        {marginLeft: 20},
+                      ]}>
+                      {item.service}
+                    </Text>
                   </View>
                   <View style={styles.contD}>
+                    <View style={styles.contA}>
+                      <View
+                        style={
+                          item.isApproved ? styles.approved : styles.noApproved
+                        }>
+                        <Text
+                          style={[
+                            Fonts.style.regular(
+                              item.isApproved ? 'green' : 'red',
+                              Fonts.size.small,
+                            ),
+                          ]}>
+                          {item.isApproved ? 'Aprobado' : 'No Aprobado'}
+                        </Text>
+                      </View>
+                    </View>
                     <TouchableOpacity
                       style={styles.delete}
                       onPress={() =>
@@ -486,7 +497,15 @@ const GalleryExpert = (props) => {
         </View>
       </View>
       <ModalApp open={uploadModal} setOpen={setUploadModal}>
-        <UploadPhoto />
+        <UploadPhoto
+          services={services}
+          source={imageSource}
+          serviceName={serviceName}
+          uploadImage={uploadImage}
+          pickImage={pickImage}
+          setServiceName={setServiceName}
+          close={setUploadModal}
+        />
       </ModalApp>
     </>
   );
@@ -516,27 +535,24 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   approved: {
-    backgroundColor: Colors.expert.primaryColor,
-    width: 100,
     borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
+    marginLeft: 20,
   },
   noApproved: {
-    backgroundColor: Colors.lightGray,
-    width: 120,
     borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
+    marginLeft: 15,
   },
-  contA: {position: 'absolute', zIndex: 1},
+  contA: {alignSelf: 'center'},
   contD: {
-    position: 'absolute',
-    zIndex: 1,
-    alignSelf: 'flex-end',
-    justifyContent: 'flex-end',
-    top: 150,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginHorizontal: 10,
   },
+
   contGallery: {
     marginVertical: 20,
   },

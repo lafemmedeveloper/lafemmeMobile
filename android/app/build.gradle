@@ -224,6 +224,8 @@ dependencies {
     implementation project(':lottie-react-native')
     implementation project(':@react-native-community_datetimepicker')
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    compile project(':@react-native-community_picker')
+
     //noinspection GradleDynamicVersion
     implementation 'com.facebook.react:react-native:+'  // From node_modules
 
