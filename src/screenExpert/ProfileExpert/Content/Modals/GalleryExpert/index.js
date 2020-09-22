@@ -25,6 +25,9 @@ import ImagePicker from 'react-native-image-picker';
 import ImageResizer from 'react-native-image-resizer';
 import utilities from '../../../../../utilities';
 import Loading from '../../../../../components/Loading';
+import _ from 'lodash';
+import ModalApp from '../../../../../components/ModalApp';
+import UploadPhoto from './UploadPhoto';
 
 const GalleryExpert = (props) => {
   const options = {
@@ -46,12 +49,14 @@ const GalleryExpert = (props) => {
 
   const [value, setValue] = useState(modelState);
   const [imageUri, setImageUri] = useState(null);
+  const [uploadModal, setUploadModal] = useState(false);
 
   useEffect(() => {
     getGallery(utilDispatch);
   }, []);
   useEffect(() => {
     let insert = gallery.filter((i) => i.expertUid === user.uid);
+
     setGalleryUid(insert);
   }, [gallery]);
 
@@ -378,7 +383,6 @@ const GalleryExpert = (props) => {
   const deletePhoto = (id) => {
     onDeleteGallery(id, utilDispatch);
   };
-  console.log('loading =========>', loading);
 
   return (
     <>
@@ -397,6 +401,7 @@ const GalleryExpert = (props) => {
         <ScrollView horizontal style={styles.contGallery}>
           {galleryUid &&
             galleryUid.map((item) => {
+              _.orderBy(item, item.date, 'desc');
               return (
                 <View key={item.id}>
                   <View style={styles.contA}>
@@ -469,7 +474,9 @@ const GalleryExpert = (props) => {
             })}
         </ScrollView>
         <View style={styles.conatinerBnt}>
-          <TouchableOpacity style={styles.sendImg} onPress={() => pickImage()}>
+          <TouchableOpacity
+            style={styles.sendImg}
+            onPress={() => setUploadModal(true)}>
             <Icon
               name={'camera'}
               size={30}
@@ -478,6 +485,9 @@ const GalleryExpert = (props) => {
           </TouchableOpacity>
         </View>
       </View>
+      <ModalApp open={uploadModal} setOpen={setUploadModal}>
+        <UploadPhoto />
+      </ModalApp>
     </>
   );
 };
