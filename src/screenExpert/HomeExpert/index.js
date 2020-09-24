@@ -33,17 +33,16 @@ const HomeExpert = () => {
   useEffect(() => {
     getDeviceInfo(utilDispatch);
     if (user) {
-      const {activity, isEnabled} = user;
-
       currentCoordinate();
       getExpertActiveOrders(utilDispatch);
       getExpertHistoryOrders(utilDispatch);
-      activeNameSlug(activity, utilDispatch);
+      activeNameSlug(user.activity, utilDispatch);
 
-      if (isEnabled) {
-        getExpertOpenOrders(activity, utilDispatch);
+      if (user.isEnabled) {
+        getExpertOpenOrders(user.activity, utilDispatch);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const appType = deviceInfo;
@@ -63,6 +62,7 @@ const HomeExpert = () => {
     if (coordinate) {
       updateProfile(coordinate, 'coordinate', authDispatch);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [coordinate]);
 
   console.log('loading home =>', loading);

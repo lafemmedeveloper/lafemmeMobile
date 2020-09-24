@@ -7,7 +7,6 @@ import {Images} from '../../../themes';
 
 const HeaderExpert = (props) => {
   const {user, dispatch} = props;
-  const {imageUrl = ''} = user;
   const toggleSwitch = async () => {
     try {
       setLoading(true, dispatch);
@@ -31,7 +30,7 @@ const HeaderExpert = (props) => {
       <View style={styles.container}>
         <View style={{alignSelf: 'center'}}>
           {user && user.imageUrl && (
-            <Image source={{uri: imageUrl.medium}} style={styles.image} />
+            <Image source={{uri: user.imageUrl.medium}} style={styles.image} />
           )}
         </View>
         <View>
@@ -46,20 +45,26 @@ const HeaderExpert = (props) => {
             marginRight: 10,
             flexDirection: 'column',
           }}>
-          <Switch
-            trackColor={{false: '#dbdbdb', true: '#dbdbdb'}}
-            thumbColor={user.isEnabled ? Colors.expert.primaryColor : '#f4f3f4'}
-            ios_backgroundColor="#3e3e3e"
-            onValueChange={toggleSwitch}
-            value={user.isEnabled}
-          />
-          <Text
-            style={[
-              Fonts.style.semiBold(Colors.dark, Fonts.size.medium),
-              {alignSelf: 'center'},
-            ]}>
-            {user.isEnabled ? 'Activo' : 'Inactivo'}
-          </Text>
+          {user && (
+            <>
+              <Switch
+                trackColor={{false: '#dbdbdb', true: '#dbdbdb'}}
+                thumbColor={
+                  user.isEnabled ? Colors.expert.primaryColor : '#f4f3f4'
+                }
+                ios_backgroundColor="#3e3e3e"
+                onValueChange={toggleSwitch}
+                value={user.isEnabled}
+              />
+              <Text
+                style={[
+                  Fonts.style.semiBold(Colors.dark, Fonts.size.medium),
+                  {alignSelf: 'center'},
+                ]}>
+                {user.isEnabled ? 'Activo' : 'Inactivo'}
+              </Text>
+            </>
+          )}
         </View>
       </View>
     </>
