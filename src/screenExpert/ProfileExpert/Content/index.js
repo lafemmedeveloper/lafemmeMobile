@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {
   View,
   Text,
@@ -28,8 +28,14 @@ import ImageResizer from 'react-native-image-resizer';
 import {firebase} from '@react-native-firebase/storage';
 import utilities from '../../../utilities';
 import GalleryExpert from './Modals/GalleryExpert';
+import {StoreContext} from '../../../flux';
 
-const Content = (props) => {
+const Content = () => {
+  const {state, authDispatch} = useContext(StoreContext);
+  const {util, auth} = state;
+  const {activity, deviceInfo} = util;
+  const {user} = auth;
+
   const options = {
     title: 'Selecciona o toma una imagen',
     storageOptions: {
@@ -40,9 +46,6 @@ const Content = (props) => {
   const modelState = {
     images: [],
   };
-  const {state, dispatch, deviceInfo, util} = props;
-  const {user} = state;
-  const {activity} = util;
 
   const [modalPassword, setModalPassword] = useState(false);
   const [tyc, seTyc] = useState(false);
@@ -58,7 +61,7 @@ const Content = (props) => {
         {
           text: 'Cerrar',
           onPress: () => {
-            signOff(dispatch);
+            signOff(authDispatch);
           },
         },
         {
@@ -97,7 +100,7 @@ const Content = (props) => {
     await prepareImage(user.uid, filename);
   };
   const prepareImage = async (uid, filename) => {
-    setLoading(true, dispatch);
+    setLoading(true, authDispatch);
     let picture = {
       thumbnail: null,
       small: null,
@@ -148,12 +151,12 @@ const Content = (props) => {
                 setValue(state);
               },
               (error) => {
-                setLoading(false, dispatch);
+                setLoading(false, authDispatch);
                 Alert.alert('Sorry, Try again.', error);
               },
             );
         } catch (error) {
-          setLoading(false, dispatch);
+          setLoading(false, authDispatch);
           console.log('err', error);
         }
       })
@@ -206,13 +209,13 @@ const Content = (props) => {
               },
             );
         } catch (error) {
-          setLoading(false, dispatch);
+          setLoading(false, authDispatch);
           console.log('err', error);
         }
       })
       .catch((error) => {
         console.log('error', error);
-        setLoading(false, dispatch);
+        setLoading(false, authDispatch);
       });
     ImageResizer.createResizedImage(x, 256, 256, 'JPEG', 30, 0)
       .then((RES) => {
@@ -259,12 +262,12 @@ const Content = (props) => {
               },
             );
         } catch (error) {
-          setLoading(false, dispatch);
+          setLoading(false, authDispatch);
           console.log('err', error);
         }
       })
       .catch((error) => {
-        setLoading(false, dispatch);
+        setLoading(false, authDispatch);
         console.log('error', error);
       });
     ImageResizer.createResizedImage(x, 512, 512, 'JPEG', 30, 0)
@@ -313,12 +316,12 @@ const Content = (props) => {
             );
         } catch (error) {
           console.log('err', error);
-          setLoading(false, dispatch);
+          setLoading(false, authDispatch);
         }
       })
       .catch((error) => {
         console.log('error', error);
-        setLoading(false, dispatch);
+        setLoading(false, authDispatch);
       });
     ImageResizer.createResizedImage(x, 1024, 1024, 'JPEG', 30, 0)
       .then((RES) => {
@@ -370,11 +373,11 @@ const Content = (props) => {
       })
       .catch((error) => {
         console.log('error', error);
-        setLoading(false, dispatch);
+        setLoading(false, authDispatch);
       });
   };
   const updateUser = async (picture) => {
-    await updateProfile({...picture}, 'imageUrl', dispatch);
+    await updateProfile({...picture}, 'imageUrl', authDispatch);
   };
   const shareRecipe = async (type, data) => {
     console.log('shareItem:', type, data);
@@ -478,7 +481,7 @@ const Content = (props) => {
         >
           <View // Image profile
           >
-            {user && (
+            {user && user.imageUrl && (
               <View style={styles.containerImageProfile}>
                 <View>
                   <TouchableOpacity onPress={() => pickImage()}>

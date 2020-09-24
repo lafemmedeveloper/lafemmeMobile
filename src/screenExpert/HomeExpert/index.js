@@ -99,7 +99,7 @@ const HomeExpert = () => {
                 Fonts.style.bold(Colors.dark, Fonts.size.h6, 'left'),
                 {marginVertical: 20, marginLeft: 20},
               ]}>
-              {`Tienes una ordén ${expertActiveOrders.length} disponible`}
+              {`Tienes ${expertActiveOrders.length} ordén disponible`}
             </Text>
             {expertActiveOrders.map((item, index) => {
               return (

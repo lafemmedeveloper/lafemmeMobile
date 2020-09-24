@@ -1,6 +1,7 @@
 import {GET_USER, HANDLE_ERROR, LOADING, DEL_USER} from './types';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
+import {Alert} from 'react-native';
 
 export const handleError = (dispatch) => {
   dispatch({type: HANDLE_ERROR, payload: true});
@@ -102,8 +103,24 @@ export const Login = async (email, password, dispatch) => {
     console.log('currentUser =>', currentUser);
     setLoading(true, dispatch);
   } catch (error) {
+    if (
+      error
+        .toString()
+        .includes('password is invalid or the user does not have a password.')
+    ) {
+      Alert.alert('Error de Autentificación', 'Tu contraseña es incorrecta');
+    } else if (error.toString().includes('email address is badly formatted.')) {
+      Alert.alert('Error de Autentificación', 'Revisa tu correo o contraseña');
+    } else if (
+      error.message
+        .toString()
+        .includes(
+          'is no user record corresponding to this identifier. The user may have been deleted.',
+        )
+    ) {
+      Alert.alert('Error de Autentificación', 'Al parecer no estas registrado');
+    }
     setLoading(false, dispatch);
-    console.log('error login expert =>', error);
   }
 };
 

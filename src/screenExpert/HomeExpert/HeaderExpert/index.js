@@ -30,11 +30,8 @@ const HeaderExpert = (props) => {
     <>
       <View style={styles.container}>
         <View style={{alignSelf: 'center'}}>
-          {user && (
-            <Image
-              source={{uri: user ? imageUrl.medium : ''}}
-              style={styles.image}
-            />
+          {user && user.imageUrl && (
+            <Image source={{uri: imageUrl.medium}} style={styles.image} />
           )}
         </View>
         <View>
