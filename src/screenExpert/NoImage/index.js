@@ -1,4 +1,4 @@
-import React, {useState, useContext, useEffect} from 'react';
+import React, {useState, useContext} from 'react';
 import {
   Text,
   View,
@@ -32,15 +32,10 @@ const NoImage = () => {
   const {state, authDispatch} = useContext(StoreContext);
   const {auth} = state;
   const {user, loading} = auth;
-  const [name, setName] = useState('');
 
   const [value, setValue] = useState(modelState);
   const [imageUri, setImageUri] = useState(null);
   const [imgSource, setImgSource] = useState('');
-
-  useEffect(() => {
-    setName(user.firstName);
-  }, [user.firstName]);
 
   const pickImage = () => {
     //setLoading(true);
@@ -348,8 +343,6 @@ const NoImage = () => {
   const updateUser = async (picture) => {
     await updateProfile({...picture}, 'imageUrl', authDispatch);
   };
-  console.log('image source =>', imgSource);
-  console.log('image imageUri =>', imageUri);
   const validateImage = async () => {
     if (imgSource === '') {
       Alert.alert('Ups!', 'Es necesario tu foto de perfil');
@@ -371,7 +364,7 @@ const NoImage = () => {
         }}>
         <TouchableOpacity onPress={() => signOff(authDispatch)}>
           <Text
-            style={Fonts.style.bold(
+            style={Fonts.style.regular(
               Colors.expert.primaryColor,
               Fonts.size.h6,
               'center',
@@ -396,7 +389,7 @@ const NoImage = () => {
                 Fonts.size.h6,
                 'center',
               )}>
-              {`${name}`}
+              {user && `${user.firstName}`}
             </Text>
           </Text>
 
@@ -447,7 +440,8 @@ const NoImage = () => {
 };
 const styles = StyleSheet.create({
   container: {flex: 1, justifyContent: 'center', alignItems: 'center'},
-  image: {width: 220, height: 100, alignSelf: 'center'},
+
+  image: {alignSelf: 'center', resizeMode: 'cover', width: 200, height: 200},
   contImage: {marginVertical: 20},
   btnContainer: {
     flex: 0,
@@ -471,7 +465,6 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   contContainer: {
-    backgroundColor: Colors.light,
     paddingHorizontal: 10,
     paddingVertical: 60,
     borderRadius: 10,

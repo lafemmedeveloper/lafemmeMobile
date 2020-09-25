@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Alert,
   ActivityIndicator,
+  Keyboard,
 } from 'react-native';
 import {Images, Colors, Fonts, Metrics} from '../../themes';
 import MyTextInput from '../../components/MyTextInput';
@@ -19,17 +20,17 @@ const LoginExpert = () => {
   const {auth} = state;
   const {loading} = auth;
 
-  const [email, setEmail] = useState('expert@gmail.com');
+  const [email, setEmail] = useState('jesusebzcp19@gmail.com');
   const [password, setPassword] = useState('123456');
 
   const handleLogin = async () => {
+    Keyboard.dismiss();
     if (email === '' || password === '') {
       Alert.alert('Ups', 'Todos los campos son necesarios');
     } else {
       await Login(email, password, authDispatch);
     }
   };
-  console.log('loading => login', loading);
 
   return (
     <>
