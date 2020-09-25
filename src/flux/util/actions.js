@@ -135,33 +135,32 @@ export const getDeviceInfo = (dispatch) => {
 export const getExpertActiveOrders = (dispatch) => {
   console.log('===> getExpertActiveOrders');
   const uid = auth().currentUser.uid;
-  console.log(' getStore().currentUser.auth.uid', uid);
 
   let ordersRef = firestore()
     .collection('orders')
     .where('status', '>=', 1)
     .where('status', '<=', 5);
-
   ordersRef.where('experts.uid', '==', uid);
-
   let listOrders = [];
 
   ordersRef.onSnapshot((orders) => {
-    console.log('=> orders', orders);
-
     listOrders = orders.docs.map((item) => {
       return {
         id: item.id,
         ...item.data(),
       };
     });
-    return dispatch({type: GET_EXPERT_OPEN_ORDERS, payload: listOrders});
+
+    return dispatch({
+      type: GET_EXPERT_OPEN_ORDERS,
+      payload: listOrders.filter((o) => o.experts.uid === uid),
+    });
   });
 };
+
 export const getExpertHistoryOrders = (dispatch) => {
   console.log('===> getExpertActiveOrders');
   const uid = auth().currentUser.uid;
-  console.log(' getStore().currentUser.auth.uid', uid);
 
   let ordersRef = firestore().collection('orders').where('status', '>=', 5);
 
@@ -170,8 +169,6 @@ export const getExpertHistoryOrders = (dispatch) => {
   let listOrders = [];
 
   ordersRef.onSnapshot((orders) => {
-    console.log('=> orders', orders);
-
     listOrders = orders.docs.map((item) => {
       return {
         id: item.id,
@@ -205,8 +202,6 @@ export const getExpertOpenOrders = (activity, dispatch) => {
 export const assingExpert = async (user, order, dispatch) => {
   try {
     console.log(user, order, dispatch);
-    console.log('order ===>', order);
-    console.log('order ===>', order);
 
     const experts = user;
 
@@ -310,6 +305,7 @@ export const activeNameSlug = async (activity, dispatch) => {
   console.log('activity', activity);
 
   try {
+    let nameDate = [];
     const ref = await firestore().collection('services').get();
 
     const data = ref.docs.map((doc) => {
@@ -319,10 +315,11 @@ export const activeNameSlug = async (activity, dispatch) => {
         id: doc.id,
       };
     });
-    activity.forEach((element) => {
+    await activity.forEach((element) => {
       const result = data.filter((item) => item.slug === element);
-      dispatch({type: GET_NAME_SERVICE, payload: result});
+      nameDate.push(result);
     });
+    dispatch({type: GET_NAME_SERVICE, payload: nameDate});
 
     setLoading(false, dispatch);
   } catch (error) {

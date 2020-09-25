@@ -91,12 +91,10 @@ const getExpertOpenOrders = (state, action) => {
   return {
     ...state,
     expertOpenOrders,
-    nextOrder: [expertOpenOrders[0]],
+    nextOrder: expertOpenOrders.length > 0 ? [expertOpenOrders[0]] : [],
   };
 };
 const getCoordinate = (state, action) => {
-  console.log('reducer data =>', action.payload);
-
   return {
     ...state,
     coordinate: action.payload,
@@ -111,7 +109,7 @@ const getOrderHistory = (state, action) => {
 const getNameService = (state, action) => {
   return {
     ...state,
-    activity: [...state.activity, action.payload],
+    activity: action.payload,
   };
 };
 
