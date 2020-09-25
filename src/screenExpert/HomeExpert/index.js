@@ -1,5 +1,5 @@
 import React, {useContext, useState, useEffect, Fragment} from 'react';
-import {View, ScrollView, StyleSheet, Text, Alert} from 'react-native';
+import {View, ScrollView, StyleSheet, Text} from 'react-native';
 import {Colors, Metrics, ApplicationStyles, Fonts} from '../../themes';
 import ExpertDealOffer from '../../components/ExpertDealOffer';
 import {StoreContext} from '../../flux';
