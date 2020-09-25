@@ -3,6 +3,8 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
+    "expert": "set ENVFILE=.env && npx react-native run-android --variant=expertDebug --appIdSuffix expertStaging",
+    "client": "set ENVFILE=.env &&  npx  react-native run-android --variant=clientDebug --appIdSuffix clientStaging",
     "android": "ENVFILE=.env.staging && react-native run-android --variant=clientDebug --appIdSuffix clientStaging",
     "iosC": "ENVFILE=.env react-native run-ios --scheme \"Client\"",
     "iosE": "ENVFILE=.env react-native run-ios --scheme \"Expert\" --simulator=\"iPhone 8\"",
