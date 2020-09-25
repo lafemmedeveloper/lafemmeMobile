@@ -1,5 +1,5 @@
 import React, {useContext, useState, useEffect, Fragment} from 'react';
-import {View, ScrollView, StyleSheet, Text} from 'react-native';
+import {View, ScrollView, StyleSheet, Text, Alert} from 'react-native';
 import {Colors, Metrics, ApplicationStyles, Fonts} from '../../themes';
 import ExpertDealOffer from '../../components/ExpertDealOffer';
 import {StoreContext} from '../../flux';
@@ -19,6 +19,7 @@ import HeaderExpert from './HeaderExpert';
 import ModalApp from '../../components/ModalApp';
 import DetailModal from '../HistoryExpert/DetailModal';
 import NextOrder from '../NextOrder';
+import messaging from '@react-native-firebase/messaging';
 
 const HomeExpert = () => {
   const {state, authDispatch, utilDispatch} = useContext(StoreContext);
@@ -30,6 +31,7 @@ const HomeExpert = () => {
   const [detailOrder, setDetailOrder] = useState(null);
 
   console.log('appType =>', appType);
+
   useEffect(() => {
     getDeviceInfo(utilDispatch);
     if (user) {
@@ -72,6 +74,22 @@ const HomeExpert = () => {
     setDetailOrder(order);
     setModalDetail(true);
   };
+  useEffect(() => {
+    return () => {
+      messaging()
+        .subscribeToTopic('expert')
+        .then(() => console.log('Subscribed to topic!'));
+      messaging().onMessage(async (remoteMessage) => {
+        console.log(
+          'A new FCM message arrived!',
+          JSON.stringify(remoteMessage),
+        );
+      });
+      messaging().setBackgroundMessageHandler(async (remoteMessage) => {
+        console.log('push notification backgraund', remoteMessage);
+      });
+    };
+  }, []);
   return (
     <>
       <View style={styles.container}>
