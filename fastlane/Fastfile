@@ -1,0 +1,182 @@
+# frozen_string_literal: true
+
+# vim: ft=ruby
+# Customise this file, documentation can be found here:
+# https://github.com/KrauseFx/fastlane/tree/master/docs
+# All available actions: https://github.com/KrauseFx/fastlane/blob/master/docs/Actions.md
+# can also be listed using the `fastlane actions` command
+
+desc 'Bump the app versions and tag a new release'
+lane :bump_version do |options|
+  type = options.fetch(:type, 'build')
+  should_push = options.fetch(:push, true)
+  target_build_number = options.fetch(:build_number, get_build_number.to_i + 1)
+
+  build_number = get_build_number
+  version = get_version_number(target: 'Client')
+
+  if type == "build"
+    increment_build_number(build_number: target_build_number)
+    set_android_version(
+      version_name: version,
+      version_code: target_build_number.to_s
+    )
+  else
+    increment_version_number(bump_type: type)
+    set_android_version(
+      version_name: get_version_number(target: 'Client'),
+      version_code: build_number.to_s
+    )
+  end
+
+  new_version = get_version_number(target: 'Client')
+  new_build_number = get_build_number
+
+ git_commit(
+    path: %w[
+      ios/WatchApp/Info.plist
+      ios/WatchApp\ Extension/Info.plist
+      ios/oruxappv3.xcodeproj/project.pbxproj
+      ios/oruxappv3/Info.plist 
+      android/app/build.gradle
+    ],
+    message: "Bump version to #{new_version} (#{new_build_number})"
+  )
+
+  add_git_tag(tag: "v#{new_version}+#{new_build_number}")
+
+  push_to_git_remote if should_push
+
+end
+
+desc "Install javascript dependencies via yarn"
+lane :install_javascript_dependencies do
+  sh("cd .. && yarn install")
+end
+
+desc "Clean react native cache files"
+lane :clean_javascript_cache do
+  sh("cd .. && yarn clean-all")
+end
+
+lane :reinstall_dependencies do
+  clean_cache
+  install_dependencies
+end
+
+lane :ensure_git_cleaned do
+  raise "ERROR: Please make sure that all changes are committed." unless sh("git status --porcelain").empty?
+end
+
+platform :ios do
+  desc 'Build the iOS app'
+  lane :build do |options|
+    clean_cache
+    install_dependencies
+    ensure_git_cleaned
+
+    check_environment_variables
+    gym(
+      scheme: options.fetch(:scheme),
+      export_options: { signingStyle: "automatic" },
+      export_xcargs: '-allowProvisioningUpdates'
+    )
+  end
+
+  desc "Clean cache"
+  lane :clean_cache do
+    clean_javascript_cache
+    sh("rm -rf ../ios/build ../ios/Pods")
+  end
+
+  desc "Install dependencies"
+  lane :install_dependencies do
+    install_javascript_dependencies
+    sh("unset BUNDLE_GEMFILE && cd ../ios && bundle exec pod install")
+  end
+
+  desc 'Submit a new iOS build to Apple TestFlight'
+  lane :beta do
+    build(scheme: 'HOFr (Staging)')
+    testflight(skip_waiting_for_build_processing: true)
+  end
+
+  desc 'Submit a new iOS build to the Apple App Store'
+  lane :release do
+    build(scheme: 'HOFr (Production)')
+    testflight(skip_waiting_for_build_processing: true, skip_submission: true)
+  end
+end
+
+platform :android do
+  desc 'Build the Android app with the specified build type and environment'
+  lane :build do |options|
+    type = options.fetch(:type, 'Release')
+    env = options.fetch(:env, 'staging')
+    task = "assembleStaging"
+    if env == "production"
+      task = "assembleProduction"
+    end
+
+
+    clean_cache
+    install_dependencies
+    ensure_git_cleaned
+
+    ENV['ENVFILE'] = ".env.#{env}"
+    ENV['LOCAL_SIGNING'] = "true"
+    gradle(task: 'clean')
+    gradle(
+      task: task,
+      build_type: type
+    )
+  end
+
+  desc "Clean cache"
+  lane :clean_cache do
+    clean_javascript_cache
+    sh("rm -rf ../android/app/build")
+  end
+
+  desc "Install dependencies"
+  lane :install_dependencies do
+    install_javascript_dependencies
+  end
+
+  desc 'Submit a new Android build to the Google Play beta channel'
+  lane :beta do
+    build(type: 'Release', env: 'staging')
+    supply(track: 'beta')
+  end
+
+  desc 'Submit a new Android build to the Google Play production channel'
+  lane :release do
+    build(type: 'Release', env: 'production')
+    supply(track: 'production', check_superseded_tracks: true)
+  end
+end
+
+def check_environment_variables
+  file_keys = -> (file_name) {
+    File.read("../#{file_name}")
+      .lines
+      .map(&:strip)
+      .reject {|line| line.match(/^\#/) }
+      .map {|line| line.split("=").first }
+      .yield_self {|keys| Set.new(keys) }
+  }
+
+  production_keys = file_keys.call(".env.production")
+  %w(sample staging).each do |env|
+    file_name = ".env.#{env}"
+    keys = file_keys.call(file_name)
+    diff = keys ^ production_keys
+    if diff.any?
+      abort <<~MESSAGE
+        ERROR: #{file_name} and .env.production have different variables
+        Missing keys in production.env: #{(keys - production_keys).to_a.join(", ")}
+        Missing keys in #{file_name}: #{(production_keys - keys).to_a.join(", ")}
+      MESSAGE
+    end
+  end
+end

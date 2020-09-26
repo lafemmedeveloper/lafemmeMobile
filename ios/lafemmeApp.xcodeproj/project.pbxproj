@@ -30,6 +30,12 @@
 		9F5AD6752519A5D6008424AC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9F5AD66A2519A5D6008424AC /* GoogleService-Info.plist */; };
 		9F5AD6772519A5D6008424AC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9F5AD66C2519A5D6008424AC /* GoogleService-Info.plist */; };
 		9F5AD67E2519A5D6008424AC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9F5AD66E2519A5D6008424AC /* GoogleService-Info.plist */; };
+		9FD4E3B8251ECABA0042D02A /* LaunchScreenExpert.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9FD4E3B7251ECABA0042D02A /* LaunchScreenExpert.storyboard */; };
+		9FD4E3B9251ECABA0042D02A /* LaunchScreenExpert.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9FD4E3B7251ECABA0042D02A /* LaunchScreenExpert.storyboard */; };
+		9FD4E3C3251ECE970042D02A /* InfoClient.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9FD4E3C2251ECE970042D02A /* InfoClient.plist */; };
+		9FD4E3C4251ECE970042D02A /* InfoClient.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9FD4E3C2251ECE970042D02A /* InfoClient.plist */; };
+		9FD4E3C9251ECEA90042D02A /* InfoExpert.plist in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB61A68108700A75B9A /* InfoExpert.plist */; };
+		9FD4E3CE251ECEA90042D02A /* InfoExpert.plist in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB61A68108700A75B9A /* InfoExpert.plist */; };
 		ADD4DE8994EAA5337237766F /* libPods-lafemmeApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9195AF213561EF7EC68D1718 /* libPods-lafemmeApp.a */; };
 /* End PBXBuildFile section */
 
@@ -39,7 +45,7 @@
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = lafemmeApp/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = lafemmeApp/AppDelegate.m; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = lafemmeApp/Images.xcassets; sourceTree = "<group>"; };
-		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = lafemmeApp/Info.plist; sourceTree = "<group>"; };
+		13B07FB61A68108700A75B9A /* InfoExpert.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = InfoExpert.plist; path = lafemmeApp/InfoExpert.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = lafemmeApp/main.m; sourceTree = "<group>"; };
 		58F38214C123258D332E55AC /* Pods-lafemmeApp-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lafemmeApp-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-lafemmeApp-tvOSTests/Pods-lafemmeApp-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
 		72A44BC6CAACF89602E3DB6F /* Pods-lafemmeApp-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lafemmeApp-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-lafemmeApp-tvOSTests/Pods-lafemmeApp-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -56,6 +62,10 @@
 		9F5AD66A2519A5D6008424AC /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		9F5AD66C2519A5D6008424AC /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		9F5AD66E2519A5D6008424AC /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		9FD4E3B7251ECABA0042D02A /* LaunchScreenExpert.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreenExpert.storyboard; path = lafemmeApp/LaunchScreenExpert.storyboard; sourceTree = "<group>"; };
+		9FD4E3C2251ECE970042D02A /* InfoClient.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = InfoClient.plist; path = lafemmeApp/InfoClient.plist; sourceTree = "<group>"; };
+		9FD4E3D3251ECEF80042D02A /* InfoClientStaging.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = InfoClientStaging.plist; path = lafemmeApp/InfoClientStaging.plist; sourceTree = "<group>"; };
+		9FD4E3D4251ECEF80042D02A /* InfoExpertStaging.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = InfoExpertStaging.plist; path = lafemmeApp/InfoExpertStaging.plist; sourceTree = "<group>"; };
 		9FFF754D24E0CD8200B12EB3 /* La Femme.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = "La Femme.entitlements"; path = "lafemmeApp/La Femme.entitlements"; sourceTree = "<group>"; };
 		A8E157F5C43EED275BDF0F28 /* libPods-lafemmeApp-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-lafemmeApp-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ABA204585163D6E4B54A5F83 /* libPods-lafemmeApp-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-lafemmeApp-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -125,9 +135,13 @@
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
-				13B07FB61A68108700A75B9A /* Info.plist */,
+				13B07FB61A68108700A75B9A /* InfoExpert.plist */,
+				9FD4E3D3251ECEF80042D02A /* InfoClientStaging.plist */,
+				9FD4E3D4251ECEF80042D02A /* InfoExpertStaging.plist */,
+				9FD4E3C2251ECE970042D02A /* InfoClient.plist */,
 				9F5AD6662519A5D6008424AC /* Firebase */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
+				9FD4E3B7251ECABA0042D02A /* LaunchScreenExpert.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
 			);
 			name = lafemmeApp;
@@ -361,6 +375,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9FD4E3C3251ECE970042D02A /* InfoClient.plist in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				9F5AD6772519A5D6008424AC /* GoogleService-Info.plist in Resources */,
@@ -371,6 +386,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9FD4E3C4251ECE970042D02A /* InfoClient.plist in Resources */,
 				9F32F2582519A3CE0050FF13 /* LaunchScreen.storyboard in Resources */,
 				9F5AD6702519A5D6008424AC /* GoogleService-Info.plist in Resources */,
 				9F32F2592519A3CE0050FF13 /* Images.xcassets in Resources */,
@@ -384,6 +400,8 @@
 				9F5AD6382519A518008424AC /* LaunchScreen.storyboard in Resources */,
 				9F5AD6752519A5D6008424AC /* GoogleService-Info.plist in Resources */,
 				9F5AD6392519A518008424AC /* Images.xcassets in Resources */,
+				9FD4E3C9251ECEA90042D02A /* InfoExpert.plist in Resources */,
+				9FD4E3B8251ECABA0042D02A /* LaunchScreenExpert.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -394,6 +412,8 @@
 				9F5AD64F2519A535008424AC /* LaunchScreen.storyboard in Resources */,
 				9F5AD6502519A535008424AC /* Images.xcassets in Resources */,
 				9F5AD67E2519A5D6008424AC /* GoogleService-Info.plist in Resources */,
+				9FD4E3CE251ECEA90042D02A /* InfoExpert.plist in Resources */,
+				9FD4E3B9251ECABA0042D02A /* LaunchScreenExpert.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -917,10 +937,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconClient;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "lafemmeApp/La Femme.entitlements";
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = CE49PKHAHF;
 				ENABLE_BITCODE = NO;
-				INFOPLIST_FILE = lafemmeApp/Info.plist;
+				INFOPLIST_FILE = lafemmeApp/InfoClient.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.0.0;
 				OTHER_LDFLAGS = (
@@ -943,9 +963,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconClient;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "lafemmeApp/La Femme.entitlements";
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = CE49PKHAHF;
-				INFOPLIST_FILE = lafemmeApp/Info.plist;
+				INFOPLIST_FILE = lafemmeApp/InfoClient.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.0.0;
 				OTHER_LDFLAGS = (
@@ -1080,10 +1100,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconClientStaging;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "lafemmeApp/La Femme.entitlements";
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = CE49PKHAHF;
 				ENABLE_BITCODE = NO;
-				INFOPLIST_FILE = "$(SRCROOT)/lafemmeApp/Info.plist";
+				INFOPLIST_FILE = lafemmeApp/InfoClientStaging.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.0.0;
 				OTHER_LDFLAGS = (
@@ -1106,9 +1126,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconClientStaging;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "lafemmeApp/La Femme.entitlements";
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = CE49PKHAHF;
-				INFOPLIST_FILE = "$(SRCROOT)/lafemmeApp/Info.plist";
+				INFOPLIST_FILE = lafemmeApp/InfoClientStaging.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.0.0;
 				OTHER_LDFLAGS = (
@@ -1130,10 +1150,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconExpert;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "lafemmeApp/La Femme.entitlements";
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = CE49PKHAHF;
 				ENABLE_BITCODE = NO;
-				INFOPLIST_FILE = "$(SRCROOT)/lafemmeApp/Info.plist";
+				INFOPLIST_FILE = lafemmeApp/InfoExpert.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.0.0;
 				OTHER_LDFLAGS = (
@@ -1156,9 +1176,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconExpert;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "lafemmeApp/La Femme.entitlements";
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = CE49PKHAHF;
-				INFOPLIST_FILE = "$(SRCROOT)/lafemmeApp/Info.plist";
+				INFOPLIST_FILE = lafemmeApp/InfoExpert.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.0.0;
 				OTHER_LDFLAGS = (
@@ -1180,10 +1200,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconExpertStaging;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "lafemmeApp/La Femme.entitlements";
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = CE49PKHAHF;
 				ENABLE_BITCODE = NO;
-				INFOPLIST_FILE = "$(SRCROOT)/lafemmeApp/Info.plist";
+				INFOPLIST_FILE = lafemmeApp/InfoExpertStaging.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.0.0;
 				OTHER_LDFLAGS = (
@@ -1206,9 +1226,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconExpertStaging;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "lafemmeApp/La Femme.entitlements";
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = CE49PKHAHF;
-				INFOPLIST_FILE = "$(SRCROOT)/lafemmeApp/Info.plist";
+				INFOPLIST_FILE = lafemmeApp/InfoExpertStaging.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.0.0;
 				OTHER_LDFLAGS = (

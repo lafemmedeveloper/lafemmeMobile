@@ -26,19 +26,19 @@
                                 <rect key="frame" x="88" y="302.5" width="199" height="62"/>
                                 <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="62" id="6oJ-bf-TyP"/>
-                                    <constraint firstAttribute="width" constant="199" id="GVJ-rz-gFQ"/>
+                                    <constraint firstAttribute="width" constant="199" id="6bl-ew-2bH"/>
+                                    <constraint firstAttribute="height" constant="62" id="9V1-bX-A3x"/>
                                 </constraints>
                             </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Bcu-3y-fUS"/>
-                        <color key="backgroundColor" red="1" green="0.28235294117647058" blue="0.47450980392156861" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" red="0.4823529411764706" green="0.85490196078431369" blue="0.82745098039215681" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstItem="lBF-mN-8jK" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="1mO-De-9me"/>
                             <constraint firstItem="Bcu-3y-fUS" firstAttribute="centerX" secondItem="obG-Y5-kRd" secondAttribute="centerX" id="5cz-MP-9tL"/>
+                            <constraint firstItem="lBF-mN-8jK" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="8mP-13-rxX"/>
+                            <constraint firstItem="lBF-mN-8jK" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="9gX-iK-cim"/>
                             <constraint firstItem="obG-Y5-kRd" firstAttribute="leading" secondItem="Bcu-3y-fUS" secondAttribute="leading" symbolic="YES" id="SfN-ll-jLj"/>
                             <constraint firstAttribute="bottom" secondItem="obG-Y5-kRd" secondAttribute="bottom" constant="20" id="Y44-ml-fuU"/>
-                            <constraint firstItem="lBF-mN-8jK" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="fcz-g2-zbv"/>
                         </constraints>
                     </view>
                 </viewController>

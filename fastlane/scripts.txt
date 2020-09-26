@@ -1,0 +1,4 @@
+bundle exec fastlane bump_version => 3.40.1 (432) -> 3.40.1 (433)
+bundle exec fastlane bump_version type:patch => 3.40.1 (432) -> 3.40.2 (432)
+bundle exec fastlane bump_version type:minor => 3.40.1 (432) -> 3.41.0 (432)
+bundle exec fastlane bump_version type:major  => 3.40.1 (432) -> 4.0.0 (432)

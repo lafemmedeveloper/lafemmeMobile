@@ -27,7 +27,17 @@
     "xcode": "cd ios/ && open lafemmeApp.xcworkspace",
     "nvmInstall": "curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.8/install.sh | bash",
     "nvmConfig": "export NVM_DIR=\"$HOME/.nvm\" &&  [ -s '$NVM_DIR/nvm.sh' ] && [ -s \"$NVM_DIR/nvm.sh\" ] && \\. \"$NVM_DIR/nvm.sh\" [ -s \"$NVM_DIR/bash_completion\" ] && . \"$NVM_DIR/bash_completion\"  ",
-    "nvm": "nvm install 13.6.0"
+    "nvm": "nvm install 13.6.0",
+    "fastlane:build": "bundle exec fastlane bump_version",
+    "fastlane:patch": "bundle exec fastlane bump_version type:patch",
+    "fastlane:minor": "bundle exec fastlane bump_version type:minor",
+    "fastlane:major": "bundle exec fastlane bump_version type:major"
+  },
+  "fastlane:helper": {
+    "build": "=> 3.40.1 (432) -> 3.40.1 (433)",
+    "patch": "=> 3.40.1 (432) -> 3.40.2 (432)",
+    "minor": "=> 3.40.1 (432) -> 3.41.0 (432)",
+    "major": "=> 3.40.1 (432) -> 4.0.0 (432)"
   },
   "dependencies": {
     "@react-native-community/datetimepicker": "^3.0.1",
