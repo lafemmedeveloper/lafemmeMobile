@@ -360,7 +360,7 @@ const Cart = (props) => {
             width: Metrics.screenWidth,
             bottom: 0,
           },
-          ApplicationStyles.shadownClientTop,
+          ApplicationStyles.shadowsClientTop,
         ]}>
         <View
           style={[
@@ -408,7 +408,7 @@ const Cart = (props) => {
               alignItems: 'center',
               paddingBottom: Metrics.addFooter,
             },
-            ApplicationStyles.shadownClientTop,
+            ApplicationStyles.shadowsClientTop,
           ]}>
           <Text
             style={Fonts.style.bold(Colors.light, Fonts.size.h6, 'center', 1)}>

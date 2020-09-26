@@ -56,7 +56,7 @@ export default (dta) => {
         activeOpacity={0.8}
         style={[
           ApplicationStyles.itemService,
-          ApplicationStyles.shadownClient,
+          ApplicationStyles.shadowsClient,
           {zIndex: 150},
         ]}>
         <FastImage
@@ -72,7 +72,7 @@ export default (dta) => {
           <Text
             style={[
               Fonts.style.bold(Colors.light, Fonts.size.h3, 'center'),
-              ApplicationStyles.shadownClient,
+              ApplicationStyles.shadowsClient,
             ]}>
             {data.name.toUpperCase()}
           </Text>

@@ -6,7 +6,7 @@ export default (data) => {
   const {menuIndex, onAction} = data;
 
   return (
-    <View style={[styles.container, ApplicationStyles.shadownClient]}>
+    <View style={[styles.container, ApplicationStyles.shadowsClient]}>
       <View style={styles.addHeader}>
         <Text
           style={[Fonts.style.regular(Colors.dark, Fonts.size.h6, 'center')]}>

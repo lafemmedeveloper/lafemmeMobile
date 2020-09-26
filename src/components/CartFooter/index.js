@@ -7,7 +7,7 @@ export default (data) => {
   return (
     <TouchableOpacity
       onPress={() => data.onAction()}
-      style={[styles.container, ApplicationStyles.shadownClient]}>
+      style={[styles.container, ApplicationStyles.shadowsClient]}>
       <View style={styles.counter}>
         <Text
           style={Fonts.style.bold(

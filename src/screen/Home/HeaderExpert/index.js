@@ -7,7 +7,7 @@ export default (data) => {
   const {menuIndex, onAction} = data;
 
   return (
-    <View style={[styles.container, ApplicationStyles.shadownClient]}>
+    <View style={[styles.container, ApplicationStyles.shadowsClient]}>
       <View style={styles.addHeader}>{/*  */}</View>
       <View style={[styles.content]}>
         <View

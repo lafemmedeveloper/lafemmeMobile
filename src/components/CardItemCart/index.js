@@ -13,7 +13,7 @@ export default (data) => {
 
   return (
     <>
-      <View style={[styles.container, ApplicationStyles.shadownClient]}>
+      <View style={[styles.container, ApplicationStyles.shadowsClient]}>
         <View style={styles.productContainer}>
           <Text
             style={Fonts.style.bold(Colors.dark, Fonts.size.medium, 'left')}>

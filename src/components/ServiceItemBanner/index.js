@@ -17,7 +17,7 @@ export default ({item, appType, onPress}) => {
       <LinearGradient
         style={[
           ApplicationStyles.bannerOrders,
-          ApplicationStyles.shadownClient,
+          ApplicationStyles.shadowsClient,
         ]}
         colors={[Colors[appType].primaryColor, Colors[appType].secondaryColor]}
         start={{x: 0, y: 1}}

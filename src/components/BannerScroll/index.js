@@ -15,7 +15,7 @@ export default (data) => {
         activeOpacity={0.8}
         style={[
           ApplicationStyles.itemService,
-          ApplicationStyles.shadownClient,
+          ApplicationStyles.shadowsClient,
         ]}>
         <FastImage
           style={ApplicationStyles.itemImage}
@@ -27,14 +27,14 @@ export default (data) => {
           <Text
             style={[
               Fonts.style.bold(Colors.light, Fonts.size.bigTitle, 'center'),
-              ApplicationStyles.shadownClient,
+              ApplicationStyles.shadowsClient,
             ]}>
             {data.name.toUpperCase()}
           </Text>
           <Text
             style={[
               Fonts.style.bold(Colors.light, Fonts.size.small, 'center'),
-              ApplicationStyles.shadownClient,
+              ApplicationStyles.shadowsClient,
             ]}>
             {data.subtitle}
           </Text>
