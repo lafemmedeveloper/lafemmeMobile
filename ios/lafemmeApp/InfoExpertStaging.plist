@@ -50,8 +50,18 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>La Femme Solicita acceso la cámara para que compartas fotos perzonalizadas en nuestra comunidad y/o redes sociales.</string>
+	<key>NSLocalizedDescription</key>
+	<string>La Femme solicita acceso a la ubicación para personalizar contenido y participar en los rankins localizados</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>La Femme solicita acceso a la ubicación para personalizar contenido y participar en los rankins localizados</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>La Femme solicita acceso a la ubicación para personalizar contenido y participar en los rankins localizados</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>La Femme solicita acceso para almacentar tus fotografías.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>La Femme solicita acceso que puedas publicar tus imagenes o enviar fotografías en el chat y poder solucuinar tus problems.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>
