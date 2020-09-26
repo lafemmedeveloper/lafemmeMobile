@@ -34,6 +34,7 @@ const DetailModal = (props) => {
 
   useEffect(() => {
     countdown(order.date);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const [dateCount, setDateCount] = useState('');

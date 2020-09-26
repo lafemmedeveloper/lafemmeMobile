@@ -16,7 +16,7 @@ const Router = () => {
   const {user} = auth;
   useEffect(() => {
     observeUser(authDispatch);
-  }, []);
+  }, [authDispatch]);
 
   if (user) {
     return (
