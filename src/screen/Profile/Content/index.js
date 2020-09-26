@@ -470,7 +470,7 @@ const Content = (props) => {
             style={styles.profileContainer} //profile
           >
             <TouchableOpacity onPress={() => pickImage()}>
-              {user && user.imageUrl.medium ? (
+              {user && user.imageUrl ? (
                 <Image
                   source={{uri: user.imageUrl.medium}}
                   style={{

@@ -19,6 +19,7 @@ import HeaderExpert from './HeaderExpert';
 import ModalApp from '../../components/ModalApp';
 import DetailModal from '../HistoryExpert/DetailModal';
 import NextOrder from '../NextOrder';
+import messaging from '@react-native-firebase/messaging';
 
 const HomeExpert = () => {
   const {state, authDispatch, utilDispatch} = useContext(StoreContext);
@@ -30,20 +31,20 @@ const HomeExpert = () => {
   const [detailOrder, setDetailOrder] = useState(null);
 
   console.log('appType =>', appType);
+
   useEffect(() => {
     getDeviceInfo(utilDispatch);
     if (user) {
-      const {activity, isEnabled} = user;
-
       currentCoordinate();
       getExpertActiveOrders(utilDispatch);
       getExpertHistoryOrders(utilDispatch);
-      activeNameSlug(activity, utilDispatch);
+      activeNameSlug(user.activity, utilDispatch);
 
-      if (isEnabled) {
-        getExpertOpenOrders(activity, utilDispatch);
+      if (user.isEnabled) {
+        getExpertOpenOrders(user.activity, utilDispatch);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const appType = deviceInfo;
@@ -63,6 +64,7 @@ const HomeExpert = () => {
     if (coordinate) {
       updateProfile(coordinate, 'coordinate', authDispatch);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [coordinate]);
 
   console.log('loading home =>', loading);
@@ -72,6 +74,22 @@ const HomeExpert = () => {
     setDetailOrder(order);
     setModalDetail(true);
   };
+  useEffect(() => {
+    return () => {
+      messaging()
+        .subscribeToTopic('expert')
+        .then(() => console.log('Subscribed to topic!'));
+      messaging().onMessage(async (remoteMessage) => {
+        console.log(
+          'A new FCM message arrived!',
+          JSON.stringify(remoteMessage),
+        );
+      });
+      messaging().setBackgroundMessageHandler(async (remoteMessage) => {
+        console.log('push notification backgraund', remoteMessage);
+      });
+    };
+  }, []);
   return (
     <>
       <View style={styles.container}>
@@ -99,7 +117,7 @@ const HomeExpert = () => {
                 Fonts.style.bold(Colors.dark, Fonts.size.h6, 'left'),
                 {marginVertical: 20, marginLeft: 20},
               ]}>
-              {`Tienes una ordén ${expertActiveOrders.length} disponible`}
+              {`Tienes ${expertActiveOrders.length} ordén disponible`}
             </Text>
             {expertActiveOrders.map((item, index) => {
               return (

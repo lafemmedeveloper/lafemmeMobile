@@ -4,10 +4,9 @@ import {Fonts, Colors, Images} from '../../../themes';
 
 const NoOrders = (props) => {
   const {user} = props;
-  console.log('NoOrders =======>', user.isEnabled);
   return (
     <>
-      {user.isEnabled ? (
+      {user && user.isEnabled ? (
         <View
           style={{
             flex: 1,

@@ -48,6 +48,7 @@ const Register = (props) => {
           rating: 5.0,
           cart: null,
           address: [],
+          imageUrl: null,
         };
         setActivityLoading(false);
         setDb(data);
