@@ -14,7 +14,9 @@ export default ({open, children, setOpen}) => {
     <>
       <Modal
         isVisible={open}
-        onBackdropPress={() => setOpen(false)}
+        onBackdropPress={() =>
+          setOpen ? setOpen(false) : console.log('not close')
+        }
         backdropColor={
           appType.appType === 'expert'
             ? Colors.expert.primaryColor

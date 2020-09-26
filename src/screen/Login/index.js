@@ -6,6 +6,7 @@ import {
   TextInput,
   Alert,
   ActivityIndicator,
+  StyleSheet,
 } from 'react-native';
 import {Colors, Metrics, Fonts} from '../../themes';
 import auth from '@react-native-firebase/auth';
@@ -16,6 +17,7 @@ import Register from '../../screen//Register';
 import {StoreContext} from '../../flux';
 import ModalApp from '../../components/ModalApp';
 import {setUser} from '../../flux/auth/actions';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const Login = (props) => {
   const {setModalAuth} = props;
@@ -53,14 +55,13 @@ const Login = (props) => {
       if (phoneNumber.formatInternational()) {
         setPhone(phoneNumber.formatInternational());
         try {
-          console.log('phoneNumber', phoneNumber.formatInternational());
-
           const confirmResult = await auth().signInWithPhoneNumber(
             phoneNumber.formatInternational(),
           );
 
           setActivityLoading(false);
           setConfirmResult(confirmResult);
+          setModalAuth(false);
           setModalCode(true);
         } catch (error) {
           console.log('error auht =>', error);
@@ -102,7 +103,7 @@ const Login = (props) => {
       ) {
         Alert.alert(
           'Error de Autentificación',
-          'el codigo a expirado vuelve a intentarlo nuevamente',
+          'el código a expirado vuelve a intentarlo nuevamente',
         );
       }
     }
@@ -110,6 +111,12 @@ const Login = (props) => {
 
   return (
     <View style={{marginTop: 20}}>
+      <Icon
+        name="email-send-outline"
+        size={50}
+        color={Colors.client.primaryColor}
+        style={styles.icon}
+      />
       <Text style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
         {'Verifica tu numero'}
       </Text>
@@ -189,7 +196,7 @@ const Login = (props) => {
         {activityLoading && <ActivityIndicator size="small" color="white" />}
       </TouchableOpacity>
 
-      <ModalApp open={modalCode} setOpen={setModalCode}>
+      <ModalApp open={modalCode}>
         <InputCode
           phone={phone}
           handleVerifyCode={handleVerifyCode}
@@ -213,4 +220,9 @@ const Login = (props) => {
     </View>
   );
 };
+const styles = StyleSheet.create({
+  icon: {
+    alignSelf: 'center',
+  },
+});
 export default Login;

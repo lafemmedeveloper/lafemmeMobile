@@ -24,7 +24,7 @@ import messaging from '@react-native-firebase/messaging';
 const HomeExpert = () => {
   const {state, authDispatch, utilDispatch} = useContext(StoreContext);
   const {auth, util} = state;
-  const {user, loading} = auth;
+  const {user} = auth;
   const {expertActiveOrders, deviceInfo, nextOrder} = util;
 
   const [modalDetail, setModalDetail] = useState(false);
@@ -44,6 +44,7 @@ const HomeExpert = () => {
         getExpertOpenOrders(user.activity, utilDispatch);
       }
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -62,14 +63,11 @@ const HomeExpert = () => {
 
   useEffect(() => {
     if (coordinate) {
-      updateProfile(coordinate, 'coordinate', authDispatch);
+      return () => updateProfile(coordinate, 'coordinate', authDispatch);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [coordinate]);
 
-  console.log('loading home =>', loading);
-
-  console.log('nextOrder=>', typeof nextOrder);
   const activeDetailModal = (order) => {
     setDetailOrder(order);
     setModalDetail(true);
