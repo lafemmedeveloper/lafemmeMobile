@@ -15,12 +15,13 @@
 
 ### La Femme iOS
 #LaFemme Client iOS
-
+[![Build status](https://build.appcenter.ms/v0.1/apps/4e985f8c-2ba3-4505-93e7-01c928921dd8/branches/master/badge)](https://appcenter.ms)
 
 #LaFemme Client Staging iOS
-
+[![Build status](https://build.appcenter.ms/v0.1/apps/f6b0e471-d537-41fc-9800-afe6879d64dd/branches/master/badge)](https://appcenter.ms)
 
 #LaFemme Expert iOS
-
+[![Build status](https://build.appcenter.ms/v0.1/apps/32550454-83da-413d-9373-39e7e846d9cb/branches/master/badge)](https://appcenter.ms)
 
 #LaFemme Expert Staging iOS
+[![Build status](https://build.appcenter.ms/v0.1/apps/1bfdcfab-75ca-4719-b6c5-6359f50de4e2/branches/master/badge)](https://appcenter.ms)
