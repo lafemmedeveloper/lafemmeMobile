@@ -661,7 +661,7 @@ const Content = (props) => {
             <TouchableOpacity
               onPress={() => {
                 Linking.openURL(
-                  `whatsapp://send?text=Me interesa contactar al desarrollador de La Femme &phone=+573106873181`,
+                  'whatsapp://send?text=Me interesa contactar al desarrollador de La Femme &phone=+573106873181',
                 );
               }}
               style={{marginVertical: 20}}>

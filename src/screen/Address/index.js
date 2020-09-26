@@ -14,6 +14,7 @@ import {Metrics, Fonts, ApplicationStyles, Colors} from '../../themes';
 import {updateProfile} from '../../flux/auth/actions';
 import {validateCoverage} from '../../helpers/GeoHelper';
 import {getCoverage} from '../../flux/util/actions';
+import Loading from '../../components/Loading';
 
 const Address = (props) => {
   const {closeModal, setModalCart, setModalAddAddress} = props;
@@ -46,20 +47,13 @@ const Address = (props) => {
   const removeAddress = async (id) => {
     let address = user.address;
 
-    const index = address ? address.findIndex((i) => i.id === id) : -1;
+    const addressFilter = address.filter((a) => a.id !== id);
+    if (addressFilter.length > 0) {
+      await updateProfile(addressFilter, 'address', authDispatch);
+    } else {
+      await updateProfile(addressFilter, 'address', authDispatch);
 
-    if (index !== -1) {
-      address = [...address.slice(0, index), ...address.slice(index + 1)];
-
-      if (user.cart.address != null && user.cart.address.id === id) {
-        await updateProfile(
-          {...user.cart, address: null},
-          'cart',
-          authDispatch,
-        );
-      }
-
-      await updateProfile(address, 'address', authDispatch);
+      await updateProfile({...user.cart, address: null}, 'cart', authDispatch);
     }
   };
 
@@ -71,6 +65,7 @@ const Address = (props) => {
 
   return (
     <View>
+      <Loading type={'client'} />
       <ScrollView>
         <View style={styles.headerContainer}>
           <View opacity={0.0} style={ApplicationStyles.separatorLine} />

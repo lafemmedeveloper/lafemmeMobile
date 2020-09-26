@@ -2,6 +2,7 @@ import {GET_USER, HANDLE_ERROR, LOADING, DEL_USER} from './types';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import {Alert} from 'react-native';
+import messaging from '@react-native-firebase/messaging';
 
 export const handleError = (dispatch) => {
   dispatch({type: HANDLE_ERROR, payload: true});
@@ -154,4 +155,47 @@ export const updateProfileItem = async (newData, uid, dispatch) => {
     console.log('error updateProfileItem =>', error);
     setLoading(false, dispatch);
   }
+};
+
+export const activeMessage = async (dispatch) => {
+  try {
+    setLoading(true, dispatch);
+    messaging()
+      .subscribeToTopic('client')
+      .then(() => console.log('Subscribed to topic!'));
+    messaging().onMessage(async (remoteMessage) => {
+      console.log('A new FCM message arrived!', JSON.stringify(remoteMessage));
+    });
+    messaging().setBackgroundMessageHandler(async (remoteMessage) => {
+      console.log('push notification backgraund', remoteMessage);
+    });
+    await sendTokenUser();
+    setLoading(false, dispatch);
+  } catch (error) {
+    setLoading(false, dispatch);
+
+    console.log('error activeMessage =>', error);
+  }
+};
+const sendTokenUser = () => {
+  messaging()
+    .getToken()
+    .then((token) => {
+      return saveTokenToDatabase(token);
+    });
+
+  return messaging().onTokenRefresh((token) => {
+    saveTokenToDatabase(token);
+  });
+};
+
+const saveTokenToDatabase = async (token) => {
+  const userId = auth().currentUser.uid;
+
+  await firestore()
+    .collection('users')
+    .doc(userId)
+    .update({
+      tokens: firestore.FieldValue.arrayUnion(token),
+    });
 };

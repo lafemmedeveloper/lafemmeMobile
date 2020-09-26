@@ -7,6 +7,7 @@ import {
   Alert,
   ActivityIndicator,
   StyleSheet,
+  Keyboard,
 } from 'react-native';
 import {Colors, Metrics, Fonts} from '../../themes';
 import auth from '@react-native-firebase/auth';
@@ -18,12 +19,12 @@ import {StoreContext} from '../../flux';
 import ModalApp from '../../components/ModalApp';
 import {setUser} from '../../flux/auth/actions';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Loading from '../../components/Loading';
 
 const Login = (props) => {
   const {setModalAuth} = props;
   const {authDispatch, state} = useContext(StoreContext);
 
-  // console.log('state=>', state);
   const initialState = {
     country: {
       cca2: 'CO',
@@ -45,6 +46,8 @@ const Login = (props) => {
   };
 
   const sendPhone = async () => {
+    Keyboard.dismiss();
+
     setActivityLoading(true);
 
     if (userPhone.length > 1) {
@@ -61,7 +64,7 @@ const Login = (props) => {
 
           setActivityLoading(false);
           setConfirmResult(confirmResult);
-          setModalAuth(false);
+
           setModalCode(true);
         } catch (error) {
           console.log('error auht =>', error);
@@ -111,6 +114,7 @@ const Login = (props) => {
 
   return (
     <View style={{marginTop: 20}}>
+      <Loading type={'client'} />
       <Icon
         name="email-send-outline"
         size={50}
@@ -223,6 +227,7 @@ const Login = (props) => {
 const styles = StyleSheet.create({
   icon: {
     alignSelf: 'center',
+    paddingVertical: 20,
   },
 });
 export default Login;

@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   TextInput,
+  Keyboard,
 } from 'react-native';
 import Utilities from '../../utilities';
 import moment from 'moment';
@@ -24,6 +25,8 @@ import ModalApp from '../../components/ModalApp';
 import AppConfig from '../../config/AppConfig';
 import {topicPush, getCoverage} from '../../flux/util/actions';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import Loading from '../../components/Loading';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
 const CartScreen = (props) => {
   const {setModalCart, setModalAddress} = props;
@@ -32,10 +35,7 @@ const CartScreen = (props) => {
   );
   const {auth} = state;
   const {user} = auth;
-  const currentDay = new Date();
-  console.log('currentDay =>', currentDay);
   const [dateCalendar, setDateCalendar] = useState('');
-  const [time, setTime] = useState('');
   const [notes, setNotes] = useState('');
   const [modalNote, setModalNote] = useState(false);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -51,6 +51,7 @@ const CartScreen = (props) => {
   }, [serviceDispatch]);
 
   const updateNotes = async (notes) => {
+    Keyboard.dismiss();
     try {
       updateProfile({...user.cart, notes}, 'cart', authDispatch);
       setModalNote(false);
@@ -125,7 +126,9 @@ const CartScreen = (props) => {
               'cart',
               authDispatch,
             );
-          } catch (error) {}
+          } catch (error) {
+            console.lgo('error sendOrder =>', error);
+          }
         })
         .catch(function (error) {
           console.error('Error saving order : ', error);
@@ -142,10 +145,16 @@ const CartScreen = (props) => {
 
   const handleConfirmDate = (date) => {
     const handleDate = moment(date).format('YYYY-MM-DD');
-    console.log('handleDate =>', handleDate);
-    setDateCalendar(handleDate);
-    setDatePickerVisibility(false);
-    setIsTimePickerVisible(true);
+    const today = new Date();
+
+    if (Date.parse(handleDate) > today) {
+      setDateCalendar(handleDate);
+      setDatePickerVisibility(false);
+      setIsTimePickerVisible(true);
+    } else {
+      setDatePickerVisibility(false);
+      Alert.alert('Ups', 'la fecha tiene que ser mayor ala fecha actual');
+    }
   };
 
   const hideDatePicker = () => {
@@ -153,9 +162,7 @@ const CartScreen = (props) => {
     setDatePickerVisibility(false);
   };
   const handleConfirmTime = async (hour) => {
-    console.log('hour ===>', hour);
     const dateTime = moment(hour).format('HH:mm:ss');
-    setTime(dateTime);
     console.log('date hour handleTime =>', dateTime);
     const date = `${dateCalendar} ${dateTime}`;
 
@@ -167,13 +174,11 @@ const CartScreen = (props) => {
     user.cart.date &&
     user.cart.services.length > 0 &&
     user.cart.notes;
-  console.log('isDatePickerVisible =>', isDatePickerVisible);
-
-  console.log('value data ==>', dateCalendar);
-  console.log('value time ==>', time);
 
   return (
     <View style={{height: 650}}>
+      <Loading type={'client'} />
+
       <View style={styles.headerContainer}>
         <View opacity={0.0} style={ApplicationStyles.separatorLine} />
         <Image
@@ -461,7 +466,6 @@ const CartScreen = (props) => {
               }
             }
 
-            console.log('hoursServices ==>', hoursServices);
             if (isCompleted) {
               console.log('isCompleted');
               let data = {
@@ -507,6 +511,15 @@ const CartScreen = (props) => {
         </TouchableOpacity>
       </View>
       <ModalApp open={modalNote} setOpen={setModalNote}>
+        <Icon
+          name="comment-dots"
+          size={50}
+          color={Colors.client.primaryColor}
+          style={styles.icon}
+        />
+        <Text style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
+          {'Añade una nota'}
+        </Text>
         <TouchableOpacity
           style={{
             alignSelf: 'center',
@@ -632,6 +645,10 @@ const styles = StyleSheet.create({
     shadowRadius: 1,
 
     elevation: 5,
+  },
+  icon: {
+    alignSelf: 'center',
+    marginTop: 40,
   },
 });
 export default CartScreen;

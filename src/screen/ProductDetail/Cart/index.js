@@ -355,7 +355,7 @@ const Cart = (props) => {
       <View
         style={[
           {
-            height: 150,
+            height: 130,
             backgroundColor: Colors.client.primaryColor,
             width: Metrics.screenWidth,
             bottom: 0,
@@ -412,7 +412,7 @@ const Cart = (props) => {
           ]}>
           <Text
             style={Fonts.style.bold(Colors.light, Fonts.size.h6, 'center', 1)}>
-            {'AGREGAR SERVICIO'}
+            {'AGREGAR SERVICIO '}
           </Text>
         </TouchableOpacity>
       </View>
