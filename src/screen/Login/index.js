@@ -7,6 +7,7 @@ import {
   Alert,
   ActivityIndicator,
   StyleSheet,
+  Keyboard,
 } from 'react-native';
 import {Colors, Metrics, Fonts} from '../../themes';
 import auth from '@react-native-firebase/auth';
@@ -45,6 +46,8 @@ const Login = (props) => {
   };
 
   const sendPhone = async () => {
+    Keyboard.dismiss();
+
     setActivityLoading(true);
 
     if (userPhone.length > 1) {
@@ -61,7 +64,7 @@ const Login = (props) => {
 
           setActivityLoading(false);
           setConfirmResult(confirmResult);
-          setModalAuth(false);
+
           setModalCode(true);
         } catch (error) {
           console.log('error auht =>', error);
@@ -223,6 +226,7 @@ const Login = (props) => {
 const styles = StyleSheet.create({
   icon: {
     alignSelf: 'center',
+    paddingVertical: 20,
   },
 });
 export default Login;
