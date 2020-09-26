@@ -8,7 +8,7 @@ module Fastlane
 
         replace_in_place(
           path,
-          /versionName\s+'(.+)'/,
+          /versionName\s+"(.+)"/,
           "versionName \"#{version_name}\""
         )
 
