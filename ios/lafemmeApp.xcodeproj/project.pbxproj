@@ -30,11 +30,11 @@
 		9F5AD6752519A5D6008424AC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9F5AD66A2519A5D6008424AC /* GoogleService-Info.plist */; };
 		9F5AD6772519A5D6008424AC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9F5AD66C2519A5D6008424AC /* GoogleService-Info.plist */; };
 		9F5AD67E2519A5D6008424AC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9F5AD66E2519A5D6008424AC /* GoogleService-Info.plist */; };
+		9FC28DC1251ED223003BF31E /* InfoExpertStaging.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9FD4E3D4251ECEF80042D02A /* InfoExpertStaging.plist */; };
+		9FC28DCA251ED22A003BF31E /* InfoClientStaging.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9FD4E3D3251ECEF80042D02A /* InfoClientStaging.plist */; };
 		9FD4E3B8251ECABA0042D02A /* LaunchScreenExpert.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9FD4E3B7251ECABA0042D02A /* LaunchScreenExpert.storyboard */; };
 		9FD4E3B9251ECABA0042D02A /* LaunchScreenExpert.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9FD4E3B7251ECABA0042D02A /* LaunchScreenExpert.storyboard */; };
 		9FD4E3C3251ECE970042D02A /* InfoClient.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9FD4E3C2251ECE970042D02A /* InfoClient.plist */; };
-		9FD4E3C4251ECE970042D02A /* InfoClient.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9FD4E3C2251ECE970042D02A /* InfoClient.plist */; };
-		9FD4E3C9251ECEA90042D02A /* InfoExpert.plist in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB61A68108700A75B9A /* InfoExpert.plist */; };
 		9FD4E3CE251ECEA90042D02A /* InfoExpert.plist in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB61A68108700A75B9A /* InfoExpert.plist */; };
 		FE92D9865A54B635A2788AD9 /* libPods-Expert.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DBBAD8702C1A94E75815037 /* libPods-Expert.a */; };
 /* End PBXBuildFile section */
@@ -408,8 +408,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9FD4E3C4251ECE970042D02A /* InfoClient.plist in Resources */,
 				9F32F2582519A3CE0050FF13 /* LaunchScreen.storyboard in Resources */,
+				9FC28DCA251ED22A003BF31E /* InfoClientStaging.plist in Resources */,
 				9F5AD6702519A5D6008424AC /* GoogleService-Info.plist in Resources */,
 				9F32F2592519A3CE0050FF13 /* Images.xcassets in Resources */,
 			);
@@ -422,7 +422,6 @@
 				9F5AD6382519A518008424AC /* LaunchScreen.storyboard in Resources */,
 				9F5AD6752519A5D6008424AC /* GoogleService-Info.plist in Resources */,
 				9F5AD6392519A518008424AC /* Images.xcassets in Resources */,
-				9FD4E3C9251ECEA90042D02A /* InfoExpert.plist in Resources */,
 				9FD4E3B8251ECABA0042D02A /* LaunchScreenExpert.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -433,6 +432,7 @@
 			files = (
 				9F5AD64F2519A535008424AC /* LaunchScreen.storyboard in Resources */,
 				9F5AD6502519A535008424AC /* Images.xcassets in Resources */,
+				9FC28DC1251ED223003BF31E /* InfoExpertStaging.plist in Resources */,
 				9F5AD67E2519A5D6008424AC /* GoogleService-Info.plist in Resources */,
 				9FD4E3CE251ECEA90042D02A /* InfoExpert.plist in Resources */,
 				9FD4E3B9251ECABA0042D02A /* LaunchScreenExpert.storyboard in Resources */,
