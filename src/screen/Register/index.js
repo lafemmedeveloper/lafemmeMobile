@@ -6,7 +6,8 @@ import {
   TouchableOpacity,
   Alert,
   ActivityIndicator,
-  StyleSheet,, Keyboard
+  StyleSheet,
+  Keyboard,
 } from 'react-native';
 import {Colors, Metrics, Fonts} from '../../themes';
 import moment from 'moment';
@@ -28,7 +29,7 @@ const Register = (props) => {
   const [email, setEmail] = useState('');
 
   const chandleRegister = async () => {
-    Keyboard.dismiss()
+    Keyboard.dismiss();
     if ((name.trim() !== '' || lastName.trim() !== '', email.trim() !== '')) {
       const currentUser = auth().currentUser;
       try {

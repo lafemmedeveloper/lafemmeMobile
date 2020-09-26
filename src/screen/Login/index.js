@@ -19,12 +19,12 @@ import {StoreContext} from '../../flux';
 import ModalApp from '../../components/ModalApp';
 import {setUser} from '../../flux/auth/actions';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Loading from '../../components/Loading';
 
 const Login = (props) => {
   const {setModalAuth} = props;
   const {authDispatch, state} = useContext(StoreContext);
 
-  // console.log('state=>', state);
   const initialState = {
     country: {
       cca2: 'CO',
@@ -114,6 +114,7 @@ const Login = (props) => {
 
   return (
     <View style={{marginTop: 20}}>
+      <Loading type={'client'} />
       <Icon
         name="email-send-outline"
         size={50}

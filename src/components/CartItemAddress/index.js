@@ -16,9 +16,6 @@ export default (data) => {
       }}
       style={styles.container}>
       <TouchableOpacity
-        onPress={() => {
-          data.removeAddress(id);
-        }}
         style={{width: 30, justifyContent: 'center', alignItems: 'center'}}>
         {
           <Icon
