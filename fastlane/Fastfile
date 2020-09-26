@@ -40,7 +40,6 @@ lane :bump_version do |options|
       ios/lafemmeApp/InfoExpert.plist
       ios/lafemmeApp/InfoExpertStaging.plist
       android/app/build.gradle
-      fastlane/report.xml
     ],
     message: "Bump version to #{new_version} (#{new_build_number})"
   )
