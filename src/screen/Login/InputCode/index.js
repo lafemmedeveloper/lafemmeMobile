@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Alert,
   ActivityIndicator,
+  StyleSheet,
 } from 'react-native';
 import {Colors, Metrics, Fonts} from '../../../themes';
 import {
@@ -16,8 +17,8 @@ import {
 } from 'react-native-confirmation-code-field';
 
 import auth from '@react-native-firebase/auth';
-import styles from './styles';
 import Countdown from 'react-countdown';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const CELL_COUNT = 6;
 
@@ -36,7 +37,7 @@ const InputCode = ({
   });
   const inputVerifyCode = () => {
     if (value.length < 6) {
-      Alert.alert('Ups', 'es necesario el codigo');
+      Alert.alert('Ups', 'Es necesario el código');
     } else {
       handleVerifyCode();
     }
@@ -44,33 +45,23 @@ const InputCode = ({
   const renderer = ({minutes, seconds}) => {
     return (
       <>
-        {seconds === 0 ? (
-          <TouchableOpacity onPress={() => setModalCode(false)}>
-            <Text
-              style={{
-                color: Colors.client.primaryColor,
-                fontSize: 15,
-                alignSelf: 'center',
-                marginVertical: 20,
-              }}>
-              Reintentar
-            </Text>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity onPress={() => auth().signOut()}>
-            <Text style={{fontSize: 15, alignSelf: 'center', marginTop: 20}}>
-              Volver a intentarlo en {minutes}:{seconds}
-            </Text>
-          </TouchableOpacity>
-        )}
+        <Text style={{fontSize: 15, alignSelf: 'center', marginTop: 20}}>
+          Volver a intentarlo en {minutes}:{seconds}
+        </Text>
       </>
     );
   };
 
   return (
     <SafeAreaView style={styles.root}>
+      <Icon
+        name="sms"
+        size={50}
+        color={Colors.client.primaryColor}
+        style={styles.icon}
+      />
       <Text style={styles.title}>
-        Tu Código de verificación para{' '}
+        Ingresa el código enviado al{' '}
         <Text style={{color: Colors.client.primaryColor, fontSize: 18}}>
           {phone}
         </Text>
@@ -124,10 +115,43 @@ const InputCode = ({
           </Text>
           {activityLoading && <ActivityIndicator size="small" color="white" />}
         </TouchableOpacity>
-        <Countdown date={Date.now() + 1 * 60000} renderer={renderer} />
+        <Text
+          style={Fonts.style.bold(Colors.light, Fonts.size.medium, 'center')}>
+          Volver a intentarlo
+        </Text>
       </View>
     </SafeAreaView>
   );
 };
+const styles = StyleSheet.create({
+  root: {padding: 20, minHeight: 300},
+  title: {textAlign: 'center', fontSize: 25},
+  codeFieldRoot: {
+    marginTop: 20,
+    width: 280,
+    marginLeft: 'auto',
+    marginRight: 'auto',
+  },
+  cellRoot: {
+    width: 20,
+    height: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderBottomColor: '#ccc',
+    borderBottomWidth: 1,
+  },
+  cellText: {
+    color: '#000',
+    fontSize: 15,
+    textAlign: 'center',
+  },
+  focusCell: {
+    borderBottomColor: Colors.client.primaryColor,
+    borderBottomWidth: 2,
+  },
+  icon: {
+    alignSelf: 'center',
+  },
+});
 
 export default InputCode;
