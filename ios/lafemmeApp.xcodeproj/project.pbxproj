@@ -10,20 +10,20 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		2A286C2B9DABC1E718C38830 /* libPods-ExpertStaging.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D955331B347AA347E62C726D /* libPods-ExpertStaging.a */; };
+		32A1264556F27D8456996847 /* libPods-ClientStaging.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7309CEDE68B36CA2385994DA /* libPods-ClientStaging.a */; };
+		51F5AC69DD1950DFFF4728D7 /* libPods-Client.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B08A4AA3227264DD7D3F2B0A /* libPods-Client.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		9F32F2532519A3CE0050FF13 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		9F32F2542519A3CE0050FF13 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		9F32F2562519A3CE0050FF13 /* libPods-lafemmeApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9195AF213561EF7EC68D1718 /* libPods-lafemmeApp.a */; };
 		9F32F2582519A3CE0050FF13 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		9F32F2592519A3CE0050FF13 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		9F5AD6332519A518008424AC /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		9F5AD6342519A518008424AC /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		9F5AD6362519A518008424AC /* libPods-lafemmeApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9195AF213561EF7EC68D1718 /* libPods-lafemmeApp.a */; };
 		9F5AD6382519A518008424AC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		9F5AD6392519A518008424AC /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		9F5AD64A2519A535008424AC /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		9F5AD64B2519A535008424AC /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		9F5AD64D2519A535008424AC /* libPods-lafemmeApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9195AF213561EF7EC68D1718 /* libPods-lafemmeApp.a */; };
 		9F5AD64F2519A535008424AC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		9F5AD6502519A535008424AC /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		9F5AD6702519A5D6008424AC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9F5AD6682519A5D6008424AC /* GoogleService-Info.plist */; };
@@ -36,23 +36,31 @@
 		9FD4E3C4251ECE970042D02A /* InfoClient.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9FD4E3C2251ECE970042D02A /* InfoClient.plist */; };
 		9FD4E3C9251ECEA90042D02A /* InfoExpert.plist in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB61A68108700A75B9A /* InfoExpert.plist */; };
 		9FD4E3CE251ECEA90042D02A /* InfoExpert.plist in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB61A68108700A75B9A /* InfoExpert.plist */; };
-		ADD4DE8994EAA5337237766F /* libPods-lafemmeApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9195AF213561EF7EC68D1718 /* libPods-lafemmeApp.a */; };
+		FE92D9865A54B635A2788AD9 /* libPods-Expert.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DBBAD8702C1A94E75815037 /* libPods-Expert.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		008F07F21AC5B25A0029DE68 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
+		00FD98D824DC78F3D7C4B5FC /* Pods-Client.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Client.release.xcconfig"; path = "Target Support Files/Pods-Client/Pods-Client.release.xcconfig"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* La Femme.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "La Femme.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = lafemmeApp/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = lafemmeApp/AppDelegate.m; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = lafemmeApp/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* InfoExpert.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = InfoExpert.plist; path = lafemmeApp/InfoExpert.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = lafemmeApp/main.m; sourceTree = "<group>"; };
+		191D20A7A42A5C90F9D7F7A8 /* Pods-Expert.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Expert.release.xcconfig"; path = "Target Support Files/Pods-Expert/Pods-Expert.release.xcconfig"; sourceTree = "<group>"; };
+		2DBBAD8702C1A94E75815037 /* libPods-Expert.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Expert.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		58F38214C123258D332E55AC /* Pods-lafemmeApp-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lafemmeApp-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-lafemmeApp-tvOSTests/Pods-lafemmeApp-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
+		5E926C7867ABF6D89C103924 /* Pods-ClientStaging.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ClientStaging.debug.xcconfig"; path = "Target Support Files/Pods-ClientStaging/Pods-ClientStaging.debug.xcconfig"; sourceTree = "<group>"; };
+		65C1CAEC1288BB6821E0F99B /* Pods-ExpertStaging.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExpertStaging.release.xcconfig"; path = "Target Support Files/Pods-ExpertStaging/Pods-ExpertStaging.release.xcconfig"; sourceTree = "<group>"; };
+		6B6BEF2D46AC0E330B81977F /* Pods-Client.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Client.debug.xcconfig"; path = "Target Support Files/Pods-Client/Pods-Client.debug.xcconfig"; sourceTree = "<group>"; };
 		72A44BC6CAACF89602E3DB6F /* Pods-lafemmeApp-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lafemmeApp-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-lafemmeApp-tvOSTests/Pods-lafemmeApp-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
+		7309CEDE68B36CA2385994DA /* libPods-ClientStaging.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ClientStaging.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		785555255C6663C42BE65D16 /* Pods-ExpertStaging.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExpertStaging.debug.xcconfig"; path = "Target Support Files/Pods-ExpertStaging/Pods-ExpertStaging.debug.xcconfig"; sourceTree = "<group>"; };
 		7B576BDB4B31D9C82AB36B9C /* Pods-lafemmeApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lafemmeApp.release.xcconfig"; path = "Target Support Files/Pods-lafemmeApp/Pods-lafemmeApp.release.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = lafemmeApp/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8A67EC510457B548A62C158E /* libPods-lafemmeApp-lafemmeAppTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-lafemmeApp-lafemmeAppTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		9195AF213561EF7EC68D1718 /* libPods-lafemmeApp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-lafemmeApp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8F8F19C539BB25E490B29B34 /* Pods-ClientStaging.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ClientStaging.release.xcconfig"; path = "Target Support Files/Pods-ClientStaging/Pods-ClientStaging.release.xcconfig"; sourceTree = "<group>"; };
 		934231F083E072BAC6262F4E /* Pods-lafemmeApp-lafemmeAppTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lafemmeApp-lafemmeAppTests.release.xcconfig"; path = "Target Support Files/Pods-lafemmeApp-lafemmeAppTests/Pods-lafemmeApp-lafemmeAppTests.release.xcconfig"; sourceTree = "<group>"; };
 		97EB26BA25DA7580DCED78AE /* Pods-lafemmeApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lafemmeApp.debug.xcconfig"; path = "Target Support Files/Pods-lafemmeApp/Pods-lafemmeApp.debug.xcconfig"; sourceTree = "<group>"; };
 		9F32F2612519A3CF0050FF13 /* ClientStaging.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ClientStaging.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -69,7 +77,10 @@
 		9FFF754D24E0CD8200B12EB3 /* La Femme.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = "La Femme.entitlements"; path = "lafemmeApp/La Femme.entitlements"; sourceTree = "<group>"; };
 		A8E157F5C43EED275BDF0F28 /* libPods-lafemmeApp-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-lafemmeApp-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ABA204585163D6E4B54A5F83 /* libPods-lafemmeApp-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-lafemmeApp-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B08A4AA3227264DD7D3F2B0A /* libPods-Client.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Client.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C96F3F25EC043B05920F1317 /* Pods-Expert.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Expert.debug.xcconfig"; path = "Target Support Files/Pods-Expert/Pods-Expert.debug.xcconfig"; sourceTree = "<group>"; };
 		D3D0ED6BC831346BF2A20F49 /* Pods-lafemmeApp-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lafemmeApp-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-lafemmeApp-tvOS/Pods-lafemmeApp-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
+		D955331B347AA347E62C726D /* libPods-ExpertStaging.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ExpertStaging.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E906C7F38BC5FAB148990387 /* Pods-lafemmeApp-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lafemmeApp-tvOS.release.xcconfig"; path = "Target Support Files/Pods-lafemmeApp-tvOS/Pods-lafemmeApp-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
@@ -81,7 +92,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				ADD4DE8994EAA5337237766F /* libPods-lafemmeApp.a in Frameworks */,
+				51F5AC69DD1950DFFF4728D7 /* libPods-Client.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -89,7 +100,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9F32F2562519A3CE0050FF13 /* libPods-lafemmeApp.a in Frameworks */,
+				32A1264556F27D8456996847 /* libPods-ClientStaging.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -97,7 +108,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9F5AD6362519A518008424AC /* libPods-lafemmeApp.a in Frameworks */,
+				FE92D9865A54B635A2788AD9 /* libPods-Expert.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -105,7 +116,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9F5AD64D2519A535008424AC /* libPods-lafemmeApp.a in Frameworks */,
+				2A286C2B9DABC1E718C38830 /* libPods-ExpertStaging.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -123,6 +134,14 @@
 				E906C7F38BC5FAB148990387 /* Pods-lafemmeApp-tvOS.release.xcconfig */,
 				58F38214C123258D332E55AC /* Pods-lafemmeApp-tvOSTests.debug.xcconfig */,
 				72A44BC6CAACF89602E3DB6F /* Pods-lafemmeApp-tvOSTests.release.xcconfig */,
+				6B6BEF2D46AC0E330B81977F /* Pods-Client.debug.xcconfig */,
+				00FD98D824DC78F3D7C4B5FC /* Pods-Client.release.xcconfig */,
+				5E926C7867ABF6D89C103924 /* Pods-ClientStaging.debug.xcconfig */,
+				8F8F19C539BB25E490B29B34 /* Pods-ClientStaging.release.xcconfig */,
+				C96F3F25EC043B05920F1317 /* Pods-Expert.debug.xcconfig */,
+				191D20A7A42A5C90F9D7F7A8 /* Pods-Expert.release.xcconfig */,
+				785555255C6663C42BE65D16 /* Pods-ExpertStaging.debug.xcconfig */,
+				65C1CAEC1288BB6821E0F99B /* Pods-ExpertStaging.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -152,10 +171,13 @@
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
-				9195AF213561EF7EC68D1718 /* libPods-lafemmeApp.a */,
 				8A67EC510457B548A62C158E /* libPods-lafemmeApp-lafemmeAppTests.a */,
 				A8E157F5C43EED275BDF0F28 /* libPods-lafemmeApp-tvOS.a */,
 				ABA204585163D6E4B54A5F83 /* libPods-lafemmeApp-tvOSTests.a */,
+				B08A4AA3227264DD7D3F2B0A /* libPods-Client.a */,
+				7309CEDE68B36CA2385994DA /* libPods-ClientStaging.a */,
+				2DBBAD8702C1A94E75815037 /* libPods-Expert.a */,
+				D955331B347AA347E62C726D /* libPods-ExpertStaging.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -459,7 +481,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-lafemmeApp-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-ClientStaging-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -505,7 +527,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-lafemmeApp/Pods-lafemmeApp-resources.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-ClientStaging/Pods-ClientStaging-resources.sh",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Entypo.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf",
@@ -548,7 +570,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-lafemmeApp/Pods-lafemmeApp-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ClientStaging/Pods-ClientStaging-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		9F32F25D2519A3CE0050FF13 /* [CP-User] [RNFB] Core Configuration */ = {
@@ -576,7 +598,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-lafemmeApp-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-Expert-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -622,7 +644,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-lafemmeApp/Pods-lafemmeApp-resources.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-Expert/Pods-Expert-resources.sh",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Entypo.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf",
@@ -665,7 +687,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-lafemmeApp/Pods-lafemmeApp-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Expert/Pods-Expert-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		9F5AD63D2519A518008424AC /* [CP-User] [RNFB] Core Configuration */ = {
@@ -693,7 +715,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-lafemmeApp-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-ExpertStaging-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -739,7 +761,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-lafemmeApp/Pods-lafemmeApp-resources.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-ExpertStaging/Pods-ExpertStaging-resources.sh",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Entypo.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf",
@@ -782,7 +804,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-lafemmeApp/Pods-lafemmeApp-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ExpertStaging/Pods-ExpertStaging-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		9F5AD6542519A535008424AC /* [CP-User] [RNFB] Core Configuration */ = {
@@ -810,7 +832,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-lafemmeApp-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-Client-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -823,7 +845,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-lafemmeApp/Pods-lafemmeApp-resources.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-Client/Pods-Client-resources.sh",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Entypo.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf",
@@ -866,7 +888,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-lafemmeApp/Pods-lafemmeApp-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Client/Pods-Client-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
@@ -932,7 +954,7 @@
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 97EB26BA25DA7580DCED78AE /* Pods-lafemmeApp.debug.xcconfig */;
+			baseConfigurationReference = 6B6BEF2D46AC0E330B81977F /* Pods-Client.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconClient;
 				CLANG_ENABLE_MODULES = YES;
@@ -958,7 +980,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7B576BDB4B31D9C82AB36B9C /* Pods-lafemmeApp.release.xcconfig */;
+			baseConfigurationReference = 00FD98D824DC78F3D7C4B5FC /* Pods-Client.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconClient;
 				CLANG_ENABLE_MODULES = YES;
@@ -1095,7 +1117,7 @@
 		};
 		9F32F25F2519A3CE0050FF13 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 97EB26BA25DA7580DCED78AE /* Pods-lafemmeApp.debug.xcconfig */;
+			baseConfigurationReference = 5E926C7867ABF6D89C103924 /* Pods-ClientStaging.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconClientStaging;
 				CLANG_ENABLE_MODULES = YES;
@@ -1121,7 +1143,7 @@
 		};
 		9F32F2602519A3CE0050FF13 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7B576BDB4B31D9C82AB36B9C /* Pods-lafemmeApp.release.xcconfig */;
+			baseConfigurationReference = 8F8F19C539BB25E490B29B34 /* Pods-ClientStaging.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconClientStaging;
 				CLANG_ENABLE_MODULES = YES;
@@ -1145,7 +1167,7 @@
 		};
 		9F5AD63F2519A518008424AC /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 97EB26BA25DA7580DCED78AE /* Pods-lafemmeApp.debug.xcconfig */;
+			baseConfigurationReference = C96F3F25EC043B05920F1317 /* Pods-Expert.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconExpert;
 				CLANG_ENABLE_MODULES = YES;
@@ -1171,7 +1193,7 @@
 		};
 		9F5AD6402519A518008424AC /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7B576BDB4B31D9C82AB36B9C /* Pods-lafemmeApp.release.xcconfig */;
+			baseConfigurationReference = 191D20A7A42A5C90F9D7F7A8 /* Pods-Expert.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconExpert;
 				CLANG_ENABLE_MODULES = YES;
@@ -1195,7 +1217,7 @@
 		};
 		9F5AD6562519A535008424AC /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 97EB26BA25DA7580DCED78AE /* Pods-lafemmeApp.debug.xcconfig */;
+			baseConfigurationReference = 785555255C6663C42BE65D16 /* Pods-ExpertStaging.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconExpertStaging;
 				CLANG_ENABLE_MODULES = YES;
@@ -1221,7 +1243,7 @@
 		};
 		9F5AD6572519A535008424AC /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7B576BDB4B31D9C82AB36B9C /* Pods-lafemmeApp.release.xcconfig */;
+			baseConfigurationReference = 65C1CAEC1288BB6821E0F99B /* Pods-ExpertStaging.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconExpertStaging;
 				CLANG_ENABLE_MODULES = YES;
