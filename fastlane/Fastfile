@@ -34,10 +34,11 @@ lane :bump_version do |options|
 
  git_commit(
     path: %w[
-      ios/WatchApp/Info.plist
-      ios/WatchApp\ Extension/Info.plist
-      ios/oruxappv3.xcodeproj/project.pbxproj
-      ios/oruxappv3/Info.plist 
+      ios/lafemmeApp.xcodeproj/project.pbxproj
+      ios/lafemmeApp/InfoClient.plist
+      ios/lafemmeApp/InfoClientStaging.plist
+      ios/lafemmeApp/InfoExpert.plist
+      ios/lafemmeApp/InfoExpertStaging.plist
       android/app/build.gradle
     ],
     message: "Bump version to #{new_version} (#{new_build_number})"
