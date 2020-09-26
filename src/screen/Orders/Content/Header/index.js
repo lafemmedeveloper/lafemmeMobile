@@ -54,7 +54,6 @@ export default (data) => {
           <View
             style={[
               styles.itemMenu,
-              // eslint-disable-next-line react-native/no-inline-styles
               {
                 height: menuIndex === 1 ? 3 : 0,
               },

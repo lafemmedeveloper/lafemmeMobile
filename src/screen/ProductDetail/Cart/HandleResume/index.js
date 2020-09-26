@@ -127,6 +127,7 @@ const HandleResume = (props) => {
               />
               <TitleValue
                 title={'Servicio'}
+                // eslint-disable-next-line radix
                 value={Utilities.formatCOP(parseInt(product.price))}
                 titleType={'regular'}
                 valueType={'regular'}
@@ -143,6 +144,7 @@ const HandleResume = (props) => {
                   }}>
                   <TitleValue
                     title={item.addonName}
+                    // eslint-disable-next-line radix
                     value={Utilities.formatCOP(parseInt(item.addOnPrice))}
                     titleType={'regular'}
                     valueType={'regular'}
@@ -174,6 +176,7 @@ const HandleResume = (props) => {
 
                 <TitleValue
                   title={'Servicio'}
+                  // eslint-disable-next-line radix
                   value={Utilities.formatCOP(parseInt(product.price))}
                   titleType={'regular'}
                   valueType={'regular'}
@@ -200,6 +203,7 @@ const HandleResume = (props) => {
                       }}>
                       <TitleValue
                         title={item.addonName}
+                        // eslint-disable-next-line radix
                         value={Utilities.formatCOP(parseInt(item.addOnPrice))}
                         titleType={'regular'}
                         valueType={'regular'}
@@ -249,6 +253,7 @@ const HandleResume = (props) => {
                     }}>
                     <TitleValue
                       title={`${item.name} x${item.count}`}
+                      // eslint-disable-next-line radix
                       value={Utilities.formatCOP(parseInt(item.addOnPrice))}
                       titleType={'regular'}
                       valueType={'regular'}
@@ -311,6 +316,7 @@ const HandleResume = (props) => {
                   1,
                 )}>
                 {Utilities.formatCOP(
+                  // eslint-disable-next-line radix
                   parseInt(product.price * (guestList.length + 1)),
                 )}
               </Text>
@@ -339,7 +345,10 @@ const HandleResume = (props) => {
                   'left',
                   1,
                 )}>
-                {Utilities.formatCOP(parseInt(addOnPrice + addOnCountPrice))}
+                {
+                  // eslint-disable-next-line radix
+                  Utilities.formatCOP(parseInt(addOnPrice + addOnCountPrice))
+                }
               </Text>
             </View>
 
@@ -367,6 +376,7 @@ const HandleResume = (props) => {
                   1,
                 )}>
                 {Utilities.formatCOP(
+                  // eslint-disable-next-line radix
                   parseInt(
                     product.price * (guestList.length + 1) +
                       addOnPrice +

@@ -50,6 +50,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginBottom: -15,
     top: 0,
-    zIndex: 100,
+    zIndex: 1,
   },
 });

@@ -16,9 +16,6 @@ export default (data) => {
       }}
       style={styles.container}>
       <TouchableOpacity
-        onPress={() => {
-          data.removeAddress(id);
-        }}
         style={{width: 30, justifyContent: 'center', alignItems: 'center'}}>
         {
           <Icon
@@ -79,29 +76,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 10,
   },
-  imageContainer: {flex: 0},
-  image: {width: 80, height: 80, borderRadius: Metrics.borderRadius},
   productContainer: {
     flex: 1,
     justifyContent: 'center',
     paddingHorizontal: 5,
   },
-  priceContainer: {
-    flex: 0,
-    paddingHorizontal: 5,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
+
   deleteContainer: {
     flex: 0,
     paddingHorizontal: 5,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  textInput: {
-    width: Metrics.screenWidth * 0.8,
-    height: 40,
-    borderColor: 'transparent',
-    borderWidth: 1,
   },
 });

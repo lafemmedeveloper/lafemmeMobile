@@ -25,6 +25,7 @@ const HistoryExpert = () => {
   };
   useEffect(() => {
     getExpertActiveOrders(utilDispatch);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

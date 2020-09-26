@@ -13,6 +13,7 @@ export default (dta) => {
 
   useEffect(() => {
     countdown(order.date);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const currentService = moment(order.date).format('dd,ll');

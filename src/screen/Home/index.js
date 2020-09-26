@@ -8,7 +8,7 @@ import {getServices} from '../../flux/services/actions';
 import {useNavigation} from '@react-navigation/native';
 import ModalApp from '../../components/ModalApp';
 import Login from '../Login';
-import {observeUser} from '../../flux/auth/actions';
+import {activeMessage, observeUser} from '../../flux/auth/actions';
 import BannerScroll from '../../components/BannerScroll';
 import Gallery from '../Gallery';
 import CartFooter from '../../components/CartFooter';
@@ -18,6 +18,7 @@ import Address from '../Address';
 import AddAddress from '../AddAddress';
 import Header from '../../components/Header';
 import {getGallery, getOrders} from '../../flux/util/actions';
+import Loading from '../../components/Loading';
 
 const Home = () => {
   const TIME_SET = 500;
@@ -50,13 +51,13 @@ const Home = () => {
   const [isModalCart, setIsModalCart] = useState(false);
   const [modalAddAddress, setModalAddAddress] = useState(false);
 
-  async function activefuntionsFlux() {
+  const activefuntionsFlux = async () => {
     observeUser(authDispatch);
     await getServices(serviceDispatch);
+    activeMessage(authDispatch);
     getOrders(utilDispatch);
-
     getGallery(utilDispatch);
-  }
+  };
   const selectService = (product) => {
     if (user !== null) {
       if (user && user.cart && user.cart.address) {
@@ -86,6 +87,7 @@ const Home = () => {
   console.log('orders =>', orders);
   return (
     <>
+      <Loading type={'client'} />
       <View style={styles.container}>
         <Header
           appType={appType}

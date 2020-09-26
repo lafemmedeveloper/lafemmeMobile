@@ -1,11 +1,14 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {WaveIndicator} from 'react-native-indicators';
+import {StoreContext} from '../../flux';
 import {Colors, Metrics} from '../../themes';
 
 export default (data) => {
-  const {type, loading} = data;
-  if (loading) {
+  const {state} = useContext(StoreContext);
+  const {auth, service, util} = state;
+  const {type} = data;
+  if (auth.loading || service.loading || util.loading) {
     return (
       <View
         style={[
@@ -31,6 +34,6 @@ const styles = StyleSheet.create({
     width: Metrics.screenWidth,
     height: Metrics.screenHeight,
     position: 'absolute',
-    zIndex: 50000,
+    zIndex: 1000,
   },
 });

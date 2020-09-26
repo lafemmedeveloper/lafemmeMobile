@@ -325,7 +325,7 @@ const AddAddress = (props) => {
         <Text
           style={[
             Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center'),
-            {marginBottom: 10},
+            {marginVertical: 20},
           ]}>
           {' Agregar una direccion'}
         </Text>

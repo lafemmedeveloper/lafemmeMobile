@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, TouchableOpacity} from 'react-native';
+import {Text, View, TouchableOpacity, StyleSheet} from 'react-native';
 import {Metrics, Colors, Fonts} from '../../../themes';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
@@ -16,12 +16,18 @@ const NoEnableCoverage = (props) => {
       <View
         style={{
           alignSelf: 'center',
-          width: Metrics.screenWidth * 0.6,
+          width: Metrics.screenWidth * 0.9,
           backgroundColor: Colors.light,
           backdropColor: 'red',
           borderRadius: 10,
           marginVertical: 20,
         }}>
+        <Icon
+          name="frown"
+          size={50}
+          color={Colors.client.primaryColor}
+          style={styles.icon}
+        />
         <Text
           style={[
             Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center'),
@@ -114,5 +120,12 @@ const NoEnableCoverage = (props) => {
     </>
   );
 };
+
+const styles = StyleSheet.create({
+  icon: {
+    alignSelf: 'center',
+    paddingVertical: 20,
+  },
+});
 
 export default NoEnableCoverage;

@@ -6,11 +6,14 @@ import {
   TouchableOpacity,
   Alert,
   ActivityIndicator,
+  StyleSheet,
+  Keyboard,
 } from 'react-native';
 import {Colors, Metrics, Fonts} from '../../themes';
 import moment from 'moment';
 import auth from '@react-native-firebase/auth';
 import {saveUser} from '../../flux/auth/actions';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
 const Register = (props) => {
   const {
@@ -26,6 +29,7 @@ const Register = (props) => {
   const [email, setEmail] = useState('');
 
   const chandleRegister = async () => {
+    Keyboard.dismiss();
     if ((name.trim() !== '' || lastName.trim() !== '', email.trim() !== '')) {
       const currentUser = auth().currentUser;
       try {
@@ -49,9 +53,11 @@ const Register = (props) => {
           cart: null,
           address: [],
           imageUrl: null,
+          tokens: [],
         };
+        await setDb(data);
         setActivityLoading(false);
-        setDb(data);
+
         setModalRegister(false);
         setModalAuth(false);
       } catch (error) {
@@ -62,7 +68,10 @@ const Register = (props) => {
             .toString()
             .includes('The email address is already in use by another account.')
         ) {
-          Alert.alert('Error de Autentificación', 'authError');
+          Alert.alert(
+            'Ups',
+            'Este correo ya esta en uso, por favor intentalo con otro',
+          );
         } else {
           Alert.alert(
             'Ups...',
@@ -82,8 +91,14 @@ const Register = (props) => {
   return (
     <>
       <View style={{marginTop: 20}}>
+        <Icon
+          name="user-edit"
+          size={50}
+          color={Colors.client.primaryColor}
+          style={styles.icon}
+        />
         <Text style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
-          {'Hola, Completa tus datos para continuar'}
+          {'Completa tus datos para continuar'}
         </Text>
         <View
           style={{
@@ -95,7 +110,7 @@ const Register = (props) => {
             value={name}
             autoCapitalize={'words'}
             onChangeText={(text) => setName(text)}
-            placeholder={'Tu Nombre'}
+            placeholder={'Nombre'}
             style={{
               width: '45%',
               padding: 10,
@@ -109,7 +124,7 @@ const Register = (props) => {
           <TextInput
             value={lastName}
             onChangeText={(text) => setLastName(text)}
-            placeholder={'Tu Apellido'}
+            placeholder={'Apellido'}
             autoCapitalize={'words'}
             style={{
               width: '45%',
@@ -125,12 +140,12 @@ const Register = (props) => {
         <TextInput
           value={email}
           onChangeText={(text) => setEmail(text)}
-          placeholder={'TuCorre@ejemplo.com'}
+          placeholder={'Correo example (JhoeDo@correo.com)'}
           autoCapitalize={'none'}
           style={{
             width: '95%',
             padding: 10,
-            marginVertical: 20,
+            marginBottom: 40,
             borderRadius: Metrics.borderRadius,
             backgroundColor: Colors.textInputBg,
             alignSelf: 'center',
@@ -164,5 +179,11 @@ const Register = (props) => {
     </>
   );
 };
+const styles = StyleSheet.create({
+  icon: {
+    alignSelf: 'center',
+    paddingVertical: 20,
+  },
+});
 
 export default Register;

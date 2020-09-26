@@ -37,6 +37,7 @@ const OrderDetail = (props) => {
     const currentOrder = ordersAll.filter((item) => item.id === params.id)[0];
 
     setOrderUser(currentOrder);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ordersAll]);
   return (
     <>

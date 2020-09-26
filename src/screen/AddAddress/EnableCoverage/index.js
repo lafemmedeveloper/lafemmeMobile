@@ -5,6 +5,7 @@ import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
 import MyTextInput from '../../../components/MyTextInput';
+import Loading from '../../../components/Loading';
 
 const EnableCoverage = (props) => {
   const {
@@ -24,6 +25,7 @@ const EnableCoverage = (props) => {
   } = props;
   return (
     <>
+      <Loading type={'client'} />
       <View style={{justifyContent: 'center', alignItems: 'center'}}>
         <View
           style={{
@@ -33,10 +35,16 @@ const EnableCoverage = (props) => {
             backdropColor: 'red',
             borderRadius: 10,
           }}>
+          <Icon
+            name="map-marked"
+            size={50}
+            color={Colors.client.primaryColor}
+            style={styles.icon}
+          />
           <Text
             style={[
               Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center'),
-              {marginVertical: 10},
+              {marginBottom: 10},
             ]}>
             {'Completa tu direccón'}
           </Text>
@@ -81,7 +89,7 @@ const EnableCoverage = (props) => {
               name={'map-marker-alt'}
               size={15}
               color={Colors.client.primaryColor}
-            />
+            />{' '}
             {googleAddress}
           </Text>
 
@@ -368,6 +376,10 @@ const styles = StyleSheet.create({
     height: Metrics.screenHeight,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  icon: {
+    alignSelf: 'center',
+    paddingTop: 25,
   },
 });
 
