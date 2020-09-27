@@ -150,7 +150,7 @@ const DetailModal = (props) => {
           <TouchableOpacity onPress={() => console.log('ir map')}>
             <MapView
               pointerEvents={'none'}
-              provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+              provider={__DEV__ ? null : PROVIDER_GOOGLE} // remove if not using Google Maps
               style={styles.mapView}
               customMapStyle={mapStyle}
               region={{
@@ -297,7 +297,7 @@ const DetailModal = (props) => {
                       {clients.length}
                     </Text>
 
-                    <View opacity={0.25} style={styles.separatorLineMini} />
+                    {/* <View opacity={0.25} style={styles.separatorLineMini} /> */}
 
                     <Text
                       style={[

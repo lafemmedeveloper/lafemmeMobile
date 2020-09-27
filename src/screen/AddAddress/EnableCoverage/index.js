@@ -49,7 +49,7 @@ const EnableCoverage = (props) => {
             {'Completa tu direccón'}
           </Text>
           <MapView
-            provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+            provider={__DEV__ ? null : PROVIDER_GOOGLE} // remove if not using Google Maps
             style={{
               width: Metrics.screenWidth * 0.8,
               height: Metrics.screenWidth * 0.4,

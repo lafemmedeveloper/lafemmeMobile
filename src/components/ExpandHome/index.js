@@ -52,8 +52,18 @@ export default (dta) => {
         activeOpacity={0.8}
         style={[
           ApplicationStyles.itemService,
-          ApplicationStyles.shadowsClient,
-          {zIndex: 150},
+
+          {
+            zIndex: 150,
+            shadowColor: Colors.client.primaryColors,
+            shadowOffset: {
+              width: 0,
+              height: 2,
+            },
+            shadowOpacity: 0.25,
+            shadowRadius: 3.84,
+            elevation: 5,
+          },
         ]}>
         <FastImage
           style={ApplicationStyles.itemImage}

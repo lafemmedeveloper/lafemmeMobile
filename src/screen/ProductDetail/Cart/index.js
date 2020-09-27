@@ -1,5 +1,13 @@
 import React, {useState, useContext} from 'react';
-import {View, Text, ScrollView, TouchableOpacity, Keyboard} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  Keyboard,
+} from 'react-native';
+import FastImage from 'react-native-fast-image';
 import {Metrics, Colors, Fonts, ApplicationStyles} from '../../../themes';
 import Utilities from '../../../utilities';
 import ModalApp from '../../../components/ModalApp';
@@ -216,17 +224,42 @@ const Cart = (props) => {
   const addOnsFilter = addOns.filter((a) => a.isEnabled === true);
 
   return (
-    <>
+    <View
+      style={{
+        width: Metrics.screenWidth,
+        flex: 1,
+        backgroundColor: Colors.light,
+      }}>
       <ScrollView>
+        <FastImage
+          style={styles.imageProduct}
+          source={{
+            uri: product.imageUrl,
+            priority: FastImage.priority.normal,
+          }}
+          resizeMode={FastImage.resizeMode.cover}
+        />
+        <View
+          style={{
+            backgroundColor: 'white',
+            zIndex: 10000,
+            height: 20,
+            width: '100%',
+            borderTopRightRadius: 10,
+            borderTopLeftRadius: 10,
+            position: 'absolute',
+            top: 260,
+          }}
+        />
         <View
           style={{
             width: Metrics.screenWidth,
+            flex: 1,
             alignSelf: 'center',
             backgroundColor: Colors.light,
-            borderTopLeftRadius: 20,
-            borderTopRightRadius: 20,
+
+            // paddingVertical: 10,
           }}>
-          <View style={{height: 20, zIndex: 999}} />
           <View //description
             style={{
               width: Metrics.screenWidth * 0.9,
@@ -269,12 +302,10 @@ const Cart = (props) => {
                 </Text>
               </View>
               <Text
-                style={Fonts.style.light(
-                  Colors.dark,
-                  Fonts.size.medium,
-                  'left',
-                  0,
-                )}>
+                style={[
+                  Fonts.style.light(Colors.dark, Fonts.size.medium, 'left', 0),
+                  {marginTop: 10},
+                ]}>
                 {product.shortDescription}
               </Text>
             </View>
@@ -290,12 +321,13 @@ const Cart = (props) => {
               setGuestModal={setGuestModal}
               product={product}
             />
+
             {/* Guest */}
 
             <>
               <View opacity={0.25} style={ApplicationStyles.separatorLine} />
 
-              <View
+              <View // experts
                 style={{
                   width: Metrics.screenWidth * 0.9,
                   alignSelf: 'center',
@@ -327,29 +359,54 @@ const Cart = (props) => {
                       'center',
                       1,
                     )}>
-                    {1}{' '}
+                    {1}
                   </Text>
                 </View>
               </View>
             </>
 
-            <View opacity={0.25} style={ApplicationStyles.separatorLine} />
+            {addonsList.length > 0 && (
+              <>
+                <View opacity={0.25} style={ApplicationStyles.separatorLine} />
 
-            <HandleAddOns
-              addOnsFilter={addOnsFilter}
-              user={user}
-              countItems={countItems}
-              selectAddons={selectAddons}
-              guestList={guestList}
-              addonsGuest={addonsGuest}
-              countableAddOrRemove={countableAddOrRemove}
-              selectAddonGuest={selectAddonGuest}
-              addonsList={addonsList}
-              product={product}
-              addonsListCount={addonsListCount}
-            />
+                <HandleAddOns
+                  addOnsFilter={addOnsFilter}
+                  user={user}
+                  countItems={countItems}
+                  selectAddons={selectAddons}
+                  guestList={guestList}
+                  addonsGuest={addonsGuest}
+                  countableAddOrRemove={countableAddOrRemove}
+                  selectAddonGuest={selectAddonGuest}
+                  addonsList={addonsList}
+                  product={product}
+                  addonsListCount={addonsListCount}
+                />
+              </>
+            )}
+          </View>
+          <View opacity={0.25} style={ApplicationStyles.separatorLine} />
+          <View //description
+            style={{
+              width: Metrics.screenWidth * 0.9,
+              alignSelf: 'center',
+            }}>
+            <Text
+              style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'left', 1)}>
+              {'Información adicional'}
+            </Text>
+            <Text
+              style={Fonts.style.light(
+                Colors.dark,
+                Fonts.size.small,
+                'left',
+                0,
+              )}>
+              {product.description}
+            </Text>
           </View>
         </View>
+        <View style={{height: 200}} />
       </ScrollView>
 
       <View
@@ -359,8 +416,16 @@ const Cart = (props) => {
             backgroundColor: Colors.client.primaryColor,
             width: Metrics.screenWidth,
             bottom: 0,
+            position: 'absolute',
+            shadowColor: Colors.client.primaryColors,
+            shadowOffset: {
+              width: 0,
+              height: 2,
+            },
+            shadowOpacity: 0.25,
+            shadowRadius: 3.84,
+            elevation: 5,
           },
-          ApplicationStyles.shadowsClientTop,
         ]}>
         <View
           style={[
@@ -379,7 +444,7 @@ const Cart = (props) => {
               'center',
               1,
             )}>
-            {'SUBTOTAL'}
+            {'SUBTOTAL '}
             {Utilities.formatCOP(
               product.price * (guestList.length + 1) +
                 addOnPrice +
@@ -412,11 +477,10 @@ const Cart = (props) => {
           ]}>
           <Text
             style={Fonts.style.bold(Colors.light, Fonts.size.h6, 'center', 1)}>
-            {'AGREGAR SERVICIO '}
+            {'AGREGAR SERVICIO'}
           </Text>
         </TouchableOpacity>
       </View>
-
       <ModalApp open={guestModal} setOpen={setGuestModal}>
         <FormGuest
           setForm={setFormGuest}
@@ -440,8 +504,16 @@ const Cart = (props) => {
           sendItemCart={sendItemCart}
         />
       </ModalApp>
-    </>
+    </View>
   );
 };
 
 export default Cart;
+
+const styles = StyleSheet.create({
+  imageProduct: {
+    width: Metrics.screenWidth,
+    height: Metrics.screenWidth / 1.5,
+    resizeMode: 'cover',
+  },
+});

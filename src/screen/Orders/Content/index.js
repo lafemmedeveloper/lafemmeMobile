@@ -1,21 +1,18 @@
 import React, {useContext, useState, Fragment} from 'react';
-import {View, StyleSheet} from 'react-native';
-import {Metrics} from '../../../themes';
+import {View, StyleSheet, TouchableOpacity, Text} from 'react-native';
+import {ApplicationStyles, Fonts, Colors, Metrics} from '../../../themes';
 import {StoreContext} from '../../../flux';
 import {ScrollView} from 'react-native-gesture-handler';
 import ExpandOrderData from '../../ExpandOrderData';
-import Header from './Header';
+// import Header from './Header';
+import Header from '../../../components/Header';
 import {useNavigation} from '@react-navigation/native';
 
 const Content = () => {
   const navigation = useNavigation();
   const {state /*  serviceDispatch, authDispatch */} = useContext(StoreContext);
-
-  const {auth, util} = state;
-
-  const {user} = auth;
+  const {util} = state;
   const {orders, history} = util;
-
   const [menuIndex, setMenuIndex] = useState(0);
 
   const activeDetailModal = (order) => {
@@ -26,28 +23,70 @@ const Content = () => {
     <>
       <View style={styles.container}>
         <Header
-          title={'Mi Agenda'}
-          menuIndex={menuIndex}
-          user={user}
-          ordersActive={orders.length}
-          onAction={(pos) => setMenuIndex(pos)}
-          onActionR={() => {}}
-        />
+          appType={'client'}
+          title={'Mis Servicios'}
+          user={null}
+          selectAddress={() => {}}>
+          <View style={[styles.childrenHeader]}>
+            <TouchableOpacity
+              onPress={() => {
+                setMenuIndex(0);
+              }}
+              style={styles.itemBtn}>
+              <Text
+                style={Fonts.style.bold(
+                  Colors.dark,
+                  Fonts.size.medium,
+                  'center',
+                )}>
+                {'Activas'}
+              </Text>
+              <View
+                style={[
+                  styles.itemMenu,
+                  {
+                    height: menuIndex === 0 ? 3 : 0,
+                  },
+                ]}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                setMenuIndex(1);
+              }}
+              style={styles.itemBtn}>
+              <Text
+                style={Fonts.style.bold(
+                  Colors.dark,
+                  Fonts.size.medium,
+                  'center',
+                )}>
+                {'Historial'}
+              </Text>
+              <View
+                style={[
+                  styles.itemMenu,
+                  {
+                    height: menuIndex === 1 ? 3 : 0,
+                  },
+                ]}
+              />
+            </TouchableOpacity>
+          </View>
+        </Header>
 
         <ScrollView
           style={{
             flex: 1,
             width: Metrics.screenWidth,
             height: '100%',
-            marginTop: 40 + Metrics.addHeader,
-            paddingTop: 40,
           }}>
           <>
             {menuIndex === 0 &&
               orders.length > 0 &&
               orders.map((item, index) => {
                 return (
-                  <View style={{marginBottom: 10}} key={index}>
+                  <View style={{marginBottom: 5}} key={index}>
                     <ExpandOrderData
                       activeDetailModal={activeDetailModal}
                       order={item}
@@ -79,6 +118,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  childrenHeader: {
+    flexDirection: 'row',
+  },
+  itemMenu: {
+    width: '100%',
+    backgroundColor: Colors.client.primaryColor,
+    position: 'absolute',
+    bottom: 0,
+  },
+
+  itemBtn: {flex: 1, paddingVertical: 10},
 });
 
 export default Content;

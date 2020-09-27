@@ -1,6 +1,5 @@
 import React from 'react';
-import {View, TouchableOpacity, ScrollView, StyleSheet} from 'react-native';
-import FastImage from 'react-native-fast-image';
+import {View, TouchableOpacity, StyleSheet} from 'react-native';
 import {Metrics, Colors} from '../../themes';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Cart from './Cart';
@@ -36,29 +35,9 @@ const ProductDetail = (props) => {
           </View>
         </TouchableOpacity>
       </View>
-      <ScrollView style={styles.container}>
-        <FastImage
-          style={styles.imageProduct}
-          source={{
-            uri: product.imageUrl,
-            priority: FastImage.priority.normal,
-          }}
-          resizeMode={FastImage.resizeMode.cover}
-        />
-        <View
-          style={{
-            backgroundColor: 'white',
-            zIndex: 10000,
-            height: 40,
-            width: '100%',
-            borderTopRightRadius: 20,
-            borderTopLeftRadius: 20,
-            position: 'absolute',
-            top: 260,
-          }}
-        />
+      <View style={styles.container}>
         <Cart product={product} dispatch={authDispatch} />
-      </ScrollView>
+      </View>
     </>
   );
 };

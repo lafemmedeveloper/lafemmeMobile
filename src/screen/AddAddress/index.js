@@ -330,7 +330,7 @@ const AddAddress = (props) => {
           {' Agregar una direccion'}
         </Text>
         <MapView
-          provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+          provider={__DEV__ ? null : PROVIDER_GOOGLE} // remove if not using Google Maps
           style={{
             width: Metrics.screenWidth,
             height: Metrics.screenHeight,

@@ -1,69 +1,89 @@
 import React from 'react';
 import FastImage from 'react-native-fast-image';
-import {TouchableOpacity, View, Text, StyleSheet, Linking} from 'react-native';
-import {Fonts, Colors} from '../../../../themes';
+import {
+  TouchableOpacity,
+  View,
+  Text,
+  StyleSheet,
+  Linking,
+  Image,
+} from 'react-native';
+import {Fonts, Colors, Images} from '../../../../themes';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
-const ExpertCall = (props) => {
-  const {expert} = props;
+const ExpertCall = ({expert}) => {
   return (
     <>
-      {expert ? (
-        <>
-          <View style={styles.contExpert}>
-            <View style={styles.profile}>
-              <FastImage
-                source={{uri: expert.imageUrl.medium}}
-                resizeMode={FastImage.resizeMode.cover}
-                style={styles.image}
-              />
-
-              <View style={styles.contInfo}>
-                <Text style={[Fonts.style.bold(Colors.light, Fonts.size.h6)]}>
-                  {expert.firstName}
-                </Text>
-                <Text
-                  style={[Fonts.style.bold(Colors.light, Fonts.size.medium)]}>
-                  <Icon
-                    name={'star'}
-                    size={20}
-                    color={Colors.client.primaryColor}
-                  />{' '}
-                  {expert.rating}
-                </Text>
-              </View>
-            </View>
-
+      <View style={styles.contExpert}>
+        <View style={styles.profile}>
+          {expert ? (
+            <FastImage
+              source={{uri: expert.imageUrl.medium}}
+              resizeMode={FastImage.resizeMode.cover}
+              style={styles.image}
+            />
+          ) : (
             <View
-              style={{
-                alignSelf: 'center',
-                justifyContent: 'space-between',
-                flexDirection: 'row',
-              }}>
-              <TouchableOpacity
-                style={styles.buttonCall}
-                onPress={() => Linking.openURL(`tel:${expert.phone}`)}>
-                <Icon
-                  name={'phone'}
-                  size={25}
-                  color={Colors.client.primaryColor}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.buttonCall2}
-                onPress={() => Linking.openURL(`tel:${expert.phone}`)}>
-                <Icon
-                  name={'heart'}
-                  size={25}
-                  color={Colors.client.primaryColor}
-                />
-              </TouchableOpacity>
+              style={[
+                styles.image,
+                {
+                  backgroundColor: Colors.light,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                },
+              ]}>
+              <Image
+                source={Images.menuUser}
+                resizeMode={FastImage.resizeMode.cover}
+                style={[
+                  styles.image,
+                  {
+                    tintColor: Colors.expert.primaryColor,
+                    width: '90%',
+                    height: '90%',
+                  },
+                ]}
+              />
             </View>
-          </View>
-        </>
-      ) : (
-        <Text>loading</Text>
-      )}
+          )}
+          {expert ? (
+            <View style={styles.contInfo}>
+              <Text style={[Fonts.style.bold(Colors.light, Fonts.size.medium)]}>
+                {expert.firstName} {expert.lastName}
+              </Text>
+              <Text
+                style={[Fonts.style.semiBold(Colors.light, Fonts.size.small)]}>
+                <Icon name={'star'} size={16} color={Colors.light} />{' '}
+                {(expert && expert.rating ? expert.rating : 5).toFixed(1)}
+              </Text>
+            </View>
+          ) : (
+            <View style={styles.contInfo}>
+              <Text style={[Fonts.style.bold(Colors.light, Fonts.size.medium)]}>
+                Buscando experto...
+              </Text>
+            </View>
+          )}
+        </View>
+
+        <View
+          style={{
+            alignSelf: 'center',
+            justifyContent: 'space-between',
+            flexDirection: 'row',
+          }}>
+          <TouchableOpacity
+            style={styles.buttonCall}
+            onPress={() => Linking.openURL(`tel:${expert.phone}`)}>
+            <Icon name={'phone'} size={20} color={Colors.expert.primaryColor} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.buttonCall}
+            onPress={() => Linking.openURL(`tel:${expert.phone}`)}>
+            <Icon name={'heart'} size={20} color={Colors.expert.primaryColor} />
+          </TouchableOpacity>
+        </View>
+      </View>
     </>
   );
 };
@@ -81,25 +101,25 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width: '100%',
     justifyContent: 'space-between',
-    backgroundColor: Colors.lightGray,
+    backgroundColor: Colors.expert.primaryColor,
     paddingHorizontal: 10,
     borderTopEndRadius: 20,
     borderTopStartRadius: 20,
     paddingVertical: 20,
   },
-  image: {height: 80, width: 80, borderRadius: 40},
+  image: {height: 60, width: 60, borderRadius: 30},
   profile: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   buttonCall: {
     backgroundColor: 'white',
-    height: 50,
-    width: 50,
-    borderRadius: 25,
+    height: 40,
+    width: 40,
+    borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 30,
+    marginRight: 10,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -110,25 +130,25 @@ const styles = StyleSheet.create({
 
     elevation: 8,
   },
-  buttonCall2: {
-    marginRight: 20,
+  // buttonCall2: {
+  //   marginRight: 20,
 
-    backgroundColor: 'white',
-    height: 50,
-    width: 50,
-    borderRadius: 25,
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 4.65,
+  //   backgroundColor: 'white',
+  //   height: 50,
+  //   width: 50,
+  //   borderRadius: 25,
+  //   justifyContent: 'center',
+  //   alignItems: 'center',
+  //   shadowColor: '#000',
+  //   shadowOffset: {
+  //     width: 0,
+  //     height: 4,
+  //   },
+  //   shadowOpacity: 0.3,
+  //   shadowRadius: 4.65,
 
-    elevation: 8,
-  },
+  //   elevation: 8,
+  // },
   contInfo: {marginLeft: 10},
 });
 

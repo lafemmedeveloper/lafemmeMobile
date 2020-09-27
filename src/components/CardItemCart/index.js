@@ -1,15 +1,12 @@
 import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-
 import {Fonts, Colors, ApplicationStyles, Metrics} from '../../themes';
 import {minToHours} from '../../helpers/MomentHelper';
 import moment from 'moment';
 
-export default (data) => {
-  const {name, id, duration, clients, experts} = data.data;
-  console.log('experts =>', experts);
-  const {dateOrder} = data;
+export default ({isCart, data, dateOrder, showExperts}) => {
+  const {name, id, duration, removeItem, clients} = data;
 
   return (
     <>
@@ -23,7 +20,7 @@ export default (data) => {
             style={Fonts.style.regular(Colors.dark, Fonts.size.small, 'left')}>
             <Icon name={'clock'} size={15} color={Colors.client.primaryColor} />{' '}
             Duración {minToHours(duration ? duration : 0)}
-            {!data.isCart &&
+            {!isCart &&
               `, iniciando: ${moment(dateOrder, 'YYYY-MM-DD  HH:mm').format(
                 'h:mm a',
               )}`}
@@ -40,10 +37,10 @@ export default (data) => {
           </Text>
         </View>
 
-        {data.isCart && (
+        {isCart && (
           <TouchableOpacity
             onPress={() => {
-              data.removeItem(id);
+              removeItem(id);
             }}
             style={styles.deleteContainer}>
             <Icon
@@ -55,7 +52,7 @@ export default (data) => {
           </TouchableOpacity>
         )}
       </View>
-      {data.showExperts && (
+      {showExperts && (
         <Text
           style={Fonts.style.bold(
             Colors.client.primaryColor,
@@ -103,7 +100,7 @@ const styles = StyleSheet.create({
   deleteContainer: {
     flex: 1,
     paddingHorizontal: 5,
-    justifyContent: 'flex-end',
+    justifyContent: 'center',
     alignItems: 'flex-end',
   },
   textInput: {

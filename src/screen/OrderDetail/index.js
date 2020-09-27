@@ -7,14 +7,36 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import StepIndicator from 'react-native-step-indicator';
-import {Colors} from '../../themes';
+import {Colors, Metrics, Fonts} from '../../themes';
 import {StoreContext} from '../../flux';
-import customStyles from './styleStep';
-import Status from './Status';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import ExpertCall from './Status/ExpertCall';
 
+const customStyles = {
+  stepIndicatorSize: 30,
+  currentStepIndicatorSize: 30,
+  separatorStrokeWidth: 2,
+  currentStepStrokeWidth: 3,
+  stepStrokeCurrentColor: Colors.expert.primaryColor,
+  stepStrokeWidth: 2,
+  stepStrokeFinishedColor: Colors.expert.secondaryColor,
+  stepStrokeUnFinishedColor: '#aaaaaa',
+  separatorFinishedColor: Colors.expert.secondaryColor,
+  separatorUnFinishedColor: '#aaaaaa',
+  stepIndicatorFinishedColor: Colors.expert.primaryColor,
+  stepIndicatorUnFinishedColor: '#ffffff',
+  stepIndicatorCurrentColor: '#ffffff',
+  stepIndicatorLabelFontSize: 16,
+  currentStepIndicatorLabelFontSize: 16,
+  stepIndicatorLabelCurrentColor: Colors.expert.primaryColor,
+  stepIndicatorLabelFinishedColor: '#ffffff',
+  stepIndicatorLabelUnFinishedColor: '#aaaaaa',
+  labelColor: '#999999',
+  labelSize: 16,
+  labelAlign: 'flex-start',
+  currentStepLabelColor: Colors.expert.primaryColor,
+};
 const OrderDetail = (props) => {
   /* config map */
   const screen = Dimensions.get('window');
@@ -22,12 +44,13 @@ const OrderDetail = (props) => {
   const mapStyle = require('../../config/mapStyle.json');
 
   const {route, navigation} = props;
+  console.log('props', props);
   const {params} = route;
 
   const {state} = useContext(StoreContext);
-
+  console.log('state', state);
   const {util} = state;
-
+  console.log('util', util);
   const {ordersAll} = util;
   const [orderUser, setOrderUser] = useState(null);
 
@@ -39,6 +62,8 @@ const OrderDetail = (props) => {
     setOrderUser(currentOrder);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ordersAll]);
+
+  console.log('orderUser', orderUser);
   return (
     <>
       <View style={styles.container}>
@@ -47,7 +72,7 @@ const OrderDetail = (props) => {
             <View>
               <MapView
                 pointerEvents={'none'}
-                provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+                // provider={PROVIDER_GOOGLE} // remove if not using Google Maps
                 style={styles.mapView}
                 customMapStyle={mapStyle}
                 region={{
@@ -81,36 +106,122 @@ const OrderDetail = (props) => {
                   />
                 </Marker.Animated>
               </MapView>
-              <View style={styles.contBack}>
-                <TouchableOpacity style={styles.back} onPress={() => goBack()}>
-                  <Icon name={'chevron-left'} size={20} color={Colors.dark} />
+              <View
+                style={{
+                  height: 40 + Metrics.addHeader,
+                  paddingTop: Metrics.addHeader,
+                  width: Metrics.screenWidth,
+                  justifyContent: 'center',
+                  zIndex: 2000,
+                  position: 'absolute',
+                  opacity: 0.8,
+                }}>
+                <TouchableOpacity onPress={() => goBack()}>
+                  <View style={styles.containerBack}>
+                    <Icon
+                      name={'chevron-left'}
+                      size={20}
+                      color={Colors.dark}
+                      style={{
+                        alignSelf: 'center',
+                      }}
+                    />
+                  </View>
                 </TouchableOpacity>
               </View>
             </View>
 
-            {orderUser.experts && <ExpertCall expert={orderUser.experts} />}
+            <ExpertCall expert={orderUser.experts} />
+            <View
+              style={{
+                flex: 0,
+                paddingVertical: 20,
+                justifyContent: 'center',
+                width: Metrics.screenWidth,
+                backgroundColor: Colors.light,
+                marginHorizontal: 20,
+              }}>
+              <Text
+                numberOfLines={1}
+                style={Fonts.style.regular(
+                  Colors.gray,
+                  Fonts.size.medium,
+                  'left',
+                )}>
+                Orden:{' '}
+                <Text
+                  numberOfLines={1}
+                  style={Fonts.style.bold(
+                    Colors.expert.primaryColor,
+                    Fonts.size.medium,
+                    'center',
+                  )}>
+                  {orderUser.cartId}
+                </Text>
+              </Text>
+              <Text
+                style={Fonts.style.regular(
+                  Colors.dark,
+                  Fonts.size.medium,
+                  'left',
+                )}>
+                <Icon
+                  name={'map-marker-alt'}
+                  size={12}
+                  color={Colors.expert.primaryColor}
+                />{' '}
+                {orderUser.address.name}
+              </Text>
+              <Text
+                style={Fonts.style.regular(
+                  Colors.dark,
+                  Fonts.size.medium,
+                  'left',
+                )}>
+                <Icon
+                  name={'calendar'}
+                  size={12}
+                  color={Colors.expert.primaryColor}
+                />{' '}
+                {orderUser.date}
+              </Text>
+            </View>
             <View style={styles.cont}>
               {orderUser.status < 6 && (
-                <View
-                  style={orderUser.status >= 4 ? styles.step4 : styles.step}>
+                <View style={styles.step}>
                   <StepIndicator
                     customStyles={customStyles}
                     currentPosition={orderUser.status}
                     direction={'vertical'}
                     stepCount={4}
+                    labels={[
+                      'Buscando Experto',
+                      'Preparando Orden',
+                      'En ruta',
+                      'En Servicio',
+                    ]}
                   />
                 </View>
               )}
-
-              <View style={styles.containerPosition}>
-                <Status
-                  status={orderUser.status}
-                  id={params.cartId}
-                  goBack={goBack}
-                  expert={orderUser.experts}
-                  orderId={orderUser.id}
-                />
-              </View>
+            </View>
+            <View
+              style={{
+                width: Metrics.screenWidth,
+                flex: 0,
+                paddingVertical: 10,
+                alignContent: 'center',
+                justifyContent: 'center',
+                paddingBottom: Metrics.addFooter + 10,
+                backgroundColor: Colors.light,
+              }}>
+              <Text
+                style={Fonts.style.underline(
+                  Colors.dark,
+                  Fonts.size.medium,
+                  'center',
+                )}>
+                Contactar a soporte
+              </Text>
             </View>
           </>
         ) : (
@@ -126,13 +237,13 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     backgroundColor: Colors.light,
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 20,
   },
   step: {
+    width: Metrics.screenWidth,
+    paddingHorizontal: 20,
+    justifyContent: 'center',
+    alignItems: 'flex-start',
     alignSelf: 'center',
-    marginLeft: 20,
-    marginBottom: 20,
   },
   step4: {
     marginTop: 10,
@@ -148,7 +259,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   mapView: {
-    height: 300,
+    height: Metrics.screenHeight * 0.5,
     width: '100%',
     zIndex: 1,
   },
@@ -175,5 +286,16 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     marginTop: 10,
   },
+  containerBack: {
+    marginLeft: 20,
+    backgroundColor: 'white',
+    height: 30,
+    width: 30,
+    flex: 0,
+    borderRadius: 15,
+    justifyContent: 'center',
+    marginTop: 20,
+  },
 });
+
 export default OrderDetail;

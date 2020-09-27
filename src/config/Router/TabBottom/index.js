@@ -13,10 +13,13 @@ const Tab = createBottomTabNavigator();
 export default function TabBottom() {
   const {state} = useContext(StoreContext);
   const {auth, util} = state;
+
   return (
     <>
-      <Loading type={'client'} loading={auth.loading || util.loading} />
-
+      <Loading //TODO: Por que esto esta detrás del componente? debería estar al frente para que se pueda renderizar
+        type={'client'}
+        loading={auth.loading || util.loading}
+      />
       <Tab.Navigator
         initialRouteName="Home"
         tabBarOptions={{

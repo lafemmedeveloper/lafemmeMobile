@@ -10,7 +10,6 @@ import moment from 'moment';
 
 export default (dta) => {
   const {order, appType, activeDetailModal} = dta;
-
   const currentService = moment(order.date).format('dd,ll');
 
   return (
@@ -100,14 +99,14 @@ const styles = StyleSheet.create({
     marginTop: 5,
     borderRadius: 10,
     flexDirection: 'row',
-    shadowColor: '#000',
+
+    shadowColor: Colors.client.primaryColors,
     shadowOffset: {
       width: 0,
-      height: 5,
+      height: 2,
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-
     elevation: 5,
   },
 });

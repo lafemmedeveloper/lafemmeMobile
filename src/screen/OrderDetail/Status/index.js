@@ -10,9 +10,7 @@ import ServiceFinish from './ServiceFinish';
 import Finish from './Finish';
 import Cancelled from './Cancelled';
 
-const Status = (props) => {
-  const {status, id, goBack, expert, orderId} = props;
-
+const Status = ({status, id, goBack, expert, orderId}) => {
   switch (status) {
     case 0:
       return <SerchExpert />;

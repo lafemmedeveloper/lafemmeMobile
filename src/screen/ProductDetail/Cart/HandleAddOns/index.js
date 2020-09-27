@@ -436,13 +436,6 @@ const HandleAddOns = (props) => {
             </View>
           );
         })}
-      <Text style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'left', 1)}>
-        {'Información adicional'}
-      </Text>
-      <Text style={Fonts.style.light(Colors.dark, Fonts.size.small, 'left', 0)}>
-        {product.description}
-      </Text>
-      <View opacity={0.25} style={ApplicationStyles.separatorLine} />
     </>
   );
 };

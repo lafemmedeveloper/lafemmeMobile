@@ -1,9 +1,8 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {View, ScrollView} from 'react-native';
-import styles from './styles';
+import {View, ScrollView, StyleSheet} from 'react-native';
 import auth from '@react-native-firebase/auth';
 import ExpandHome from '../../components/ExpandHome';
-import {Metrics, ApplicationStyles, Images} from '../../themes';
+import {Metrics, Images, Colors} from '../../themes';
 import {StoreContext} from '../../flux';
 import {getServices} from '../../flux/services/actions';
 import {useNavigation} from '@react-navigation/native';
@@ -18,7 +17,7 @@ import CartScreen from '../CartScreen';
 import Address from '../Address';
 import AddAddress from '../AddAddress';
 import Header from '../../components/Header';
-import {getGallery, getOrders} from '../../flux/util/actions';
+import {getGallery, getOrders, getDeviceInfo} from '../../flux/util/actions';
 import Loading from '../../components/Loading';
 
 const Home = () => {
@@ -64,6 +63,8 @@ const Home = () => {
 
   const activeFunctionsFlux = async () => {
     // observeUser(authDispatch);
+    getDeviceInfo(utilDispatch);
+
     await getServices(serviceDispatch);
     activeMessage(authDispatch);
     getOrders(utilDispatch);
@@ -112,9 +113,7 @@ const Home = () => {
           onActionL={() => {}}
           onActionR={() => {}}
         />
-        <ScrollView
-          style={[ApplicationStyles.scrollHome, {marginTop: Metrics.header}]}
-          bounces={true}>
+        <ScrollView style={[styles.scroll]} bounces={true}>
           {services &&
             services.length > 0 &&
             services.map((data) => {
@@ -128,7 +127,7 @@ const Home = () => {
                 />
               );
             })}
-          {services && (
+          {services && services.length > 0 && (
             <BannerScroll
               key={'banner'}
               name={'INSPO'}
@@ -137,6 +136,7 @@ const Home = () => {
               selectBanner={() => setModalInspo(true)}
             />
           )}
+          <View style={{height: 50}} />
         </ScrollView>
       </View>
 
@@ -207,5 +207,15 @@ const Home = () => {
     </>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    width: Metrics.screenWidth,
+    height: Metrics.screenHeight,
+    backgroundColor: Colors.backgroundColor,
+  },
+  scroll: {width: Metrics.screenWidth, flex: 1, paddingBottom: 10},
+});
 
 export default Home;

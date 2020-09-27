@@ -180,12 +180,12 @@ const CartScreen = (props) => {
       <Loading type={'client'} />
 
       <View style={styles.headerContainer}>
-        <View opacity={0.0} style={ApplicationStyles.separatorLine} />
+        <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
         <Image
           source={Images.billResume}
           style={{
-            width: 30,
-            height: 30,
+            width: 50,
+            height: 50,
             resizeMode: 'contain',
             alignSelf: 'center',
             marginBottom: 10,
@@ -199,7 +199,7 @@ const CartScreen = (props) => {
           style={Fonts.style.light(Colors.data, Fonts.size.small, 'center')}>
           {'Agrega los servicios según el orden que deseas recibirlos.'}
         </Text>
-        <View opacity={0.0} style={ApplicationStyles.separatorLine} />
+        <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
       </View>
       <ScrollView>
         {user &&
@@ -247,7 +247,7 @@ const CartScreen = (props) => {
           </Text>
         </TouchableOpacity>
 
-        <View opacity={0.0} style={ApplicationStyles.separatorLine} />
+        <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
 
         <View style={styles.totalContainer}>
           <Text
@@ -293,7 +293,7 @@ const CartScreen = (props) => {
           </Text>
         </View>
 
-        <View opacity={0.0} style={ApplicationStyles.separatorLine} />
+        <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
         {user && user.cart && (
           <>
             <View style={styles.itemTitleContainer}>
@@ -379,7 +379,7 @@ const CartScreen = (props) => {
                   width: '100%',
                   height: '100%',
                   flex: 1,
-                  backgroundColor: 'red',
+                  backgroundColor: 'green',
                 }}
               />
             </View>
@@ -405,7 +405,7 @@ const CartScreen = (props) => {
                   height: '100%',
 
                   flex: 1,
-                  backgroundColor: 'red',
+                  backgroundColor: 'purple',
                 }}
               />
             </View>
@@ -433,7 +433,7 @@ const CartScreen = (props) => {
             </TouchableOpacity>
           </>
         )}
-        <View opacity={0.0} style={ApplicationStyles.separatorLine} />
+        <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
       </ScrollView>
       <View style={styles.footerContainer}>
         <TouchableOpacity
@@ -626,7 +626,7 @@ const styles = StyleSheet.create({
 
   btnContainer: {
     flex: 0,
-    height: 60 + Metrics.addFooter,
+    height: 50 + Metrics.addFooter,
     width: Metrics.screenWidth,
     alignSelf: 'center',
     borderTopLeftRadius: Metrics.borderRadius,

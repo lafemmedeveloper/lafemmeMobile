@@ -14,7 +14,7 @@ import {
 import {Colors, Fonts, Images, Metrics} from '../../../themes';
 import ItemProfile from '../../../components/ItemProfile';
 import {signOff, setLoading, updateProfile} from '../../../flux/auth/actions';
-import ModalCompoent from './ModalComponent';
+import ModalComponent from './ModalComponent';
 import UpdateName from './Modals/UpdateName';
 import UpdateEmail from './Modals/UpdateEmail';
 import ModalApp from '../../../components/ModalApp';
@@ -42,8 +42,11 @@ const options = {
 
 const Content = (props) => {
   const {state, dispatch} = props;
-  const {user} = state;
-
+  console.log('render:state', state);
+  const {auth, util} = state;
+  const {user} = auth;
+  const {deviceInfo} = util;
+  console.log('state', state);
   const [modalName, setModalName] = useState(false);
   const [modalEmail, setModalEmail] = useState(false);
   const [tyc, setTyc] = useState(false);
@@ -652,6 +655,7 @@ const Content = (props) => {
                 'center',
               )}>
               La Femme Clientes
+              {deviceInfo.bundleId === 'com.femme.clientstaging' && ' Staging'}
             </Text>
             <Text
               style={Fonts.style.regular(
@@ -659,7 +663,7 @@ const Content = (props) => {
                 Fonts.size.small,
                 'center',
               )}>
-              {'deviceInfo.readableVersion'}
+              {deviceInfo.readableVersion}
             </Text>
             <TouchableOpacity
               onPress={() => {
@@ -689,22 +693,22 @@ const Content = (props) => {
           </View>
         </ScrollView>
       </View>
-      <ModalCompoent
+      <ModalComponent
         nameIcon={'user'}
         lastTitle={'Actualiza el nombre de usuario'}
         title={'Actualizar nombre'}
         open={modalName}
         setOpen={setModalName}>
         <UpdateName user={user} />
-      </ModalCompoent>
-      <ModalCompoent
+      </ModalComponent>
+      <ModalComponent
         nameIcon={'envelope'}
         lastTitle={'Actualiza tu email'}
         title={'Actualizar email de tu usuario'}
         open={modalEmail}
         setOpen={setModalEmail}>
         <UpdateEmail user={user} dispatch={dispatch} />
-      </ModalCompoent>
+      </ModalComponent>
 
       <ModalApp open={modalAddAddress} setOpen={setModalAddAddress}>
         <Address setModalAddAddress={setModalAddAddress} />

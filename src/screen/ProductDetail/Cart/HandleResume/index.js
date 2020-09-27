@@ -222,6 +222,7 @@ const HandleResume = (props) => {
                 flex: 1,
                 alignSelf: 'center',
                 flexDirection: 'column',
+                marginTop: 20,
               }}>
               <Text
                 style={Fonts.style.semiBold(
@@ -230,7 +231,7 @@ const HandleResume = (props) => {
                   'center',
                   1,
                 )}>
-                {'Adiciones comunes'}
+                {'Adicionales comunes'}
               </Text>
               <Text
                 style={Fonts.style.light(
@@ -272,7 +273,7 @@ const HandleResume = (props) => {
               'center',
               1,
             )}>
-            {'Duracion - Expertos'}
+            {'Duración - Expertos'}
           </Text>
           <Text
             style={Fonts.style.regular(
@@ -282,9 +283,8 @@ const HandleResume = (props) => {
               1,
             )}>
             {minToHours(timeTotal)} - {1}
-            {'Experto'}
+            {' Experto'}
           </Text>
-          <View opacity={0.25} style={ApplicationStyles.separatorLine} />
           <View opacity={0.25} style={ApplicationStyles.separatorLine} />
           <View
             style={{

@@ -4,7 +4,7 @@ import Modal from 'react-native-modal';
 import {View, StyleSheet, Text} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
-const ModalCompoent = (data) => {
+const ModalComponent = (data) => {
   const {open, children, setOpen, title, lastTitle, nameIcon} = data;
 
   return (
@@ -61,4 +61,4 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
 });
-export default ModalCompoent;
+export default ModalComponent;

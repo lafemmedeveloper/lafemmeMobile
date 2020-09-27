@@ -4,10 +4,9 @@ import {WaveIndicator} from 'react-native-indicators';
 import {StoreContext} from '../../flux';
 import {Colors, Metrics} from '../../themes';
 
-export default (data) => {
+export default ({type}) => {
   const {state} = useContext(StoreContext);
   const {auth, service, util} = state;
-  const {type} = data;
   if (auth.loading || service.loading || util.loading) {
     return (
       <View

@@ -49,6 +49,13 @@ const ApplicationStyles = {
     backgroundColor: Colors.dark,
     marginVertical: 20,
   },
+  separatorLineMini: {
+    width: Metrics.screenWidth * 0.9,
+    alignSelf: 'center',
+    height: 0.5,
+    backgroundColor: Colors.dark,
+    marginVertical: 10,
+  },
 
   scrollHomeExpert: {
     width: Metrics.screenWidth * 0.95,
