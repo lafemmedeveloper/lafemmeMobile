@@ -1,101 +1,103 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-<dict>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>en</string>
-	<key>CFBundleDisplayName</key>
-	<string>La Femme Expert Staging</string>
-	<key>CFBundleExecutable</key>
-	<string>$(EXECUTABLE_NAME)</string>
-	<key>CFBundleIdentifier</key>
-	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>CFBundleName</key>
-	<string>$(PRODUCT_NAME)</string>
-	<key>CFBundlePackageType</key>
-	<string>APPL</string>
-	<key>CFBundleShortVersionString</key>
-	<string>1.0.7</string>
-	<key>CFBundleSignature</key>
-	<string>????</string>
-	<key>CFBundleURLTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>google</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>com.googleusercontent.apps.429277642355-02t5lqf4on61jqpjtf6362t2nd1da98f</string>
-			</array>
-		</dict>
-	</array>
-	<key>CFBundleVersion</key>
-	<string>40</string>
-	<key>LSRequiresIPhoneOS</key>
-	<true/>
-	<key>NSAppTransportSecurity</key>
 	<dict>
-		<key>NSAllowsArbitraryLoads</key>
-		<true/>
-		<key>NSExceptionDomains</key>
-		<dict>
-			<key>localhost</key>
+		<key>CFBundleDevelopmentRegion</key>
+		<string>en</string>
+		<key>CFBundleDisplayName</key>
+		<string>La Femme Expert Staging</string>
+		<key>CFBundleExecutable</key>
+		<string>$(EXECUTABLE_NAME)</string>
+		<key>CFBundleIdentifier</key>
+		<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+		<key>CFBundleInfoDictionaryVersion</key>
+		<string>6.0</string>
+		<key>CFBundleName</key>
+		<string>$(PRODUCT_NAME)</string>
+		<key>CFBundlePackageType</key>
+		<string>APPL</string>
+		<key>CFBundleShortVersionString</key>
+		<string>1.0.7</string>
+		<key>CFBundleSignature</key>
+		<string>????</string>
+		<key>CFBundleURLTypes</key>
+		<array>
 			<dict>
-				<key>NSExceptionAllowsInsecureHTTPLoads</key>
-				<true/>
+				<key>CFBundleTypeRole</key>
+				<string>Editor</string>
+				<key>CFBundleURLName</key>
+				<string>google</string>
+				<key>CFBundleURLSchemes</key>
+				<array>
+					<string>com.googleusercontent.apps.172150230750-d33ufvsqgre20fq63j33nqi9e57st7jj</string>
+				</array>
+			</dict>
+		</array>
+		<key>CFBundleVersion</key>
+		<string>40</string>
+		<key>LSRequiresIPhoneOS</key>
+		<true />
+		<key>NSAppTransportSecurity</key>
+		<dict>
+			<key>NSAllowsArbitraryLoads</key>
+			<true />
+			<key>NSExceptionDomains</key>
+			<dict>
+				<key>localhost</key>
+				<dict>
+					<key>NSExceptionAllowsInsecureHTTPLoads</key>
+					<true />
+				</dict>
 			</dict>
 		</dict>
+		<key>ITSAppUsesNonExemptEncryption</key>
+		<false />
+		<key>NSCameraUsageDescription</key>
+		<string>La Femme Solicita acceso la cámara para que compartas fotos perzonalizadas en nuestra comunidad y/o redes sociales.</string>
+		<key>NSLocalizedDescription</key>
+		<string>La Femme solicita acceso a la ubicación para personalizar contenido y participar en los rankins localizados</string>
+		<key>NSLocationAlwaysUsageDescription</key>
+		<string>La Femme solicita acceso a la ubicación para personalizar contenido y participar en los rankins localizados</string>
+		<key>NSLocationWhenInUseUsageDescription</key>
+		<string>La Femme solicita acceso a la ubicación para personalizar contenido y participar en los rankins localizados</string>
+		<key>NSPhotoLibraryAddUsageDescription</key>
+		<string>La Femme solicita acceso para almacentar tus fotografías.</string>
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>La Femme solicita acceso que puedas publicar tus imagenes o enviar fotografías en el chat y poder solucuinar tus problems.</string>
+		<key>UIAppFonts</key>
+		<array>
+			<string>AntDesign.ttf</string>
+			<string>Entypo.ttf</string>
+			<string>EvilIcons.ttf</string>
+			<string>Feather.ttf</string>
+			<string>FontAwesome.ttf</string>
+			<string>FontAwesome5_Brands.ttf</string>
+			<string>FontAwesome5_Regular.ttf</string>
+			<string>FontAwesome5_Solid.ttf</string>
+			<string>Foundation.ttf</string>
+			<string>Ionicons.ttf</string>
+			<string>MaterialCommunityIcons.ttf</string>
+			<string>MaterialIcons.ttf</string>
+			<string>Octicons.ttf</string>
+			<string>SimpleLineIcons.ttf</string>
+			<string>Zocial.ttf</string>
+			<string>Fontisto.ttf</string>
+		</array>
+		<key>UIBackgroundModes</key>
+		<array>
+			<string>location</string>
+		</array>
+		<key>UILaunchStoryboardName</key>
+		<string>LaunchScreenExpert</string>
+		<key>UIRequiredDeviceCapabilities</key>
+		<array>
+			<string>armv7</string>
+		</array>
+		<key>UISupportedInterfaceOrientations</key>
+		<array>
+			<string>UIInterfaceOrientationPortrait</string>
+		</array>
+		<key>UIViewControllerBasedStatusBarAppearance</key>
+		<false />
 	</dict>
-	<key>NSCameraUsageDescription</key>
-	<string>La Femme Solicita acceso la cámara para que compartas fotos perzonalizadas en nuestra comunidad y/o redes sociales.</string>
-	<key>NSLocalizedDescription</key>
-	<string>La Femme solicita acceso a la ubicación para personalizar contenido y participar en los rankins localizados</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>La Femme solicita acceso a la ubicación para personalizar contenido y participar en los rankins localizados</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>La Femme solicita acceso a la ubicación para personalizar contenido y participar en los rankins localizados</string>
-	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>La Femme solicita acceso para almacentar tus fotografías.</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>La Femme solicita acceso que puedas publicar tus imagenes o enviar fotografías en el chat y poder solucuinar tus problems.</string>
-	<key>UIAppFonts</key>
-	<array>
-		<string>AntDesign.ttf</string>
-		<string>Entypo.ttf</string>
-		<string>EvilIcons.ttf</string>
-		<string>Feather.ttf</string>
-		<string>FontAwesome.ttf</string>
-		<string>FontAwesome5_Brands.ttf</string>
-		<string>FontAwesome5_Regular.ttf</string>
-		<string>FontAwesome5_Solid.ttf</string>
-		<string>Foundation.ttf</string>
-		<string>Ionicons.ttf</string>
-		<string>MaterialCommunityIcons.ttf</string>
-		<string>MaterialIcons.ttf</string>
-		<string>Octicons.ttf</string>
-		<string>SimpleLineIcons.ttf</string>
-		<string>Zocial.ttf</string>
-		<string>Fontisto.ttf</string>
-	</array>
-	<key>UIBackgroundModes</key>
-	<array>
-		<string>location</string>
-	</array>
-	<key>UILaunchStoryboardName</key>
-	<string>LaunchScreenExpert</string>
-	<key>UIRequiredDeviceCapabilities</key>
-	<array>
-		<string>armv7</string>
-	</array>
-	<key>UISupportedInterfaceOrientations</key>
-	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-	</array>
-	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<false/>
-</dict>
 </plist>

@@ -29,7 +29,7 @@
 			<string>google</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.429277642355-02t5lqf4on61jqpjtf6362t2nd1da98f</string>
+				<string>com.googleusercontent.apps.429277642355-t66c52l588ba9uobofmqm1irsrrgvrco</string>
 			</array>
 		</dict>
 	</array>
@@ -50,6 +50,8 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>NSCameraUsageDescription</key>
 	<string>La Femme Solicita acceso la cámara para que compartas fotos perzonalizadas en nuestra comunidad y/o redes sociales.</string>
 	<key>NSLocalizedDescription</key>

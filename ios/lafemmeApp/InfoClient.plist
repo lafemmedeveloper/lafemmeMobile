@@ -50,6 +50,8 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>NSCameraUsageDescription</key>
 	<string>La Femme Solicita acceso la cámara para que compartas fotos perzonalizadas en nuestra comunidad y/o redes sociales.</string>
 	<key>NSLocalizedDescription</key>
