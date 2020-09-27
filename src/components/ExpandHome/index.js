@@ -1,6 +1,5 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {View, Image, Text, TouchableOpacity, Animated} from 'react-native';
-
 import styles from './styles';
 import {ApplicationStyles, Colors, Fonts, Images, Metrics} from '../../themes';
 import FastImage from 'react-native-fast-image';
@@ -9,15 +8,9 @@ import _ from 'lodash';
 
 export default (dta) => {
   const [expanded, onChangeExpanded] = React.useState(true);
-  const [animation, onChangeanimation] = React.useState(new Animated.Value(0));
-  const [animationItem, onChangeanimationItem] = React.useState(
-    new Animated.Value(0),
-  );
-  console.log('onChangeanimation =>', onChangeanimation);
-  console.log('onChangeanimationItem =>', onChangeanimationItem);
-
-  const [opacity, onChangeOpacity] = React.useState(new Animated.Value(0));
-  console.log('Animation =>', onChangeOpacity);
+  const [animation] = useState(new Animated.Value(0));
+  const [animationItem] = useState(new Animated.Value(0));
+  const [opacity] = useState(new Animated.Value(0));
 
   const {data, slug} = dta;
   const {products, addOns} = data;
@@ -39,16 +32,19 @@ export default (dta) => {
           Animated.timing(animation, {
             toValue: expanded ? toHeight : 0,
             duration,
+            useNativeDriver: false,
           }).start();
 
           Animated.timing(animationItem, {
             toValue: expanded ? itemHeight : 0,
             duration,
+            useNativeDriver: false,
           }).start();
 
           Animated.timing(opacity, {
             toValue: expanded ? 100 : 0,
             duration,
+            useNativeDriver: false,
           }).start();
 
           onChangeExpanded(expanded ? false : true);

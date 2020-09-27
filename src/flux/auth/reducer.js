@@ -1,5 +1,5 @@
 import createReducer from '../createReducer';
-import {GET_USER, HANDLE_ERROR, LOADING, DEL_USER} from './types';
+import {SET_USER, HANDLE_ERROR, LOADING, DEL_USER} from './types';
 
 export const INITIAL_STATE_AUTH = {
   loading: false,
@@ -21,7 +21,7 @@ const setError = (state, action) => {
   };
 };
 
-const getUser = (state, action) => {
+const setUser = (state, action) => {
   return {
     ...state,
     user: action.payload,
@@ -37,6 +37,6 @@ const delUser = (state) => {
 export default createReducer(INITIAL_STATE_AUTH, {
   [LOADING]: setLoading,
   [HANDLE_ERROR]: setError,
-  [GET_USER]: getUser,
+  [SET_USER]: setUser,
   [DEL_USER]: delUser,
 });

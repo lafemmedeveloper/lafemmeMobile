@@ -476,15 +476,18 @@ const Content = (props) => {
                   style={{
                     height: 100,
                     width: 100,
-                    resizeMode: 'contain',
+                    resizeMode: 'cover',
+                    borderRadius: 50,
                   }}
                 />
               ) : (
                 <Image
-                  source={Images.user}
+                  source={Images.defaultUser}
                   style={{
                     height: 100,
                     width: 100,
+                    resizeMode: 'cover',
+                    borderRadius: 50,
                   }}
                 />
               )}

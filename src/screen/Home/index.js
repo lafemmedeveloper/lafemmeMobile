@@ -1,6 +1,7 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {View, ScrollView} from 'react-native';
 import styles from './styles';
+import auth from '@react-native-firebase/auth';
 import ExpandHome from '../../components/ExpandHome';
 import {Metrics, ApplicationStyles, Images} from '../../themes';
 import {StoreContext} from '../../flux';
@@ -8,7 +9,7 @@ import {getServices} from '../../flux/services/actions';
 import {useNavigation} from '@react-navigation/native';
 import ModalApp from '../../components/ModalApp';
 import Login from '../Login';
-import {activeMessage, observeUser} from '../../flux/auth/actions';
+import {activeMessage, setUser} from '../../flux/auth/actions';
 import BannerScroll from '../../components/BannerScroll';
 import Gallery from '../Gallery';
 import CartFooter from '../../components/CartFooter';
@@ -22,14 +23,12 @@ import Loading from '../../components/Loading';
 
 const Home = () => {
   const TIME_SET = 500;
-
   const navigation = useNavigation();
   const {state, serviceDispatch, authDispatch, utilDispatch} = useContext(
     StoreContext,
   );
-  const {service, auth, util} = state;
-
-  const {user} = auth;
+  const {service, util} = state;
+  const {user} = state.auth;
   const {services} = service;
   const {deviceInfo, orders} = util;
   console.log(
@@ -39,11 +38,6 @@ const Home = () => {
 
   const appType = deviceInfo;
 
-  useEffect(() => {
-    activefuntionsFlux();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const [modalAuth, setModalAuth] = useState(false);
   const [modalInspo, setModalInspo] = useState(false);
   const [modalCart, setModalCart] = useState(false);
@@ -51,13 +45,31 @@ const Home = () => {
   const [isModalCart, setIsModalCart] = useState(false);
   const [modalAddAddress, setModalAddAddress] = useState(false);
 
-  const activefuntionsFlux = async () => {
-    observeUser(authDispatch);
+  function onAuthStateChanged(user) {
+    if (auth().currentUser && auth().currentUser.uid) {
+      console.log('onAuthStateChanged:user', user);
+      setUser(auth().currentUser.uid, authDispatch);
+    }
+  }
+
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber; // unsubscribe on unmount
+  }, []);
+
+  useEffect(() => {
+    activeFunctionsFlux();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const activeFunctionsFlux = async () => {
+    // observeUser(authDispatch);
     await getServices(serviceDispatch);
     activeMessage(authDispatch);
     getOrders(utilDispatch);
     getGallery(utilDispatch);
   };
+
   const selectService = (product) => {
     if (user !== null) {
       if (user && user.cart && user.cart.address) {
@@ -134,7 +146,7 @@ const Home = () => {
             width: Metrics.screenWidth,
             height: 50,
             bottom: 0,
-            backgroundColor: 'transparet',
+            backgroundColor: 'transparent',
             position: 'absolute',
           }}>
           <CartFooter

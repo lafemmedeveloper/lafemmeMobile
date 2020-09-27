@@ -3,7 +3,7 @@ import {Text, View, Switch, StyleSheet, Image} from 'react-native';
 import {Fonts, Colors} from '../../../themes';
 import firestore from '@react-native-firebase/firestore';
 import {setUser, setLoading} from '../../../flux/auth/actions';
-import {Images} from '../../../themes';
+import {Images, Metrics} from '../../../themes';
 
 const HeaderExpert = (props) => {
   const {user, dispatch} = props;
@@ -76,6 +76,7 @@ const styles = StyleSheet.create({
   container: {
     paddingVertical: 10,
     backgroundColor: Colors.light,
+    paddingTop: Metrics.addHeader,
     flex: 0,
     flexDirection: 'row',
     justifyContent: 'space-between',

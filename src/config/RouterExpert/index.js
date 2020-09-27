@@ -14,9 +14,9 @@ const Router = () => {
   const {authDispatch, state} = useContext(StoreContext);
   const {auth} = state;
   const {user} = auth;
-  useEffect(() => {
-    observeUser(authDispatch);
-  }, [authDispatch]);
+  // useEffect(() => {
+  //   observeUser(authDispatch);
+  // }, [authDispatch]);
 
   if (user) {
     return (

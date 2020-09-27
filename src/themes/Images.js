@@ -16,6 +16,7 @@ const images = {
 
   moto: require('../Images/moto.png'),
   user: require('../Images/user.png'),
+  defaultUser: require('../Images/defaultUser.jpg'),
 
   billResume: require('../Images/billResume.png'),
 

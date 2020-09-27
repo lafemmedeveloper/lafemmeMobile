@@ -47,7 +47,6 @@ const Login = (props) => {
 
   const sendPhone = async () => {
     Keyboard.dismiss();
-
     setActivityLoading(true);
 
     if (userPhone.length > 1) {
@@ -67,7 +66,7 @@ const Login = (props) => {
 
           setModalCode(true);
         } catch (error) {
-          console.log('error auht =>', error);
+          console.log('error auth =>', error);
           setActivityLoading(false);
           Alert.alert('Ups...', 'Numero incorrecto');
         }
@@ -149,7 +148,7 @@ const Login = (props) => {
             flexDirection: 'row',
           }}
           filterProps={{
-            placeholder: 'Busca tu pais',
+            placeholder: 'Busca tu país',
           }}
           placeholder={`+ ${stateInitial.country.callingCode} `}
           style={{

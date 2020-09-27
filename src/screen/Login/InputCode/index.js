@@ -58,7 +58,7 @@ const InputCode = ({
           style={styles.icon}
         />
         <Text style={styles.title}>
-          Ingresa el código enviado al{' '}
+          Ingresa el código enviado al{'\n'}
           <Text style={{color: Colors.client.primaryColor, fontSize: 18}}>
             {phone}
           </Text>

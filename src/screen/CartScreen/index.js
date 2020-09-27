@@ -14,7 +14,7 @@ import {
 import Utilities from '../../utilities';
 import moment from 'moment';
 import firestore from '@react-native-firebase/firestore';
-import {observeUser, updateProfile} from '../../flux/auth/actions';
+import {updateProfile} from '../../flux/auth/actions';
 import {getServices} from '../../flux/services/actions';
 import {StoreContext} from '../../flux';
 import CardItemCart from '../../components/CardItemCart';
@@ -42,9 +42,9 @@ const CartScreen = (props) => {
   const [isTimePickerVisible, setIsTimePickerVisible] = useState(false);
   console.log('moment =>', moment(new Date()).format('YYYY-MM-DD HH:mm:ss'));
 
-  useEffect(() => {
-    observeUser(authDispatch);
-  }, [authDispatch]);
+  // useEffect(() => {
+  //   observeUser(authDispatch);
+  // }, [authDispatch]);
 
   useEffect(() => {
     getServices(serviceDispatch);
@@ -391,7 +391,7 @@ const CartScreen = (props) => {
                 onCancel={hideDatePicker}
                 is24Hour={false}
                 form
-                isDarkModeEnabled={true}
+                // isDarkModeEnabled={false}
                 locale="es_co"
                 format="HH:mm:ss"
                 headerTextIOS="Elige un Hora de reserva"

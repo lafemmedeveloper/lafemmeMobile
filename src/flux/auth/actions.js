@@ -1,4 +1,5 @@
-import {GET_USER, HANDLE_ERROR, LOADING, DEL_USER} from './types';
+import {SET_USER, HANDLE_ERROR, LOADING, DEL_USER} from './types';
+import moment from 'moment';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import {Alert} from 'react-native';
@@ -18,7 +19,7 @@ export const saveUser = async (data, dispatch) => {
     setLoading(true, dispatch);
     const ref = firestore().collection('users').doc(data.uid);
     await ref.set(data);
-    dispatch({type: GET_USER, payload: data});
+    dispatch({type: SET_USER, payload: data});
     setLoading(false, dispatch);
   } catch (error) {
     setLoading(false, dispatch);
@@ -26,33 +27,59 @@ export const saveUser = async (data, dispatch) => {
   }
 };
 
-export const observeUser = (dispatch) => {
-  try {
-    setLoading(true, dispatch);
-    auth().onAuthStateChanged(function (user) {
-      if (user) {
-        setUser(user.uid, dispatch);
-      }
-    });
-    setLoading(false, dispatch);
-  } catch (error) {
-    setLoading(false, dispatch);
-    console.log('error observeUser =>', error);
-  }
-};
+// export const observeUser = (dispatch) => {
+//   try {
+//     setLoading(true, dispatch);
+//     auth().onAuthStateChanged(function (user) {
+//       if (user) {
+//         setUser(user.uid, dispatch);
+//       }
+//     });
+//     setLoading(false, dispatch);
+//   } catch (error) {
+//     setLoading(false, dispatch);
+//     console.log('error observeUser =>', error);
+//   }
+// };
 export const setUser = async (data, dispatch) => {
-  let result = firestore().collection('users').doc(data);
-  await result
+  let usersRef = firestore().collection('users').doc(data);
+  const currentUser = auth().currentUser;
+  await usersRef
     .get()
-    .then((doc) => {
+    .then((docSnapshot) => {
       setLoading(false, dispatch);
-      if (!doc.exists) {
-        console.log('No such document!');
+      if (docSnapshot.exists) {
+        const currentUserDb = docSnapshot.data();
         setLoading(false, dispatch);
+        dispatch({type: SET_USER, payload: currentUserDb});
       } else {
-        const currentUserDb = doc.data();
-        dispatch({type: GET_USER, payload: currentUserDb});
-        setLoading(false, dispatch);
+        usersRef
+          .set({
+            address: [],
+            email: '',
+            firstName: '',
+            lastName: '',
+            numberOfServices: 0,
+            phone: currentUser.phoneNumber,
+            uid: currentUser.uid,
+            role: 'client',
+            tyc: moment(new Date()).format('LLLL'),
+            guest: [],
+            rating: 5.0,
+            cart: null,
+            imageUrl: null,
+            token: null,
+          })
+          .then(function () {
+            console.log('Document successfully written!');
+            usersRef.onSnapshot((user) => {
+              setLoading(false, dispatch);
+              dispatch({type: SET_USER, payload: user.data()});
+            });
+          })
+          .catch(function (error) {
+            console.error('Error writing document: ', error);
+          });
       }
     })
     .catch((error) => {
@@ -60,6 +87,7 @@ export const setUser = async (data, dispatch) => {
       console.log(error);
     });
 };
+
 export const signOff = async (dispatch) => {
   try {
     setLoading(true, dispatch);
@@ -85,7 +113,7 @@ export const updateProfile = async (data, typeData, dispatch) => {
       {merge: true},
     );
 
-    await setUser(currentUser.uid, dispatch);
+    // await setUser(currentUser.uid, dispatch);
     setLoading(false, dispatch);
   } catch (error) {
     setLoading(false, dispatch);
@@ -191,7 +219,6 @@ const sendTokenUser = () => {
 
 const saveTokenToDatabase = async (token) => {
   const userId = auth().currentUser.uid;
-
   await firestore()
     .collection('users')
     .doc(userId)
