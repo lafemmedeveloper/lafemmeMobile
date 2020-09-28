@@ -27,21 +27,8 @@ export const saveUser = async (data, dispatch) => {
   }
 };
 
-// export const observeUser = (dispatch) => {
-//   try {
-//     setLoading(true, dispatch);
-//     auth().onAuthStateChanged(function (user) {
-//       if (user) {
-//         setUser(user.uid, dispatch);
-//       }
-//     });
-//     setLoading(false, dispatch);
-//   } catch (error) {
-//     setLoading(false, dispatch);
-//     console.log('error observeUser =>', error);
-//   }
-// };
 export const setUser = async (data, dispatch) => {
+  console.log('active snapshot user');
   let usersRef = firestore().collection('users').doc(data);
   const currentUser = auth().currentUser;
   await usersRef
@@ -51,6 +38,8 @@ export const setUser = async (data, dispatch) => {
       if (docSnapshot.exists) {
         const currentUserDb = docSnapshot.data();
         setLoading(false, dispatch);
+
+        console.log('currentUserDb ==>', currentUserDb);
         dispatch({type: SET_USER, payload: currentUserDb});
       } else {
         usersRef

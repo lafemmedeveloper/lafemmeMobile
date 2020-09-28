@@ -66,7 +66,6 @@ const Home = () => {
   }, []);
 
   const activeFunctionsFlux = async () => {
-    // observeUser(authDispatch);
     getDeviceInfo(utilDispatch);
 
     await getServices(serviceDispatch);
