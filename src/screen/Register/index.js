@@ -72,10 +72,13 @@ const Register = (props) => {
             'Ups',
             'Este correo ya esta en uso, por favor intentalo con otro',
           );
+        } else if (
+          error.toString().includes('  The email address is badly formatted.')
+        ) {
         } else {
           Alert.alert(
             'Ups...',
-            'Tuvimos un problema procesando tu solicitud, por favor intentalo de nuevo',
+            'Tuvimos problemas con tu correo, por favor verifica que este bien escrito e intentalo de nuevo',
           );
         }
       }

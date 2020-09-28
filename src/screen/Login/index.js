@@ -85,6 +85,7 @@ const Login = (props) => {
       setActivityLoading(true);
       await confirmResult.confirm(value);
       const currentUser = auth().currentUser;
+      console.log('currentUser ===>', currentUser);
       if (currentUser.email) {
         setUser(currentUser.uid, authDispatch);
         setModalCode(false);

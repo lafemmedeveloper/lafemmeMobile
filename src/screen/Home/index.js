@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {View, ScrollView, StyleSheet} from 'react-native';
+import {View, ScrollView, StyleSheet, Alert} from 'react-native';
 import auth from '@react-native-firebase/auth';
 import ExpandHome from '../../components/ExpandHome';
 import {Metrics, Images, Colors} from '../../themes';
@@ -46,14 +46,18 @@ const Home = () => {
 
   function onAuthStateChanged(user) {
     if (auth().currentUser && auth().currentUser.uid) {
-      console.log('onAuthStateChanged:user', user);
-      setUser(auth().currentUser.uid, authDispatch);
+      console.log('onAuthStateChanged:user', user._user);
+
+      if (auth().currentUser.email) {
+        setUser(auth().currentUser.uid, authDispatch);
+      }
     }
   }
 
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
     return subscriber; // unsubscribe on unmount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -97,7 +101,13 @@ const Home = () => {
     }
   };
 
-  console.log('orders =>', orders);
+  const openModalAddress = () => {
+    if (user) {
+      setModalAddress(true);
+    } else {
+      setModalAuth(true);
+    }
+  };
   return (
     <>
       <Loading type={'client'} />
@@ -109,7 +119,7 @@ const Home = () => {
           iconR={null}
           user={user}
           ordersActive={orders.length}
-          selectAddress={() => setModalAddress(true)}
+          selectAddress={() => openModalAddress()}
           onActionL={() => {}}
           onActionR={() => {}}
         />
