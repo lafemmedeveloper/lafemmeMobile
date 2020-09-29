@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {Colors, Images} from '../../../themes';
 import {Image} from 'react-native';
@@ -16,7 +16,6 @@ export default function TabBottom() {
   const {auth, util} = state;
   const {loading} = auth;
   const {expertActiveOrders} = util;
-  console.log('orders ==>', expertActiveOrders);
 
   return (
     <>

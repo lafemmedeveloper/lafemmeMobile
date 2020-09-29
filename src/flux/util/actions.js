@@ -82,17 +82,14 @@ export const getCoverage = async (city, dispatch) => {
 export const getOrders = (dispatch) => {
   const uid = auth().currentUser.uid;
   try {
-    console.log('<=== Active getOrder functions ===>');
     setLoading(true, dispatch);
     const ordersRef = firestore()
       .collection('orders')
       .where('client.uid', '==', uid);
     ordersRef.orderBy('createDate', 'desc');
 
-    let listOrders = [];
-
     ordersRef.onSnapshot((orders) => {
-      listOrders = orders.docs.map((item) => {
+      let listOrders = orders.docs.map((item) => {
         return {
           id: item.id,
           ...item.data(),
@@ -337,4 +334,8 @@ export const onDeleteGallery = async (id, dispatch) => {
   } catch (error) {
     console.log('onDeleteGallery error', error);
   }
+};
+
+export const resetReducer = (dispatch) => {
+  dispatch({type: GET_ORDERS, payload: []});
 };

@@ -67,7 +67,6 @@ const Home = () => {
 
     await getServices(serviceDispatch);
     activeMessage('client', authDispatch);
-    getOrders(utilDispatch);
     getGallery(utilDispatch);
   };
 

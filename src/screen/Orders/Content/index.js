@@ -1,20 +1,27 @@
-import React, {useContext, useState, Fragment} from 'react';
+import React, {useContext, useState, Fragment, useEffect} from 'react';
 import {View, StyleSheet, TouchableOpacity, Text} from 'react-native';
-import {ApplicationStyles, Fonts, Colors, Metrics} from '../../../themes';
+import {Fonts, Colors, Metrics} from '../../../themes';
 import {StoreContext} from '../../../flux';
 import {ScrollView} from 'react-native-gesture-handler';
 import ExpandOrderData from '../../ExpandOrderData';
 // import Header from './Header';
 import Header from '../../../components/Header';
 import {useNavigation} from '@react-navigation/native';
+import {getOrders} from '../../../flux/util/actions';
 
 const Content = () => {
+  const {utilDispatch} = useContext(StoreContext);
+
   const navigation = useNavigation();
   const {state /*  serviceDispatch, authDispatch */} = useContext(StoreContext);
   const {util} = state;
   const {orders, history} = util;
   const [menuIndex, setMenuIndex] = useState(0);
 
+  useEffect(() => {
+    getOrders(utilDispatch);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const activeDetailModal = (order) => {
     navigation.navigate('OrderDetail', order);
   };

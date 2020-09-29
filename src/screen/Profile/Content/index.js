@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {
   View,
   Text,
@@ -28,6 +28,8 @@ import {firebase} from '@react-native-firebase/storage';
 import ImagePicker from 'react-native-image-picker';
 import ImageResizer from 'react-native-image-resizer';
 import utilities from '../../../utilities';
+import {resetReducer} from '../../../flux/util/actions';
+import {StoreContext} from '../../../flux';
 
 const modelState = {
   images: [],
@@ -41,6 +43,7 @@ const options = {
 };
 
 const Content = (props) => {
+  const {utilDispatch} = useContext(StoreContext);
   const {state, dispatch} = props;
   console.log('render:state', state);
   const {auth, util} = state;
@@ -455,8 +458,10 @@ const Content = (props) => {
   const updateUser = async (picture) => {
     await updateProfile({...picture}, 'imageUrl', dispatch);
   };
-  console.log('image source =>', imgSource);
-  console.log('image imageUri =>', imageUri);
+  const signOffUser = async () => {
+    resetReducer(utilDispatch);
+    await signOff(dispatch);
+  };
 
   return (
     <>
@@ -630,7 +635,7 @@ const Content = (props) => {
                     {
                       text: 'Si',
                       onPress: () => {
-                        signOff(dispatch);
+                        signOffUser();
                       },
                     },
                     {
