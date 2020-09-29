@@ -162,11 +162,11 @@ export const updateProfileItem = async (newData, uid, dispatch) => {
   }
 };
 
-export const activeMessage = async (dispatch) => {
+export const activeMessage = async (topic, dispatch) => {
   try {
     setLoading(true, dispatch);
     messaging()
-      .subscribeToTopic('client')
+      .subscribeToTopic(topic)
       .then(() => console.log('Subscribed to topic!'));
     messaging().onMessage(async (remoteMessage) => {
       console.log('A new FCM message arrived!', JSON.stringify(remoteMessage));
@@ -174,7 +174,7 @@ export const activeMessage = async (dispatch) => {
     messaging().setBackgroundMessageHandler(async (remoteMessage) => {
       console.log('push notification backgraund', remoteMessage);
     });
-    await sendTokenUser();
+    // sendTokenUser();
     setLoading(false, dispatch);
   } catch (error) {
     setLoading(false, dispatch);
@@ -182,7 +182,7 @@ export const activeMessage = async (dispatch) => {
     console.log('error activeMessage =>', error);
   }
 };
-const sendTokenUser = () => {
+/* const sendTokenUser = () => {
   messaging()
     .getToken()
     .then((token) => {
@@ -203,3 +203,4 @@ const saveTokenToDatabase = async (token) => {
       tokens: firestore.FieldValue.arrayUnion(token),
     });
 };
+ */

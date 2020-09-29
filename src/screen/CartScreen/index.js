@@ -14,7 +14,7 @@ import {
 import Utilities from '../../utilities';
 import moment from 'moment';
 import firestore from '@react-native-firebase/firestore';
-import {updateProfile} from '../../flux/auth/actions';
+import {activeMessage, updateProfile} from '../../flux/auth/actions';
 import {getServices} from '../../flux/services/actions';
 import {StoreContext} from '../../flux';
 import CardItemCart from '../../components/CardItemCart';
@@ -42,10 +42,6 @@ const CartScreen = (props) => {
   const [isTimePickerVisible, setIsTimePickerVisible] = useState(false);
   console.log('moment =>', moment(new Date()).format('YYYY-MM-DD HH:mm:ss'));
 
-  // useEffect(() => {
-  //   observeUser(authDispatch);
-  // }, [authDispatch]);
-
   useEffect(() => {
     getServices(serviceDispatch);
   }, [serviceDispatch]);
@@ -72,7 +68,8 @@ const CartScreen = (props) => {
     }
   };
 
-  const sendOrder = (data) => {
+  const sendOrder = async (data) => {
+    activeMessage(data.id, authDispatch);
     try {
       firestore()
         .collection('orders')
@@ -100,9 +97,7 @@ const CartScreen = (props) => {
 
           let notification = {
             title: 'Nueva orden de servicio La Femme',
-            body: `-Cuándo: ${moment(data.date, 'HH:HH').format(
-              'LLL',
-            )}.\n-Dónde: ${data.address.locality}-${
+            body: `-Cuándo: ${data.date}.\n-Dónde: ${data.address.locality}-${
               data.address.neighborhood
             }.\n-Servicios: ${servicesPush.toString()}.`,
             content_available: true,
@@ -127,7 +122,7 @@ const CartScreen = (props) => {
               authDispatch,
             );
           } catch (error) {
-            console.lgo('error sendOrder =>', error);
+            console.log('error sendOrder =>', error);
           }
         })
         .catch(function (error) {

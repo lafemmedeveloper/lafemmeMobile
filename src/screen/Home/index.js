@@ -67,7 +67,7 @@ const Home = () => {
     getDeviceInfo(utilDispatch);
 
     await getServices(serviceDispatch);
-    activeMessage(authDispatch);
+    activeMessage('client', authDispatch);
     getOrders(utilDispatch);
     getGallery(utilDispatch);
   };
