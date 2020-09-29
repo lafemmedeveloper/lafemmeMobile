@@ -6,6 +6,7 @@ import {
   View,
   Alert,
   ActivityIndicator,
+  Keyboard,
 } from 'react-native';
 import MyTextInput from '../../../../../components/MyTextInput';
 import {StoreContext} from '../../../../../flux';
@@ -26,6 +27,7 @@ const UpdateName = (props) => {
     if (firstName === '' || lastName === '') {
       Alert.alert('Ups', 'Todos los campos son requeridos');
     } else {
+      Keyboard.dismiss();
       await updateProfileItem({firstName, lastName}, user.uid, authDispatch);
       setFirstName('');
       setLastName('');

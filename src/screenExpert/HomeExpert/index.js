@@ -1,9 +1,9 @@
 import React, {useContext, useState, useEffect, Fragment} from 'react';
-import {View, ScrollView, StyleSheet, Text} from 'react-native';
+import {View, ScrollView, StyleSheet, Text, StatusBar} from 'react-native';
 import {Colors, Metrics, ApplicationStyles, Fonts} from '../../themes';
 import ExpertDealOffer from '../../components/ExpertDealOffer';
 import {StoreContext} from '../../flux';
-import {updateProfile} from '../../flux/auth/actions';
+import {setUser, updateProfile} from '../../flux/auth/actions';
 import {
   getExpertOpenOrders,
   assingExpert,
@@ -20,11 +20,11 @@ import ModalApp from '../../components/ModalApp';
 import DetailModal from '../HistoryExpert/DetailModal';
 import NextOrder from '../NextOrder';
 import messaging from '@react-native-firebase/messaging';
+import auth from '@react-native-firebase/auth';
 
 const HomeExpert = () => {
   const {state, authDispatch, utilDispatch} = useContext(StoreContext);
-  const {auth, util} = state;
-  const {user} = auth;
+  const {util} = state;
   const {expertActiveOrders, deviceInfo, nextOrder} = util;
 
   const [modalDetail, setModalDetail] = useState(false);
@@ -32,16 +32,30 @@ const HomeExpert = () => {
 
   console.log('appType =>', appType);
 
+  function onAuthStateChanged(user) {
+    if (auth().currentUser && auth().currentUser.uid) {
+      console.log('onAuthStateChanged:user', user._user);
+
+      setUser(auth().currentUser.uid, authDispatch);
+    }
+  }
+
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber; // unsubscribe on unmount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useEffect(() => {
     getDeviceInfo(utilDispatch);
-    if (user) {
+    if (state.auth.user) {
       currentCoordinate();
       getExpertActiveOrders(utilDispatch);
       getExpertHistoryOrders(utilDispatch);
-      activeNameSlug(user.activity, utilDispatch);
+      activeNameSlug(state.auth.user.activity, utilDispatch);
 
-      if (user.isEnabled) {
-        getExpertOpenOrders(user.activity, utilDispatch);
+      if (state.auth.user.isEnabled) {
+        getExpertOpenOrders(state.auth.user.activity, utilDispatch);
       }
     }
 
@@ -90,8 +104,9 @@ const HomeExpert = () => {
   }, []);
   return (
     <>
+      <StatusBar backgroundColor={Colors.expert.primaryColor} />
       <View style={styles.container}>
-        <HeaderExpert user={user} dispatch={authDispatch} />
+        <HeaderExpert user={state.auth.user} dispatch={authDispatch} />
         {nextOrder &&
           nextOrder.length > 0 &&
           nextOrder.map((item, index) => {
@@ -122,7 +137,7 @@ const HomeExpert = () => {
                 <View key={index}>
                   <ExpertDealOffer
                     order={item}
-                    user={user}
+                    user={state.auth.user}
                     dispatch={utilDispatch}
                     assingExpert={assingExpert}
                   />
@@ -131,7 +146,7 @@ const HomeExpert = () => {
             })}
           </ScrollView>
         ) : (
-          <NoOrders user={user} />
+          <NoOrders user={state.auth.user} />
         )}
       </View>
       <ModalApp open={modalDetail} setOpen={setModalDetail}>

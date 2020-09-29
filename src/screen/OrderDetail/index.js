@@ -12,6 +12,9 @@ import {StoreContext} from '../../flux';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import ExpertCall from './Status/ExpertCall';
+import Loading from '../../components/Loading';
+import Qualification from './Status/Qualification';
+import ModalApp from '../../components/ModalApp';
 
 const customStyles = {
   stepIndicatorSize: 30,
@@ -48,11 +51,12 @@ const OrderDetail = (props) => {
   const {params} = route;
 
   const {state} = useContext(StoreContext);
-  console.log('state', state);
   const {util} = state;
-  console.log('util', util);
   const {ordersAll} = util;
   const [orderUser, setOrderUser] = useState(null);
+  const [modalQual, setModalQual] = useState(false);
+
+  console.log('util', util);
 
   const {goBack} = navigation;
 
@@ -186,6 +190,13 @@ const OrderDetail = (props) => {
                 {orderUser.date}
               </Text>
             </View>
+            {orderUser.status === 4 && (
+              <TouchableOpacity
+                style={{height: 50}}
+                onPress={() => setModalQual(true)}>
+                <Text>Calificar</Text>
+              </TouchableOpacity>
+            )}
             <View style={styles.cont}>
               {orderUser.status < 6 && (
                 <View style={styles.step}>
@@ -225,9 +236,12 @@ const OrderDetail = (props) => {
             </View>
           </>
         ) : (
-          <Text>loading....</Text>
+          <Loading type={'client'} />
         )}
       </View>
+      <ModalApp open={modalQual} setOpen={setModalQual}>
+        <Qualification id={orderUser.id} expert={orderUser.experts} />
+      </ModalApp>
     </>
   );
 };

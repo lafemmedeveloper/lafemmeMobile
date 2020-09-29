@@ -27,65 +27,41 @@ export const saveUser = async (data, dispatch) => {
   }
 };
 
-// export const observeUser = (dispatch) => {
-//   try {
-//     setLoading(true, dispatch);
-//     auth().onAuthStateChanged(function (user) {
-//       if (user) {
-//         setUser(user.uid, dispatch);
-//       }
-//     });
-//     setLoading(false, dispatch);
-//   } catch (error) {
-//     setLoading(false, dispatch);
-//     console.log('error observeUser =>', error);
-//   }
-// };
 export const setUser = async (data, dispatch) => {
+  console.log('active snapshot user');
   let usersRef = firestore().collection('users').doc(data);
   const currentUser = auth().currentUser;
-  await usersRef
-    .get()
-    .then((docSnapshot) => {
-      setLoading(false, dispatch);
-      if (docSnapshot.exists) {
-        const currentUserDb = docSnapshot.data();
-        setLoading(false, dispatch);
-        dispatch({type: SET_USER, payload: currentUserDb});
+
+  try {
+    usersRef.onSnapshot((result) => {
+      if (result.exists) {
+        const user = result.data();
+        dispatch({type: SET_USER, payload: user});
       } else {
-        usersRef
-          .set({
-            address: [],
-            email: '',
-            firstName: '',
-            lastName: '',
-            numberOfServices: 0,
-            phone: currentUser.phoneNumber,
-            uid: currentUser.uid,
-            role: 'client',
-            tyc: moment(new Date()).format('LLLL'),
-            guest: [],
-            rating: 5.0,
-            cart: null,
-            imageUrl: null,
-            token: null,
-          })
-          .then(function () {
-            console.log('Document successfully written!');
-            usersRef.onSnapshot((user) => {
-              setLoading(false, dispatch);
-              dispatch({type: SET_USER, payload: user.data()});
-            });
-          })
-          .catch(function (error) {
-            console.error('Error writing document: ', error);
-          });
+        const userData = {
+          address: [],
+          email: '',
+          firstName: '',
+          lastName: '',
+          numberOfServices: 0,
+          phone: currentUser.phoneNumber,
+          uid: currentUser.uid,
+          role: 'client',
+          tyc: moment(new Date()).format('LLLL'),
+          guest: [],
+          rating: 5.0,
+          cart: null,
+          imageUrl: null,
+          token: null,
+        };
+        usersRef.set(userData);
+
+        dispatch({type: SET_USER, payload: userData});
       }
-    })
-    .catch((error) => {
-      setLoading(false, dispatch);
-      console.log(error);
     });
+  } catch (error) {
+    console.lgo('error', error);
+  }
 };
 
 export const signOff = async (dispatch) => {
@@ -130,6 +106,7 @@ export const Login = async (email, password, dispatch) => {
       password,
     );
     console.log('currentUser =>', currentUser);
+
     setLoading(true, dispatch);
   } catch (error) {
     if (
@@ -185,11 +162,11 @@ export const updateProfileItem = async (newData, uid, dispatch) => {
   }
 };
 
-export const activeMessage = async (dispatch) => {
+export const activeMessage = async (topic, dispatch) => {
   try {
     setLoading(true, dispatch);
     messaging()
-      .subscribeToTopic('client')
+      .subscribeToTopic(topic)
       .then(() => console.log('Subscribed to topic!'));
     messaging().onMessage(async (remoteMessage) => {
       console.log('A new FCM message arrived!', JSON.stringify(remoteMessage));
@@ -197,7 +174,7 @@ export const activeMessage = async (dispatch) => {
     messaging().setBackgroundMessageHandler(async (remoteMessage) => {
       console.log('push notification backgraund', remoteMessage);
     });
-    await sendTokenUser();
+    // sendTokenUser();
     setLoading(false, dispatch);
   } catch (error) {
     setLoading(false, dispatch);
@@ -205,7 +182,7 @@ export const activeMessage = async (dispatch) => {
     console.log('error activeMessage =>', error);
   }
 };
-const sendTokenUser = () => {
+/* const sendTokenUser = () => {
   messaging()
     .getToken()
     .then((token) => {
@@ -226,3 +203,4 @@ const saveTokenToDatabase = async (token) => {
       tokens: firestore.FieldValue.arrayUnion(token),
     });
 };
+ */

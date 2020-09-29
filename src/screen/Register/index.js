@@ -16,13 +16,7 @@ import {saveUser} from '../../flux/auth/actions';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
 const Register = (props) => {
-  const {
-    dispatch,
-    activityLoading,
-    setActivityLoading,
-    setModalRegister,
-    setModalAuth,
-  } = props;
+  const {dispatch, activityLoading, setActivityLoading, setModalAuth} = props;
 
   const [name, setName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -58,7 +52,6 @@ const Register = (props) => {
         await setDb(data);
         setActivityLoading(false);
 
-        setModalRegister(false);
         setModalAuth(false);
       } catch (error) {
         console.log('error:register', error);
@@ -72,10 +65,13 @@ const Register = (props) => {
             'Ups',
             'Este correo ya esta en uso, por favor intentalo con otro',
           );
+        } else if (
+          error.toString().includes('  The email address is badly formatted.')
+        ) {
         } else {
           Alert.alert(
             'Ups...',
-            'Tuvimos un problema procesando tu solicitud, por favor intentalo de nuevo',
+            'Tuvimos problemas con tu correo, por favor verifica que este bien escrito e intentalo de nuevo',
           );
         }
       }

@@ -1,6 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {View, ScrollView, StyleSheet} from 'react-native';
-import auth from '@react-native-firebase/auth';
+import {View, ScrollView, StyleSheet, StatusBar} from 'react-native';
 import ExpandHome from '../../components/ExpandHome';
 import {Metrics, Images, Colors} from '../../themes';
 import {StoreContext} from '../../flux';
@@ -19,13 +18,28 @@ import AddAddress from '../AddAddress';
 import Header from '../../components/Header';
 import {getGallery, getOrders, getDeviceInfo} from '../../flux/util/actions';
 import Loading from '../../components/Loading';
-
+import auth from '@react-native-firebase/auth';
 const Home = () => {
   const TIME_SET = 500;
   const navigation = useNavigation();
   const {state, serviceDispatch, authDispatch, utilDispatch} = useContext(
     StoreContext,
   );
+
+  function onAuthStateChanged(user) {
+    if (auth().currentUser && auth().currentUser.uid) {
+      console.log('onAuthStateChanged:user', user._user);
+
+      setUser(auth().currentUser.uid, authDispatch);
+    }
+  }
+
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber; // unsubscribe on unmount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const {service, util} = state;
   const {user} = state.auth;
   const {services} = service;
@@ -44,29 +58,16 @@ const Home = () => {
   const [isModalCart, setIsModalCart] = useState(false);
   const [modalAddAddress, setModalAddAddress] = useState(false);
 
-  function onAuthStateChanged(user) {
-    if (auth().currentUser && auth().currentUser.uid) {
-      console.log('onAuthStateChanged:user', user);
-      setUser(auth().currentUser.uid, authDispatch);
-    }
-  }
-
-  useEffect(() => {
-    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-    return subscriber; // unsubscribe on unmount
-  }, []);
-
   useEffect(() => {
     activeFunctionsFlux();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const activeFunctionsFlux = async () => {
-    // observeUser(authDispatch);
     getDeviceInfo(utilDispatch);
 
     await getServices(serviceDispatch);
-    activeMessage(authDispatch);
+    activeMessage('client', authDispatch);
     getOrders(utilDispatch);
     getGallery(utilDispatch);
   };
@@ -97,9 +98,16 @@ const Home = () => {
     }
   };
 
-  console.log('orders =>', orders);
+  const openModalAddress = () => {
+    if (user) {
+      setModalAddress(true);
+    } else {
+      setModalAuth(true);
+    }
+  };
   return (
     <>
+      <StatusBar backgroundColor={Colors.client.primaryColor} />
       <Loading type={'client'} />
       <View style={styles.container}>
         <Header
@@ -109,7 +117,7 @@ const Home = () => {
           iconR={null}
           user={user}
           ordersActive={orders.length}
-          selectAddress={() => setModalAddress(true)}
+          selectAddress={() => openModalAddress()}
           onActionL={() => {}}
           onActionR={() => {}}
         />
