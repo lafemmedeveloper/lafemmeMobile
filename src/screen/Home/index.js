@@ -16,7 +16,7 @@ import CartScreen from '../CartScreen';
 import Address from '../Address';
 import AddAddress from '../AddAddress';
 import Header from '../../components/Header';
-import {getGallery, getOrders, getDeviceInfo} from '../../flux/util/actions';
+import {getGallery, getDeviceInfo} from '../../flux/util/actions';
 import Loading from '../../components/Loading';
 import auth from '@react-native-firebase/auth';
 const Home = () => {

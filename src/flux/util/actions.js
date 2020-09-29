@@ -299,9 +299,8 @@ export const updateNote = async (id, note, dispatch) => {
   }
 };
 export const activeNameSlug = async (activity, dispatch) => {
-  console.log('activity', activity);
-
   try {
+    setLoading(true, dispatch);
     let nameDate = [];
     const ref = await firestore().collection('services').get();
 
@@ -320,6 +319,8 @@ export const activeNameSlug = async (activity, dispatch) => {
 
     setLoading(false, dispatch);
   } catch (error) {
+    setLoading(false, dispatch);
+
     console.log('activeNameSlug error', error);
   }
 };

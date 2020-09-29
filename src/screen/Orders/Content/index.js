@@ -4,7 +4,6 @@ import {Fonts, Colors, Metrics} from '../../../themes';
 import {StoreContext} from '../../../flux';
 import {ScrollView} from 'react-native-gesture-handler';
 import ExpandOrderData from '../../ExpandOrderData';
-// import Header from './Header';
 import Header from '../../../components/Header';
 import {useNavigation} from '@react-navigation/native';
 import {getOrders} from '../../../flux/util/actions';

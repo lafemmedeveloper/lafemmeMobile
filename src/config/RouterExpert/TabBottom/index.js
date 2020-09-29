@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useContext} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {Colors, Images} from '../../../themes';
 import {Image} from 'react-native';
@@ -24,7 +24,9 @@ export default function TabBottom() {
         tabBarOptions={{
           activeTintColor: Colors.expert.primaryColor,
         }}>
-        {expertActiveOrders.length > 0 ? (
+        {state.auth.user &&
+        state.auth.user.isEnabled &&
+        expertActiveOrders.length > 0 ? (
           <Tab.Screen
             name="Home"
             component={HomeExpert}

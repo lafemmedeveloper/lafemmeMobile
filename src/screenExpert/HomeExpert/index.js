@@ -54,9 +54,7 @@ const HomeExpert = () => {
       getExpertHistoryOrders(utilDispatch);
       activeNameSlug(state.auth.user.activity, utilDispatch);
 
-      if (state.auth.user.isEnabled) {
-        getExpertOpenOrders(state.auth.user.activity, utilDispatch);
-      }
+      getExpertOpenOrders(state.auth.user.activity, utilDispatch);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -120,8 +118,10 @@ const HomeExpert = () => {
               </Fragment>
             );
           })}
-
-        {expertActiveOrders && expertActiveOrders.length > 0 ? (
+        {state.auth.user &&
+        state.auth.user.isEnabled &&
+        expertActiveOrders &&
+        expertActiveOrders.length > 0 ? (
           <ScrollView
             style={[ApplicationStyles.scrollHomeExpert, {flex: 1}]}
             bounces={true}>
