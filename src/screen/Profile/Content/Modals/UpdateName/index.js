@@ -16,7 +16,7 @@ import {Colors, Fonts, Metrics} from '../../../../../themes';
 const UpdateName = (props) => {
   const {state, authDispatch} = useContext(StoreContext);
 
-  const {user} = props;
+  const {user, setModalName} = props;
   const {auth} = state;
   const {loading} = auth;
 
@@ -29,6 +29,7 @@ const UpdateName = (props) => {
     } else {
       Keyboard.dismiss();
       await updateProfileItem({firstName, lastName}, user.uid, authDispatch);
+      setModalName(false);
       setFirstName('');
       setLastName('');
       Alert.alert('Que bien', 'Se actualizo tu nombre satisfactoriamente');

@@ -461,7 +461,7 @@ const Content = () => {
         let name = `activeReview_${Platform.OS}`;
         let properties = {uid: user.uid};
         console.log('rate', name, properties);
-        Alert.alert('Exelente', 'gracias por calificarnos');
+        Alert.alert('Excelente', 'Gracias por calificarnos');
       } else {
         console.log('rate:NoSuccess', success);
       }

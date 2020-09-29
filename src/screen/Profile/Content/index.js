@@ -139,7 +139,7 @@ const Content = (props) => {
         let name = `activeReview_${Platform.OS}`;
         let properties = {uid: user.uid};
         console.log('rate', name, properties);
-        Alert.alert('Exelente', 'gracias por calificarnos');
+        Alert.alert('Excelente', 'Gracias por calificarnos');
       } else {
         console.log('rate:NoSuccess', success);
       }
@@ -699,7 +699,7 @@ const Content = (props) => {
         title={'Actualizar nombre'}
         open={modalName}
         setOpen={setModalName}>
-        <UpdateName user={user} />
+        <UpdateName user={user} setModalName={setModalName} />
       </ModalComponent>
       <ModalComponent
         nameIcon={'envelope'}
@@ -707,7 +707,11 @@ const Content = (props) => {
         title={'Actualizar email de tu usuario'}
         open={modalEmail}
         setOpen={setModalEmail}>
-        <UpdateEmail user={user} dispatch={dispatch} />
+        <UpdateEmail
+          user={user}
+          dispatch={dispatch}
+          setModalEmail={setModalEmail}
+        />
       </ModalComponent>
 
       <ModalApp open={modalAddAddress} setOpen={setModalAddAddress}>

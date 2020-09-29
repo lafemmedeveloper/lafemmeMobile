@@ -240,7 +240,9 @@ const OrderDetail = (props) => {
         )}
       </View>
       <ModalApp open={modalQual} setOpen={setModalQual}>
-        <Qualification id={orderUser.id} expert={orderUser.experts} />
+        {orderUser && (
+          <Qualification id={orderUser.id} expert={orderUser.experts} />
+        )}
       </ModalApp>
     </>
   );
