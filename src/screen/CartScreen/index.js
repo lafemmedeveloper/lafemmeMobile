@@ -147,7 +147,7 @@ const CartScreen = (props) => {
     const handleDate = moment(date).format('YYYY-MM-DD');
     const today = new Date();
 
-    if (Date.parse(handleDate) > today) {
+    if (Date.parse(handleDate) < today) {
       setDateCalendar(handleDate);
       setDatePickerVisibility(false);
       setIsTimePickerVisible(true);

@@ -1,6 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {View, ScrollView, StyleSheet, Alert} from 'react-native';
-import auth from '@react-native-firebase/auth';
+import {View, ScrollView, StyleSheet, StatusBar} from 'react-native';
 import ExpandHome from '../../components/ExpandHome';
 import {Metrics, Images, Colors} from '../../themes';
 import {StoreContext} from '../../flux';
@@ -8,7 +7,7 @@ import {getServices} from '../../flux/services/actions';
 import {useNavigation} from '@react-navigation/native';
 import ModalApp from '../../components/ModalApp';
 import Login from '../Login';
-import {activeMessage, setUser} from '../../flux/auth/actions';
+import {activeMessage} from '../../flux/auth/actions';
 import BannerScroll from '../../components/BannerScroll';
 import Gallery from '../Gallery';
 import CartFooter from '../../components/CartFooter';
@@ -43,22 +42,6 @@ const Home = () => {
   const [modalAddress, setModalAddress] = useState(false);
   const [isModalCart, setIsModalCart] = useState(false);
   const [modalAddAddress, setModalAddAddress] = useState(false);
-
-  function onAuthStateChanged(user) {
-    if (auth().currentUser && auth().currentUser.uid) {
-      console.log('onAuthStateChanged:user', user._user);
-
-      if (auth().currentUser.email) {
-        setUser(auth().currentUser.uid, authDispatch);
-      }
-    }
-  }
-
-  useEffect(() => {
-    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-    return subscriber; // unsubscribe on unmount
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   useEffect(() => {
     activeFunctionsFlux();
@@ -109,6 +92,7 @@ const Home = () => {
   };
   return (
     <>
+      <StatusBar backgroundColor={Colors.client.primaryColor} />
       <Loading type={'client'} />
       <View style={styles.container}>
         <Header

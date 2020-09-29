@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import {
   Text,
   View,
@@ -13,12 +13,25 @@ import {Images, Colors, Fonts, Metrics} from '../../themes';
 import MyTextInput from '../../components/MyTextInput';
 import Loading from '../../components/Loading';
 import {StoreContext} from '../../flux';
-import {Login} from '../../flux/auth/actions';
+import {Login, setUser} from '../../flux/auth/actions';
+import auth from '@react-native-firebase/auth';
 
 const LoginExpert = () => {
   const {state, authDispatch} = useContext(StoreContext);
-  const {auth} = state;
-  const {loading} = auth;
+
+  function onAuthStateChanged(user) {
+    if (auth().currentUser && auth().currentUser.uid) {
+      console.log('onAuthStateChanged:user', user._user);
+
+      setUser(auth().currentUser.uid, authDispatch);
+    }
+  }
+
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber; // unsubscribe on unmount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const [email, setEmail] = useState('jesusebzcp19@gmail.com');
   const [password, setPassword] = useState('123456');
@@ -34,7 +47,7 @@ const LoginExpert = () => {
 
   return (
     <>
-      <Loading type={'expert'} loading={loading} />
+      <Loading type={'expert'} loading={state.auth.loading} />
       <View style={styles.container}>
         <View style={styles.contentContainer}>
           <Image
@@ -48,7 +61,7 @@ const LoginExpert = () => {
               {marginVertical: 20},
             ]}>
             {'Iniciar Sesión'}
-            {loading && <ActivityIndicator />}
+            {state.auth.loading && <ActivityIndicator />}
           </Text>
 
           <MyTextInput
