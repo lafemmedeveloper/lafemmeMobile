@@ -113,93 +113,111 @@ const Login = (props) => {
   };
 
   return (
-    <View style={{marginTop: 20}}>
-      <Loading type={'client'} />
-      <Icon
-        name="email-send-outline"
-        size={50}
-        color={Colors.client.primaryColor}
-        style={styles.icon}
-      />
-      <Text style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
-        {'Verifica tu numero'}
-      </Text>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignSelf: 'center',
-        }}>
-        <CountryPicker
-          closeable
-          withFilter
-          withFlagButton
-          withCountryNameButton
-          withFlag
-          withCallingCode
-          theme={{
-            fontSize: Fonts.size.medium,
-            filterPlaceholderTextColor: '#aaa',
-          }}
-          containerButtonStyle={{
-            padding: 20,
-            marginTop: 22,
-            marginRight: 10,
-            borderRadius: Metrics.borderRadius,
-            backgroundColor: Colors.textInputBg,
-            flexDirection: 'row',
-          }}
-          filterProps={{
-            placeholder: 'Busca tu país',
-          }}
-          placeholder={`+ ${stateInitial.country.callingCode} `}
-          style={{
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-          onSelect={(country) => _changeCountry(country)}
-          cca2={stateInitial.country.cca2}
-          translation={'spa'}
+    <>
+      {!modalRegister ? (
+        <View style={{marginTop: 20}}>
+          <Loading type={'client'} />
+          <Icon
+            name="email-send-outline"
+            size={50}
+            color={Colors.client.primaryColor}
+            style={styles.icon}
+          />
+          <Text style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
+            {'Verifica tu numero'}
+          </Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignSelf: 'center',
+            }}>
+            <CountryPicker
+              closeable
+              withFilter
+              withFlagButton
+              withCountryNameButton
+              withFlag
+              withCallingCode
+              theme={{
+                fontSize: Fonts.size.medium,
+                filterPlaceholderTextColor: '#aaa',
+              }}
+              containerButtonStyle={{
+                padding: 20,
+                marginTop: 22,
+                marginRight: 10,
+                borderRadius: Metrics.borderRadius,
+                backgroundColor: Colors.textInputBg,
+                flexDirection: 'row',
+              }}
+              filterProps={{
+                placeholder: 'Busca tu país',
+              }}
+              placeholder={`+ ${stateInitial.country.callingCode} `}
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+              onSelect={(country) => _changeCountry(country)}
+              cca2={stateInitial.country.cca2}
+              translation={'spa'}
+            />
+            <TextInput
+              keyboardType="numeric"
+              value={userPhone}
+              onChangeText={(text) => setUserPhone(text)}
+              placeholder={'300 55555'}
+              style={{
+                width: '70%',
+                padding: 20,
+                marginVertical: 20,
+                borderRadius: Metrics.borderRadius,
+                backgroundColor: Colors.textInputBg,
+                alignSelf: 'center',
+              }}
+            />
+          </View>
+
+          <TouchableOpacity
+            onPress={() => sendPhone()}
+            style={[
+              {
+                flex: 0,
+                borderRadius: Metrics.textInBr,
+                alignSelf: 'center',
+                flexDirection: 'row',
+                justifyContent: 'center',
+                width: '90%',
+
+                paddingHorizontal: 10,
+                paddingVertical: 10,
+                backgroundColor: Colors.client.primaryColor,
+                marginBottom: Metrics.addFooter + 10,
+              },
+            ]}>
+            <Text
+              style={Fonts.style.bold(
+                Colors.light,
+                Fonts.size.medium,
+                'center',
+              )}>
+              Verificar
+            </Text>
+            {activityLoading && (
+              <ActivityIndicator size="small" color="white" />
+            )}
+          </TouchableOpacity>
+        </View>
+      ) : (
+        <Register
+          state={state}
+          dispatch={authDispatch}
+          setModalCode={setModalCode}
+          activityLoading={activityLoading}
+          setActivityLoading={setActivityLoading}
+          setModalAuth={setModalAuth}
         />
-        <TextInput
-          keyboardType="numeric"
-          value={userPhone}
-          onChangeText={(text) => setUserPhone(text)}
-          placeholder={'300 55555'}
-          style={{
-            width: '70%',
-            padding: 20,
-            marginVertical: 20,
-            borderRadius: Metrics.borderRadius,
-            backgroundColor: Colors.textInputBg,
-            alignSelf: 'center',
-          }}
-        />
-      </View>
-
-      <TouchableOpacity
-        onPress={() => sendPhone()}
-        style={[
-          {
-            flex: 0,
-            borderRadius: Metrics.textInBr,
-            alignSelf: 'center',
-            flexDirection: 'row',
-            justifyContent: 'center',
-            width: '90%',
-
-            paddingHorizontal: 10,
-            paddingVertical: 10,
-            backgroundColor: Colors.client.primaryColor,
-            marginBottom: Metrics.addFooter + 10,
-          },
-        ]}>
-        <Text
-          style={Fonts.style.bold(Colors.light, Fonts.size.medium, 'center')}>
-          Verificar
-        </Text>
-        {activityLoading && <ActivityIndicator size="small" color="white" />}
-      </TouchableOpacity>
-
+      )}
       <ModalApp open={modalCode}>
         <InputCode
           phone={phone}
@@ -210,18 +228,7 @@ const Login = (props) => {
           activityLoading={activityLoading}
         />
       </ModalApp>
-      <ModalApp open={modalRegister} setOpen={setModalRegister}>
-        <Register
-          state={state}
-          dispatch={authDispatch}
-          setModalCode={setModalCode}
-          activityLoading={activityLoading}
-          setActivityLoading={setActivityLoading}
-          setModalRegister={setModalRegister}
-          setModalAuth={setModalAuth}
-        />
-      </ModalApp>
-    </View>
+    </>
   );
 };
 const styles = StyleSheet.create({

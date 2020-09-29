@@ -11,7 +11,7 @@ const ModalComponent = (data) => {
     <Modal
       isVisible={open}
       onBackdropPress={() => setOpen(false)}
-      backdropColor={Colors.client.primaryColor}
+      backdropColor={Colors.pinkMask(0.75)}
       style={styles.Modal}>
       <View style={styles.musk} />
       <View style={styles.container}>

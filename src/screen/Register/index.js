@@ -16,13 +16,7 @@ import {saveUser} from '../../flux/auth/actions';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
 const Register = (props) => {
-  const {
-    dispatch,
-    activityLoading,
-    setActivityLoading,
-    setModalRegister,
-    setModalAuth,
-  } = props;
+  const {dispatch, activityLoading, setActivityLoading, setModalAuth} = props;
 
   const [name, setName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -58,7 +52,6 @@ const Register = (props) => {
         await setDb(data);
         setActivityLoading(false);
 
-        setModalRegister(false);
         setModalAuth(false);
       } catch (error) {
         console.log('error:register', error);

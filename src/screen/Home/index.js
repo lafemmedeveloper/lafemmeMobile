@@ -7,7 +7,7 @@ import {getServices} from '../../flux/services/actions';
 import {useNavigation} from '@react-navigation/native';
 import ModalApp from '../../components/ModalApp';
 import Login from '../Login';
-import {activeMessage} from '../../flux/auth/actions';
+import {activeMessage, setUser} from '../../flux/auth/actions';
 import BannerScroll from '../../components/BannerScroll';
 import Gallery from '../Gallery';
 import CartFooter from '../../components/CartFooter';
@@ -18,13 +18,28 @@ import AddAddress from '../AddAddress';
 import Header from '../../components/Header';
 import {getGallery, getOrders, getDeviceInfo} from '../../flux/util/actions';
 import Loading from '../../components/Loading';
-
+import auth from '@react-native-firebase/auth';
 const Home = () => {
   const TIME_SET = 500;
   const navigation = useNavigation();
   const {state, serviceDispatch, authDispatch, utilDispatch} = useContext(
     StoreContext,
   );
+
+  function onAuthStateChanged(user) {
+    if (auth().currentUser && auth().currentUser.uid) {
+      console.log('onAuthStateChanged:user', user._user);
+
+      setUser(auth().currentUser.uid, authDispatch);
+    }
+  }
+
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber; // unsubscribe on unmount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const {service, util} = state;
   const {user} = state.auth;
   const {services} = service;

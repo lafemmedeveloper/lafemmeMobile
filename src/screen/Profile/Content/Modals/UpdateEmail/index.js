@@ -6,6 +6,7 @@ import {
   View,
   Alert,
   ActivityIndicator,
+  Keyboard,
 } from 'react-native';
 import MyTextInput from '../../../../../components/MyTextInput';
 import {StoreContext} from '../../../../../flux';
@@ -24,6 +25,7 @@ const UpdateEmail = (props) => {
     if (email === '') {
       Alert.alert('Ups', 'Todos los campos son requeridos');
     } else {
+      Keyboard.dismiss();
       await updateProfileItem({email}, user.uid, dispatch);
       setEmail('');
       Alert.alert('Que bien', 'Se actualizo tu correo satisfactoriamente');
