@@ -37,7 +37,7 @@ export const setUser = async (data, dispatch) => {
       if (result.exists) {
         const user = result.data();
         dispatch({type: SET_USER, payload: user});
-      } else {
+      } /*  else {
         const userData = {
           address: [],
           email: '',
@@ -54,10 +54,10 @@ export const setUser = async (data, dispatch) => {
           imageUrl: null,
           token: null,
         };
-        usersRef.set(userData);
+        //usersRef.set(userData);
 
-        dispatch({type: SET_USER, payload: userData});
-      }
+        // dispatch({type: SET_USER, payload: userData});
+      } */
     });
   } catch (error) {
     console.lgo('error', error);
