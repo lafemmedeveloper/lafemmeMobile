@@ -1,5 +1,4 @@
 import {SET_USER, HANDLE_ERROR, LOADING, DEL_USER} from './types';
-import moment from 'moment';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import {Alert} from 'react-native';
@@ -30,7 +29,6 @@ export const saveUser = async (data, dispatch) => {
 export const setUser = async (data, dispatch) => {
   console.log('active snapshot user');
   let usersRef = firestore().collection('users').doc(data);
-  const currentUser = auth().currentUser;
 
   try {
     usersRef.onSnapshot((result) => {
