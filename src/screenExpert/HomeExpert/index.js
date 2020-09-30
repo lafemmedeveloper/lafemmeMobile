@@ -3,7 +3,7 @@ import {View, ScrollView, StyleSheet, Text, StatusBar} from 'react-native';
 import {Colors, Metrics, ApplicationStyles, Fonts} from '../../themes';
 import ExpertDealOffer from '../../components/ExpertDealOffer';
 import {StoreContext} from '../../flux';
-import {setUser, updateProfile} from '../../flux/auth/actions';
+import {activeMessage, setUser, updateProfile} from '../../flux/auth/actions';
 import {
   getExpertOpenOrders,
   assingExpert,
@@ -50,10 +50,10 @@ const HomeExpert = () => {
     getDeviceInfo(utilDispatch);
     if (state.auth.user) {
       currentCoordinate();
+      activeMessage('expert', utilDispatch);
       getExpertActiveOrders(utilDispatch);
       getExpertHistoryOrders(utilDispatch);
       activeNameSlug(state.auth.user.activity, utilDispatch);
-
       getExpertOpenOrders(state.auth.user.activity, utilDispatch);
     }
 
@@ -84,22 +84,7 @@ const HomeExpert = () => {
     setDetailOrder(order);
     setModalDetail(true);
   };
-  useEffect(() => {
-    return () => {
-      messaging()
-        .subscribeToTopic('expert')
-        .then(() => console.log('Subscribed to topic!'));
-      messaging().onMessage(async (remoteMessage) => {
-        console.log(
-          'A new FCM message arrived!',
-          JSON.stringify(remoteMessage),
-        );
-      });
-      messaging().setBackgroundMessageHandler(async (remoteMessage) => {
-        console.log('push notification backgraund', remoteMessage);
-      });
-    };
-  }, []);
+
   return (
     <>
       <StatusBar backgroundColor={Colors.expert.primaryColor} />

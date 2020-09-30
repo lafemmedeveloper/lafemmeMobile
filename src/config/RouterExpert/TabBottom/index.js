@@ -5,21 +5,21 @@ import {Image} from 'react-native';
 import HomeExpert from '../../../screenExpert/HomeExpert';
 import HistoryExpert from '../../../screenExpert/HistoryExpert';
 import ProfileExpert from '../../../screenExpert/ProfileExpert';
-import Loading from '../../../components/Loading';
 import {StoreContext} from '../../../flux';
 import Icon from 'react-native-vector-icons/Ionicons';
+import Loading from '../../../components/Loading';
 
 const Tab = createBottomTabNavigator();
 
 export default function TabBottom() {
   const {state} = useContext(StoreContext);
-  const {auth, util} = state;
-  const {loading} = auth;
+  const {util} = state;
   const {expertActiveOrders} = util;
 
   return (
     <>
-      <Loading type={'expert'} loading={loading} />
+      <Loading type="expert" />
+
       <Tab.Navigator
         tabBarOptions={{
           activeTintColor: Colors.expert.primaryColor,

@@ -100,6 +100,8 @@ export const getOrders = (dispatch) => {
     });
     setLoading(false, dispatch);
   } catch (error) {
+    setLoading(false, dispatch);
+
     console.log('error getOrders ==>', error);
   }
 };
@@ -198,8 +200,6 @@ export const getExpertOpenOrders = (activity, dispatch) => {
 
 export const assingExpert = async (user, order, dispatch) => {
   try {
-    console.log(user, order, dispatch);
-
     const experts = user;
 
     const ref = firestore().collection('orders').doc(order.id);

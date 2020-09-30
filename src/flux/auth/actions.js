@@ -58,6 +58,8 @@ export const setUser = async (data, dispatch) => {
       } */
     });
   } catch (error) {
+    setLoading(false, dispatch);
+
     console.lgo('error', error);
   }
 };
@@ -77,21 +79,23 @@ export const signOff = async (dispatch) => {
 
 export const updateProfile = async (data, typeData, dispatch) => {
   const currentUser = auth().currentUser;
-  try {
-    setLoading(true, dispatch);
-    const userRef = firestore().collection('users').doc(currentUser.uid);
-    await userRef.set(
-      {
-        [typeData]: data,
-      },
-      {merge: true},
-    );
+  if (currentUser && currentUser.uid) {
+    try {
+      setLoading(true, dispatch);
+      const userRef = firestore().collection('users').doc(currentUser.uid);
+      await userRef.set(
+        {
+          [typeData]: data,
+        },
+        {merge: true},
+      );
 
-    // await setUser(currentUser.uid, dispatch);
-    setLoading(false, dispatch);
-  } catch (error) {
-    setLoading(false, dispatch);
-    console.log('error', error);
+      // await setUser(currentUser.uid, dispatch);
+      setLoading(false, dispatch);
+    } catch (error) {
+      console.log('error', error);
+      setLoading(false, dispatch);
+    }
   }
 };
 export const Login = async (email, password, dispatch) => {
@@ -105,7 +109,7 @@ export const Login = async (email, password, dispatch) => {
     );
     console.log('currentUser =>', currentUser);
 
-    setLoading(true, dispatch);
+    setLoading(false, dispatch);
   } catch (error) {
     if (
       error
@@ -172,7 +176,7 @@ export const activeMessage = async (topic, dispatch) => {
     messaging().setBackgroundMessageHandler(async (remoteMessage) => {
       console.log('push notification backgraund', remoteMessage);
     });
-    // sendTokenUser();
+    sendTokenUser();
     setLoading(false, dispatch);
   } catch (error) {
     setLoading(false, dispatch);
@@ -180,7 +184,7 @@ export const activeMessage = async (topic, dispatch) => {
     console.log('error activeMessage =>', error);
   }
 };
-/* const sendTokenUser = () => {
+const sendTokenUser = () => {
   messaging()
     .getToken()
     .then((token) => {
@@ -194,11 +198,7 @@ export const activeMessage = async (topic, dispatch) => {
 
 const saveTokenToDatabase = async (token) => {
   const userId = auth().currentUser.uid;
-  await firestore()
-    .collection('users')
-    .doc(userId)
-    .update({
-      tokens: firestore.FieldValue.arrayUnion(token),
-    });
+  await firestore().collection('users').doc(userId).update({
+    fcm: token,
+  });
 };
- */
