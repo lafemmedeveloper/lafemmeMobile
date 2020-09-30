@@ -161,8 +161,6 @@ const Cart = (props) => {
   };
 
   const selectAddonGuest = (addonSelected, guest) => {
-    console.log('addonSelected =>', addonSelected);
-    console.log('guest =>', guest);
     let item = {
       addonId: addonSelected.id,
       addOnPrice: addonSelected.price,
@@ -222,6 +220,8 @@ const Cart = (props) => {
     1;
 
   const addOnsFilter = addOns.filter((a) => a.isEnabled === true);
+
+  console.log('addonsList =====================>', addOnsFilter);
 
   return (
     <View
@@ -365,7 +365,7 @@ const Cart = (props) => {
               </View>
             </>
 
-            {addonsList.length > 0 && (
+            {addOnsFilter.length > 0 && (
               <>
                 <View opacity={0.25} style={ApplicationStyles.separatorLine} />
 

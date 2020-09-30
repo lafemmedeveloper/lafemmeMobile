@@ -275,7 +275,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   mapView: {
-    height: Metrics.screenHeight * 0.5,
+    height: '50%',
     width: '100%',
     zIndex: 1,
   },
