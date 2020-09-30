@@ -16,7 +16,7 @@ import CartScreen from '../CartScreen';
 import Address from '../Address';
 import AddAddress from '../AddAddress';
 import Header from '../../components/Header';
-import {getGallery, getDeviceInfo} from '../../flux/util/actions';
+import {getGallery, getOrders, getDeviceInfo} from '../../flux/util/actions';
 import Loading from '../../components/Loading';
 import auth from '@react-native-firebase/auth';
 const Home = () => {
@@ -28,7 +28,6 @@ const Home = () => {
 
   function onAuthStateChanged(user) {
     if (auth().currentUser && auth().currentUser.uid) {
-      console.log('onAuthStateChanged:user', user._user);
       setUser(auth().currentUser.uid, authDispatch);
     }
   }
@@ -67,6 +66,7 @@ const Home = () => {
 
     await getServices(serviceDispatch);
     activeMessage('client', authDispatch);
+    getOrders(utilDispatch);
     getGallery(utilDispatch);
   };
 

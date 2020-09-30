@@ -30,6 +30,7 @@ import ImageResizer from 'react-native-image-resizer';
 import utilities from '../../../utilities';
 import {resetReducer} from '../../../flux/util/actions';
 import {StoreContext} from '../../../flux';
+import AddAddress from '../../AddAddress';
 
 const modelState = {
   images: [],
@@ -54,6 +55,7 @@ const Content = (props) => {
   const [modalEmail, setModalEmail] = useState(false);
   const [tyc, setTyc] = useState(false);
 
+  const [modalAddress, setModalAddress] = useState(false);
   const [modalAddAddress, setModalAddAddress] = useState(false);
 
   const [value, setValue] = useState(modelState);
@@ -572,7 +574,7 @@ const Content = (props) => {
               title={'Mis direcciones'}
               icon={'map-marker'}
               action={() => {
-                setModalAddAddress(true);
+                setModalAddress(true);
               }}
               decorationLine={true}
             />
@@ -719,8 +721,17 @@ const Content = (props) => {
         />
       </ModalComponent>
 
-      <ModalApp open={modalAddAddress} setOpen={setModalAddAddress}>
-        <Address setModalAddAddress={setModalAddAddress} />
+      <ModalApp
+        open={modalAddress}
+        setOpen={modalAddAddress ? setModalAddAddress : setModalAddress}>
+        {!modalAddAddress ? (
+          <Address setModalAddAddress={setModalAddAddress} />
+        ) : (
+          <AddAddress
+            addAddress={() => setModalAddAddress(true)}
+            closeAddAddress={() => setModalAddress(false)}
+          />
+        )}
       </ModalApp>
       <ModalApp open={tyc} setOpen={setTyc}>
         <View style={{height: '90%'}}>
