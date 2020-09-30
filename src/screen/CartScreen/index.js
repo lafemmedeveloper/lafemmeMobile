@@ -140,16 +140,12 @@ const CartScreen = (props) => {
 
   const handleConfirmDate = (date) => {
     const handleDate = moment(date).format('YYYY-MM-DD');
-    const today = new Date();
 
-    if (Date.parse(handleDate) > today) {
-      setDateCalendar(handleDate);
-      setDatePickerVisibility(false);
-      setIsTimePickerVisible(true);
-    } else {
-      setDatePickerVisibility(false);
-      Alert.alert('Ups', 'la fecha tiene que ser mayor ala fecha actual');
-    }
+    setDateCalendar(handleDate);
+    setDatePickerVisibility(false);
+    setIsTimePickerVisible(true);
+
+    Alert.alert('Ups', 'la fecha tiene que ser mayor ala fecha actual');
   };
 
   const hideDatePicker = () => {
@@ -158,7 +154,6 @@ const CartScreen = (props) => {
   };
   const handleConfirmTime = async (hour) => {
     const dateTime = moment(hour).format('HH:mm:ss');
-    console.log('date hour handleTime =>', dateTime);
     const date = `${dateCalendar} ${dateTime}`;
 
     await updateProfile({...user.cart, date}, 'cart', authDispatch);
@@ -506,6 +501,8 @@ const CartScreen = (props) => {
         </TouchableOpacity>
       </View>
       <ModalApp open={modalNote} setOpen={setModalNote}>
+        <Loading type={'client'} />
+
         <Icon
           name="comment-dots"
           size={50}

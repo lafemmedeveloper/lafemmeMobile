@@ -1,5 +1,11 @@
 import React from 'react';
-import {Text, View, StyleSheet, TouchableOpacity} from 'react-native';
+import {
+  Text,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native';
 import {Metrics, Colors, Fonts} from '../../../themes';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import Icon from 'react-native-vector-icons/FontAwesome5';
@@ -26,7 +32,12 @@ const EnableCoverage = (props) => {
   return (
     <>
       <Loading type={'client'} />
-      <View style={{justifyContent: 'center', alignItems: 'center'}}>
+      <ScrollView
+        contentContainerStyle={{
+          justifyContent: 'center',
+          alignItems: 'center',
+          maxHeight: Metrics.screenHeight * 2,
+        }}>
         <View
           style={{
             alignSelf: 'center',
@@ -224,7 +235,7 @@ const EnableCoverage = (props) => {
             {'Guardar'}
           </Text>
         </TouchableOpacity>
-      </View>
+      </ScrollView>
     </>
   );
 };

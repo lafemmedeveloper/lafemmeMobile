@@ -73,31 +73,32 @@ const HandleResume = (props) => {
           borderTopLeftRadius: 10,
         }}>
         <View opacity={0.0} style={ApplicationStyles.separatorLine} />
-        <Image
-          source={Images.billResume}
-          style={{
-            width: 40,
-            height: 40,
-            resizeMode: 'contain',
-            alignSelf: 'center',
-            marginBottom: 20,
-          }}
-        />
-        <Text
-          style={Fonts.style.semiBold(
-            Colors.dark,
-            Fonts.size.medium,
-            'center',
-            1,
-          )}>
-          Resumen del servicio
-        </Text>
-
-        <Text style={Fonts.style.bold(Colors.dark, Fonts.size.h4, 'center', 1)}>
-          {product.name}
-        </Text>
-        <View opacity={0.0} style={ApplicationStyles.separatorLine} />
         <ScrollView>
+          <Image
+            source={Images.billResume}
+            style={{
+              width: 40,
+              height: 40,
+              resizeMode: 'contain',
+              alignSelf: 'center',
+              marginBottom: 20,
+            }}
+          />
+          <Text
+            style={Fonts.style.semiBold(
+              Colors.dark,
+              Fonts.size.medium,
+              'center',
+              1,
+            )}>
+            Resumen del servicio
+          </Text>
+
+          <Text
+            style={Fonts.style.bold(Colors.dark, Fonts.size.h4, 'center', 1)}>
+            {product.name}
+          </Text>
+          <View opacity={0.0} style={ApplicationStyles.separatorLine} />
           <Text
             style={Fonts.style.semiBold(
               Colors.client.primaryColor,

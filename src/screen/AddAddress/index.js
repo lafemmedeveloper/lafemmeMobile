@@ -312,7 +312,7 @@ const AddAddress = (props) => {
           debounce={200} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
         />
       </View>
-      <View style={{height: Metrics.header * 16.5}}>
+      <View style={{maxHeight: Metrics.screenHeight * 0.8}}>
         <Text
           style={[
             Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center'),
