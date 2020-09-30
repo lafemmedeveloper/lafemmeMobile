@@ -113,16 +113,11 @@ const AddAddress = (props) => {
 
     const addressSerch = details.formatted_address;
 
-    setGoogleAddress(addressSerch);
-
     setName(main_text);
     await Geocode.fromAddress(addressSerch).then(
       (response) => {
         const dataResponse = response.results[0];
-        //  setGoogleAddress(dataResponse);
-        console.log('response =>', response);
         const {lat, lng} = dataResponse.geometry.location;
-        console.log('location =>', lat, lng);
         activeApi({
           latitude: lat,
           longitude: lng,
@@ -131,6 +126,8 @@ const AddAddress = (props) => {
           latitude: lat,
           longitude: lng,
         });
+
+        setGoogleAddress(addressSerch);
       },
       (error) => {
         console.error('error updateLocation =>', error);
@@ -201,28 +198,22 @@ const AddAddress = (props) => {
       }
     }
 
-    console.log('data filterResultsByTypes ===>', data);
     setGoogleDetail(data);
   };
-  console.log('googleAddress ==> exit', googleAddress);
-  console.log('googleDetail ==> exit', googleDetail);
-  console.log('currentLocationActive =>', currentLocationActive);
   return (
     <>
       <View
         style={{
           position: 'absolute',
           width: '90%',
-          bottom: 100,
+          bottom: Metrics.screenHeight / 9,
           zIndex: 5,
-          // backgroundColor: 'green',
           justifyContent: 'space-between',
           alignSelf: 'center',
           flexDirection: 'row-reverse',
         }}>
         <View
           style={{
-            //backgroundColor: 'red',
             zIndex: 6,
             marginRight: 10,
           }}>
@@ -238,7 +229,7 @@ const AddAddress = (props) => {
           />
         </View>
         <GooglePlacesAutocomplete
-          placeholder={'Buscar direccion (ej: carrera 33 #10-20)'}
+          placeholder={'(Ej: carrera 33 #10-20)'}
           autoFocus={false}
           returnKeyType={'search'} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
           keyboardAppearance={'light'} // Can be left out for default keyboardAppearance https://facebook.github.io/react-native/docs/textinput.html#keyboardappearance
@@ -459,13 +450,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
 
-  containerAddress: {
-    width: Metrics.screenWidth,
-    flex: 0,
-    marginTop: 60,
-    zIndex: 1000,
-    position: 'absolute',
-  },
   headerContainer: {
     flex: 0,
     height: 70,
@@ -480,8 +464,6 @@ const styles = StyleSheet.create({
   footerContainer: {
     flex: 0,
     flexDirection: 'row',
-    width: Metrics.screenWidth,
-
     justifyContent: 'flex-end',
     alignItems: 'center',
   },
