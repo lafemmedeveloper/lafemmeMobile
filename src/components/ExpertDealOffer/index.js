@@ -6,8 +6,9 @@ import {formatDate} from '../../helpers/MomentHelper';
 import {Colors, Fonts, Images, Metrics} from '../../themes';
 import Utilities from '../../utilities';
 import AppConfig from '../../config/AppConfig';
+import {assignExpert} from '../../flux/util/actions';
 
-export default ({order, assingExpert, dispatch, user}) => {
+export default ({order, dispatch, user}) => {
   return (
     <View style={styles.cellContainer}>
       <View style={styles.contentContainer}>
@@ -164,7 +165,7 @@ export default ({order, assingExpert, dispatch, user}) => {
       <View>
         <TouchableOpacity
           style={styles.btnContainer}
-          onPress={() => assingExpert(user, order, dispatch)}>
+          onPress={() => assignExpert(user, order, dispatch)}>
           <Text
             style={Fonts.style.bold(Colors.light, Fonts.size.medium, 'center')}>
             Tomar <Icon name={'arrow-right'} size={15} color={Colors.light} />

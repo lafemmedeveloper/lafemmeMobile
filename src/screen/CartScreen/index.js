@@ -144,8 +144,6 @@ const CartScreen = (props) => {
     setDateCalendar(handleDate);
     setDatePickerVisibility(false);
     setIsTimePickerVisible(true);
-
-    Alert.alert('Ups', 'la fecha tiene que ser mayor ala fecha actual');
   };
 
   const hideDatePicker = () => {
@@ -459,6 +457,8 @@ const CartScreen = (props) => {
             if (isCompleted) {
               console.log('isCompleted');
               let data = {
+                fcmClient: user.fcm,
+                fcmExpert: '',
                 id: Utilities.create_UUID(),
                 experts: null,
                 client: {

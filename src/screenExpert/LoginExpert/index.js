@@ -45,8 +45,6 @@ const LoginExpert = () => {
     }
   };
 
-  console.log('state.auth.loading =>', state.auth.loading);
-
   return (
     <>
       <Loading type={'expert'} loading={state.auth.loading} />

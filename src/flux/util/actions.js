@@ -14,6 +14,7 @@ import {
 import firestore from '@react-native-firebase/firestore';
 import DeviceInfo from 'react-native-device-info';
 import auth from '@react-native-firebase/auth';
+import axios from 'axios';
 
 export const handleError = (dispatch) => {
   dispatch({type: HANDLE_ERROR, payload: true});
@@ -198,21 +199,31 @@ export const getExpertOpenOrders = (activity, dispatch) => {
   });
 };
 
-export const assingExpert = async (user, order, dispatch) => {
+export const assignExpert = async (user, order, dispatch) => {
+  console.log('order ==>', order);
+  const assingExpertUrl =
+    'https://us-central1-lafemme-5017a.cloudfunctions.net/assignExpert';
+
+  const updateOrderStatus =
+    'https://us-central1-lafemme-5017a.cloudfunctions.net/updateOrderStatus';
   try {
-    const experts = user;
+    setLoading(true, dispatch);
 
-    const ref = firestore().collection('orders').doc(order.id);
-    await ref.set(
-      {
-        status: 1,
-
-        experts,
-      },
-      {merge: true},
-    );
+    const res = await axios.post(assingExpertUrl, {
+      expert: user,
+      idOrder: order.id,
+    });
+    if (res.status === 200) {
+      await axios.post(updateOrderStatus, {
+        newOrderStatus: 1,
+        order,
+      });
+    }
+    setLoading(false, dispatch);
   } catch (error) {
-    console.error('assingExpert ==>', error);
+    setLoading(false, dispatch);
+
+    console.error('assignExpert ==>', error);
   }
 };
 export const sendCoordinate = async (data, typeData, dispatch) => {

@@ -6,7 +6,6 @@ import {StoreContext} from '../../flux';
 import {activeMessage, setUser, updateProfile} from '../../flux/auth/actions';
 import {
   getExpertOpenOrders,
-  assingExpert,
   getDeviceInfo,
   getExpertActiveOrders,
   getExpertHistoryOrders,
@@ -19,7 +18,6 @@ import HeaderExpert from './HeaderExpert';
 import ModalApp from '../../components/ModalApp';
 import DetailModal from '../HistoryExpert/DetailModal';
 import NextOrder from '../NextOrder';
-import messaging from '@react-native-firebase/messaging';
 import auth from '@react-native-firebase/auth';
 
 const HomeExpert = () => {
@@ -29,8 +27,6 @@ const HomeExpert = () => {
 
   const [modalDetail, setModalDetail] = useState(false);
   const [detailOrder, setDetailOrder] = useState(null);
-
-  console.log('appType =>', appType);
 
   function onAuthStateChanged(user) {
     if (auth().currentUser && auth().currentUser.uid) {
@@ -124,7 +120,6 @@ const HomeExpert = () => {
                     order={item}
                     user={state.auth.user}
                     dispatch={utilDispatch}
-                    assingExpert={assingExpert}
                   />
                 </View>
               );
