@@ -40,6 +40,7 @@ const Register = (props) => {
           numberOfServices: 0,
           phone: currentUser.phoneNumber,
           uid: currentUser.uid,
+          isEnabled: true,
           role: 'client',
           tyc: moment(new Date()).format('LLLL'),
           guest: [],
