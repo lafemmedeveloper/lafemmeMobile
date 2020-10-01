@@ -6,7 +6,7 @@ import Profile from '../../../screen/Profile';
 import {Colors, Images} from '../../../themes';
 import {Image} from 'react-native';
 import {StoreContext} from '../../../flux';
-import NoEnabled from '../../../screen/noEnabled';
+import NoEnabled from '../../../screen/NoEnabled';
 
 const Tab = createBottomTabNavigator();
 

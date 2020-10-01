@@ -8,76 +8,83 @@ import ProfileExpert from '../../../screenExpert/ProfileExpert';
 import {StoreContext} from '../../../flux';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Loading from '../../../components/Loading';
+import NoEnabled from '../../../screen/NoEnabled';
 
 const Tab = createBottomTabNavigator();
 
 export default function TabBottom() {
   const {state} = useContext(StoreContext);
-  const {util} = state;
+  const {util, auth} = state;
   const {expertActiveOrders} = util;
 
   return (
     <>
-      <Loading type="expert" />
+      {auth.user && !auth.user.isActive ? (
+        <NoEnabled />
+      ) : (
+        <>
+          <Loading type="expert" />
 
-      <Tab.Navigator
-        tabBarOptions={{
-          activeTintColor: Colors.expert.primaryColor,
-        }}>
-        {state.auth.user &&
-        state.auth.user.isEnabled &&
-        expertActiveOrders.length > 0 ? (
-          <Tab.Screen
-            name="Home"
-            component={HomeExpert}
-            options={{
-              tabBarLabel: 'Ordenes',
-              tabBarIcon: ({color}) => (
-                <Icon name={'time-outline'} size={25} color={color} />
-              ),
-              tabBarBadge: expertActiveOrders.length,
-            }}
-          />
-        ) : (
-          <Tab.Screen
-            name="Home"
-            component={HomeExpert}
-            options={{
-              tabBarLabel: 'Ordenes',
-              tabBarIcon: ({color}) => (
-                <Icon name={'time-outline'} size={25} color={color} />
-              ),
-            }}
-          />
-        )}
+          <Tab.Navigator
+            tabBarOptions={{
+              activeTintColor: Colors.expert.primaryColor,
+            }}>
+            {state.auth.user &&
+            state.auth.user.isEnabled &&
+            expertActiveOrders.length > 0 ? (
+              <Tab.Screen
+                name="Home"
+                component={HomeExpert}
+                options={{
+                  tabBarLabel: 'Ordenes',
+                  tabBarIcon: ({color}) => (
+                    <Icon name={'time-outline'} size={25} color={color} />
+                  ),
+                  tabBarBadge: expertActiveOrders.length,
+                }}
+              />
+            ) : (
+              <Tab.Screen
+                name="Home"
+                component={HomeExpert}
+                options={{
+                  tabBarLabel: 'Ordenes',
+                  tabBarIcon: ({color}) => (
+                    <Icon name={'time-outline'} size={25} color={color} />
+                  ),
+                }}
+              />
+            )}
 
-        <Tab.Screen
-          name="Ordenes"
-          component={HistoryExpert}
-          options={{
-            tabBarLabel: 'Mis Servicios',
-            tabBarIcon: ({color}) => (
-              <Image
-                style={[styles.icon, {tintColor: color}]}
-                source={Images.menuAppoiment}
-              />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="Profile"
-          component={ProfileExpert}
-          options={{
-            tabBarLabel: 'Perfil',
-            tabBarIcon: ({color}) => (
-              <Image
-                style={[styles.icon, {tintColor: color}]}
-                source={Images.menuUser}
-              />
-            ),
-          }}
-        />
-      </Tab.Navigator>
+            <Tab.Screen
+              name="Ordenes"
+              component={HistoryExpert}
+              options={{
+                tabBarLabel: 'Mis Servicios',
+                tabBarIcon: ({color}) => (
+                  <Image
+                    style={[styles.icon, {tintColor: color}]}
+                    source={Images.menuAppoiment}
+                  />
+                ),
+              }}
+            />
+            <Tab.Screen
+              name="Profile"
+              component={ProfileExpert}
+              options={{
+                tabBarLabel: 'Perfil',
+                tabBarIcon: ({color}) => (
+                  <Image
+                    style={[styles.icon, {tintColor: color}]}
+                    source={Images.menuUser}
+                  />
+                ),
+              }}
+            />
+          </Tab.Navigator>
+        </>
+      )}
     </>
   );
 }
