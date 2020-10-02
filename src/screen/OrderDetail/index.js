@@ -12,15 +12,15 @@ import {
 import StepIndicator from 'react-native-step-indicator';
 import {Colors, Metrics, Fonts} from '../../themes';
 import {StoreContext} from '../../flux';
-import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
+import MapView, {Marker} from 'react-native-maps';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import ExpertCall from './Status/ExpertCall';
 import Loading from '../../components/Loading';
-import Qualification from './Status/Qualification';
 import ModalApp from '../../components/ModalApp';
 import ButtonCoordinate from '../../components/ButtonCoordinate';
 import Geolocation from '@react-native-community/geolocation';
 import {updateStatus} from '../../flux/util/actions';
+import Qualify from '../../components/Qualify';
 
 const customStyles = {
   stepIndicatorSize: 30,
@@ -247,33 +247,87 @@ const OrderDetail = (props) => {
                   {orderUser.date}
                 </Text>
               </View>
-              {orderUser.status === 4 && (
-                <TouchableOpacity
-                  style={{height: 50}}
-                  onPress={() => setModalQual(true)}>
-                  <Text>Calificar</Text>
-                </TouchableOpacity>
-              )}
+
               <View style={styles.cont}>
                 {orderUser.status < 6 && (
                   <View style={styles.step}>
                     <StepIndicator
                       customStyles={customStyles}
                       currentPosition={orderUser.status}
-                      direction={'horizontal'}
-                      stepCount={4}
+                      direction={'vertical'}
+                      stepCount={5}
                       labels={[
                         'Buscando Experto',
                         'Preparando Orden',
                         'En ruta',
                         'En Servicio',
+                        'Completado',
                       ]}
                     />
                   </View>
                 )}
               </View>
+
+              {orderUser.status === 4 && (
+                <TouchableOpacity
+                  style={styles.btn}
+                  onPress={() =>
+                    Alert.alert(
+                      'Hey',
+                      'Estas seguro(a) que deseas cambiar de estado ?',
+                      [
+                        {
+                          text: 'SI',
+                          onPress: () => {
+                            updateStatus(5, orderUser, utilDispatch);
+                          },
+                        },
+                        {
+                          text: 'Cancelar',
+                          onPress: () => console.log('Cancel Pressed'),
+                          style: 'cancel',
+                        },
+                      ],
+                      {cancelable: true},
+                    )
+                  }>
+                  <Text
+                    style={Fonts.style.bold(
+                      Colors.light,
+                      Fonts.size.medium,
+                      'center',
+                    )}>
+                    Completar orden
+                  </Text>
+                </TouchableOpacity>
+              )}
+
+              {orderUser.status === 5 && (
+                <>
+                  <Text
+                    style={[
+                      Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center'),
+                      {marginVertical: 10},
+                    ]}>
+                    Calificar nuestro servicio
+                  </Text>
+                  <TouchableOpacity
+                    style={styles.btn}
+                    onPress={() => setModalQual(true)}>
+                    <Text
+                      style={Fonts.style.bold(
+                        Colors.light,
+                        Fonts.size.medium,
+                        'center',
+                      )}>
+                      Calificar servicio
+                    </Text>
+                  </TouchableOpacity>
+                </>
+              )}
             </ScrollView>
-            <View
+            <TouchableOpacity
+              onPress={() => console.log('call soport')}
               style={{
                 width: Metrics.screenWidth,
                 flex: 0,
@@ -291,17 +345,22 @@ const OrderDetail = (props) => {
                 )}>
                 Contactar a soporte
               </Text>
-            </View>
+            </TouchableOpacity>
+            <ModalApp setOpen={setModalQual} open={modalQual}>
+              <Qualify
+                type="expert"
+                userRef={orderUser.experts}
+                ordersRef={orderUser}
+                close={setModalQual}
+                typeQualification={'qualtificationExpert'}
+                updateStatus={updateStatus}
+              />
+            </ModalApp>
           </>
         ) : (
           <Loading type={'client'} />
         )}
       </View>
-      <ModalApp open={modalQual} setOpen={setModalQual}>
-        {orderUser && (
-          <Qualification id={orderUser.id} expert={orderUser.experts} />
-        )}
-      </ModalApp>
     </>
   );
 };
@@ -314,6 +373,8 @@ const styles = StyleSheet.create({
   },
   step: {
     width: Metrics.screenWidth,
+    height: Metrics.screenHeight / 2,
+    marginLeft: 20,
   },
   step4: {
     marginTop: 10,
@@ -381,6 +442,15 @@ const styles = StyleSheet.create({
     top: 20,
     right: 20,
     alignItems: 'flex-end',
+  },
+  btn: {
+    backgroundColor: Colors.expert.primaryColor,
+    width: Metrics.screenWidth - 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+    alignSelf: 'center',
   },
 });
 

@@ -276,7 +276,7 @@ export const addImageGallery = async (data, id, dispatch) => {
     console.log('error', error);
   }
 };
-export const expertRating = async (uid, rating, dispatch) => {
+export const userRating = async (uid, rating, dispatch) => {
   try {
     setLoading(true, dispatch);
     const userRef = firestore().collection('users').doc(uid);
@@ -294,13 +294,14 @@ export const expertRating = async (uid, rating, dispatch) => {
   }
 };
 
-export const updateNote = async (id, note, dispatch) => {
+export const updateNote = async (id, note, type, dispatch) => {
   try {
     setLoading(true, dispatch);
-    const userRef = firestore().collection('users').doc(id);
-    await userRef.set(
+    const orderRef = firestore().collection('orders').doc(id);
+
+    await orderRef.set(
       {
-        noteQualtification: note,
+        [type]: note,
       },
       {merge: true},
     );
@@ -308,7 +309,7 @@ export const updateNote = async (id, note, dispatch) => {
     setLoading(false, dispatch);
   } catch (error) {
     setLoading(false, dispatch);
-    console.log('error', error);
+    console.log('error:updateNote ==>', error);
   }
 };
 export const activeNameSlug = async (activity, dispatch) => {

@@ -16,6 +16,8 @@ import utilities from '../../../utilities';
 import {updateStatus} from '../../../flux/util/actions';
 import Loading from '../../../components/Loading';
 import {StoreContext} from '../../../flux';
+import ModalApp from '../../../components/ModalApp';
+import Qualify from '../../../components/Qualify';
 
 const DetailModal = (props) => {
   const {state, utilDispatch} = useContext(StoreContext);
@@ -29,7 +31,6 @@ const DetailModal = (props) => {
   const {order} = props;
 
   const filterOrder = expertOpenOrders.filter((o) => o.id === order.id)[0];
-  console.log('filterOrder ==>', filterOrder);
   const {client, services, cartId, address} = filterOrder;
 
   const screen = Dimensions.get('window');
@@ -42,6 +43,7 @@ const DetailModal = (props) => {
 
   const [dateCount, setDateCount] = useState('');
   const [activeStatus, setActiveStatus] = useState(false);
+  const [qualifyClient, setQualifyClient] = useState(false);
 
   const getRemainingTime = (deadline) => {
     let now = new Date(),
@@ -349,8 +351,6 @@ const DetailModal = (props) => {
                       {clients.length}
                     </Text>
 
-                    {/* <View opacity={0.25} style={styles.separatorLineMini} /> */}
-
                     <Text
                       style={[
                         Fonts.style.bold(
@@ -612,9 +612,9 @@ const DetailModal = (props) => {
             </Text>
           </TouchableOpacity>
         )}
-        {filterOrder.status === 4 && (
+        {filterOrder.status === 4 && filterOrder.qualtificationClient === '' && (
           <TouchableOpacity
-            onPress={() => console.log(4)}
+            onPress={() => setQualifyClient(true)}
             style={[styles.btnContainer]}>
             <Text
               style={[
@@ -626,6 +626,16 @@ const DetailModal = (props) => {
           </TouchableOpacity>
         )}
       </View>
+
+      <ModalApp setOpen={setQualifyClient} open={qualifyClient}>
+        <Qualify
+          type="expert"
+          userRef={filterOrder.client}
+          ordersRef={filterOrder}
+          close={setQualifyClient}
+          typeQualification={'qualtificationClient'}
+        />
+      </ModalApp>
     </>
   );
 };

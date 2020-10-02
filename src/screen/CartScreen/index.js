@@ -457,6 +457,7 @@ const CartScreen = (props) => {
             if (isCompleted) {
               console.log('isCompleted');
               let data = {
+                noteQualtification: '',
                 fcmClient: user.fcm,
                 fcmExpert: '',
                 id: Utilities.create_UUID(),
