@@ -105,7 +105,10 @@ const Home = () => {
   };
   return (
     <>
-      <StatusBar backgroundColor={Colors.client.primaryColor} />
+      <StatusBar
+        backgroundColor={Colors.backgroundColor}
+        barStyle={'dark-content'}
+      />
       <Loading type={'client'} />
       <View style={styles.container}>
         <Header
