@@ -13,27 +13,30 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 
 import {Colors, Fonts, ApplicationStyles, Metrics} from '../../../themes';
 import utilities from '../../../utilities';
-import {setLoading} from '../../../flux/util/actions';
+import {updateStatus} from '../../../flux/util/actions';
 import Loading from '../../../components/Loading';
 import {StoreContext} from '../../../flux';
-import firestore from '@react-native-firebase/firestore';
 
 const DetailModal = (props) => {
   const {state, utilDispatch} = useContext(StoreContext);
   const {util} = state;
+  const {expertOpenOrders} = util;
+
   const {loading} = util;
 
   const mapStyle = require('../../../config/mapStyle.json');
 
-  const {order, setModalDetail} = props;
-  const {client, services, cartId} = order;
-  const {address} = order;
+  const {order} = props;
+
+  const filterOrder = expertOpenOrders.filter((o) => o.id === order.id)[0];
+  console.log('filterOrder ==>', filterOrder);
+  const {client, services, cartId, address} = filterOrder;
 
   const screen = Dimensions.get('window');
   const ASPECT_RATIO = screen.width * 0.8 - 500 / screen.height;
 
   useEffect(() => {
-    countdown(order.date);
+    countdown(filterOrder.date);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -64,58 +67,107 @@ const DetailModal = (props) => {
         `${t.remainDays}d:${t.remainHours}h:${t.remainMinutes}m:${t.remainSeconds}s`,
       );
       console.log('t.remainHours =====>', t.remainHours);
-      if (t.remainDays <= 1) {
+      if (t.remainDays <= 30) {
         clearInterval(timerUpdate);
         setActiveStatus(true);
       }
     }, 1000);
   };
 
-  const onRut = async (number) => {
-    console.log('status ==>', number);
+  const onRut = async () => {
     if (!activeStatus) {
       Alert.alert('Ups', `Aun faltan : ${dateCount} para continuar`);
     } else {
-      try {
-        setLoading(true, utilDispatch);
-        const ref = firestore().collection('orders').doc(order.id);
-        await ref.set(
-          {
-            status: number,
-          },
-          {merge: true},
-        );
+      const status = 2;
 
-        setLoading(false, utilDispatch);
-
-        setModalDetail(false);
-      } catch (error) {
-        setLoading(false, utilDispatch);
-
-        console.log('error onRut', error);
-      }
+      updateStatus(status, filterOrder, utilDispatch);
     }
   };
 
   const changeStatus = (status) => {
-    Alert.alert(
-      'Hola',
-      'Estas seguro(a) que quieres cambiar de estado.',
-      [
-        {
-          text: 'Si',
-          onPress: () => {
-            onRut(status);
+    if (filterOrder.status === 1) {
+      Alert.alert(
+        'Hola',
+        'Estas seguro(a) que quieres cambiar de estado.',
+        [
+          {
+            text: 'Si',
+            onPress: () => {
+              onRut(status);
+            },
           },
-        },
-        {
-          text: 'Cancelar',
-          onPress: () => console.log('Cancel Pressed'),
-          style: 'cancel',
-        },
-      ],
-      {cancelable: true},
-    );
+          {
+            text: 'Cancelar',
+            onPress: () => console.log('Cancel Pressed'),
+            style: 'cancel',
+          },
+        ],
+        {cancelable: true},
+      );
+    } else if (filterOrder.status === 2) {
+      const status = 3;
+
+      Alert.alert(
+        'Hola',
+        'Estas seguro(a) que quieres cambiar de estado.',
+        [
+          {
+            text: 'Si',
+            onPress: () => {
+              updateStatus(status, filterOrder, utilDispatch);
+            },
+          },
+          {
+            text: 'Cancelar',
+            onPress: () => console.log('Cancel Pressed'),
+            style: 'cancel',
+          },
+        ],
+        {cancelable: true},
+      );
+    } else if (filterOrder.status === 3) {
+      const status = 4;
+
+      Alert.alert(
+        'Hola',
+        'Estas seguro(a) que quieres cambiar de estado.',
+        [
+          {
+            text: 'Si',
+            onPress: () => {
+              updateStatus(status, filterOrder, utilDispatch);
+            },
+          },
+          {
+            text: 'Cancelar',
+            onPress: () => console.log('Cancel Pressed'),
+            style: 'cancel',
+          },
+        ],
+        {cancelable: true},
+      );
+    } else if (filterOrder.status === 4) {
+      const status = 5;
+
+      Alert.alert(
+        'Hola',
+        'Estas seguro(a) que quieres cambiar de estado.',
+        [
+          {
+            text: 'Si',
+            onPress: () => {
+              updateStatus(status, filterOrder, utilDispatch);
+            },
+          },
+          {
+            text: 'Cancelar',
+            onPress: () => console.log('Cancel Pressed'),
+            style: 'cancel',
+          },
+        ],
+        {cancelable: true},
+      );
+    }
   };
 
   return (
@@ -154,15 +206,15 @@ const DetailModal = (props) => {
               style={styles.mapView}
               customMapStyle={mapStyle}
               region={{
-                latitude: order.address.coordinates.latitude,
-                longitude: order.address.coordinates.longitude,
+                latitude: filterOrder.address.coordinates.latitude,
+                longitude: filterOrder.address.coordinates.longitude,
                 latitudeDelta: 0.00002,
                 longitudeDelta: 0.0002 * ASPECT_RATIO,
               }}>
               <Marker.Animated
                 coordinate={{
-                  latitude: order.address.coordinates.latitude,
-                  longitude: order.address.coordinates.longitude,
+                  latitude: filterOrder.address.coordinates.latitude,
+                  longitude: filterOrder.address.coordinates.longitude,
                 }}>
                 <Icon
                   name={'map-marker-alt'}
@@ -172,8 +224,8 @@ const DetailModal = (props) => {
               </Marker.Animated>
               <Marker
                 coordinate={{
-                  latitude: order.experts.coordinate.latitude,
-                  longitude: order.experts.coordinate.longitude,
+                  latitude: filterOrder.experts.coordinate.latitude,
+                  longitude: filterOrder.experts.coordinate.longitude,
                 }}>
                 <Icon
                   name={'map-marker-alt'}
@@ -521,7 +573,7 @@ const DetailModal = (props) => {
               })}
           </View>
         </ScrollView>
-        {order.status === 1 && (
+        {filterOrder.status === 1 && (
           <TouchableOpacity
             onPress={() => changeStatus(2)}
             style={[styles.btnContainer]}>
@@ -534,7 +586,7 @@ const DetailModal = (props) => {
             </Text>
           </TouchableOpacity>
         )}
-        {order.status === 2 && (
+        {filterOrder.status === 2 && (
           <TouchableOpacity
             onPress={() => changeStatus(3)}
             style={[styles.btnContainer]}>
@@ -547,7 +599,7 @@ const DetailModal = (props) => {
             </Text>
           </TouchableOpacity>
         )}
-        {order.status === 3 && (
+        {filterOrder.status === 3 && (
           <TouchableOpacity
             onPress={() => changeStatus(4)}
             style={[styles.btnContainer]}>
@@ -557,6 +609,19 @@ const DetailModal = (props) => {
                 {alignSelf: 'center'},
               ]}>
               Finalizando servicio
+            </Text>
+          </TouchableOpacity>
+        )}
+        {filterOrder.status === 4 && (
+          <TouchableOpacity
+            onPress={() => console.log(4)}
+            style={[styles.btnContainer]}>
+            <Text
+              style={[
+                Fonts.style.bold(Colors.light, Fonts.size.medium),
+                {alignSelf: 'center'},
+              ]}>
+              Calificar cliente
             </Text>
           </TouchableOpacity>
         )}

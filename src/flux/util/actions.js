@@ -244,16 +244,18 @@ export const sendCoordinate = async (data, typeData, dispatch) => {
     console.log('error', error);
   }
 };
-export const updateStatus = async (status, id, dispatch) => {
+export const updateStatus = async (status, order, dispatch) => {
+  const urlOrderStatus =
+    'https://us-central1-lafemme-5017a.cloudfunctions.net/updateOrderStatus';
+
   try {
     setLoading(true, dispatch);
-    const ref = firestore().collection('orders').doc(id);
-    await ref.set(
-      {
-        status: status,
-      },
-      {merge: true},
-    );
+
+    await axios.post(urlOrderStatus, {
+      newOrderStatus: status,
+      order,
+    });
+
     setLoading(false, dispatch);
   } catch (error) {
     setLoading(false, dispatch);

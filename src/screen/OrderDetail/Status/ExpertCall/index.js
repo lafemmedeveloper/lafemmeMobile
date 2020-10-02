@@ -75,7 +75,11 @@ const ExpertCall = ({expert}) => {
           <TouchableOpacity
             style={styles.buttonCall}
             onPress={() => Linking.openURL(`tel:${expert.phone}`)}>
-            <Icon name={'phone'} size={20} color={Colors.expert.primaryColor} />
+            <Icon
+              name={'phone-alt'}
+              size={20}
+              color={Colors.expert.primaryColor}
+            />
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.buttonCall}
