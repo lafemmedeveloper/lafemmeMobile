@@ -6,6 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Keyboard,
+  Alert,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {Metrics, Colors, Fonts, ApplicationStyles} from '../../../themes';
@@ -221,8 +222,14 @@ const Cart = (props) => {
 
   const addOnsFilter = addOns.filter((a) => a.isEnabled === true);
 
-  console.log('addonsList =====================>', addOnsFilter);
-
+  const addCart = () => {
+    const cart = user.cart.services.length;
+    if (cart > 1) {
+      setShowModalService(true);
+    } else {
+      Alert.alert('Lo siento', 'Solo puedes agregar un servicio por orden');
+    }
+  };
   return (
     <View
       style={{
@@ -257,8 +264,6 @@ const Cart = (props) => {
             flex: 1,
             alignSelf: 'center',
             backgroundColor: Colors.light,
-
-            // paddingVertical: 10,
           }}>
           <View //description
             style={{
@@ -461,9 +466,9 @@ const Cart = (props) => {
             {minToHours(timeTotal)} - {' 1 Experto'}
           </Text>
         </View>
-
+        {/*show from  user.cart.services.length */}
         <TouchableOpacity
-          onPress={() => setShowModalService(true)}
+          onPress={() => addCart()}
           style={[
             {
               flex: 1,

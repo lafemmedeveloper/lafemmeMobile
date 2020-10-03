@@ -163,6 +163,72 @@ const CartScreen = (props) => {
     user.cart.services.length > 0 &&
     user.cart.notes;
 
+  const activeSendOrder = () => {
+    let servicesType = [];
+    for (let i = 0; i < user.cart.services.length; i++) {
+      if (servicesType.indexOf(user.cart.services[i].servicesType) === -1) {
+        servicesType = [...servicesType, user.cart.services[i].servicesType];
+      }
+    }
+
+    let hoursServices = [];
+
+    // for (user.cart.services)
+    for (let i = 0; i < user.cart.services.length; i++) {
+      if (i === 0) {
+        hoursServices = [...hoursServices, user.cart.date];
+      } else {
+        hoursServices = [
+          ...hoursServices,
+          moment(user.cart.date, 'YYYY-MM-DD HH:mm')
+            .add(user.cart.services[i - 1].duration, 'minutes')
+            .format('YYYY-MM-DD HH:mm'),
+        ];
+      }
+    }
+
+    if (isCompleted) {
+      console.log('isCompleted');
+      let data = {
+        noteQualtification: '',
+        fcmClient: user.fcm,
+        fcmExpert: '',
+        id: Utilities.create_UUID(),
+        experts: null,
+        client: {
+          uid: user.uid,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+          phone: user.phone,
+          rating: user.rating,
+        },
+        createDate: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+        cartId: Utilities.create_CartId(),
+        status: 0,
+        hoursServices,
+        date: `${user.cart.date}`,
+        servicesType,
+        ...user.cart,
+      };
+      sendOrder(data);
+      console.log('data', data);
+    } else {
+      Alert.alert(
+        'Ups...',
+        'Completa todos los items de tu orden para continuar.',
+      );
+    }
+  };
+
+  const addCart = () => {
+    const cart = user.cart.services.length;
+    if (cart > 1) {
+      setModalCart(true);
+    } else {
+      Alert.alert('Lo siento', 'Solo puedes agregar un servicio por orden');
+    }
+  };
   return (
     <View style={{height: 650}}>
       <Loading type={'client'} />
@@ -224,7 +290,7 @@ const CartScreen = (props) => {
             );
           })}
         <TouchableOpacity
-          onPress={() => setModalCart(false)}
+          onPress={() => addCart()}
           style={[
             styles.productContainer,
             {backgroundColor: Colors.client.primaryColor},
@@ -425,68 +491,7 @@ const CartScreen = (props) => {
       </ScrollView>
       <View style={styles.footerContainer}>
         <TouchableOpacity
-          onPress={() => {
-            let servicesType = [];
-            for (let i = 0; i < user.cart.services.length; i++) {
-              if (
-                servicesType.indexOf(user.cart.services[i].servicesType) === -1
-              ) {
-                servicesType = [
-                  ...servicesType,
-                  user.cart.services[i].servicesType,
-                ];
-              }
-            }
-
-            let hoursServices = [];
-
-            // for (user.cart.services)
-            for (let i = 0; i < user.cart.services.length; i++) {
-              if (i === 0) {
-                hoursServices = [...hoursServices, user.cart.date];
-              } else {
-                hoursServices = [
-                  ...hoursServices,
-                  moment(user.cart.date, 'YYYY-MM-DD HH:mm')
-                    .add(user.cart.services[i - 1].duration, 'minutes')
-                    .format('YYYY-MM-DD HH:mm'),
-                ];
-              }
-            }
-
-            if (isCompleted) {
-              console.log('isCompleted');
-              let data = {
-                noteQualtification: '',
-                fcmClient: user.fcm,
-                fcmExpert: '',
-                id: Utilities.create_UUID(),
-                experts: null,
-                client: {
-                  uid: user.uid,
-                  firstName: user.firstName,
-                  lastName: user.lastName,
-                  email: user.email,
-                  phone: user.phone,
-                  rating: user.rating,
-                },
-                createDate: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
-                cartId: Utilities.create_CartId(),
-                status: 0,
-                hoursServices,
-                date: `${user.cart.date}`,
-                servicesType,
-                ...user.cart,
-              };
-              sendOrder(data);
-              console.log('data', data);
-            } else {
-              Alert.alert(
-                'Ups...',
-                'Completa todos los items de tu orden para continuar.',
-              );
-            }
-          }}
+          onPress={() => activeSendOrder()}
           style={[
             styles.btnContainer,
             {

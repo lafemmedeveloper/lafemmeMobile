@@ -283,7 +283,7 @@ const OrderDetail = (props) => {
         )}
       </View>
       <View style={{backgroundColor: Colors.light, width: '100%'}}>
-        <View style={{}}>
+        <View>
           {orderUser && orderUser.status === 4 && (
             <TouchableOpacity
               style={styles.btn}
@@ -321,13 +321,6 @@ const OrderDetail = (props) => {
 
           {orderUser && orderUser.status === 5 && (
             <>
-              <Text
-                style={[
-                  Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center'),
-                  {marginVertical: 10},
-                ]}>
-                Calificar nuestro servicio
-              </Text>
               <TouchableOpacity
                 style={styles.btn}
                 onPress={() => setModalQual(true)}>
