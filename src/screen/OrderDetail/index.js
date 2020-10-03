@@ -4,9 +4,9 @@ import {
   StyleSheet,
   View,
   Dimensions,
-  TouchableOpacity,
   StatusBar,
   Alert,
+  TouchableOpacity,
 } from 'react-native';
 import StepIndicator from 'react-native-step-indicator';
 import {Colors, Metrics, Fonts} from '../../themes';
@@ -193,7 +193,7 @@ const OrderDetail = (props) => {
             </View>
 
             <ExpertCall expert={orderUser.experts} />
-            <View style={{}}>
+            <View>
               <View
                 style={{
                   justifyContent: 'center',
@@ -265,64 +265,6 @@ const OrderDetail = (props) => {
                     />
                   </View>
                 )}
-
-                {orderUser.status === 4 && (
-                  <TouchableOpacity
-                    style={styles.btn}
-                    onPress={() =>
-                      Alert.alert(
-                        'Hey',
-                        'Estas seguro(a) que deseas cambiar de estado ?',
-                        [
-                          {
-                            text: 'SI',
-                            onPress: () => {
-                              updateStatus(5, orderUser, utilDispatch);
-                            },
-                          },
-                          {
-                            text: 'Cancelar',
-                            onPress: () => console.log('Cancel Pressed'),
-                            style: 'cancel',
-                          },
-                        ],
-                        {cancelable: true},
-                      )
-                    }>
-                    <Text
-                      style={Fonts.style.bold(
-                        Colors.light,
-                        Fonts.size.medium,
-                        'center',
-                      )}>
-                      Completar orden
-                    </Text>
-                  </TouchableOpacity>
-                )}
-
-                {orderUser.status === 5 && (
-                  <>
-                    <Text
-                      style={[
-                        Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center'),
-                        {marginVertical: 10},
-                      ]}>
-                      Calificar nuestro servicio
-                    </Text>
-                    <TouchableOpacity
-                      style={styles.btn}
-                      onPress={() => setModalQual(true)}>
-                      <Text
-                        style={Fonts.style.bold(
-                          Colors.light,
-                          Fonts.size.medium,
-                          'center',
-                        )}>
-                        Calificar servicio
-                      </Text>
-                    </TouchableOpacity>
-                  </>
-                )}
               </View>
             </View>
             <ModalApp setOpen={setModalQual} open={modalQual}>
@@ -340,34 +282,89 @@ const OrderDetail = (props) => {
           <Loading type={'client'} />
         )}
       </View>
-      <View
-        style={{
-          position: 'absolute',
-          zIndex: 5,
-          paddingBottom: Metrics.addFooter + 10,
-          bottom: 0,
-        }}>
-        <TouchableOpacity
-          onPress={() => console.log('call soport')}
-          style={{
-            width: Metrics.screenWidth,
-            paddingVertical: 10,
-            alignContent: 'center',
-            justifyContent: 'center',
+      <View style={{backgroundColor: Colors.light, width: '100%'}}>
+        <View style={{}}>
+          {orderUser && orderUser.status === 4 && (
+            <TouchableOpacity
+              style={styles.btn}
+              onPress={() =>
+                Alert.alert(
+                  'Hey',
+                  'Estas seguro(a) que deseas cambiar de estado ?',
+                  [
+                    {
+                      text: 'SI',
+                      onPress: async () => {
+                        await updateStatus(5, orderUser, utilDispatch);
+                      },
+                    },
 
-            backgroundColor: Colors.light,
-            zIndex: 2,
-            height: 20,
-          }}>
-          <Text
-            style={Fonts.style.underline(
-              Colors.dark,
-              Fonts.size.medium,
-              'center',
-            )}>
-            Contactar a soporte
-          </Text>
-        </TouchableOpacity>
+                    {
+                      text: 'Cancelar',
+                      onPress: () => console.log('Cancel Pressed'),
+                      style: 'cancel',
+                    },
+                  ],
+                  {cancelable: true},
+                )
+              }>
+              <Text
+                style={Fonts.style.bold(
+                  Colors.light,
+                  Fonts.size.medium,
+                  'center',
+                )}>
+                Completar orden
+              </Text>
+            </TouchableOpacity>
+          )}
+
+          {orderUser && orderUser.status === 5 && (
+            <>
+              <Text
+                style={[
+                  Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center'),
+                  {marginVertical: 10},
+                ]}>
+                Calificar nuestro servicio
+              </Text>
+              <TouchableOpacity
+                style={styles.btn}
+                onPress={() => setModalQual(true)}>
+                <Text
+                  style={Fonts.style.bold(
+                    Colors.light,
+                    Fonts.size.medium,
+                    'center',
+                  )}>
+                  Calificar servicio
+                </Text>
+              </TouchableOpacity>
+            </>
+          )}
+          <TouchableOpacity
+            onPress={() => console.log('call soport')}
+            style={{
+              width: Metrics.screenWidth,
+              paddingVertical: 20,
+              alignContent: 'center',
+              justifyContent: 'center',
+
+              backgroundColor: Colors.light,
+              zIndex: 2,
+              height: 20,
+              marginTop: 30,
+            }}>
+            <Text
+              style={Fonts.style.underline(
+                Colors.dark,
+                Fonts.size.medium,
+                'center',
+              )}>
+              Contactar a soporte
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </>
   );
@@ -451,6 +448,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,
+    zIndex: 2,
     alignSelf: 'center',
   },
 });
