@@ -7,6 +7,7 @@ import {Colors, Images} from '../../../themes';
 import {Image} from 'react-native';
 import {StoreContext} from '../../../flux';
 import NoEnabled from '../../../screen/NoEnabled';
+import Loading from '../../../components/Loading';
 
 const Tab = createBottomTabNavigator();
 
@@ -16,6 +17,7 @@ export default function TabBottom() {
 
   return (
     <>
+      <Loading type={'client'} />
       {auth.user && !auth.user.isEnabled ? (
         <NoEnabled />
       ) : (

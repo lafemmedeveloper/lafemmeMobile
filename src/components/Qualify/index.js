@@ -32,7 +32,11 @@ const Qualify = (props) => {
   const calQuantity = async () => {
     try {
       Keyboard.dismiss();
-      const result = (rating + userRef.rating) / 2;
+
+      const result = (parseFloat(rating) + parseFloat(userRef.rating)) / 2;
+
+      console.log('userRef.rating ==> ===================> ', userRef.rating);
+
       const noteSend = note === '' ? 'Perfecto' : note;
       await updateNote(ordersRef.id, noteSend, typeQualification, utilDispatch);
       await userRating(userRef.uid, result, utilDispatch);
@@ -70,7 +74,8 @@ const Qualify = (props) => {
             reviews={['Terrible', 'Malo', 'Bien', 'Genial', 'Perfecto']}
             defaultRating={5}
             size={40}
-            onFinishRating={(value) => setRating(value)}
+            // eslint-disable-next-line radix
+            onFinishRating={(value) => setRating(parseInt(value))}
             ratingBackgroundColor="#c8c7c8"
             ratingColor="#3498db"
             showRating={true}

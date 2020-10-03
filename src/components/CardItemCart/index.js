@@ -1,12 +1,12 @@
 import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, Alert} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {Fonts, Colors, ApplicationStyles, Metrics} from '../../themes';
 import {minToHours} from '../../helpers/MomentHelper';
 import moment from 'moment';
 
-export default ({isCart, data, dateOrder, showExperts}) => {
-  const {name, id, duration, removeItem, clients} = data;
+export default ({isCart, data, dateOrder, showExperts, removeItem}) => {
+  const {name, duration, clients, id} = data;
 
   return (
     <>
@@ -39,9 +39,26 @@ export default ({isCart, data, dateOrder, showExperts}) => {
 
         {isCart && (
           <TouchableOpacity
-            onPress={() => {
-              removeItem(id);
-            }}
+            onPress={() =>
+              Alert.alert(
+                'Alerta',
+                'Realmente desea eliminar este item de tu lista.',
+                [
+                  {
+                    text: 'Eliminar',
+                    onPress: () => {
+                      removeItem(id);
+                    },
+                  },
+                  {
+                    text: 'Cancelar',
+                    onPress: () => console.log('Cancel Pressed'),
+                    style: 'cancel',
+                  },
+                ],
+                {cancelable: true},
+              )
+            }
             style={styles.deleteContainer}>
             <Icon
               name={'minus-square'}

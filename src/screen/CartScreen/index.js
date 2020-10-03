@@ -56,18 +56,6 @@ const CartScreen = (props) => {
     }
   };
 
-  const removeCartItem = async (id) => {
-    let services = user.cart.services;
-
-    const index = services ? services.findIndex((i) => i.id === id) : -1;
-
-    if (index !== -1) {
-      services = [...services.slice(0, index), ...services.slice(index + 1)];
-
-      updateProfile({...user.cart, services}, 'cart', authDispatch);
-    }
-  };
-
   const sendOrder = async (data) => {
     activeMessage(data.id, authDispatch);
     try {
@@ -173,7 +161,6 @@ const CartScreen = (props) => {
 
     let hoursServices = [];
 
-    // for (user.cart.services)
     for (let i = 0; i < user.cart.services.length; i++) {
       if (i === 0) {
         hoursServices = [...hoursServices, user.cart.date];
@@ -229,6 +216,20 @@ const CartScreen = (props) => {
       Alert.alert('Lo siento', 'Solo puedes agregar un servicio por orden');
     }
   };
+  const removeItem = async (id) => {
+    const filterService = user.cart.services.filter((s) => s.id !== id);
+    const emptyCart = {
+      ...user.cart,
+      date: null,
+      address: null,
+      notes: null,
+      services: [],
+      coupon: null,
+    };
+    if (filterService !== 0) {
+      await updateProfile([emptyCart], 'cart', authDispatch);
+    }
+  };
   return (
     <View style={{height: 650}}>
       <Loading type={'client'} />
@@ -266,26 +267,7 @@ const CartScreen = (props) => {
                 isCart={true}
                 showExperts={false}
                 data={item}
-                removeItem={(id) => {
-                  Alert.alert(
-                    'Alerta',
-                    'Realmente desea eliminar este item de tu lista.',
-                    [
-                      {
-                        text: 'Eliminar',
-                        onPress: () => {
-                          removeCartItem(id);
-                        },
-                      },
-                      {
-                        text: 'Cancelar',
-                        onPress: () => console.log('Cancel Pressed'),
-                        style: 'cancel',
-                      },
-                    ],
-                    {cancelable: true},
-                  );
-                }}
+                removeItem={removeItem}
               />
             );
           })}
