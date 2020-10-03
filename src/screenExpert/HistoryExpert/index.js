@@ -23,10 +23,14 @@ const HistoryExpert = () => {
 
   const activeDetailModal = (order) => {
     setDetailOrder(order);
-    setModalDetail(true);
 
     if (order.status >= 6) {
       setModeHistory(true);
+      setModalDetail(true);
+    } else {
+      setModeHistory(false);
+
+      setModalDetail(true);
     }
   };
   useEffect(() => {

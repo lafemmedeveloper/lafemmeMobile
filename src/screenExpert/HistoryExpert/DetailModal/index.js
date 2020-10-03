@@ -29,7 +29,7 @@ const DetailModal = (props) => {
   const mapStyle = require('../../../config/mapStyle.json');
 
   const {order, modeHistory} = props;
-
+  console.log('mode hsitory ==>', modeHistory);
   const filterOrder = modeHistory
     ? order
     : expertOpenOrders.filter((o) => o.id === order.id)[0];
@@ -70,8 +70,7 @@ const DetailModal = (props) => {
       setDateCount(
         `${t.remainDays}d:${t.remainHours}h:${t.remainMinutes}m:${t.remainSeconds}s`,
       );
-      console.log('t.remainHours =====>', t.remainHours);
-      if (t.remainDays <= 30) {
+      if (t.remainHours < 1) {
         clearInterval(timerUpdate);
         setActiveStatus(true);
       }
@@ -641,7 +640,7 @@ const DetailModal = (props) => {
 
 const styles = StyleSheet.create({
   container: {
-    height: Metrics.screenHeight - 40,
+    height: Metrics.screenHeight - 80,
     paddingTop: 40,
   },
   mapView: {

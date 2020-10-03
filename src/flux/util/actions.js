@@ -86,7 +86,7 @@ export const getOrders = (dispatch) => {
     setLoading(true, dispatch);
     const ordersRef = firestore()
       .collection('orders')
-      .where('experts.uid', '==', uid);
+      .where('client.uid', '==', uid);
     ordersRef.orderBy('createDate', 'desc');
 
     ordersRef.onSnapshot((orders) => {
@@ -96,7 +96,6 @@ export const getOrders = (dispatch) => {
           ...item.data(),
         };
       });
-      console.log('listOrders =====================>', listOrders);
       return dispatch({type: GET_ORDERS, payload: listOrders});
     });
     setLoading(false, dispatch);
