@@ -23,7 +23,7 @@ import auth from '@react-native-firebase/auth';
 const HomeExpert = () => {
   const {state, authDispatch, utilDispatch} = useContext(StoreContext);
   const {util} = state;
-  const {expertActiveOrders, deviceInfo, nextOrder} = util;
+  const {expertActiveOrders, nextOrder} = util;
 
   const [modalDetail, setModalDetail] = useState(false);
   const [detailOrder, setDetailOrder] = useState(null);
@@ -56,8 +56,6 @@ const HomeExpert = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const appType = deviceInfo;
-
   const [coordinate, setCoordinate] = useState(null);
 
   const currentCoordinate = () => {
@@ -83,7 +81,8 @@ const HomeExpert = () => {
 
   return (
     <>
-      <StatusBar backgroundColor={Colors.expert.primaryColor} />
+      <StatusBar backgroundColor={'white'} barStyle={'dark-content'} />
+
       <View style={styles.container}>
         <HeaderExpert user={state.auth.user} dispatch={authDispatch} />
         {nextOrder &&

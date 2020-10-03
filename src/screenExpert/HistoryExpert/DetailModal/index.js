@@ -28,9 +28,11 @@ const DetailModal = (props) => {
 
   const mapStyle = require('../../../config/mapStyle.json');
 
-  const {order} = props;
+  const {order, modeHistory} = props;
 
-  const filterOrder = expertOpenOrders.filter((o) => o.id === order.id)[0];
+  const filterOrder = modeHistory
+    ? order
+    : expertOpenOrders.filter((o) => o.id === order.id)[0];
   const {client, services, cartId, address} = filterOrder;
 
   const screen = Dimensions.get('window');
@@ -196,9 +198,6 @@ const DetailModal = (props) => {
             {cartId}
           </Text>
         </Text>
-        {/*    <View style={styles.contButtonMap}>
-          <ButtonMaps goLocation={sendLocation} />
-        </View> */}
 
         <ScrollView style={{marginTop: 20}}>
           <TouchableOpacity onPress={() => console.log('ir map')}>
@@ -612,7 +611,7 @@ const DetailModal = (props) => {
             </Text>
           </TouchableOpacity>
         )}
-        {filterOrder.status === 4 && filterOrder.qualtificationClient === '' && (
+        {filterOrder.status >= 4 && filterOrder.qualtificationClient === '' && (
           <TouchableOpacity
             onPress={() => setQualifyClient(true)}
             style={[styles.btnContainer]}>
@@ -642,7 +641,7 @@ const DetailModal = (props) => {
 
 const styles = StyleSheet.create({
   container: {
-    height: Metrics.screenHeight - 100,
+    height: Metrics.screenHeight - 40,
     paddingTop: 40,
   },
   mapView: {

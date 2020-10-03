@@ -6,7 +6,6 @@ import {
   Dimensions,
   TouchableOpacity,
   StatusBar,
-  ScrollView,
   Alert,
 } from 'react-native';
 import StepIndicator from 'react-native-step-indicator';
@@ -194,7 +193,7 @@ const OrderDetail = (props) => {
             </View>
 
             <ExpertCall expert={orderUser.experts} />
-            <ScrollView>
+            <View style={{}}>
               <View
                 style={{
                   justifyContent: 'center',
@@ -266,86 +265,66 @@ const OrderDetail = (props) => {
                     />
                   </View>
                 )}
-              </View>
 
-              {orderUser.status === 4 && (
-                <TouchableOpacity
-                  style={styles.btn}
-                  onPress={() =>
-                    Alert.alert(
-                      'Hey',
-                      'Estas seguro(a) que deseas cambiar de estado ?',
-                      [
-                        {
-                          text: 'SI',
-                          onPress: () => {
-                            updateStatus(5, orderUser, utilDispatch);
-                          },
-                        },
-                        {
-                          text: 'Cancelar',
-                          onPress: () => console.log('Cancel Pressed'),
-                          style: 'cancel',
-                        },
-                      ],
-                      {cancelable: true},
-                    )
-                  }>
-                  <Text
-                    style={Fonts.style.bold(
-                      Colors.light,
-                      Fonts.size.medium,
-                      'center',
-                    )}>
-                    Completar orden
-                  </Text>
-                </TouchableOpacity>
-              )}
-
-              {orderUser.status === 5 && (
-                <>
-                  <Text
-                    style={[
-                      Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center'),
-                      {marginVertical: 10},
-                    ]}>
-                    Calificar nuestro servicio
-                  </Text>
+                {orderUser.status === 4 && (
                   <TouchableOpacity
                     style={styles.btn}
-                    onPress={() => setModalQual(true)}>
+                    onPress={() =>
+                      Alert.alert(
+                        'Hey',
+                        'Estas seguro(a) que deseas cambiar de estado ?',
+                        [
+                          {
+                            text: 'SI',
+                            onPress: () => {
+                              updateStatus(5, orderUser, utilDispatch);
+                            },
+                          },
+                          {
+                            text: 'Cancelar',
+                            onPress: () => console.log('Cancel Pressed'),
+                            style: 'cancel',
+                          },
+                        ],
+                        {cancelable: true},
+                      )
+                    }>
                     <Text
                       style={Fonts.style.bold(
                         Colors.light,
                         Fonts.size.medium,
                         'center',
                       )}>
-                      Calificar servicio
+                      Completar orden
                     </Text>
                   </TouchableOpacity>
-                </>
-              )}
-            </ScrollView>
-            <TouchableOpacity
-              onPress={() => console.log('call soport')}
-              style={{
-                width: Metrics.screenWidth,
-                flex: 0,
-                paddingVertical: 10,
-                alignContent: 'center',
-                justifyContent: 'center',
-                paddingBottom: Metrics.addFooter + 10,
-                backgroundColor: Colors.light,
-              }}>
-              <Text
-                style={Fonts.style.underline(
-                  Colors.dark,
-                  Fonts.size.medium,
-                  'center',
-                )}>
-                Contactar a soporte
-              </Text>
-            </TouchableOpacity>
+                )}
+
+                {orderUser.status === 5 && (
+                  <>
+                    <Text
+                      style={[
+                        Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center'),
+                        {marginVertical: 10},
+                      ]}>
+                      Calificar nuestro servicio
+                    </Text>
+                    <TouchableOpacity
+                      style={styles.btn}
+                      onPress={() => setModalQual(true)}>
+                      <Text
+                        style={Fonts.style.bold(
+                          Colors.light,
+                          Fonts.size.medium,
+                          'center',
+                        )}>
+                        Calificar servicio
+                      </Text>
+                    </TouchableOpacity>
+                  </>
+                )}
+              </View>
+            </View>
             <ModalApp setOpen={setModalQual} open={modalQual}>
               <Qualify
                 type="expert"
@@ -361,6 +340,35 @@ const OrderDetail = (props) => {
           <Loading type={'client'} />
         )}
       </View>
+      <View
+        style={{
+          position: 'absolute',
+          zIndex: 5,
+          paddingBottom: Metrics.addFooter + 10,
+          bottom: 0,
+        }}>
+        <TouchableOpacity
+          onPress={() => console.log('call soport')}
+          style={{
+            width: Metrics.screenWidth,
+            paddingVertical: 10,
+            alignContent: 'center',
+            justifyContent: 'center',
+
+            backgroundColor: Colors.light,
+            zIndex: 2,
+            height: 20,
+          }}>
+          <Text
+            style={Fonts.style.underline(
+              Colors.dark,
+              Fonts.size.medium,
+              'center',
+            )}>
+            Contactar a soporte
+          </Text>
+        </TouchableOpacity>
+      </View>
     </>
   );
 };
@@ -368,19 +376,12 @@ const styles = StyleSheet.create({
   container: {flex: 1, backgroundColor: Colors.light},
   cont: {
     flex: 1,
-    flexDirection: 'row',
     backgroundColor: Colors.light,
   },
   step: {
     width: Metrics.screenWidth,
-    height: Metrics.screenHeight / 2,
+    height: Metrics.screenHeight / 4,
     marginLeft: 20,
-  },
-  step4: {
-    marginTop: 10,
-    marginLeft: 20,
-    marginBottom: 20,
-    height: 150,
   },
 
   containerPosition: {
@@ -390,7 +391,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   mapView: {
-    height: Metrics.screenHeight / 2.22,
+    height: Metrics.screenHeight / 4,
     width: '100%',
     zIndex: 1,
   },

@@ -1,7 +1,7 @@
 import React, {useEffect, useContext, useState, Fragment} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {StoreContext} from '../../flux';
-import {getExpertActiveOrders} from '../../flux/util/actions';
+import {getExpertActiveOrders, getOrders} from '../../flux/util/actions';
 import Header from './Header';
 import {ScrollView} from 'react-native-gesture-handler';
 import {Metrics} from '../../themes';
@@ -19,11 +19,18 @@ const HistoryExpert = () => {
   const [menuIndex, setMenuIndex] = useState(0);
   const [modalDetail, setModalDetail] = useState(false);
   const [detailOrder, setDetailOrder] = useState(null);
+  const [modeHistory, setModeHistory] = useState(false);
+
   const activeDetailModal = (order) => {
     setDetailOrder(order);
     setModalDetail(true);
+
+    if (order.status >= 6) {
+      setModeHistory(true);
+    }
   };
   useEffect(() => {
+    getOrders(utilDispatch);
     getExpertActiveOrders(utilDispatch);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -79,7 +86,11 @@ const HistoryExpert = () => {
         </ScrollView>
       </View>
       <ModalApp open={modalDetail} setOpen={setModalDetail}>
-        <DetailModal order={detailOrder} setModalDetail={setModalDetail} />
+        <DetailModal
+          order={detailOrder}
+          setModalDetail={setModalDetail}
+          modeHistory={modeHistory}
+        />
       </ModalApp>
     </>
   );
