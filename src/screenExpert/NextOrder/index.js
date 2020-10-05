@@ -19,6 +19,7 @@ export default (dta) => {
 
   const currentService = moment(order.date).format('dd,ll');
   const [dateCount, setDateCount] = useState('');
+  const [stopTime, setStopTime] = useState(false);
 
   const getRemainingTime = (deadline) => {
     let now = new Date(),
@@ -46,6 +47,9 @@ export default (dta) => {
       if (t.remainTime <= 1) {
         clearInterval(timerUpdate);
         activeStatus(true);
+      }
+      if (Math.sign(t.remainDays) === -1) {
+        setStopTime(true);
       }
     }, 1000);
   };
@@ -91,7 +95,14 @@ export default (dta) => {
           <Text
             style={Fonts.style.regular(Colors.dark, Fonts.size.small, 'left')}>
             <Icon name={'running'} size={12} color={Colors.light} /> Faltan{' '}
-            {dateCount}
+            <Text
+              style={Fonts.style.regular(
+                !stopTime ? Colors.dark : Colors.light,
+                Fonts.size.small,
+                'left',
+              )}>
+              {!stopTime ? dateCount : 'Terminado'}
+            </Text>
           </Text>
         </View>
         <View
