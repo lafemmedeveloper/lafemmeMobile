@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-
+import moment from 'moment';
 import {Colors, Fonts, ApplicationStyles, Metrics} from '../../../themes';
 import utilities from '../../../utilities';
 import {updateStatus} from '../../../flux/util/actions';
@@ -29,7 +29,7 @@ const DetailModal = (props) => {
   const mapStyle = require('../../../config/mapStyle.json');
 
   const {order, modeHistory} = props;
-  console.log('mode hsitory ==>', modeHistory);
+  console.log('mode history ==>', modeHistory);
   const filterOrder = modeHistory
     ? order
     : expertOpenOrders.filter((o) => o.id === order.id)[0];
@@ -38,44 +38,54 @@ const DetailModal = (props) => {
   const screen = Dimensions.get('window');
   const ASPECT_RATIO = screen.width * 0.8 - 500 / screen.height;
 
-  useEffect(() => {
-    countdown(filterOrder.date);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // useEffect(() => {
+  //   // countdown(filterOrder.date);
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   const [dateCount, setDateCount] = useState('');
   const [activeStatus, setActiveStatus] = useState(false);
   const [qualifyClient, setQualifyClient] = useState(false);
 
-  const getRemainingTime = (deadline) => {
-    let now = new Date(),
-      remainTime = (new Date(deadline) - now + 1000) / 1000,
-      remainSeconds = ('0' + Math.floor(remainTime % 60)).slice(-2),
-      remainMinutes = ('0' + Math.floor((remainTime / 60) % 60)).slice(-2),
-      remainHours = ('0' + Math.floor((remainTime / 3600) % 24)).slice(-2),
-      remainDays = Math.floor(remainTime / (3600 * 24));
+  // const getRemainingTime = (deadline) => {
+  //   console.log('deadline', deadline);
+  //   let now = new Date(),
+  //     remainTime = (new Date(deadline) - now + 1000) / 1000,
+  //     remainSeconds = ('0' + Math.floor(remainTime % 60)).slice(-2),
+  //     remainMinutes = ('0' + Math.floor((remainTime / 60) % 60)).slice(-2),
+  //     remainHours = ('0' + Math.floor((remainTime / 3600) % 24)).slice(-2),
+  //     remainDays = Math.floor(remainTime / (3600 * 24));
 
-    return {
-      remainSeconds,
-      remainMinutes,
-      remainHours,
-      remainDays,
-      remainTime,
-    };
-  };
+  //   return {
+  //     remainSeconds,
+  //     remainMinutes,
+  //     remainHours,
+  //     remainDays,
+  //     remainTime,
+  //   };
+  // };
 
-  const countdown = (deadline) => {
-    const timerUpdate = setInterval(() => {
-      let t = getRemainingTime(deadline);
-      setDateCount(
-        `${t.remainDays}d:${t.remainHours}h:${t.remainMinutes}m:${t.remainSeconds}s`,
-      );
-      if (t.remainHours < 1) {
-        clearInterval(timerUpdate);
-        setActiveStatus(true);
-      }
-    }, 1000);
-  };
+  // const countdown = (deadline) => {
+  //   const timerUpdate = setInterval(() => {
+  //= getRemainingTime(deadline);
+
+  //     var endFormat = moment(deadline).format();
+  //     let diff = moment(endFormat).diff(moment(new Date()), 'seconds');
+
+  //     // var duration = moment.duration(diff, 'seconds').format('hh:mm:ss');
+  //     // // var formatted = duration.format('hh:mm:ss');
+  //     // console.log(duration); // 01:03:40
+  //     // console.log('diff', diff);
+
+  //     setDateCount(
+  //       `${t.remainDays}d:${t.remainHours}h:${t.remainMinutes}m:${t.remainSeconds}s`,
+  //     );
+  //     if (t.remainHours < 1) {
+  //       clearInterval(timerUpdate);
+  //       setActiveStatus(true);
+  //     }
+  //   }, 1000);
+  // };
 
   const onRut = async () => {
     if (!activeStatus) {

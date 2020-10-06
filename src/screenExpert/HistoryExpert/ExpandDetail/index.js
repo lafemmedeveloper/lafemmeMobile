@@ -4,21 +4,19 @@ import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import {Colors, Fonts, Metrics} from '../../../themes';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
-export default (data) => {
+export default ({action, icon, title}) => {
   return (
     <>
-      <TouchableOpacity
-        onPress={() => data.action()}
-        style={styles.itemProfile}>
+      <TouchableOpacity onPress={() => action()} style={styles.itemProfile}>
         <View style={styles.itemIcon}>
-          <Icon name={data.icon} size={15} color={Colors.dark} />
+          <Icon name={icon} size={15} color={Colors.dark} />
         </View>
         <Text
           style={[
             Fonts.style.regular(Colors.dark, Fonts.size.medium, 'center'),
             {marginLeft: 20},
           ]}>
-          {data.title}
+          {title}
         </Text>
 
         <View style={styles.itemIconEnd}>

@@ -224,7 +224,7 @@ const Cart = (props) => {
 
   const addCart = () => {
     const cart = user.cart.services.length;
-    if (cart > 1) {
+    if (cart < 1) {
       setShowModalService(true);
     } else {
       Alert.alert('Lo siento', 'Solo puedes agregar un servicio por orden');

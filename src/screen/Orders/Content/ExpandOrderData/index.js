@@ -102,7 +102,7 @@ export default (dta) => {
               size={12}
               color={Colors[appType].primaryColor}
             />{' '}
-            Faltan {dateCount}
+            Faltan {order.date}
           </Text>
         </View>
         <View

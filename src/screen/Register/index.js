@@ -14,6 +14,7 @@ import moment from 'moment';
 import auth from '@react-native-firebase/auth';
 import {saveUser} from '../../flux/auth/actions';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import utilities from '../../utilities';
 
 const Register = (props) => {
   const {dispatch, activityLoading, setActivityLoading, setModalAuth} = props;
@@ -22,7 +23,7 @@ const Register = (props) => {
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
 
-  const chandleRegister = async () => {
+  const handleRegister = async () => {
     Keyboard.dismiss();
     if ((name.trim() !== '' || lastName.trim() !== '', email.trim() !== '')) {
       const currentUser = auth().currentUser;
@@ -32,6 +33,14 @@ const Register = (props) => {
           displayName: `${name} ${lastName}`,
         });
         await currentUser.updateEmail(email);
+
+        const emptyCart = {
+          date: null,
+          address: null,
+          notes: null,
+          services: [],
+          coupon: null,
+        };
 
         const data = {
           email,
@@ -45,7 +54,7 @@ const Register = (props) => {
           tyc: moment(new Date()).format('LLLL'),
           guest: [],
           rating: 5.0,
-          cart: null,
+          cart: emptyCart,
           address: [],
           imageUrl: null,
           tokens: [],
@@ -151,7 +160,7 @@ const Register = (props) => {
         />
 
         <TouchableOpacity
-          onPress={() => chandleRegister()}
+          onPress={() => handleRegister()}
           style={[
             {
               flex: 0,

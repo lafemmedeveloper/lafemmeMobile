@@ -32,9 +32,13 @@ const Address = (props) => {
     const {latitude, longitude} = address.coordinates;
 
     let coverage = validateCoverage(latitude, longitude, coverageZones);
-
+    let services = user?.cart?.services ?? [];
     if (coverage) {
-      await updateProfile({...user.cart, address}, 'cart', authDispatch);
+      await updateProfile(
+        {...user.cart, address, services},
+        'cart',
+        authDispatch,
+      );
       closeModal();
     } else {
       Alert.alert(

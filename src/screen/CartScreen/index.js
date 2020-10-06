@@ -39,7 +39,6 @@ const CartScreen = (props) => {
   const [notes, setNotes] = useState('');
   const [modalNote, setModalNote] = useState(false);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-  const [isTimePickerVisible, setIsTimePickerVisible] = useState(false);
   console.log('moment =>', moment(new Date()).format('YYYY-MM-DD HH:mm:ss'));
 
   useEffect(() => {
@@ -126,30 +125,24 @@ const CartScreen = (props) => {
     getCoverage('Medellín', utilDispatch);
   }, [utilDispatch]);
 
-  const handleConfirmDate = (date) => {
-    const handleDate = moment(date).format('YYYY-MM-DD');
+  const handleConfirmDate = async (date) => {
+    const handleDate = moment(date).format('YYYY-MM-DD HH:mm');
 
     setDateCalendar(handleDate);
     setDatePickerVisibility(false);
-    setIsTimePickerVisible(true);
+    await updateProfile(
+      {...user.cart, date: dateCalendar},
+      'cart',
+      authDispatch,
+    );
   };
 
-  const hideDatePicker = () => {
-    setIsTimePickerVisible(false);
+  const hideDatePicker = async () => {
     setDatePickerVisibility(false);
-  };
-  const handleConfirmTime = async (hour) => {
-    const dateTime = moment(hour).format('HH:mm:ss');
-    const date = `${dateCalendar} ${dateTime}`;
-
-    await updateProfile({...user.cart, date}, 'cart', authDispatch);
   };
 
   let isCompleted =
-    user.cart.address &&
-    user.cart.date &&
-    user.cart.services.length > 0 &&
-    user.cart.notes;
+    user.cart.address && user.cart.date && user.cart.services.length > 0;
 
   const activeSendOrder = () => {
     let servicesType = [];
@@ -208,26 +201,22 @@ const CartScreen = (props) => {
     }
   };
 
-  const addCart = () => {
-    const cart = user.cart.services.length;
-    if (cart > 1) {
-      setModalCart(true);
-    } else {
-      Alert.alert('Lo siento', 'Solo puedes agregar un servicio por orden');
-    }
-  };
+  // const addCart = () => {
+  //   const cart = user.cart.services.length;
+  //   if (cart < 1) {
+  //     setModalCart(true);
+  //   } else {
+  //     Alert.alert('Lo siento', 'Solo puedes agregar un servicio por orden');
+  //   }
+  // };
   const removeItem = async (id) => {
     const filterService = user.cart.services.filter((s) => s.id !== id);
     const emptyCart = {
       ...user.cart,
-      date: null,
-      address: null,
-      notes: null,
       services: [],
-      coupon: null,
     };
     if (filterService !== 0) {
-      await updateProfile([emptyCart], 'cart', authDispatch);
+      await updateProfile(emptyCart, 'cart', authDispatch);
     }
   };
   return (
@@ -271,17 +260,26 @@ const CartScreen = (props) => {
               />
             );
           })}
-        <TouchableOpacity
-          onPress={() => addCart()}
-          style={[
-            styles.productContainer,
-            {backgroundColor: Colors.client.primaryColor},
-          ]}>
-          <Text
-            style={Fonts.style.bold(Colors.light, Fonts.size.medium, 'center')}>
-            {'+ Agregar servicios'}
-          </Text>
-        </TouchableOpacity>
+        {/* {user &&
+          user.cart &&
+          user.cart.services &&
+          user.cart.services.length === 0 && (
+            <TouchableOpacity
+              onPress={() => addCart()}
+              style={[
+                styles.productContainer,
+                {backgroundColor: Colors.client.primaryColor},
+              ]}>
+              <Text
+                style={Fonts.style.bold(
+                  Colors.light,
+                  Fonts.size.medium,
+                  'center',
+                )}>
+                {'+ Agregar servicios'}
+              </Text>
+            </TouchableOpacity>
+          )} */}
 
         <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
 
@@ -396,11 +394,11 @@ const CartScreen = (props) => {
             <View>
               <DateTimePickerModal
                 isVisible={isDatePickerVisible}
-                mode="date"
+                isDarkModeEnabled={false}
+                mode="datetime"
                 onConfirm={handleConfirmDate}
                 onCancel={hideDatePicker}
                 is24Hour={true}
-                isDarkModeEnabled={true}
                 locale="es_ES"
                 headerTextIOS="Elige un a Fecha de reserva"
                 cancelTextIOS="Cancelar"
@@ -419,32 +417,7 @@ const CartScreen = (props) => {
                 }}
               />
             </View>
-            <View>
-              <DateTimePickerModal
-                isVisible={isTimePickerVisible}
-                mode="time"
-                onConfirm={handleConfirmTime}
-                onCancel={hideDatePicker}
-                is24Hour={false}
-                form
-                // isDarkModeEnabled={false}
-                locale="es_co"
-                format="HH:mm:ss"
-                headerTextIOS="Elige un Hora de reserva"
-              />
 
-              <View
-                opacity={0.0}
-                style={{
-                  position: 'absolute',
-                  width: '100%',
-                  height: '100%',
-
-                  flex: 1,
-                  backgroundColor: 'purple',
-                }}
-              />
-            </View>
             {/* endDate */}
 
             <View style={styles.itemTitleContainer}>
@@ -454,7 +427,7 @@ const CartScreen = (props) => {
                   Fonts.size.medium,
                   'left',
                 )}>
-                {'Comentarios'}
+                {'Comentarios (Opcional)'}
               </Text>
             </View>
             <TouchableOpacity onPress={() => setModalNote(true)}>
