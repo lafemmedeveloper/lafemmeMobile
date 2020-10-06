@@ -25,7 +25,7 @@ const HistoryExpert = () => {
   const activeDetailModal = (order) => {
     setDetailOrder(order);
 
-    if (order.status >= 6) {
+    if (order.status >= 5) {
       setModeHistory(true);
       setModalDetail(true);
     } else {
@@ -90,6 +90,9 @@ const HistoryExpert = () => {
         </ScrollView>
       </View>
       <ModalApp open={modalDetail} setOpen={setModalDetail}>
+
+
+
         <DetailModal
           order={detailOrder}
           setModalDetail={setModalDetail}

@@ -57,7 +57,7 @@ const EnableCoverage = (props) => {
               Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center'),
               {marginBottom: 10},
             ]}>
-            {'Completa tu direccón'}
+            {'Completa tu dirección'}
           </Text>
           <MapView
             provider={__DEV__ ? null : PROVIDER_GOOGLE} // remove if not using Google Maps

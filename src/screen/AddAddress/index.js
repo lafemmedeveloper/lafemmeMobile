@@ -96,8 +96,8 @@ const AddAddress = (props) => {
     let address = [...user.address, item];
 
     console.log('=== saveAddress address ==>', address);
-    await updateProfile(address, 'address', authDispatch);
 
+    await updateProfile(address, 'address', authDispatch);
     setIsCoverage(addressStatus.searching);
     closeAddAddress(false);
   };
