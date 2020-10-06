@@ -138,7 +138,7 @@ export const getExpertActiveOrders = (dispatch) => {
   let ordersRef = firestore()
     .collection('orders')
     .where('status', '>=', 1)
-    .where('status', '<=', 5);
+    .where('status', '<', 5);
   ordersRef.where('experts.uid', '==', uid);
   let listOrders = [];
 
@@ -199,7 +199,6 @@ export const getExpertOpenOrders = (activity, dispatch) => {
 };
 
 export const assignExpert = async (user, order, dispatch) => {
-  console.log('order ==>', order);
   const assingExpertUrl =
     'https://us-central1-lafemme-5017a.cloudfunctions.net/assignExpert';
 
