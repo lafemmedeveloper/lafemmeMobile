@@ -14,8 +14,6 @@ const HistoryExpert = () => {
   const {util, auth} = state;
   const {user} = auth;
   const {expertOpenOrders, expertHistoryOrders} = util;
-  console.log('expertActiveOrders ==>', expertOpenOrders);
-  console.log('expertHistoryOrders ==>', expertHistoryOrders);
 
   const [menuIndex, setMenuIndex] = useState(0);
   const [modalDetail, setModalDetail] = useState(false);
@@ -90,9 +88,6 @@ const HistoryExpert = () => {
         </ScrollView>
       </View>
       <ModalApp open={modalDetail} setOpen={setModalDetail}>
-
-
-
         <DetailModal
           order={detailOrder}
           setModalDetail={setModalDetail}
