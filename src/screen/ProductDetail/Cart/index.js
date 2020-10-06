@@ -91,9 +91,7 @@ const Cart = (props) => {
         ({guestId}) => guestId !== item.id,
       );
 
-      setAddonsGuest({
-        addonsGuestFilter,
-      });
+      setAddonsGuest(addonsGuestFilter);
 
       data = [...guestList.slice(0, index), ...guestList.slice(index + 1)];
     } else {
@@ -136,9 +134,10 @@ const Cart = (props) => {
       setAddonsList(addonsGuest);
 
       data = [...addonsList.slice(0, index), ...addonsList.slice(index + 1)];
+      setAddonsGuest([]);
     } else {
       data = addonsList && addonsList ? [...addonsList, itemData] : [itemData];
-      return setAddonsList(data);
+      setAddonsList(data);
     }
   };
 
@@ -230,6 +229,7 @@ const Cart = (props) => {
       Alert.alert('Lo siento', 'Solo puedes agregar un servicio por orden');
     }
   };
+
   return (
     <View
       style={{

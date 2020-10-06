@@ -126,7 +126,7 @@ const HandleGuest = (props) => {
               'right',
               1,
             )}>
-            {Utilities.formatCOP(product.price)}
+            {Utilities.formatCOP((guestList.length + 1) * product.price)}
           </Text>
         </View>
       </View>
