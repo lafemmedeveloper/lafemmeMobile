@@ -39,7 +39,6 @@ const CartScreen = (props) => {
   const [notes, setNotes] = useState('');
   const [modalNote, setModalNote] = useState(false);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-  console.log('moment =>', moment(new Date()).format('YYYY-MM-DD HH:mm:ss'));
 
   useEffect(() => {
     getServices(serviceDispatch);
@@ -125,18 +124,6 @@ const CartScreen = (props) => {
     getCoverage('Medellín', utilDispatch);
   }, [utilDispatch]);
 
-  const handleConfirmDate = async (date) => {
-    const handleDate = moment(date).format('YYYY-MM-DD HH:mm');
-
-    setDateCalendar(handleDate);
-    setDatePickerVisibility(false);
-    await updateProfile(
-      {...user.cart, date: dateCalendar},
-      'cart',
-      authDispatch,
-    );
-  };
-
   const hideDatePicker = async () => {
     setDatePickerVisibility(false);
   };
@@ -201,14 +188,6 @@ const CartScreen = (props) => {
     }
   };
 
-  // const addCart = () => {
-  //   const cart = user.cart.services.length;
-  //   if (cart < 1) {
-  //     setModalCart(true);
-  //   } else {
-  //     Alert.alert('Lo siento', 'Solo puedes agregar un servicio por orden');
-  //   }
-  // };
   const removeItem = async (id) => {
     const filterService = user.cart.services.filter((s) => s.id !== id);
     const emptyCart = {
@@ -218,6 +197,18 @@ const CartScreen = (props) => {
     if (filterService !== 0) {
       await updateProfile(emptyCart, 'cart', authDispatch);
     }
+  };
+
+  const handleConfirmDate = async (date) => {
+    const handleDate = moment(date).format('YYYY-MM-DD HH:mm');
+    setDateCalendar(handleDate);
+    setDatePickerVisibility(false);
+
+    await updateProfile(
+      {...user.cart, date: dateCalendar},
+      'cart',
+      authDispatch,
+    );
   };
   return (
     <View style={{height: 650}}>
@@ -260,12 +251,12 @@ const CartScreen = (props) => {
               />
             );
           })}
-        {/* {user &&
+        {user &&
           user.cart &&
           user.cart.services &&
           user.cart.services.length === 0 && (
             <TouchableOpacity
-              onPress={() => addCart()}
+              onPress={() => setModalCart(false)}
               style={[
                 styles.productContainer,
                 {backgroundColor: Colors.client.primaryColor},
@@ -279,7 +270,7 @@ const CartScreen = (props) => {
                 {'+ Agregar servicios'}
               </Text>
             </TouchableOpacity>
-          )} */}
+          )}
 
         <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
 
@@ -398,7 +389,7 @@ const CartScreen = (props) => {
                 mode="datetime"
                 onConfirm={handleConfirmDate}
                 onCancel={hideDatePicker}
-                is24Hour={true}
+                is24Hour={false}
                 locale="es_ES"
                 headerTextIOS="Elige un a Fecha de reserva"
                 cancelTextIOS="Cancelar"
