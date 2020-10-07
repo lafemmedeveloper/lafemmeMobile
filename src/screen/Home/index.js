@@ -42,10 +42,6 @@ const Home = () => {
   const {user} = state.auth;
   const {services} = service;
   const {deviceInfo, orders} = util;
-  console.log(
-    'usuario current=>',
-    user ? user : '=========User is Empty============',
-  );
 
   const appType = deviceInfo;
 
