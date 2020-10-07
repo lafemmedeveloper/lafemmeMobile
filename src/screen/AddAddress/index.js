@@ -30,7 +30,6 @@ const AddAddress = (props) => {
   const {auth, util} = state;
   const {user} = auth;
   const {coverageZones} = util;
-  console.log('coverageZones ==>', coverageZones);
 
   const mapStyle = require('../../config/mapStyle.json');
   const screen = Dimensions.get('window');
@@ -206,7 +205,7 @@ const AddAddress = (props) => {
         style={{
           position: 'absolute',
           width: '90%',
-          bottom: Metrics.screenHeight / 9,
+          bottom: Metrics.screenHeight / 5 - 20,
           zIndex: 5,
           justifyContent: 'space-between',
           alignSelf: 'center',
@@ -237,7 +236,6 @@ const AddAddress = (props) => {
           fetchDetails={true}
           renderDescription={(row) => row.description} // custom description render
           onPress={(data, details = null) => updateLocation(data, details)}
-          value="hola"
           query={{
             // available options: https://developers.google.com/places/web-service/autocomplete
             key: APIKEY,
