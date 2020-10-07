@@ -1,13 +1,14 @@
 import React, {useEffect, useContext, useState, Fragment} from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, Text} from 'react-native';
 import {StoreContext} from '../../flux';
 import {getExpertActiveOrders, getOrders} from '../../flux/util/actions';
 import Header from './Header';
 import {ScrollView} from 'react-native-gesture-handler';
-import {Metrics} from '../../themes';
+import {Colors, Fonts, Metrics} from '../../themes';
 import ExpandHistoryData from './ExpandHistoryData';
 import ModalApp from '../../components/ModalApp';
 import DetailModal from './DetailModal';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const HistoryExpert = () => {
   const {state, utilDispatch} = useContext(StoreContext);
@@ -58,32 +59,86 @@ const HistoryExpert = () => {
             paddingTop: 25,
           }}>
           <>
-            {menuIndex === 0 &&
-              expertOpenOrders.length > 0 &&
-              expertOpenOrders.map((item, index) => {
-                return (
-                  <Fragment key={index}>
-                    <ExpandHistoryData
-                      activeDetailModal={activeDetailModal}
-                      order={item}
-                      appType={'expert'}
+            {menuIndex === 0 && expertOpenOrders.length > 0
+              ? expertOpenOrders.map((item, index) => {
+                  return (
+                    <Fragment key={index}>
+                      <ExpandHistoryData
+                        activeDetailModal={activeDetailModal}
+                        order={item}
+                        appType={'expert'}
+                      />
+                    </Fragment>
+                  );
+                })
+              : menuIndex === 0 && (
+                  <View>
+                    <Icon
+                      name="room-service-outline"
+                      size={50}
+                      color={Colors.expert.primaryColor}
+                      style={{alignSelf: 'center', marginTop: 40}}
                     />
-                  </Fragment>
-                );
-              })}
-            {menuIndex === 1 &&
-              expertHistoryOrders.length > 0 &&
-              expertHistoryOrders.map((item, index) => {
-                return (
-                  <Fragment key={index}>
-                    <ExpandHistoryData
-                      activeDetailModal={activeDetailModal}
-                      order={item}
-                      appType={'expert'}
+                    <Text
+                      style={[
+                        Fonts.style.bold(Colors.dark, Fonts.size.h4, 'center'),
+                        {marginTop: 10},
+                      ]}>
+                      Lo siento
+                    </Text>
+                    <Text
+                      style={[
+                        Fonts.style.regular(
+                          Colors.dark,
+                          Fonts.size.medium,
+                          'center',
+                        ),
+                        {marginTop: 10},
+                      ]}>
+                      Actualmente no cuentas con ordenes activas
+                    </Text>
+                  </View>
+                )}
+            {menuIndex === 1 && expertHistoryOrders.length > 0
+              ? expertHistoryOrders.map((item, index) => {
+                  return (
+                    <Fragment key={index}>
+                      <ExpandHistoryData
+                        activeDetailModal={activeDetailModal}
+                        order={item}
+                        appType={'expert'}
+                      />
+                    </Fragment>
+                  );
+                })
+              : menuIndex === 1 && (
+                  <View>
+                    <Icon
+                      name="history"
+                      size={50}
+                      color={Colors.expert.primaryColor}
+                      style={{alignSelf: 'center', marginTop: 40}}
                     />
-                  </Fragment>
-                );
-              })}
+                    <Text
+                      style={[
+                        Fonts.style.bold(Colors.dark, Fonts.size.h4, 'center'),
+                        {marginTop: 10},
+                      ]}>
+                      Lo siento
+                    </Text>
+                    <Text
+                      style={[
+                        Fonts.style.regular(
+                          Colors.dark,
+                          Fonts.size.medium,
+                          'center',
+                        ),
+                        {marginTop: 10},
+                      ]}>
+                      Actualmente no cuentas con ordenes anteriores
+                    </Text>
+                  </View>
+                )}
           </>
         </ScrollView>
       </View>

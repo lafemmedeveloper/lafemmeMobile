@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {View, ScrollView, StyleSheet, StatusBar} from 'react-native';
 import ExpandHome from '../../components/ExpandHome';
 import {Metrics, Images, Colors} from '../../themes';
@@ -19,6 +19,7 @@ import Header from '../../components/Header';
 import {getGallery, getOrders, getDeviceInfo} from '../../flux/util/actions';
 import Loading from '../../components/Loading';
 import auth from '@react-native-firebase/auth';
+import ExpandOrderData from '../ExpandOrderData';
 const Home = () => {
   const TIME_SET = 500;
   const navigation = useNavigation();
@@ -41,11 +42,7 @@ const Home = () => {
   const {service, util} = state;
   const {user} = state.auth;
   const {services} = service;
-  const {deviceInfo, orders} = util;
-  console.log(
-    'usuario current=>',
-    user ? user : '=========User is Empty============',
-  );
+  const {deviceInfo, orders, nextOrderClient} = util;
 
   const appType = deviceInfo;
 
@@ -103,6 +100,11 @@ const Home = () => {
       setModalAuth(true);
     }
   };
+
+  const activeDetailModal = (order) => {
+    navigation.navigate('OrderDetail', order);
+  };
+
   return (
     <>
       <StatusBar
@@ -123,6 +125,19 @@ const Home = () => {
           onActionR={() => {}}
         />
         <ScrollView style={[styles.scroll]} bounces={true}>
+          {nextOrderClient &&
+            nextOrderClient.length > 0 &&
+            nextOrderClient.map((item, index) => {
+              return (
+                <Fragment key={index}>
+                  <ExpandOrderData
+                    activeDetailModal={activeDetailModal}
+                    order={item}
+                    appType={'client'}
+                  />
+                </Fragment>
+              );
+            })}
           {services &&
             services.length > 0 &&
             services.map((data) => {

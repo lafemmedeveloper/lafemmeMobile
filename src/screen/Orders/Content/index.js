@@ -7,12 +7,13 @@ import ExpandOrderData from '../../ExpandOrderData';
 import Header from '../../../components/Header';
 import {useNavigation} from '@react-navigation/native';
 import {getOrders} from '../../../flux/util/actions';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const Content = () => {
   const {utilDispatch} = useContext(StoreContext);
 
   const navigation = useNavigation();
-  const {state /*  serviceDispatch, authDispatch */} = useContext(StoreContext);
+  const {state} = useContext(StoreContext);
   const {util} = state;
   const {orders, history} = util;
   const [menuIndex, setMenuIndex] = useState(0);
@@ -88,32 +89,86 @@ const Content = () => {
             height: '100%',
           }}>
           <>
-            {menuIndex === 0 &&
-              orders.length > 0 &&
-              orders.map((item, index) => {
-                return (
-                  <View style={{marginBottom: 5}} key={index}>
-                    <ExpandOrderData
-                      activeDetailModal={activeDetailModal}
-                      order={item}
-                      appType={'client'}
+            {menuIndex === 0 && orders.length > 0
+              ? orders.map((item, index) => {
+                  return (
+                    <View style={{marginBottom: 5}} key={index}>
+                      <ExpandOrderData
+                        activeDetailModal={activeDetailModal}
+                        order={item}
+                        appType={'client'}
+                      />
+                    </View>
+                  );
+                })
+              : menuIndex === 0 && (
+                  <View>
+                    <Icon
+                      name="room-service-outline"
+                      size={50}
+                      color={Colors.client.primaryColor}
+                      style={{alignSelf: 'center', marginTop: 40}}
                     />
+                    <Text
+                      style={[
+                        Fonts.style.bold(Colors.dark, Fonts.size.h4, 'center'),
+                        {marginTop: 10},
+                      ]}>
+                      Lo siento
+                    </Text>
+                    <Text
+                      style={[
+                        Fonts.style.regular(
+                          Colors.dark,
+                          Fonts.size.medium,
+                          'center',
+                        ),
+                        {marginTop: 10},
+                      ]}>
+                      Actualmente no cuentas con ordenes activas
+                    </Text>
                   </View>
-                );
-              })}
-            {menuIndex === 1 &&
-              history.length > 0 &&
-              history.map((item, index) => {
-                return (
-                  <Fragment key={index}>
-                    <ExpandOrderData
-                      activeDetailModal={activeDetailModal}
-                      order={item}
-                      appType={'client'}
+                )}
+            {menuIndex === 1 && history.length > 0
+              ? history.map((item, index) => {
+                  return (
+                    <Fragment key={index}>
+                      <ExpandOrderData
+                        activeDetailModal={activeDetailModal}
+                        order={item}
+                        appType={'client'}
+                      />
+                    </Fragment>
+                  );
+                })
+              : menuIndex === 1 && (
+                  <View>
+                    <Icon
+                      name="history"
+                      size={50}
+                      color={Colors.client.primaryColor}
+                      style={{alignSelf: 'center', marginTop: 40}}
                     />
-                  </Fragment>
-                );
-              })}
+                    <Text
+                      style={[
+                        Fonts.style.bold(Colors.dark, Fonts.size.h4, 'center'),
+                        {marginTop: 10},
+                      ]}>
+                      Lo siento
+                    </Text>
+                    <Text
+                      style={[
+                        Fonts.style.regular(
+                          Colors.dark,
+                          Fonts.size.medium,
+                          'center',
+                        ),
+                        {marginTop: 10},
+                      ]}>
+                      Actualmente no cuentas con ordenes anteriores
+                    </Text>
+                  </View>
+                )}
           </>
         </ScrollView>
       </View>

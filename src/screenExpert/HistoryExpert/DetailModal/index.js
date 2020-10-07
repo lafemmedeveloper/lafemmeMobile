@@ -21,17 +21,16 @@ import Qualify from '../../../components/Qualify';
 const DetailModal = (props) => {
   const {state, utilDispatch} = useContext(StoreContext);
   const {util} = state;
-  const {expertOpenOrders} = util;
+  const {expertOpenOrders, expertHistoryOrders} = util;
 
   const {loading} = util;
 
   const mapStyle = require('../../../config/mapStyle.json');
 
   const {order, modeHistory} = props;
-  console.log('mode history ==>', modeHistory);
 
   const dataOrder = !expertOpenOrders.filter((o) => o.id === order.id)[0]
-    ? order
+    ? expertHistoryOrders.filter((o) => o.id === order.id)[0] || order
     : expertOpenOrders.filter((o) => o.id === order.id)[0];
 
   const filterOrder = modeHistory ? order : dataOrder;
@@ -47,7 +46,7 @@ const DetailModal = (props) => {
     console.log('time await  ======>', resulTime.remainHours);
 
     if (resulTime.remainHours > 1) {
-      Alert.alert('Ups', `Aun faltan : ${resulTime} para continuar`);
+      Alert.alert('Ups', 'Lo siento aun falta mas de una hora para esta orden');
     } else {
       const status = 2;
       updateStatus(status, filterOrder, utilDispatch);
@@ -139,6 +138,8 @@ const DetailModal = (props) => {
       );
     }
   };
+
+  console.log('filterOrder.status ===>', filterOrder.status);
 
   return (
     <>

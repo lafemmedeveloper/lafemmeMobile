@@ -32,6 +32,7 @@ export const INITIAL_STATE_UTIL = {
   expertActiveOrders: [],
   ordersAll: [],
   nextOrder: [],
+  nextOrderClient: [],
   activity: [],
 };
 
@@ -74,6 +75,7 @@ const getOrder = (state, action) => {
     orders,
     history,
     ordersAll,
+    nextOrderClient: ordersAll.length > 0 ? [ordersAll[0]] : [],
   };
 };
 const getDeviceInfo = (state, action) => {
