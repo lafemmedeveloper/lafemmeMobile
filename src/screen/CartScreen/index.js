@@ -35,7 +35,6 @@ const CartScreen = (props) => {
   );
   const {auth} = state;
   const {user} = auth;
-  const [dateCalendar, setDateCalendar] = useState('');
   const [notes, setNotes] = useState('');
   const [modalNote, setModalNote] = useState(false);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -201,14 +200,8 @@ const CartScreen = (props) => {
 
   const handleConfirmDate = async (date) => {
     const handleDate = moment(date).format('YYYY-MM-DD HH:mm');
-    setDateCalendar(handleDate);
+    await updateProfile({...user.cart, date: handleDate}, 'cart', authDispatch);
     setDatePickerVisibility(false);
-
-    await updateProfile(
-      {...user.cart, date: dateCalendar},
-      'cart',
-      authDispatch,
-    );
   };
   return (
     <View style={{height: 650}}>

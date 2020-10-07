@@ -29,9 +29,12 @@ const DetailModal = (props) => {
 
   const {order, modeHistory} = props;
   console.log('mode history ==>', modeHistory);
-  const filterOrder = modeHistory
+
+  const dataOrder = !expertOpenOrders.filter((o) => o.id === order.id)[0]
     ? order
     : expertOpenOrders.filter((o) => o.id === order.id)[0];
+
+  const filterOrder = modeHistory ? order : dataOrder;
   const {client, services, cartId, address} = filterOrder;
 
   const screen = Dimensions.get('window');
@@ -263,7 +266,6 @@ const DetailModal = (props) => {
             {services &&
               services.map((item, index) => {
                 const {name, clients, addOnsCount, addons} = item;
-                console.log('addons =========>', addons);
 
                 return (
                   <Fragment key={index}>
