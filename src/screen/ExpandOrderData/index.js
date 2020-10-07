@@ -55,6 +55,23 @@ export default (dta) => {
             />{' '}
             {currentService}
           </Text>
+          {appType === 'client' && (
+            <Text
+              style={Fonts.style.regular(
+                Colors.dark,
+                Fonts.size.small,
+                'left',
+              )}>
+              <Icon
+                name={'user-alt'}
+                size={12}
+                color={Colors[appType].primaryColor}
+              />{' '}
+              {order.experts
+                ? `${order.experts.firstName} ${order.experts.lastName}`
+                : 'Buscando experto.....'}
+            </Text>
+          )}
         </View>
         <View
           style={{
@@ -94,7 +111,7 @@ export default (dta) => {
 const styles = StyleSheet.create({
   contentContainer: {
     backgroundColor: Colors.light,
-    marginHorizontal: 5,
+    marginHorizontal: 10,
     padding: 20,
     marginTop: 5,
     borderRadius: 10,

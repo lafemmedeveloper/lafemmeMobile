@@ -6,6 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Alert,
+  StatusBar,
 } from 'react-native';
 import {Images, Fonts, Colors, Metrics} from '../../themes';
 import {StoreContext} from '../../flux';
@@ -353,6 +354,8 @@ const NoImage = () => {
   return (
     <>
       <Loading type={'expert'} loading={loading} />
+      <StatusBar backgroundColor={'white'} barStyle={'dark-content'} />
+
       <View
         style={{
           position: 'absolute',
@@ -399,7 +402,7 @@ const NoImage = () => {
           </Text>
           <View style={styles.contImage}>
             <Image
-              style={styles.image}
+              style={imgSource ? styles.image : styles.noImage}
               source={imgSource ? imgSource : Images.upload}
             />
           </View>
@@ -471,6 +474,12 @@ const styles = StyleSheet.create({
   },
   logout: {
     marginTop: 20,
+  },
+  noImage: {
+    alignSelf: 'center',
+    resizeMode: 'contain',
+    width: 200,
+    height: 200,
   },
 });
 

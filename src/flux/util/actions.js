@@ -174,7 +174,7 @@ export const getExpertHistoryOrders = (dispatch) => {
         ...item.data(),
       };
     });
-    console.log('listOrders =>', listOrders);
+
     return dispatch({type: GET_EXPERT_ORDER_HISTORY, payload: listOrders});
   });
 };

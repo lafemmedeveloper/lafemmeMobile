@@ -1,6 +1,6 @@
 export default {
   orderStatusStr: {
-    0: 'Buscando Expertos',
+    0: 'Buscando Experto',
     1: 'Preparando Servicio',
     2: 'En Ruta',
     3: 'En servicio',

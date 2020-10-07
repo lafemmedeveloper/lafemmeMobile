@@ -1,9 +1,13 @@
-import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import React, {useContext} from 'react';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Colors, Fonts, Metrics} from '../../themes';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {signOff} from '../../flux/auth/actions';
+import {StoreContext} from '../../flux';
 
 const NoEnabled = () => {
+  const {authDispatch} = useContext(StoreContext);
+
   return (
     <View style={styles.container}>
       <View>
@@ -31,6 +35,18 @@ const NoEnabled = () => {
               'Detectamos  algo inusual con tu cuenta por favor contacta a soporte para mas información'
             }
           </Text>
+          <TouchableOpacity
+            style={{marginTop: 20}}
+            onPress={() => signOff(authDispatch)}>
+            <Text
+              style={Fonts.style.underline(
+                Colors.dark,
+                Fonts.size.medium,
+                'center',
+              )}>
+              Cerrar sesión
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
       <View style={styles.btnContainer}>

@@ -13,7 +13,7 @@ const Content = () => {
   const {utilDispatch} = useContext(StoreContext);
 
   const navigation = useNavigation();
-  const {state /*  serviceDispatch, authDispatch */} = useContext(StoreContext);
+  const {state} = useContext(StoreContext);
   const {util} = state;
   const {orders, history} = util;
   const [menuIndex, setMenuIndex] = useState(0);
