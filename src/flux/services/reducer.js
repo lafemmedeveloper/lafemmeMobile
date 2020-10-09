@@ -1,10 +1,11 @@
 import createReducer from '../createReducer';
-import {GET_SERVICES, HANDLE_ERROR, LOADING} from './types';
+import {GET_SERVICES, HANDLE_ERROR, LOADING, GET_SERVICE} from './types';
 
 export const INITIAL_STATE_SERVICES = {
   loading: false,
   error: false,
   services: null,
+  service: null,
 };
 
 const setLoading = (state, action) => {
@@ -28,8 +29,16 @@ const getServices = (state, action) => {
   };
 };
 
+const getService = (state, action) => {
+  return {
+    ...state,
+    service: action.payload,
+  };
+};
+
 export default createReducer(INITIAL_STATE_SERVICES, {
   [LOADING]: setLoading,
   [HANDLE_ERROR]: setError,
   [GET_SERVICES]: getServices,
+  [GET_SERVICE]: getService,
 });

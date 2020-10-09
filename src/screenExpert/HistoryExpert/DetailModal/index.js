@@ -18,6 +18,8 @@ import {StoreContext} from '../../../flux';
 import ModalApp from '../../../components/ModalApp';
 import Qualify from '../../../components/Qualify';
 
+import ServiceModal from './ServiceModal';
+
 const DetailModal = (props) => {
   const {state, utilDispatch} = useContext(StoreContext);
   const {util} = state;
@@ -27,7 +29,7 @@ const DetailModal = (props) => {
 
   const mapStyle = require('../../../config/mapStyle.json');
 
-  const {order, modeHistory} = props;
+  const {order, modeHistory, setModalDetail} = props;
 
   const dataOrder = !expertOpenOrders.filter((o) => o.id === order.id)[0]
     ? expertHistoryOrders.filter((o) => o.id === order.id)[0] || order
@@ -40,6 +42,7 @@ const DetailModal = (props) => {
   const ASPECT_RATIO = screen.width * 0.8 - 500 / screen.height;
 
   const [qualifyClient, setQualifyClient] = useState(false);
+  const [modalEdit, setModalEdit] = useState(false);
 
   const onRut = async () => {
     let resulTime = utilities.counting(filterOrder.date);
@@ -140,7 +143,10 @@ const DetailModal = (props) => {
   };
 
   console.log('filterOrder.status ===>', filterOrder.status);
-
+  const close = () => {
+    setModalEdit(false);
+    setModalDetail(false);
+  };
   return (
     <>
       <Loading type={'expert'} loading={loading} />
@@ -270,6 +276,17 @@ const DetailModal = (props) => {
 
                 return (
                   <Fragment key={index}>
+                    <View style={styles.contEdit}>
+                      <TouchableOpacity
+                        style={styles.btnEdit}
+                        onPress={() => setModalEdit(true)}>
+                        <Icon
+                          name={'plus'}
+                          size={25}
+                          color={Colors.expert.primaryColor}
+                        />
+                      </TouchableOpacity>
+                    </View>
                     <Text
                       style={[
                         Fonts.style.bold(
@@ -330,7 +347,6 @@ const DetailModal = (props) => {
                     {addons.length > 0 ? (
                       addons.map((dataAddon) => {
                         const {addonName, id} = dataAddon;
-                        console.log('name ', dataAddon);
                         return (
                           <Fragment key={id}>
                             <Text
@@ -601,6 +617,9 @@ const DetailModal = (props) => {
           typeQualification={'qualtificationClient'}
         />
       </ModalApp>
+      <ModalApp setOpen={setModalEdit} open={modalEdit}>
+        <ServiceModal close={close} order={filterOrder} />
+      </ModalApp>
     </>
   );
 };
@@ -629,6 +648,30 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     justifyContent: 'center',
     marginVertical: 20,
+  },
+  btnEdit: {
+    zIndex: 2,
+    backgroundColor: Colors.light,
+    height: 50,
+    width: 50,
+    borderRadius: 25,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 4.65,
+
+    elevation: 8,
+  },
+  contEdit: {
+    alignSelf: 'flex-end',
+    right: 20,
+    position: 'absolute',
+    top: 250,
   },
 });
 
