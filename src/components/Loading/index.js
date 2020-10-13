@@ -14,7 +14,7 @@ export default ({type}) => {
           styles.container,
           {
             backgroundColor:
-              type === 'client' ? Colors.pinkMask(0.7) : Colors.expertMask(0.7),
+              type === 'client' ? Colors.pinkMask(0.7) : Colors.expertMask(0.5),
           },
         ]}>
         <WaveIndicator

@@ -8,6 +8,7 @@ import {
   Alert,
   ActivityIndicator,
   Keyboard,
+  Linking,
 } from 'react-native';
 import {Images, Colors, Fonts, Metrics} from '../../themes';
 import MyTextInput from '../../components/MyTextInput';
@@ -15,6 +16,7 @@ import Loading from '../../components/Loading';
 import {StoreContext} from '../../flux';
 import {Login, setUser} from '../../flux/auth/actions';
 import auth from '@react-native-firebase/auth';
+import Config from 'react-native-config';
 
 const LoginExpert = () => {
   const {state, authDispatch} = useContext(StoreContext);
@@ -47,74 +49,74 @@ const LoginExpert = () => {
 
   return (
     <>
-      <Loading type={'expert'} loading={state.auth.loading} />
-      <View style={styles.container}>
-        <View style={styles.contentContainer}>
-          <Image
-            style={{
-              width: Metrics.images.logo,
-              height: Metrics.images.logo - 100,
-              resizeMode: 'contain',
-              alignSelf: 'center',
-              marginTop: 40,
-            }}
-            source={Images.logoExpert}
-          />
+      <View style={styles.contentContainer}>
+        <Image
+          style={{
+            width: Metrics.images.logo,
+            height: Metrics.images.logo - 100,
+            resizeMode: 'contain',
+            alignSelf: 'center',
+            marginVertical: 20,
+          }}
+          source={Images.logoExpert}
+        />
 
+        <Text
+          style={[
+            Fonts.style.regular(Colors.dark, Fonts.size.h6, 'center'),
+            {marginVertical: 16},
+          ]}>
+          {'Iniciar Sesión'}
+          {state.auth.loading && <ActivityIndicator />}
+        </Text>
+
+        <MyTextInput
+          pHolder={'Correo electrónico'}
+          text={email}
+          onChangeText={(text) => setEmail(text)}
+          secureText={false}
+          textContent={'emailAddress'}
+          autoCapitalize={'none'}
+        />
+        <MyTextInput
+          pHolder={'Contraseña'}
+          text={password}
+          onChangeText={(text) => setPassword(text)}
+          secureText={true}
+          textContent={'password'}
+          autoCapitalize={'none'}
+        />
+        <TouchableOpacity
+          onPress={() => handleLogin()}
+          style={[
+            styles.btnContainer,
+            {
+              backgroundColor: Colors.expert.secondaryColor,
+            },
+          ]}>
           <Text
-            style={[
-              Fonts.style.regular(Colors.dark, Fonts.size.h6, 'center'),
-              {marginVertical: 16},
-            ]}>
-            {'Iniciar Sesión'}
-            {state.auth.loading && <ActivityIndicator />}
+            style={Fonts.style.bold(Colors.light, Fonts.size.medium, 'center')}>
+            {'Iniciar sesión'}
           </Text>
-
-          <MyTextInput
-            pHolder={'Correo electrónico'}
-            text={email}
-            onChangeText={(text) => setEmail(text)}
-            secureText={false}
-            textContent={'emailAddress'}
-            autoCapitalize={'none'}
-          />
-          <MyTextInput
-            pHolder={'Contraseña'}
-            text={password}
-            onChangeText={(text) => setPassword(text)}
-            secureText={true}
-            textContent={'password'}
-            autoCapitalize={'none'}
-          />
-          <TouchableOpacity
-            onPress={() => handleLogin()}
-            style={[
-              styles.btnContainer,
-              {
-                backgroundColor: Colors.expert.secondaryColor,
-              },
-            ]}>
-            <Text
-              style={Fonts.style.bold(
-                Colors.light,
-                Fonts.size.medium,
-                'center',
-              )}>
-              {'Iniciar sesión'}
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity styles={styles.contacSupport}>
-            <Text
-              style={Fonts.style.underline(
-                Colors.dark,
-                Fonts.size.medium,
-                'center',
-              )}>
-              Quiero pertenecer al equipo la femme
-            </Text>
-          </TouchableOpacity>
-        </View>
+        </TouchableOpacity>
+        <TouchableOpacity
+          styles={styles.contacSupport}
+          onPress={() => {
+            Linking.openURL(
+              `whatsapp://send?text=Hola me gustaría pertenecer al equipo de La Femme &phone=${Config.ADMIN_PHONE}`,
+            );
+          }}>
+          <Text
+            style={Fonts.style.underline(
+              Colors.dark,
+              Fonts.size.medium,
+              'center',
+            )}>
+            Quiero pertenecer al equipo la femme
+          </Text>
+        </TouchableOpacity>
       </View>
+      <Loading type={'expert'} />
     </>
   );
 };

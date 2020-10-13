@@ -12,7 +12,6 @@ const images = {
 
   logoLafemme: require('../Images/logoLafemme.png'),
   logoExpert: require('../Images/logoExpert.png'),
-  logoExpertText: require('../Images/logoExpertText.png'),
 
   moto: require('../Images/moto.png'),
   user: require('../Images/user.png'),

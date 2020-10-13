@@ -20,7 +20,10 @@ import {signOff, updateProfile, setLoading} from '../../flux/auth/actions';
 import Loading from '../../components/Loading';
 
 const options = {
-  title: 'Selecciona o toma una imagen',
+  title: 'Selecciona o toma una imagén',
+  cancelButtonTitle: 'Cancelar',
+  takePhotoButtonTitle: 'Tomar una fotografía',
+  chooseFromLibraryButtonTitle: 'Selecciona de la galería',
   storageOptions: {
     skipBackup: true,
     path: 'images',
@@ -346,7 +349,10 @@ const NoImage = () => {
   };
   const validateImage = async () => {
     if (imgSource === '') {
-      Alert.alert('Ups!', 'Es necesario tu foto de perfil');
+      Alert.alert(
+        'Ups!',
+        'Es necesario cargar una foto de perfil para continuar',
+      );
     } else {
       await uploadImage();
     }
@@ -355,36 +361,10 @@ const NoImage = () => {
     <>
       <Loading type={'expert'} loading={loading} />
       <StatusBar backgroundColor={'white'} barStyle={'dark-content'} />
-
-      <View
-        style={{
-          position: 'absolute',
-          zIndex: 1000,
-          top: 10,
-          justifyContent: 'flex-end',
-          flexDirection: 'row',
-          right: 20,
-        }}>
-        <TouchableOpacity onPress={() => signOff(authDispatch)}>
-          <Text
-            style={Fonts.style.regular(
-              Colors.expert.primaryColor,
-              Fonts.size.h6,
-              'center',
-            )}>
-            {'Cerrar sesión'}{' '}
-            <Icon
-              name={'power-off'}
-              size={15}
-              color={Colors.expert.primaryColor}
-            />
-          </Text>
-        </TouchableOpacity>
-      </View>
       <View style={styles.container}>
         <View style={styles.contContainer}>
           <Text
-            style={Fonts.style.semiBold(Colors.gray, Fonts.size.h6, 'center')}>
+            style={Fonts.style.regular(Colors.gray, Fonts.size.h6, 'center')}>
             Hola,{' '}
             <Text
               style={Fonts.style.semiBold(
@@ -392,34 +372,30 @@ const NoImage = () => {
                 Fonts.size.h6,
                 'center',
               )}>
-              {user && `${user.firstName}`}
+              {user && `${user.firstName} ${user.lastName}`}
+            </Text>{' '}
+            <Text
+              style={Fonts.style.regular(Colors.gray, Fonts.size.h6, 'center')}>
+              Para continuar tu experiencia La Femme es necesario subir tu foto
+              de perfil.
             </Text>
           </Text>
 
-          <Text
-            style={Fonts.style.semiBold(Colors.gray, Fonts.size.h6, 'center')}>
-            Completa tu foto de perfil para continuar
-          </Text>
           <View style={styles.contImage}>
             <Image
-              style={imgSource ? styles.image : styles.noImage}
-              source={imgSource ? imgSource : Images.upload}
+              style={styles.image}
+              source={imgSource ? imgSource : Images.defaultUser}
             />
           </View>
 
           <TouchableOpacity onPress={() => pickImage()}>
             <Text
-              style={Fonts.style.bold(
+              style={Fonts.style.underline(
                 Colors.expert.primaryColor,
                 Fonts.size.h6,
                 'center',
               )}>
-              {'Tomar o cargar foto'}{' '}
-              <Icon
-                name={'camera'}
-                size={15}
-                color={Colors.expert.primaryColor}
-              />
+              {'Tomar o cargar foto'}
             </Text>
           </TouchableOpacity>
         </View>
@@ -434,10 +410,27 @@ const NoImage = () => {
         ]}>
         <Text
           style={Fonts.style.bold(Colors.light, Fonts.size.medium, 'center')}>
-          {'Continuar'}{' '}
+          {'Continuar'}{'  '}
           <Icon name={'arrow-right'} size={15} color={Colors.light} />
         </Text>
       </TouchableOpacity>
+      <View
+        style={{
+          justifyContent: 'center',
+          flexDirection: 'row',
+          paddingBottom: Metrics.addFooter,
+        }}>
+        <TouchableOpacity onPress={() => signOff(authDispatch)}>
+          <Text
+            style={Fonts.style.underline(
+              Colors.expert.primaryColor,
+              Fonts.size.medium,
+              'center',
+            )}>
+            {'Cerrar sesión'}
+          </Text>
+        </TouchableOpacity>
+      </View>
     </>
   );
 };
@@ -468,18 +461,12 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   contContainer: {
-    paddingHorizontal: 10,
+    paddingHorizontal: 30,
     paddingVertical: 60,
     borderRadius: 10,
   },
   logout: {
     marginTop: 20,
-  },
-  noImage: {
-    alignSelf: 'center',
-    resizeMode: 'contain',
-    width: 200,
-    height: 200,
   },
 });
 

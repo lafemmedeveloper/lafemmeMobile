@@ -51,6 +51,7 @@ export default {
       .replace(/^-+/, '')
       .replace(/-+$/, '');
   },
+
   counting: (date) => {
     let now = new Date(),
       remainTime = (new Date(date) - now + 1000) / 1000,
@@ -66,5 +67,12 @@ export default {
       remainDays,
       remainTime,
     };
+  },
+
+  capitalize: (s) => {
+    if (typeof s !== 'string') {
+      return '';
+    }
+    return s.charAt(0).toUpperCase() + s.slice(1);
   },
 };

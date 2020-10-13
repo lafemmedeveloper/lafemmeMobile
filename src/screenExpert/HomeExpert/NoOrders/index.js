@@ -27,6 +27,7 @@ const NoOrders = (props) => {
                 marginTop: -20,
                 marginBottom: 20,
                 resizeMode: 'contain',
+                tintColor: Colors.expert.primaryColor,
               }}
               source={Images.handleTime}
             />
@@ -71,6 +72,7 @@ const NoOrders = (props) => {
                 marginTop: -20,
                 marginBottom: 20,
                 resizeMode: 'contain',
+                tintColor: Colors.expert.primaryColor,
               }}
               source={Images.noConection}
             />

@@ -7,21 +7,12 @@ export default (data) => {
 
   return (
     <View style={[styles.container, ApplicationStyles.shadowsClient]}>
-      <View style={styles.addHeader}>
+      <View style={styles.addHeader} />
+      <View style={[styles.content]}>
         <Text
           style={Fonts.style.semiBold(Colors.dark, Fonts.size.h6, 'center')}>
           Mi Balance
         </Text>
-      </View>
-      <View style={[styles.content]}>
-        <View
-          style={[
-            styles.contentC,
-            ApplicationStyles.centerContent,
-            {flexDirection: 'row'},
-          ]}>
-          {/*  */}
-        </View>
       </View>
       <View style={[styles.contentBtn]}>
         <TouchableOpacity
@@ -67,8 +58,6 @@ export default (data) => {
 const styles = StyleSheet.create({
   container: {
     width: Metrics.screenWidth,
-    paddingTop: 10,
-    position: 'absolute',
     zIndex: 100,
     height: 60 + Metrics.addHeader,
     backgroundColor: Colors.light,
@@ -92,7 +81,8 @@ const styles = StyleSheet.create({
   content: {
     width: Metrics.screenWidth,
     flex: 1,
-    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 
   contentBtn: {

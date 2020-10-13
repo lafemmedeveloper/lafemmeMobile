@@ -52,11 +52,7 @@ const HistoryExpert = () => {
 
         <ScrollView
           style={{
-            fielx: 1,
-            width: Metrics.screenWidth,
-            height: '100%',
-            marginTop: 40 + Metrics.addHeader,
-            paddingTop: 25,
+            flex: 1,
           }}>
           <>
             {menuIndex === 0 && expertOpenOrders.length > 0

@@ -40,14 +40,14 @@ export default (dta) => {
             </Text>
           </Text>
           <Text
-            style={Fonts.style.regular(Colors.dark, Fonts.size.small, 'left')}>
+            style={Fonts.style.regular(Colors.light, Fonts.size.small, 'left')}>
             <Icon name={'map-marker-alt'} size={12} color={Colors.light} />{' '}
             {order.address.name} {order.address.locality}
             {' - '}
             {order.address.neighborhood}
           </Text>
           <Text
-            style={Fonts.style.regular(Colors.dark, Fonts.size.small, 'left')}>
+            style={Fonts.style.regular(Colors.light, Fonts.size.small, 'left')}>
             <Icon name={'calendar'} size={12} color={Colors.light} />{' '}
             {currentService}
           </Text>

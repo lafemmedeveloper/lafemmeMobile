@@ -36,7 +36,7 @@ const HeaderExpert = (props) => {
         <View>
           <Image
             style={{width: 100, height: 50, resizeMode: 'contain'}}
-            source={Images.logoExpertText}
+            source={Images.logoExpert}
           />
         </View>
         <View

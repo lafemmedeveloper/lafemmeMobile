@@ -24,11 +24,18 @@ const ModalPhoto = (props) => {
     close,
     changeStatus,
   } = props;
+
   const options = {
-    title: 'Selecciona o toma una imagen',
+    title: 'Selecciona o toma una imagén',
+    cancelButtonTitle: 'Cancelar',
+    takePhotoButtonTitle: 'Tomar una fotografía',
+    chooseFromLibraryButtonTitle: 'Selecciona de la galería',
     storageOptions: {
       skipBackup: true,
       path: 'images',
+      takePhotoButtonTitle: 'Acceder a la cámara',
+      chooseFromLibraryButtonTitle: 'Importar desde la libreria',
+      cancelButtonTitle: 'Cancelar',
     },
   };
   const modelState = {

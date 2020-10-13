@@ -31,7 +31,10 @@ import UploadPhoto from './UploadPhoto';
 
 const GalleryExpert = (props) => {
   const options = {
-    title: 'Selecciona o toma una imagen',
+    title: 'Selecciona o toma una imagén',
+    cancelButtonTitle: 'Cancelar',
+    takePhotoButtonTitle: 'Tomar una fotografía',
+    chooseFromLibraryButtonTitle: 'Selecciona de la galería',
     storageOptions: {
       skipBackup: true,
       path: 'images',

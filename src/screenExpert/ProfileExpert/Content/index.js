@@ -10,21 +10,19 @@ import {
   ActivityIndicator,
   Platform,
 } from 'react-native';
-
+import FastImage from 'react-native-fast-image';
+import StarRating from 'react-native-star-rating';
+import WebView from 'react-native-webview';
+import Share from 'react-native-share';
+import Rate, {AndroidMarket} from 'react-native-rate';
+import UpdatePassword from './Modals/UpdatePassword';
+import Header from '../Header';
 import {Colors, Fonts, Metrics} from '../../../themes';
 import ItemProfile from '../../../components/ItemProfile';
 import {setLoading, signOff, updateProfile} from '../../../flux/auth/actions';
-import FastImage from 'react-native-fast-image';
-import StarRating from 'react-native-star-rating';
 import ModalApp from '../../../components/ModalApp';
-import UpdatePassword from './Modals/UpdatePassword';
-import WebView from 'react-native-webview';
-import Rate, {AndroidMarket} from 'react-native-rate';
-import Share from 'react-native-share';
-
 import ImagePicker from 'react-native-image-picker';
 import ImageResizer from 'react-native-image-resizer';
-
 import {firebase} from '@react-native-firebase/storage';
 import utilities from '../../../utilities';
 import GalleryExpert from './Modals/GalleryExpert';
@@ -37,7 +35,10 @@ const Content = () => {
   const {user} = auth;
 
   const options = {
-    title: 'Selecciona o toma una imagen',
+    title: 'Selecciona o toma una imagén',
+    cancelButtonTitle: 'Cancelar',
+    takePhotoButtonTitle: 'Tomar una fotografía',
+    chooseFromLibraryButtonTitle: 'Selecciona de la galería',
     storageOptions: {
       skipBackup: true,
       path: 'images',
@@ -470,17 +471,12 @@ const Content = () => {
   return (
     <>
       <View style={styles.container}>
-        <View style={{paddingTop: 20}}>
-          <Text
-            style={Fonts.style.semiBold(Colors.dark, Fonts.size.h6, 'center')}>
-            {'Perfil y configuración'}
-          </Text>
-        </View>
-
-        <ScrollView //Content
-        >
-          <View // Image profile
-          >
+        <Header title={'Perfil y configuración'} />
+        <ScrollView
+          style={{
+            flex: 1,
+          }}>
+          <View>
             {user && user.imageUrl && (
               <View style={styles.containerImageProfile}>
                 <View>
@@ -497,12 +493,12 @@ const Content = () => {
                         style={[
                           Fonts.style.regular(
                             Colors.dark,
-                            Fonts.size.small,
+                            Fonts.size.medium,
                             'center',
                           ),
                           {marginTop: 2.5},
                         ]}>
-                        {'Calificación '} {user.rating}
+                        {'Calificación '} {user.rating.toFixed(1)}
                       </Text>
 
                       <StarRating
@@ -511,8 +507,8 @@ const Content = () => {
                         rating={user.rating ? parseFloat(user.rating) : 5}
                         starSize={15}
                         emptyStarColor={Colors.gray}
-                        fullStarColor={Colors.start}
-                        halfStarColor={Colors.start}
+                        fullStarColor={Colors.client.primaryColor}
+                        halfStarColor={Colors.client.secondaryColor}
                       />
                     </>
                   )}
@@ -530,8 +526,26 @@ const Content = () => {
                   {activity && activity.length > 0 ? (
                     activity.map((item, index) => {
                       return (
-                        <View key={index} style={{marginVertical: 2.5}}>
-                          <Text style={styles.activity}>{item[0].name}</Text>
+                        <View
+                          key={index}
+                          style={{
+                            marginVertical: 2.5,
+                            borderRadius: 15,
+                            backgroundColor: Colors.expert.primaryColor,
+                          }}>
+                          <Text
+                            style={[
+                              Fonts.style.regular(
+                                Colors.light,
+                                Fonts.size.small,
+                              ),
+                              'center',
+                              {
+                                paddingHorizontal: 10,
+                              },
+                            ]}>
+                            {utilities.capitalize(item[0].name)}
+                          </Text>
                         </View>
                       );
                     })
@@ -546,7 +560,7 @@ const Content = () => {
           <View //items
             style={styles.profileContainer}>
             <ItemProfile
-              title={`${user.firstName}${user.lastName}`}
+              title={`${user.firstName} ${user.lastName}`}
               icon={'user'}
               decorationLine={true}
             />
@@ -614,7 +628,7 @@ const Content = () => {
             />
           </View>
           <View //logout
-            style={styles.profileContainer}>
+            style={[styles.profileContainer, {marginVertical: 40}]}>
             <ItemProfile
               title={'Cerrar Sesión'}
               icon={'sign-out-alt'}

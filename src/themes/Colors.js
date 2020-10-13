@@ -33,7 +33,7 @@ const colors = {
   backgroundGradient: ['#393e46', '#363c44'],
   loader: 'rgba(10,3,8,0.8)',
   pinkMask: (opacity) => `rgba(100,74, 87,${opacity})`,
-  expertMask: (opacity) => `rgba(123,218, 211,${opacity})`,
+  expertMask: (opacity) => `rgba(0,59, 72,${opacity})`,
   lightMask: (opacity) => `rgba(255,255, 255,${opacity})`,
 };
 

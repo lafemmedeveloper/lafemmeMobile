@@ -10,6 +10,10 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {Fonts, Colors, Images, Metrics} from '../../../../../../themes';
 import {Picker} from '@react-native-community/picker';
+import utilities from '../../../../../../utilities';
+
+
+
 
 const UploadPhoto = (props) => {
   const {
@@ -59,7 +63,7 @@ const UploadPhoto = (props) => {
             {services.map((item) => {
               return (
                 <Picker.Item
-                  label={item[0].name}
+                  label={utilities.capitalize(item[0].name)}
                   value={item[0].name}
                   key={item[0].id}
                 />
