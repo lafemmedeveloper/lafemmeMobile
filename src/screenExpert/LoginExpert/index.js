@@ -51,14 +51,20 @@ const LoginExpert = () => {
       <View style={styles.container}>
         <View style={styles.contentContainer}>
           <Image
-            style={{width: 100, height: 100, resizeMode: 'contain'}}
+            style={{
+              width: Metrics.images.logo,
+              height: Metrics.images.logo - 100,
+              resizeMode: 'contain',
+              alignSelf: 'center',
+              marginTop: 40,
+            }}
             source={Images.logoExpert}
           />
 
           <Text
             style={[
               Fonts.style.regular(Colors.dark, Fonts.size.h6, 'center'),
-              {marginVertical: 20},
+              {marginVertical: 16},
             ]}>
             {'Iniciar Sesión'}
             {state.auth.loading && <ActivityIndicator />}
@@ -95,6 +101,16 @@ const LoginExpert = () => {
                 'center',
               )}>
               {'Iniciar sesión'}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity styles={styles.contacSupport}>
+            <Text
+              style={Fonts.style.underline(
+                Colors.dark,
+                Fonts.size.medium,
+                'center',
+              )}>
+              Quiero pertenecer al equipo la femme
             </Text>
           </TouchableOpacity>
         </View>
@@ -135,8 +151,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width: Metrics.screenWidth,
     paddingHorizontal: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
+    marginTop: 40,
   },
   footerContainer: {
     flex: 0,
@@ -188,6 +203,10 @@ const styles = StyleSheet.create({
 
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  contacSupport: {
+    marginTop: 40,
+    backgroundColor: 'red',
   },
 });
 

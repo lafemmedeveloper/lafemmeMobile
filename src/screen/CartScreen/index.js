@@ -54,7 +54,7 @@ const CartScreen = (props) => {
   };
 
   const sendOrder = async (data) => {
-    activeMessage(data.id, authDispatch);
+    await activeMessage(data.id, authDispatch);
     try {
       firestore()
         .collection('orders')

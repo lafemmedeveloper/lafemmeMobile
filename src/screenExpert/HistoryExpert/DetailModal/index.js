@@ -347,8 +347,9 @@ const DetailModal = (props) => {
                     {addons.length > 0 ? (
                       addons.map((dataAddon) => {
                         const {addonName, id} = dataAddon;
+
                         return (
-                          <Fragment key={id}>
+                          <View key={id} style={styles.contAddons}>
                             <Text
                               style={[
                                 Fonts.style.regular(
@@ -360,7 +361,7 @@ const DetailModal = (props) => {
                               ]}>
                               {addonName}{' '}
                             </Text>
-                          </Fragment>
+                          </View>
                         );
                       })
                     ) : (
@@ -459,97 +460,99 @@ const DetailModal = (props) => {
                 const {duration, total, totalAddons, totalServices} = item;
 
                 return (
-                  <Fragment key={index}>
-                    <Text
-                      style={[
-                        Fonts.style.regular(
-                          Colors.dark,
-                          Fonts.size.medium,
-                          'left',
-                        ),
-                        {marginLeft: 20},
-                      ]}>
-                      Duracion :{' '}
+                  <View key={index} style={styles.cont}>
+                    <View>
                       <Text
                         style={[
-                          Fonts.style.bold(
+                          Fonts.style.regular(
                             Colors.dark,
                             Fonts.size.medium,
                             'left',
                           ),
                           {marginLeft: 20},
                         ]}>
-                        {duration} mins
+                        Duracion :{' '}
+                        <Text
+                          style={[
+                            Fonts.style.bold(
+                              Colors.dark,
+                              Fonts.size.medium,
+                              'left',
+                            ),
+                            {marginLeft: 20},
+                          ]}>
+                          {duration} mins
+                        </Text>
                       </Text>
-                    </Text>
 
-                    <Text
-                      style={[
-                        Fonts.style.regular(
-                          Colors.dark,
-                          Fonts.size.medium,
-                          'left',
-                        ),
-                        {marginLeft: 20},
-                      ]}>
-                      SubTotal :{' '}
                       <Text
                         style={[
-                          Fonts.style.bold(
+                          Fonts.style.regular(
                             Colors.dark,
                             Fonts.size.medium,
                             'left',
                           ),
                           {marginLeft: 20},
                         ]}>
-                        {utilities.formatCOP(totalServices)}
+                        SubTotal :{' '}
+                        <Text
+                          style={[
+                            Fonts.style.bold(
+                              Colors.dark,
+                              Fonts.size.medium,
+                              'left',
+                            ),
+                            {marginLeft: 20},
+                          ]}>
+                          {utilities.formatCOP(totalServices)}
+                        </Text>
                       </Text>
-                    </Text>
-                    <Text
-                      style={[
-                        Fonts.style.regular(
-                          Colors.dark,
-                          Fonts.size.medium,
-                          'left',
-                        ),
-                        {marginLeft: 20},
-                      ]}>
-                      Adiciones :{' '}
                       <Text
                         style={[
-                          Fonts.style.bold(
+                          Fonts.style.regular(
                             Colors.dark,
                             Fonts.size.medium,
                             'left',
                           ),
                           {marginLeft: 20},
                         ]}>
-                        {utilities.formatCOP(totalAddons)}
+                        Adiciones :{' '}
+                        <Text
+                          style={[
+                            Fonts.style.bold(
+                              Colors.dark,
+                              Fonts.size.medium,
+                              'left',
+                            ),
+                            {marginLeft: 20},
+                          ]}>
+                          {utilities.formatCOP(totalAddons)}
+                        </Text>
                       </Text>
-                    </Text>
-                    <Text
-                      style={[
-                        Fonts.style.regular(
-                          Colors.dark,
-                          Fonts.size.medium,
-                          'left',
-                        ),
-                        {marginLeft: 20},
-                      ]}>
-                      Total de servicios:{' '}
                       <Text
                         style={[
-                          Fonts.style.bold(
+                          Fonts.style.regular(
                             Colors.dark,
                             Fonts.size.medium,
                             'left',
                           ),
                           {marginLeft: 20},
                         ]}>
-                        {utilities.formatCOP(total)}
+                        Total de servicios:{' '}
+                        <Text
+                          style={[
+                            Fonts.style.bold(
+                              Colors.dark,
+                              Fonts.size.medium,
+                              'left',
+                            ),
+                            {marginLeft: 20},
+                          ]}>
+                          {utilities.formatCOP(total)}
+                        </Text>
                       </Text>
-                    </Text>
-                  </Fragment>
+                    </View>
+                  </View>
                 );
               })}
           </View>
@@ -672,6 +675,9 @@ const styles = StyleSheet.create({
     right: 20,
     position: 'absolute',
     top: 250,
+  },
+  contAddons: {
+    flexDirection: 'row',
   },
 });
 

@@ -240,11 +240,18 @@ const Cart = (props) => {
 
     console.log('services', services);
 
-    // await updateOrder({...user.cart, services}, 'cart', authDispatch);
+
+    await updateOrder(
+      services,
+
+      'services',
+      order.id,
+      serviceDispatch,
+    );
 
     setShowModalService(false);
 
-    navigation.navigate('Home');
+    navigation.navigate('TabBottom');
   };
 
   let addOnPrice = _.sumBy(addonsGuest, 'addOnPrice');
@@ -263,16 +270,7 @@ const Cart = (props) => {
 
   const addCart = () => {
     setShowModalService(true);
-
-    /*    const cart = services.length;
-    if (cart < 1) {
-      setShowModalService(true);
-    } else {
-      Alert.alert('Lo siento', 'Solo puedes agregar un servicio por orden');
-    } */
   };
-
-  console.log('timeTotal ===>', timeTotal);
 
   return (
     <View

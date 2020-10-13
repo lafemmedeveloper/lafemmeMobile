@@ -285,7 +285,7 @@ const HandleAddOns = (props) => {
                             'left',
                             0,
                           )}>
-                          {user.firstName} {user.lastName} (yo)
+                          {user.firstName} {user.lastName} (Cliente)
                         </Text>
                       </View>
                       <View>
