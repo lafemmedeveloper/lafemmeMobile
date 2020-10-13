@@ -38,7 +38,7 @@ const FormGuest = (props) => {
           onChangeText={(text) => setForm({...form, lastName: text})}
           secureText={false}
           textContent={'name'}
-          autoCapitalize={'words'}
+          autoCapitalize={'none'}
         />
 
         <MyTextInput
@@ -47,7 +47,7 @@ const FormGuest = (props) => {
           onChangeText={(text) => setForm({...form, email: text})}
           secureText={false}
           textContent={'name'}
-          autoCapitalize={'none'}
+          autoCapitalize={''}
         />
         <MyTextInput
           pHolder={'Teléfono (opcional)'}
@@ -68,9 +68,10 @@ const FormGuest = (props) => {
             flexDirection: 'row',
             justifyContent: 'center',
             width: '100%',
+
             paddingHorizontal: 10,
             paddingVertical: 10,
-            backgroundColor: Colors.client.primaryColor,
+            backgroundColor: Colors.expert.primaryColor,
             marginBottom: Metrics.addFooter + 10,
           },
         ]}>

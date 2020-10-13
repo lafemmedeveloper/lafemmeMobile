@@ -1,11 +1,11 @@
 const colors = {
   client: {
-    primaryColor: '#ff4879',
-    secondaryColor: '#e85b79',
+    primaryColor: '#f26856',
+    secondaryColor: '#f26856',
   },
   expert: {
-    primaryColor: '#7bdad3',
-    secondaryColor: '#7bdad3',
+    primaryColor: '#003b48',
+    secondaryColor: '#003b48',
   },
   dark: '#333333',
   gray: '#adadad',

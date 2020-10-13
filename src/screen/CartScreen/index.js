@@ -54,7 +54,7 @@ const CartScreen = (props) => {
   };
 
   const sendOrder = async (data) => {
-    activeMessage(data.id, authDispatch);
+    await activeMessage(data.id, authDispatch);
     try {
       firestore()
         .collection('orders')
@@ -168,6 +168,7 @@ const CartScreen = (props) => {
           email: user.email,
           phone: user.phone,
           rating: user.rating,
+          guest: user.guest,
         },
         createDate: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
         cartId: Utilities.create_CartId(),
@@ -178,7 +179,6 @@ const CartScreen = (props) => {
         ...user.cart,
       };
       sendOrder(data);
-      console.log('data', data);
     } else {
       Alert.alert(
         'Ups...',

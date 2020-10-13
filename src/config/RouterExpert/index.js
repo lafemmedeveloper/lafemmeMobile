@@ -1,35 +1,40 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useContext} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {NavigationContainer} from '@react-navigation/native';
 import TabBottom from './TabBottom';
-
-import {observeUser} from '../../flux/auth/actions';
 import {StoreContext} from '../../flux';
 import LoginExpert from '../../screenExpert/LoginExpert';
 import NoImage from '../../screenExpert/NoImage';
+import DetailProduct from '../../screenExpert/DetailProduct';
 
 const Stack = createStackNavigator();
 
 const Router = () => {
-  const {authDispatch, state} = useContext(StoreContext);
+  const {state} = useContext(StoreContext);
   const {auth} = state;
   const {user} = auth;
-  // useEffect(() => {
-  //   observeUser(authDispatch);
-  // }, [authDispatch]);
 
   if (user) {
     return (
       <NavigationContainer>
         <Stack.Navigator>
           {user.imageUrl ? (
-            <Stack.Screen
-              name={'TabBottom'}
-              component={TabBottom}
-              options={{
-                headerShown: false,
-              }}
-            />
+            <>
+              <Stack.Screen
+                name={'TabBottom'}
+                component={TabBottom}
+                options={{
+                  headerShown: false,
+                }}
+              />
+              <Stack.Screen
+                name={'DetailProduct'}
+                component={DetailProduct}
+                options={{
+                  headerShown: false,
+                }}
+              />
+            </>
           ) : (
             <Stack.Screen
               name={'NoImage'}
