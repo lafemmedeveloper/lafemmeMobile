@@ -468,246 +468,253 @@ const Content = () => {
       }
     });
   };
-  return (
-    <>
-      <View style={styles.container}>
-        <Header title={'Perfil y configuración'} />
-        <ScrollView
-          style={{
-            flex: 1,
-          }}>
-          <View>
-            {user && user.imageUrl && (
-              <View style={styles.containerImageProfile}>
-                <View>
-                  <TouchableOpacity onPress={() => pickImage()}>
-                    <FastImage
-                      style={styles.containerImage}
-                      source={{uri: user ? user.imageUrl.medium : ''}}
-                      resizeMode={FastImage.resizeMode.cover}
-                    />
-                  </TouchableOpacity>
-                  {user && (
-                    <>
-                      <Text
-                        style={[
-                          Fonts.style.regular(
-                            Colors.dark,
-                            Fonts.size.medium,
-                            'center',
-                          ),
-                          {marginTop: 2.5},
-                        ]}>
-                        {'Calificación '} {user.rating.toFixed(1)}
-                      </Text>
 
-                      <StarRating
-                        disabled={true}
-                        maxStars={5}
-                        rating={user.rating ? parseFloat(user.rating) : 5}
-                        starSize={15}
-                        emptyStarColor={Colors.gray}
-                        fullStarColor={Colors.client.primaryColor}
-                        halfStarColor={Colors.client.secondaryColor}
+  if (!user) {
+    return null;
+  } else {
+    return (
+      <>
+        <View style={styles.container}>
+          <Header title={'Perfil y configuración'} />
+          <ScrollView
+            style={{
+              flex: 1,
+            }}>
+            <View>
+              {user && user.imageUrl && (
+                <View style={styles.containerImageProfile}>
+                  <View>
+                    <TouchableOpacity onPress={() => pickImage()}>
+                      <FastImage
+                        style={styles.containerImage}
+                        source={{uri: user ? user.imageUrl.medium : ''}}
+                        resizeMode={FastImage.resizeMode.cover}
                       />
-                    </>
-                  )}
-                </View>
-
-                <View style={styles.containerRating}>
-                  <Text
-                    style={[
-                      {marginBottom: 5},
-                      Fonts.style.semiBold(Colors.dark, Fonts.size.h6),
-                      'center',
-                    ]}>
-                    Actividades
-                  </Text>
-                  {activity && activity.length > 0 ? (
-                    activity.map((item, index) => {
-                      return (
-                        <View
-                          key={index}
-                          style={{
-                            marginVertical: 2.5,
-                            borderRadius: 15,
-                            backgroundColor: Colors.expert.primaryColor,
-                          }}>
-                          <Text
-                            style={[
-                              Fonts.style.regular(
-                                Colors.light,
-                                Fonts.size.small,
-                              ),
+                    </TouchableOpacity>
+                    {user && (
+                      <>
+                        <Text
+                          style={[
+                            Fonts.style.regular(
+                              Colors.dark,
+                              Fonts.size.medium,
                               'center',
-                              {
-                                paddingHorizontal: 10,
-                              },
-                            ]}>
-                            {utilities.capitalize(item[0].name)}
-                          </Text>
-                        </View>
-                      );
-                    })
-                  ) : (
-                    <ActivityIndicator color={Colors.expert.primaryColor} />
-                  )}
+                            ),
+                            {marginTop: 2.5},
+                          ]}>
+                          {'Calificación '} {user.rating.toFixed(1)}
+                        </Text>
+
+                        <StarRating
+                          disabled={true}
+                          maxStars={5}
+                          rating={user.rating ? parseFloat(user.rating) : 5}
+                          starSize={15}
+                          emptyStarColor={Colors.gray}
+                          fullStarColor={Colors.client.primaryColor}
+                          halfStarColor={Colors.client.secondaryColor}
+                        />
+                      </>
+                    )}
+                  </View>
+
+                  <View style={styles.containerRating}>
+                    <Text
+                      style={[
+                        {marginBottom: 5},
+                        Fonts.style.semiBold(Colors.dark, Fonts.size.h6),
+                        'center',
+                      ]}>
+                      Actividades
+                    </Text>
+                    {activity && activity.length > 0 ? (
+                      activity.map((item, index) => {
+                        return (
+                          <View
+                            key={index}
+                            style={{
+                              marginVertical: 2.5,
+                              borderRadius: 15,
+                              backgroundColor: Colors.expert.primaryColor,
+                            }}>
+                            <Text
+                              style={[
+                                Fonts.style.regular(
+                                  Colors.light,
+                                  Fonts.size.small,
+                                ),
+                                'center',
+                                {
+                                  paddingHorizontal: 10,
+                                },
+                              ]}>
+                              {utilities.capitalize(item[0].name)}
+                            </Text>
+                          </View>
+                        );
+                      })
+                    ) : (
+                      <ActivityIndicator color={Colors.expert.primaryColor} />
+                    )}
+                  </View>
                 </View>
-              </View>
-            )}
-          </View>
+              )}
+            </View>
 
-          <View //items
-            style={styles.profileContainer}>
-            <ItemProfile
-              title={`${user.firstName} ${user.lastName}`}
-              icon={'user'}
-              decorationLine={true}
-            />
-            <ItemProfile
-              title={`${user.email}`}
-              icon={'envelope'}
-              decorationLine={true}
-            />
+            <View //items
+              style={styles.profileContainer}>
+              <ItemProfile
+                title={user && `${user.firstName} ${user.lastName}`}
+                icon={'user'}
+                decorationLine={true}
+              />
+              <ItemProfile
+                title={`${user.email}`}
+                icon={'envelope'}
+                decorationLine={true}
+              />
 
-            <ItemProfile
-              arrow={true}
-              title={'Actualizar contraseña'}
-              icon={'lock'}
-              action={() => {
-                setModalPassword(true);
-              }}
-              decorationLine={true}
-            />
-            <ItemProfile
-              arrow={true}
-              title={'Galería INSPO'}
-              icon={'images'}
-              action={() => {
-                setGalleryModal(true);
-              }}
-              decorationLine={true}
-            />
-            <ItemProfile
-              arrow={true}
-              title={'Comparte La Femme con tus amigos'}
-              icon={'paper-plane'}
-              action={() => {
-                shareRecipe();
-              }}
-              decorationLine={true}
-            />
-          </View>
+              <ItemProfile
+                arrow={true}
+                title={'Actualizar contraseña'}
+                icon={'lock'}
+                action={() => {
+                  setModalPassword(true);
+                }}
+                decorationLine={true}
+              />
+              <ItemProfile
+                arrow={true}
+                title={'Galería INSPO'}
+                icon={'images'}
+                action={() => {
+                  setGalleryModal(true);
+                }}
+                decorationLine={true}
+              />
+              <ItemProfile
+                arrow={true}
+                title={'Comparte La Femme con tus amigos'}
+                icon={'paper-plane'}
+                action={() => {
+                  shareRecipe();
+                }}
+                decorationLine={true}
+              />
+            </View>
 
-          <View //Legals
-            style={styles.profileContainer}>
-            <ItemProfile
-              title={'Califica tu experiencia'}
-              icon={'star'}
-              action={() => {
-                activeReview();
-              }}
-              decorationLine={true}
-            />
-            <ItemProfile
-              title={'Condiciones del servicio'}
-              icon={'check-square'}
-              action={() => {
-                seTyc(true);
-              }}
-              decorationLine={true}
-            />
+            <View //Legals
+              style={styles.profileContainer}>
+              <ItemProfile
+                title={'Califica tu experiencia'}
+                icon={'star'}
+                action={() => {
+                  activeReview();
+                }}
+                decorationLine={true}
+              />
+              <ItemProfile
+                title={'Condiciones del servicio'}
+                icon={'check-square'}
+                action={() => {
+                  seTyc(true);
+                }}
+                decorationLine={true}
+              />
 
-            <ItemProfile
-              title={'Ayuda'}
-              icon={'question-circle'}
-              action={() => {
-                seTyc(true);
-              }}
-              decorationLine={false}
-            />
-          </View>
-          <View //logout
-            style={[styles.profileContainer, {marginVertical: 40}]}>
-            <ItemProfile
-              title={'Cerrar Sesión'}
-              icon={'sign-out-alt'}
-              action={() => {
-                logout();
-              }}
-              decorationLine={false}
-            />
-          </View>
-          <View //About
-            style={styles.profileContainer}>
-            <View style={styles.separator} />
-            <Text
-              style={Fonts.style.regular(
-                Colors.dark,
-                Fonts.size.small,
-                'center',
-              )}>
-              La Femme Clientes
-            </Text>
-            <Text
-              style={Fonts.style.regular(
-                Colors.dark,
-                Fonts.size.small,
-                'center',
-              )}>
-              {deviceInfo.readableVersion}
-            </Text>
-            <TouchableOpacity
-              onPress={() => {
-                Linking.openURL(
-                  'whatsapp://send?text=Me interesa contactar al desarrollador de La Femme &phone=+573106873181',
-                );
-              }}
-              style={{marginVertical: 20}}>
+              <ItemProfile
+                title={'Ayuda'}
+                icon={'question-circle'}
+                action={() => {
+                  seTyc(true);
+                }}
+                decorationLine={false}
+              />
+            </View>
+            <View //logout
+              style={[styles.profileContainer, {marginVertical: 40}]}>
+              <ItemProfile
+                title={'Cerrar Sesión'}
+                icon={'sign-out-alt'}
+                action={() => {
+                  logout();
+                }}
+                decorationLine={false}
+              />
+            </View>
+            <View //About
+              style={styles.profileContainer}>
+              <View style={styles.separator} />
               <Text
                 style={Fonts.style.regular(
-                  Colors.dark,
-                  Fonts.size.tiny,
-                  'center',
-                )}>
-                {'Desarrollado por'}
-              </Text>
-              <Text
-                style={Fonts.style.bold(
                   Colors.dark,
                   Fonts.size.small,
                   'center',
                 )}>
-                {'@NiboStudio'}
+                La Femme Clientes
               </Text>
-            </TouchableOpacity>
-            <View style={styles.separator} />
-          </View>
-        </ScrollView>
-      </View>
-      <ModalApp open={modalPassword} setOpen={setModalPassword}>
-        <UpdatePassword user={user} />
-      </ModalApp>
-      <ModalApp open={tyc} setOpen={seTyc}>
-        <View style={{height: '90%'}}>
-          <WebView
-            WebView={true}
-            source={{uri: 'https://lafemme.com.co/terminos-y-condiciones/'}}
-            // renderLoading={this.renderLoadingView}
-            startInLoadingState={true}
-            style={{
-              width: Metrics.screenWidth,
-              alignSelf: 'center',
-              flex: 1,
-            }}
-          />
+              <Text
+                style={Fonts.style.regular(
+                  Colors.dark,
+                  Fonts.size.small,
+                  'center',
+                )}>
+                {deviceInfo.readableVersion}
+              </Text>
+              <TouchableOpacity
+                onPress={() => {
+                  Linking.openURL(
+                    'whatsapp://send?text=Me interesa contactar al desarrollador de La Femme &phone=+573106873181',
+                  );
+                }}
+                style={{marginVertical: 20}}>
+                <Text
+                  style={Fonts.style.regular(
+                    Colors.dark,
+                    Fonts.size.tiny,
+                    'center',
+                  )}>
+                  {'Desarrollado por'}
+                </Text>
+                <Text
+                  style={Fonts.style.bold(
+                    Colors.dark,
+                    Fonts.size.small,
+                    'center',
+                  )}>
+                  {'@NiboStudio'}
+                </Text>
+              </TouchableOpacity>
+              <View style={styles.separator} />
+            </View>
+          </ScrollView>
         </View>
-      </ModalApp>
-      <ModalApp open={galleryModal} setOpen={setGalleryModal}>
-        <GalleryExpert user={user} services={activity} />
-      </ModalApp>
-    </>
-  );
+        <ModalApp open={modalPassword} setOpen={setModalPassword}>
+          <UpdatePassword user={user} />
+        </ModalApp>
+        <ModalApp open={tyc} setOpen={seTyc}>
+          <View style={{height: '90%'}}>
+            <WebView
+              WebView={true}
+              source={{
+                uri: 'https://lafemme.com.co/terminos-y-condiciones/',
+              }}
+              // renderLoading={this.renderLoadingView}
+              startInLoadingState={true}
+              style={{
+                width: Metrics.screenWidth,
+                alignSelf: 'center',
+                flex: 1,
+              }}
+            />
+          </View>
+        </ModalApp>
+        <ModalApp open={galleryModal} setOpen={setGalleryModal}>
+          <GalleryExpert user={user} services={activity} />
+        </ModalApp>
+      </>
+    );
+  }
 };
 const styles = StyleSheet.create({
   container: {
