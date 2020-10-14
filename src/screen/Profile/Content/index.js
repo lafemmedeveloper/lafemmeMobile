@@ -31,6 +31,7 @@ import utilities from '../../../utilities';
 import {resetReducer} from '../../../flux/util/actions';
 import {StoreContext} from '../../../flux';
 import AddAddress from '../../AddAddress';
+import Header from '../Header';
 
 const modelState = {
   images: [],
@@ -471,14 +472,9 @@ const Content = (props) => {
   return (
     <>
       <View style={styles.container}>
-        <View style={styles.headerContainer}>
-          <Text
-            style={Fonts.style.semiBold(Colors.dark, Fonts.size.h6, 'center')}>
-            {'Perfil y configuración'}
-          </Text>
-        </View>
+        <Header title={'Perfil y configuración'} />
 
-        <ScrollView>
+        <ScrollView style={{marginTop: 20}}>
           <View //profile
             style={styles.profileContainer} //profile
           >

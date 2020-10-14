@@ -83,6 +83,7 @@ const HandleResume = (props) => {
               resizeMode: 'contain',
               alignSelf: 'center',
               marginBottom: 20,
+              tintColor: Colors.expert.primaryColor,
             }}
           />
           <Text

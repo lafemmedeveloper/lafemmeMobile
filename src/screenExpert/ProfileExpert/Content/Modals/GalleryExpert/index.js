@@ -405,8 +405,18 @@ const GalleryExpert = (props) => {
         <Text style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
           {'Galeria Inspo'}
         </Text>
+        {galleryUid && galleryUid.length === 0 && (
+          <Text
+            style={[
+              Fonts.style.regular(Colors.dark, Fonts.size.h6, 'center'),
+              {marginTop: 100},
+            ]}>
+            {'Lo siento aun no tienes imagenes de tu trabajo'}
+          </Text>
+        )}
         <ScrollView horizontal style={styles.contGallery}>
           {galleryUid &&
+            galleryUid.length > 0 &&
             galleryUid.map((item) => {
               _.orderBy(item, item.date, 'desc');
               return (

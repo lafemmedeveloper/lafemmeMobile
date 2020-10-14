@@ -88,7 +88,10 @@ const OrderDetail = (props) => {
     <>
       {util.Loading && <Loading type="client" />}
 
-      <StatusBar backgroundColor={Colors.expert.primaryColor} />
+      <StatusBar
+        backgroundColor={Colors.expert.primaryColor}
+        barStyle={'light-content'}
+      />
       <View style={styles.container}>
         {orderUser ? (
           <>

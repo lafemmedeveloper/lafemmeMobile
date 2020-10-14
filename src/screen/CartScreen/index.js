@@ -217,6 +217,7 @@ const CartScreen = (props) => {
             resizeMode: 'contain',
             alignSelf: 'center',
             marginBottom: 10,
+            tintColor: Colors.client.primaryColor,
           }}
         />
         <Text style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
