@@ -738,10 +738,5 @@ const styles = StyleSheet.create({
     marginHorizontal: 25,
     marginVertical: 20,
   },
-  activity: {
-    backgroundColor: Colors.expert.primaryColor,
-    paddingHorizontal: 10,
-    borderRadius: 5,
-  },
 });
 export default Content;

@@ -12,9 +12,6 @@ import {Fonts, Colors, Images, Metrics} from '../../../../../../themes';
 import {Picker} from '@react-native-community/picker';
 import utilities from '../../../../../../utilities';
 
-
-
-
 const UploadPhoto = (props) => {
   const {
     services,

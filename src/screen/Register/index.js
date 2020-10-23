@@ -14,7 +14,6 @@ import moment from 'moment';
 import auth from '@react-native-firebase/auth';
 import {saveUser} from '../../flux/auth/actions';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import utilities from '../../utilities';
 
 const Register = (props) => {
   const {dispatch, activityLoading, setActivityLoading, setModalAuth} = props;
