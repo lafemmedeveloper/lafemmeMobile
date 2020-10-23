@@ -16,7 +16,7 @@ import CartScreen from '../CartScreen';
 import Address from '../Address';
 import AddAddress from '../AddAddress';
 import Header from '../../components/Header';
-import {getGallery, getOrders, getDeviceInfo} from '../../flux/util/actions';
+import {getOrders, getDeviceInfo} from '../../flux/util/actions';
 import Loading from '../../components/Loading';
 import auth from '@react-native-firebase/auth';
 import ExpandOrderData from '../ExpandOrderData';
@@ -64,7 +64,6 @@ const Home = () => {
     await getServices(serviceDispatch);
     activeMessage('client', authDispatch);
     getOrders(utilDispatch);
-    getGallery(utilDispatch);
   };
 
   const selectService = (product) => {

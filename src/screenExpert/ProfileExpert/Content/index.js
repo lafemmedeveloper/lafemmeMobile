@@ -31,8 +31,9 @@ import {StoreContext} from '../../../flux';
 const Content = () => {
   const {state, authDispatch} = useContext(StoreContext);
   const {util, auth} = state;
-  const {activity, deviceInfo} = util;
+  const {deviceInfo} = util;
   const {user} = auth;
+  console.log('user ==>', user);
 
   const options = {
     title: 'Selecciona o toma una imagén',
@@ -527,8 +528,9 @@ const Content = () => {
                       ]}>
                       Actividades
                     </Text>
-                    {activity && activity.length > 0 ? (
-                      activity.map((item, index) => {
+                    {user && user?.activity.length > 0 ? (
+                      user?.activity.map((item, index) => {
+                        console.log('item ==>', item);
                         return (
                           <View
                             key={index}
@@ -548,7 +550,7 @@ const Content = () => {
                                   paddingHorizontal: 10,
                                 },
                               ]}>
-                              {utilities.capitalize(item[0].name)}
+                              {utilities.capitalize(item.split('-').join(' '))}
                             </Text>
                           </View>
                         );
@@ -710,7 +712,9 @@ const Content = () => {
           </View>
         </ModalApp>
         <ModalApp open={galleryModal} setOpen={setGalleryModal}>
-          <GalleryExpert user={user} services={activity} />
+          <GalleryExpert
+            user={user} //services={activity}
+          />
         </ModalApp>
       </>
     );

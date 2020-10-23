@@ -81,28 +81,30 @@ export const getCoverage = async (city, dispatch) => {
   }
 };
 export const getOrders = (dispatch) => {
-  const uid = auth().currentUser.uid;
-  try {
-    setLoading(true, dispatch);
-    const ordersRef = firestore()
-      .collection('orders')
-      .where('client.uid', '==', uid);
-    ordersRef.orderBy('createDate', 'desc');
+  const uid = auth().currentUser ? auth().currentUser.uid : null;
+  if (uid) {
+    try {
+      setLoading(true, dispatch);
+      const ordersRef = firestore()
+        .collection('orders')
+        .where('client.uid', '==', uid);
+      ordersRef.orderBy('createDate', 'desc');
 
-    ordersRef.onSnapshot((orders) => {
-      let listOrders = orders.docs.map((item) => {
-        return {
-          id: item.id,
-          ...item.data(),
-        };
+      ordersRef.onSnapshot((orders) => {
+        let listOrders = orders.docs.map((item) => {
+          return {
+            id: item.id,
+            ...item.data(),
+          };
+        });
+        return dispatch({type: GET_ORDERS, payload: listOrders});
       });
-      return dispatch({type: GET_ORDERS, payload: listOrders});
-    });
-    setLoading(false, dispatch);
-  } catch (error) {
-    setLoading(false, dispatch);
+      setLoading(false, dispatch);
+    } catch (error) {
+      setLoading(false, dispatch);
 
-    console.log('error getOrders ==>', error);
+      console.log('error getOrders ==>', error);
+    }
   }
 };
 
@@ -133,7 +135,7 @@ export const getDeviceInfo = (dispatch) => {
 
 export const getExpertActiveOrders = (dispatch) => {
   console.log('===> getExpertActiveOrders');
-  const uid = auth().currentUser.uid;
+  const uid = auth().currentUser?.uid;
 
   let ordersRef = firestore()
     .collection('orders')
@@ -158,7 +160,6 @@ export const getExpertActiveOrders = (dispatch) => {
 };
 
 export const getExpertHistoryOrders = (dispatch) => {
-  console.log('===> getExpertActiveOrders');
   const uid = auth().currentUser.uid;
 
   let ordersRef = firestore().collection('orders').where('status', '>=', 5);
@@ -228,7 +229,7 @@ export const sendCoordinate = async (data, typeData, dispatch) => {
   const currentUser = auth().currentUser;
   try {
     setLoading(true, dispatch);
-    const userRef = firestore().collection('users').doc(currentUser.uid);
+    const userRef = firestore().collection('users').doc(currentUser?.uid);
     await userRef.set(
       {
         [typeData]: data,

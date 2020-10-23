@@ -23,6 +23,7 @@ import auth from '@react-native-firebase/auth';
 const HomeExpert = () => {
   const {state, authDispatch, utilDispatch} = useContext(StoreContext);
   const {util} = state;
+
   const {expertActiveOrders, nextOrder} = util;
 
   const [modalDetail, setModalDetail] = useState(false);
@@ -51,6 +52,14 @@ const HomeExpert = () => {
       getExpertHistoryOrders(utilDispatch);
       activeNameSlug(state.auth.user.activity, utilDispatch);
       getExpertOpenOrders(state.auth.user.activity, utilDispatch);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  useEffect(() => {
+    getDeviceInfo(utilDispatch);
+    if (state.auth.user && !state.auth.user.coordinates) {
+      currentCoordinate();
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -98,7 +107,8 @@ const HomeExpert = () => {
               </Fragment>
             );
           })}
-        {state.auth.user &&
+        {state.auth.user.coordinates &&
+        state.auth.user &&
         state.auth.user.isEnabled &&
         expertActiveOrders &&
         expertActiveOrders.length > 0 ? (
@@ -119,6 +129,7 @@ const HomeExpert = () => {
                     order={item}
                     user={state.auth.user}
                     dispatch={utilDispatch}
+                    currentCoordinate={currentCoordinate}
                   />
                 </View>
               );

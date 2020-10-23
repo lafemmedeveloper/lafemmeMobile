@@ -32,6 +32,8 @@ import {resetReducer} from '../../../flux/util/actions';
 import {StoreContext} from '../../../flux';
 import AddAddress from '../../AddAddress';
 import Header from '../Header';
+import Icon from 'react-native-vector-icons/FontAwesome5';
+import UpdateImage from './Modals/UpdateImage';
 
 const modelState = {
   images: [],
@@ -50,7 +52,6 @@ const options = {
 const Content = (props) => {
   const {utilDispatch} = useContext(StoreContext);
   const {state, dispatch} = props;
-  console.log('render:state', state);
   const {auth, util} = state;
   const {user} = auth;
   const {deviceInfo} = util;
@@ -64,7 +65,8 @@ const Content = (props) => {
 
   const [value, setValue] = useState(modelState);
   const [imageUri, setImageUri] = useState(null);
-  const [imgSource, setImgSource] = useState('');
+  const [imgSource, setImgSource] = useState(null);
+  const [modalImage, setModalImage] = useState(false);
 
   const shareRecipe = async (type, data) => {
     console.log('shareItem:', type, data);
@@ -166,19 +168,13 @@ const Content = (props) => {
       } else {
         const source = {uri: response.uri};
         setImageUri(response.uri);
-        await setImgSource(source);
-
-        setTimeout(() => {
-          uploadImage();
-        }, 100);
+        setImgSource(source);
       }
     });
   };
 
   const uploadImage = async () => {
-    console.log('imageUri ==>', imageUri);
     const ext = imageUri.split('.').pop(); // Extract image extension
-    console.log('ext ==>', ext);
     const filename = `${utilities.create_UUID()}.${ext}`; // Generate unique name
     setValue({...value, uploading: true});
     await prepareImage(user.uid, filename);
@@ -478,7 +474,17 @@ const Content = (props) => {
           <View //profile
             style={styles.profileContainer} //profile
           >
-            <TouchableOpacity onPress={() => pickImage()}>
+            <View>
+              <TouchableOpacity
+                style={styles.contUpdate}
+                onPress={() => setModalImage(true)}>
+                <Icon
+                  name="sync-alt"
+                  style={styles.update}
+                  color={Colors.client.primaryColor}
+                  size={25}
+                />
+              </TouchableOpacity>
               {user && user.imageUrl ? (
                 <Image
                   source={{uri: user.imageUrl.medium}}
@@ -500,7 +506,7 @@ const Content = (props) => {
                   }}
                 />
               )}
-            </TouchableOpacity>
+            </View>
 
             <View style={styles.separator} />
             <Text
@@ -746,6 +752,19 @@ const Content = (props) => {
           />
         </View>
       </ModalApp>
+      <ModalComponent
+        open={modalImage}
+        setOpen={setModalImage}
+        nameIcon={'image'}
+        lastTitle={'Actualiza tu Foto'}
+        title={'Cambia tu foto de perfil'}>
+        <UpdateImage
+          source={imgSource}
+          pickImage={pickImage}
+          uploadImage={uploadImage}
+          close={setModalImage}
+        />
+      </ModalComponent>
     </>
   );
 };
@@ -774,6 +793,27 @@ const styles = StyleSheet.create({
     borderBottomColor: Colors.disabledBtn,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  contUpdate: {
+    position: 'absolute',
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    zIndex: 20,
+    backgroundColor: Colors.light,
+    shadowColor: '#000',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.27,
+    shadowRadius: 4.65,
+
+    elevation: 6,
+    alignSelf: 'flex-end',
+    marginTop: 60,
   },
 });
 
