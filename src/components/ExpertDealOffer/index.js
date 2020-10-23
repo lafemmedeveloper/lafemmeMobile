@@ -8,13 +8,7 @@ import Utilities from '../../utilities';
 import AppConfig from '../../config/AppConfig';
 import {assignExpert} from '../../flux/util/actions';
 
-export default ({order, dispatch, user, currentCoordinate}) => {
-  const assingExpertOrder = async () => {
-    if (!user.coordinates) {
-      await currentCoordinate();
-    }
-    assignExpert(user, order, dispatch);
-  };
+export default ({order, dispatch, user}) => {
   return (
     <View style={styles.cellContainer}>
       <View style={styles.contentContainer}>
@@ -171,7 +165,7 @@ export default ({order, dispatch, user, currentCoordinate}) => {
       <View>
         <TouchableOpacity
           style={styles.btnContainer}
-          onPress={() => assingExpertOrder()}>
+          onPress={() => assignExpert(user, order, dispatch)}>
           <Text
             style={Fonts.style.bold(Colors.light, Fonts.size.medium, 'center')}>
             Tomar <Icon name={'arrow-right'} size={15} color={Colors.light} />

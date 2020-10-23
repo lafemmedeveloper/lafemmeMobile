@@ -15,18 +15,22 @@ import StarRating from 'react-native-star-rating';
 import WebView from 'react-native-webview';
 import Share from 'react-native-share';
 import Rate, {AndroidMarket} from 'react-native-rate';
+import Icon from 'react-native-vector-icons/FontAwesome5';
+import ImagePicker from 'react-native-image-picker';
+import ImageResizer from 'react-native-image-resizer';
+import {firebase} from '@react-native-firebase/storage';
+
 import UpdatePassword from './Modals/UpdatePassword';
 import Header from '../Header';
 import {Colors, Fonts, Metrics} from '../../../themes';
 import ItemProfile from '../../../components/ItemProfile';
 import {setLoading, signOff, updateProfile} from '../../../flux/auth/actions';
 import ModalApp from '../../../components/ModalApp';
-import ImagePicker from 'react-native-image-picker';
-import ImageResizer from 'react-native-image-resizer';
-import {firebase} from '@react-native-firebase/storage';
 import utilities from '../../../utilities';
 import GalleryExpert from './Modals/GalleryExpert';
 import {StoreContext} from '../../../flux';
+import UpdateImage from './Modals/UpdateImage';
+import ModalComponent from '../../../screen/Profile/Content/ModalComponent';
 
 const Content = () => {
   const {state, authDispatch} = useContext(StoreContext);
@@ -54,6 +58,8 @@ const Content = () => {
   const [value, setValue] = useState(modelState);
   const [imageUri, setImageUri] = useState(null);
   const [galleryModal, setGalleryModal] = useState(false);
+  const [modalImage, setModalImage] = useState(false);
+  const [imgSource, setImgSource] = useState(null);
 
   const logout = () => {
     Alert.alert(
@@ -86,9 +92,9 @@ const Content = () => {
         Alert.alert('Ups...', 'And error occured: ', response.error);
         // setLoading(false);
       } else {
-        await setImageUri(response.uri);
-
-        uploadImage();
+        const source = {uri: response.uri};
+        setImageUri(response.uri);
+        setImgSource(source);
       }
     });
   };
@@ -485,13 +491,23 @@ const Content = () => {
               {user && user.imageUrl && (
                 <View style={styles.containerImageProfile}>
                   <View>
-                    <TouchableOpacity onPress={() => pickImage()}>
+                    <View>
+                      <TouchableOpacity
+                        style={styles.contUpdate}
+                        onPress={() => setModalImage(true)}>
+                        <Icon
+                          name="sync-alt"
+                          style={styles.update}
+                          color={Colors.expert.primaryColor}
+                          size={25}
+                        />
+                      </TouchableOpacity>
                       <FastImage
                         style={styles.containerImage}
                         source={{uri: user ? user.imageUrl.medium : ''}}
                         resizeMode={FastImage.resizeMode.cover}
                       />
-                    </TouchableOpacity>
+                    </View>
                     {user && (
                       <>
                         <Text
@@ -716,6 +732,21 @@ const Content = () => {
             user={user} //services={activity}
           />
         </ModalApp>
+        <ModalComponent
+          type={'expert'}
+          open={modalImage}
+          setOpen={setModalImage}
+          nameIcon={'image'}
+          lastTitle={'Actualiza tu Foto'}
+          title={'Cambia tu foto de perfil'}>
+          <UpdateImage
+            source={imgSource}
+            pickImage={pickImage}
+            uploadImage={uploadImage}
+            close={setModalImage}
+            type={'expert'}
+          />
+        </ModalComponent>
       </>
     );
   }
@@ -737,6 +768,27 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginHorizontal: 25,
     marginVertical: 20,
+  },
+  contUpdate: {
+    position: 'absolute',
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    zIndex: 20,
+    backgroundColor: Colors.light,
+    shadowColor: '#000',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.27,
+    shadowRadius: 4.65,
+
+    elevation: 6,
+    alignSelf: 'flex-end',
+    marginTop: 60,
   },
 });
 export default Content;

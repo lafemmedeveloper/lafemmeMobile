@@ -64,7 +64,7 @@ const Home = () => {
     setLoading(true, authDispatch);
     getDeviceInfo(utilDispatch);
     await getServices(serviceDispatch);
-    activeMessage('client', authDispatch);
+    await activeMessage('client', authDispatch);
     getOrders(utilDispatch);
     setLoading(false, authDispatch);
   };

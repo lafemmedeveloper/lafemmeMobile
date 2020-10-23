@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import {
   Text,
   View,
@@ -8,14 +8,17 @@ import {
   Alert,
   StatusBar,
 } from 'react-native';
+import Geolocation from '@react-native-community/geolocation';
+
+import ImagePicker from 'react-native-image-picker';
+import ImageResizer from 'react-native-image-resizer';
+import {firebase} from '@react-native-firebase/storage';
+
 import {Images, Fonts, Colors, Metrics} from '../../themes';
 import {StoreContext} from '../../flux';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
-import ImagePicker from 'react-native-image-picker';
-import ImageResizer from 'react-native-image-resizer';
 import Utilities from '../../utilities';
-import {firebase} from '@react-native-firebase/storage';
 import {signOff, updateProfile, setLoading} from '../../flux/auth/actions';
 import Loading from '../../components/Loading';
 
@@ -40,6 +43,7 @@ const NoImage = () => {
   const [value, setValue] = useState(modelState);
   const [imageUri, setImageUri] = useState(null);
   const [imgSource, setImgSource] = useState('');
+  const [coordinate, setCoordinate] = useState(null);
 
   const pickImage = () => {
     //setLoading(true);
@@ -357,6 +361,30 @@ const NoImage = () => {
       await uploadImage();
     }
   };
+  const currentCoordinate = () => {
+    Geolocation.getCurrentPosition((info) =>
+      setCoordinate({
+        latitude: info.coords.latitude,
+        longitude: info.coords.longitude,
+      }),
+    );
+  };
+
+  useEffect(() => {
+    if (user && !user.coordinates) {
+      currentCoordinate();
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (user && coordinate) {
+      updateProfile(coordinate, 'coordinates', authDispatch);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [coordinate, user]);
+
   return (
     <>
       <Loading type={'expert'} loading={loading} />
@@ -423,11 +451,14 @@ const NoImage = () => {
         }}>
         <TouchableOpacity onPress={() => signOff(authDispatch)}>
           <Text
-            style={Fonts.style.underline(
-              Colors.expert.primaryColor,
-              Fonts.size.medium,
-              'center',
-            )}>
+            style={[
+              Fonts.style.underline(
+                Colors.expert.primaryColor,
+                Fonts.size.medium,
+                'center',
+              ),
+              {marginBottom: 40},
+            ]}>
             {'Cerrar sesión'}
           </Text>
         </TouchableOpacity>

@@ -5,7 +5,7 @@ import {View, StyleSheet, Text} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
 const ModalComponent = (data) => {
-  const {open, children, setOpen, title, lastTitle, nameIcon} = data;
+  const {open, children, setOpen, title, lastTitle, nameIcon, type} = data;
 
   return (
     <Modal
@@ -18,7 +18,7 @@ const ModalComponent = (data) => {
         <Icon
           name={nameIcon}
           size={50}
-          color={Colors.client.primaryColor}
+          color={type ? Colors[type].primaryColor : Colors.client.primaryColor}
           style={styles.icon}
         />
         <Text style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
