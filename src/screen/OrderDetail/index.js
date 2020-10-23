@@ -147,8 +147,8 @@ const OrderDetail = (props) => {
                     {orderUser.experts && (
                       <Marker.Animated
                         coordinate={{
-                          latitude: orderUser.experts.coordinate.latitude,
-                          longitude: orderUser.experts.coordinate.longitude,
+                          latitude: orderUser.experts.coordinates.latitude,
+                          longitude: orderUser.experts.coordinates.longitude,
                         }}>
                         <Icon
                           name={'map-marker-alt'}

@@ -68,7 +68,7 @@ export default (dta) => {
         <FastImage
           style={ApplicationStyles.itemImage}
           source={{
-            uri: data.imageUrl,
+            uri: data.imageUrl.medium,
             priority: FastImage.priority.normal,
           }}
           resizeMode={FastImage.resizeMode.cover}
@@ -125,7 +125,7 @@ export default (dta) => {
                     alignItems: 'center',
                     flexDirection: 'row',
                   }}
-                  image={{uri: data.imageUrl}}>
+                  image={{uri: data.imageUrl.medium}}>
                   <View
                     style={{
                       height: 80,
@@ -142,7 +142,7 @@ export default (dta) => {
                         height: 60,
                       }}>
                       <FastImage
-                        source={{uri: product.imageUrl}}
+                        source={{uri: product.imageUrl.medium}}
                         style={{
                           width: 60,
                           height: 60,
@@ -176,7 +176,7 @@ export default (dta) => {
                           Fonts.size.medium,
                           'left',
                         )}>
-                        {product.shortDescription}
+                        {product.description}
                       </Text>
                     </View>
                   </View>

@@ -66,18 +66,17 @@ const getOrder = (state, action) => {
   let orders = _.filter(action.payload, (o) => o.status <= 5);
   let history = _.filter(action.payload, (o) => o.status > 5);
 
-  orders = _.orderBy(orders, 'date', 'des');
+  orders = _.orderBy(orders, 'date', 'desc');
   history = _.orderBy(history, 'date', 'asc');
-  const ordersAll = _.orderBy(action.payload, 'date', 'asc');
-  let nextOrder = ordersAll.length > 0 ? [ordersAll[0]] : [];
+  const ordersAll = _.orderBy(action.payload, 'date', 'desc');
+  let nextOrder = orders.length > 0 ? [ordersAll[0]] : [];
 
   return {
     ...state,
     orders,
     history,
     ordersAll,
-    nextOrderClient:
-      nextOrder.length > 0 && nextOrder.filter((o) => o.status < 5),
+    nextOrderClient: nextOrder,
   };
 };
 const getDeviceInfo = (state, action) => {

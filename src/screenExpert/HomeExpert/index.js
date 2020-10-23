@@ -69,7 +69,7 @@ const HomeExpert = () => {
 
   useEffect(() => {
     if (coordinate) {
-      return () => updateProfile(coordinate, 'coordinate', authDispatch);
+      return () => updateProfile(coordinate, 'coordinates', authDispatch);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [coordinate]);

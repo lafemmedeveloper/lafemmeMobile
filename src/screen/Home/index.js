@@ -28,8 +28,8 @@ const Home = () => {
   );
 
   function onAuthStateChanged(user) {
-    if (auth().currentUser && auth().currentUser.uid) {
-      setUser(auth().currentUser.uid, authDispatch);
+    if (user) {
+      setUser(auth().currentUser?.uid, authDispatch);
     }
   }
 
@@ -104,6 +104,7 @@ const Home = () => {
   const activeDetailModal = (order) => {
     navigation.navigate('OrderDetail', order);
   };
+  console.log('nextOrderClient ===> ', nextOrderClient);
 
   return (
     <>
@@ -145,7 +146,7 @@ const Home = () => {
                 <ExpandHome
                   key={data.id}
                   data={data}
-                  image={{uri: data.imageUrl}}
+                  image={{uri: data.imageUrl.medium}}
                   slug={data.slug}
                   selectService={(data) => selectService(data)}
                 />

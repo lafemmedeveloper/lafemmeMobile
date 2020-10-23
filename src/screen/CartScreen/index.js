@@ -169,6 +169,7 @@ const CartScreen = (props) => {
           phone: user.phone,
           rating: user.rating,
           guest: user.guest,
+          numberOfServices: user.numberOfServices,
         },
         createDate: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
         cartId: Utilities.create_CartId(),
@@ -385,7 +386,7 @@ const CartScreen = (props) => {
                 onCancel={hideDatePicker}
                 is24Hour={false}
                 locale="es_ES"
-                headerTextIOS="Elige un a Fecha de reserva"
+                headerTextIOS="Elige una Fecha de servicio"
                 cancelTextIOS="Cancelar"
                 confirmTextIOS="Confirmar"
               />

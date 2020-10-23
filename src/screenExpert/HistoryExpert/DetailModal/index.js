@@ -12,7 +12,7 @@ import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {Colors, Fonts, ApplicationStyles, Metrics} from '../../../themes';
 import utilities from '../../../utilities';
-import {updateStatus} from '../../../flux/util/actions';
+import {addService, updateStatus} from '../../../flux/util/actions';
 import Loading from '../../../components/Loading';
 import {StoreContext} from '../../../flux';
 import ModalApp from '../../../components/ModalApp';
@@ -107,7 +107,7 @@ const DetailModal = (props) => {
           {
             text: 'Si',
             onPress: () => {
-              updateStatus(status, filterOrder, utilDispatch);
+              addServiceClient(status);
             },
           },
           {
@@ -141,8 +141,12 @@ const DetailModal = (props) => {
       );
     }
   };
-
-  console.log('filterOrder.status ===>', filterOrder.status);
+  const addServiceClient = async (status) => {
+    console.log('acitve number of service');
+    const mathData = filterOrder.client.numberOfServices + 1;
+    await addService(filterOrder.client.uid, mathData, utilDispatch);
+    await updateStatus(status, filterOrder, utilDispatch);
+  };
   const close = () => {
     setModalEdit(false);
     setModalDetail(false);
@@ -180,15 +184,15 @@ const DetailModal = (props) => {
               style={styles.mapView}
               customMapStyle={mapStyle}
               region={{
-                latitude: filterOrder.address.coordinates.latitude,
-                longitude: filterOrder.address.coordinates.longitude,
+                latitude: filterOrder.address.coordinates?.latitude,
+                longitude: filterOrder.address.coordinates?.longitude,
                 latitudeDelta: 0.00002,
                 longitudeDelta: 0.0002 * ASPECT_RATIO,
               }}>
               <Marker.Animated
                 coordinate={{
-                  latitude: filterOrder.address.coordinates.latitude,
-                  longitude: filterOrder.address.coordinates.longitude,
+                  latitude: filterOrder.address.coordinates?.latitude,
+                  longitude: filterOrder.address.coordinates?.longitude,
                 }}>
                 <Icon
                   name={'map-marker-alt'}
@@ -198,8 +202,8 @@ const DetailModal = (props) => {
               </Marker.Animated>
               <Marker
                 coordinate={{
-                  latitude: filterOrder.experts.coordinate.latitude,
-                  longitude: filterOrder.experts.coordinate.longitude,
+                  latitude: filterOrder.experts.coordinates?.latitude,
+                  longitude: filterOrder.experts.coordinates?.longitude,
                 }}>
                 <Icon
                   name={'map-marker-alt'}

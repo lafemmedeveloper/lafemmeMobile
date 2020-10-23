@@ -23,7 +23,6 @@ const ServiceModal = ({order, close}) => {
   console.log('state service', service.service);
   console.log('state slug ==>', order.servicesType.join());
 
-  const [serviceCurrent, setServiceCurrent] = useState(null);
   const [products, setProducts] = useState([]);
   const [addOns, setAddons] = useState([]);
 
@@ -33,7 +32,6 @@ const ServiceModal = ({order, close}) => {
 
   useEffect(() => {
     if (service.service && service.service.length > 0) {
-      setServiceCurrent(service.service[0]);
       setProducts(service.service[0].products);
       setAddons(service.service[0].addOns);
     }
@@ -63,7 +61,7 @@ const ServiceModal = ({order, close}) => {
           Products
         </Text>
         <View>
-          {products.length > 0 &&
+          {products.length > 0 ? (
             products.map((product, index) => {
               return (
                 <TouchableOpacity
@@ -97,7 +95,7 @@ const ServiceModal = ({order, close}) => {
                       alignItems: 'center',
                       flexDirection: 'row',
                     }}
-                    image={{uri: product.imageUrl}}>
+                    image={{uri: product.imageUrl.medium}}>
                     <View
                       style={{
                         height: 80,
@@ -113,7 +111,7 @@ const ServiceModal = ({order, close}) => {
                           height: 60,
                         }}>
                         <FastImage
-                          source={{uri: product.imageUrl}}
+                          source={{uri: product.imageUrl.medium}}
                           style={{
                             width: 60,
                             height: 60,
@@ -147,7 +145,7 @@ const ServiceModal = ({order, close}) => {
                             Fonts.size.medium,
                             'left',
                           )}>
-                          {product.shortDescription}
+                          {product.description}
                         </Text>
                       </View>
                     </View>
@@ -182,7 +180,16 @@ const ServiceModal = ({order, close}) => {
                   </View>
                 </TouchableOpacity>
               );
-            })}
+            })
+          ) : (
+            <Text
+              style={[
+                Fonts.style.bold(Colors.dark, Fonts.size.medium, 'left'),
+                {marginLeft: 20, marginTop: 40},
+              ]}>
+              Este servicio ya no tiene productos disponibles
+            </Text>
+          )}
         </View>
       </ScrollView>
     </View>

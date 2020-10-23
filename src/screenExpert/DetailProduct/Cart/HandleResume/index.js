@@ -31,7 +31,6 @@ const HandleResume = (props) => {
     addonsGuest,
     setShowModalService,
     sendItemCart,
-    lastTotal,
   } = props;
 
   let gList = [
@@ -308,36 +307,6 @@ const HandleResume = (props) => {
                   'left',
                   1,
                 )}>
-                TOTAL SERVICIOS ANTERIORES
-              </Text>
-              <Text
-                style={Fonts.style.regular(
-                  Colors.dark,
-                  Fonts.size.medium,
-                  'left',
-                  1,
-                )}>
-                {Utilities.formatCOP(
-                  // eslint-disable-next-line radix
-                  parseInt(lastTotal),
-                )}
-              </Text>
-            </View>
-
-            <View
-              style={{
-                flex: 1,
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                marginHorizontal: 5,
-              }}>
-              <Text
-                style={Fonts.style.regular(
-                  Colors.dark,
-                  Fonts.size.small,
-                  'left',
-                  1,
-                )}>
                 TOTAL SERVICIOS
               </Text>
               <Text
@@ -412,8 +381,7 @@ const HandleResume = (props) => {
                   parseInt(
                     product.price * (guestList.length + 1) +
                       addOnPrice +
-                      addOnCountPrice +
-                      lastTotal,
+                      addOnCountPrice,
                   ),
                 )}
               </Text>

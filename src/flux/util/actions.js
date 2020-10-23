@@ -338,17 +338,39 @@ export const activeNameSlug = async (activity, dispatch) => {
 };
 
 export const onDeleteGallery = async (id, dispatch) => {
-  setLoading(true, dispatch);
   try {
-    setLoading(false, dispatch);
+    setLoading(true, dispatch);
     await firestore().collection('gallery').doc(id).delete();
     await getGallery(dispatch);
     setLoading(false, dispatch);
   } catch (error) {
+    setLoading(false, dispatch);
     console.log('onDeleteGallery error', error);
   }
 };
 
 export const resetReducer = (dispatch) => {
   dispatch({type: GET_ORDERS, payload: []});
+};
+
+export const addService = async (uid, calcu, dispatch) => {
+  console.log('calcul number service ==>', calcu);
+  console.log('uid==>', uid);
+
+  try {
+    setLoading(true, dispatch);
+
+    const ref = firestore().collection('users').doc(uid);
+
+    await ref.set(
+      {
+        numberOfServices: calcu,
+      },
+      {merge: true},
+    );
+    setLoading(false, dispatch);
+  } catch (error) {
+    console.log('error addService ==>', error);
+    setLoading(false, dispatch);
+  }
 };

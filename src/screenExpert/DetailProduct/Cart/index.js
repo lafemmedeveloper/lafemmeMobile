@@ -240,7 +240,6 @@ const Cart = (props) => {
 
     console.log('services', services);
 
-
     await updateOrder(
       services,
 
@@ -283,7 +282,7 @@ const Cart = (props) => {
         <FastImage
           style={styles.imageProduct}
           source={{
-            uri: product.imageUrl,
+            uri: product.big,
             priority: FastImage.priority.normal,
           }}
           resizeMode={FastImage.resizeMode.cover}
@@ -353,7 +352,7 @@ const Cart = (props) => {
                   Fonts.style.light(Colors.dark, Fonts.size.medium, 'left', 0),
                   {marginTop: 10},
                 ]}>
-                {product.shortDescription}
+                {product.description}
               </Text>
             </View>
 

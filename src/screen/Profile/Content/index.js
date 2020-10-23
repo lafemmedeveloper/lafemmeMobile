@@ -154,7 +154,7 @@ const Content = (props) => {
       }
     });
   };
-  const pickImage = () => {
+  const pickImage = async () => {
     //setLoading(true);
     ImagePicker.showImagePicker(options, async (response) => {
       if (response.didCancel) {

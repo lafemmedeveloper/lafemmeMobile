@@ -410,7 +410,8 @@ const NoImage = () => {
         ]}>
         <Text
           style={Fonts.style.bold(Colors.light, Fonts.size.medium, 'center')}>
-          {'Continuar'}{'  '}
+          {'Continuar'}
+          {'  '}
           <Icon name={'arrow-right'} size={15} color={Colors.light} />
         </Text>
       </TouchableOpacity>
