@@ -7,7 +7,7 @@ import {getServices} from '../../flux/services/actions';
 import {useNavigation} from '@react-navigation/native';
 import ModalApp from '../../components/ModalApp';
 import Login from '../Login';
-import {activeMessage, setUser} from '../../flux/auth/actions';
+import {activeMessage, setLoading, setUser} from '../../flux/auth/actions';
 import BannerScroll from '../../components/BannerScroll';
 import Gallery from '../Gallery';
 import CartFooter from '../../components/CartFooter';
@@ -35,6 +35,7 @@ const Home = () => {
 
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+
     return subscriber; // unsubscribe on unmount
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -55,15 +56,17 @@ const Home = () => {
 
   useEffect(() => {
     activeFunctionsFlux();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const activeFunctionsFlux = async () => {
+    setLoading(true, authDispatch);
     getDeviceInfo(utilDispatch);
-
     await getServices(serviceDispatch);
     activeMessage('client', authDispatch);
     getOrders(utilDispatch);
+    setLoading(false, authDispatch);
   };
 
   const selectService = (product) => {
