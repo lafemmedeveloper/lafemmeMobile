@@ -46,7 +46,6 @@ const DetailModal = (props) => {
 
   const onRut = async () => {
     let resulTime = utilities.counting(filterOrder.date);
-    console.log('time await  ======>', resulTime.remainHours);
 
     if (resulTime.remainHours > 1) {
       Alert.alert('Ups', 'Lo siento aun falta mas de una hora para esta orden');

@@ -80,9 +80,7 @@ const GalleryExpert = (props) => {
   };
 
   const uploadImage = async () => {
-    console.log('imageUri ==>', imageUri);
     const ext = imageUri.split('.').pop(); // Extract image extension
-    console.log('ext ==>', ext);
     const filename = `${utilities.create_UUID()}.${ext}`; // Generate unique name
     setValue({...value, uploading: true});
     await prepareImage(user.uid, filename);
@@ -131,7 +129,6 @@ const GalleryExpert = (props) => {
                       .ref(`users/${uid}/thumbnail@${filename}`)
                       .getDownloadURL()
                       .then((url) => {
-                        console.log('url:_large', url);
                         picture = {...picture, thumbnail: url};
                         updateUser(picture);
                       });
@@ -275,7 +272,6 @@ const GalleryExpert = (props) => {
                     progress:
                       (snapshot.bytesTransferred / snapshot.totalBytes) * 100, // Calculate progress percentage
                   };
-                  console.log('snapshot', snapshot);
                   if (snapshot.state === firebase.storage.TaskState.SUCCESS) {
                     let allImages = value.images;
                     allImages.push(snapshot.downloadURL);
@@ -313,8 +309,6 @@ const GalleryExpert = (props) => {
         });
       ImageResizer.createResizedImage(x, 1024, 1024, 'JPEG', 30, 0)
         .then((RES) => {
-          console.log('RES 1024', RES);
-
           try {
             firebase
               .storage()
@@ -329,7 +323,6 @@ const GalleryExpert = (props) => {
                     progress:
                       (snapshot.bytesTransferred / snapshot.totalBytes) * 100, // Calculate progress percentage
                   };
-                  console.log('snapshot', snapshot);
                   if (snapshot.state === firebase.storage.TaskState.SUCCESS) {
                     let allImages = value.images;
                     allImages.push(snapshot.downloadURL);
@@ -345,7 +338,6 @@ const GalleryExpert = (props) => {
                       .ref(`users/${uid}/giant@${filename}`)
                       .getDownloadURL()
                       .then((url) => {
-                        console.log('url:giant', url);
                         picture = {...picture, giant: url};
                         updateUser(picture);
                       });

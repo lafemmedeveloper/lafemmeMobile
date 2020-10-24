@@ -23,7 +23,6 @@ const ButtonCoordinates = (props) => {
   };
 
   const activeLocation = async (info) => {
-    console.log('info =>', info);
     setActiveCoor(info);
     fullState(info);
   };
@@ -41,8 +40,6 @@ const ButtonCoordinates = (props) => {
 
     await Geocode.fromLatLng(info.coords.latitude, info.coords.longitude).then(
       async (response) => {
-        console.log('response ==> fullState', response);
-
         const address = response.results[0].formatted_address;
         setGoogleAddress(address);
         setName(address);
@@ -57,8 +54,6 @@ const ButtonCoordinates = (props) => {
       },
     );
   };
-
-  console.log('activeCoor =>', activeCoor);
 
   return (
     <>

@@ -106,7 +106,6 @@ const Home = () => {
   const activeDetailModal = (order) => {
     navigation.navigate('OrderDetail', order);
   };
-  console.log('nextOrderClient ===> ', nextOrderClient);
 
   return (
     <>

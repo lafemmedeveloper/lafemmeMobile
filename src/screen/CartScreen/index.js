@@ -426,6 +426,26 @@ const CartScreen = (props) => {
                 icon={'comment-alt'}
               />
             </TouchableOpacity>
+            <View style={styles.itemTitleContainer}>
+              <Text
+                style={Fonts.style.regular(
+                  Colors.client.primaryColor,
+                  Fonts.size.medium,
+                  'left',
+                )}>
+                {'¿Tienes algun cupon?'}
+              </Text>
+            </View>
+            <TouchableOpacity onPress={() => setModalNote(true)}>
+              <FieldCartConfig
+                key={'cuopons'}
+                textSecondary={''}
+                value={user.cart.notes ? user.cart.notes : false}
+                textActive={user.cart.notes}
+                textInactive={'+ Agrega un cupon'}
+                icon={'tag'}
+              />
+            </TouchableOpacity>
           </>
         )}
         <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />

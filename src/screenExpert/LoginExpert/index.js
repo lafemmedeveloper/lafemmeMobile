@@ -23,8 +23,6 @@ const LoginExpert = () => {
 
   function onAuthStateChanged(user) {
     if (auth().currentUser && auth().currentUser.uid) {
-      console.log('onAuthStateChanged:user', user._user);
-
       setUser(auth().currentUser.uid, authDispatch);
     }
   }

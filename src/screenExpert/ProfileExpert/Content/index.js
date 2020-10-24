@@ -546,7 +546,6 @@ const Content = () => {
                     </Text>
                     {user && user?.activity.length > 0 ? (
                       user?.activity.map((item, index) => {
-                        console.log('item ==>', item);
                         return (
                           <View
                             key={index}
