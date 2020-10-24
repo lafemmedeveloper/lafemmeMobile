@@ -375,3 +375,49 @@ export const addService = async (uid, calcu, dispatch) => {
     setLoading(false, dispatch);
   }
 };
+
+export const valdiateCouponDb = async (coupon, dispatch) => {
+  try {
+    const coupons = await firestore()
+      .collection('coupon')
+      .where('coupon', '==', coupon)
+      .where('isEnabled', '==', true)
+      .get();
+    const data = coupons.docs.map((doc) => {
+      const item = doc.data();
+
+      return {
+        ...item,
+        id: doc.id,
+      };
+    });
+
+    let cuoponRes = data.filter((c) => c.existence > 0);
+    let dataRes = cuoponRes.length > 0 ? cuoponRes[0] : null;
+    console.log('dataRes ==>', dataRes);
+    console.log('cuoponRes ==>', cuoponRes);
+    console.log('coupons ==>', data);
+
+    return dataRes;
+  } catch (error) {
+    console.log('error valdiateCoupon ==>', error);
+  }
+};
+export const addCoupon = async (id, math, dispatch) => {
+  try {
+    setLoading(true, dispatch);
+
+    const ref = firestore().collection('coupon').doc(id);
+
+    await ref.set(
+      {
+        existence: math,
+      },
+      {merge: true},
+    );
+    setLoading(false, dispatch);
+  } catch (error) {
+    console.log('error add cuopon ==>', error);
+    setLoading(false, dispatch);
+  }
+};

@@ -23,10 +23,12 @@ import {formatDate} from '../../helpers/MomentHelper';
 import _ from 'lodash';
 import ModalApp from '../../components/ModalApp';
 import AppConfig from '../../config/AppConfig';
-import {topicPush, getCoverage} from '../../flux/util/actions';
+import {topicPush, getCoverage, addCoupon} from '../../flux/util/actions';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import Loading from '../../components/Loading';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import ModalCuopon from './ModalCuopon';
+import utilities from '../../utilities';
 
 const CartScreen = (props) => {
   const {setModalCart, setModalAddress} = props;
@@ -38,6 +40,7 @@ const CartScreen = (props) => {
   const [notes, setNotes] = useState('');
   const [modalNote, setModalNote] = useState(false);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [modalCoupon, setModalCoupon] = useState(false);
 
   useEffect(() => {
     getServices(serviceDispatch);
@@ -189,13 +192,28 @@ const CartScreen = (props) => {
   };
 
   const removeItem = async (id) => {
-    const filterService = user.cart.services.filter((s) => s.id !== id);
-    const emptyCart = {
-      ...user.cart,
-      services: [],
-    };
-    if (filterService !== 0) {
-      await updateProfile(emptyCart, 'cart', authDispatch);
+    if (!user.cart.coupon) {
+      const filterService = user.cart.services.filter((s) => s.id !== id);
+      const emptyCart = {
+        ...user.cart,
+        services: [],
+      };
+      if (filterService !== 0) {
+        await updateProfile(emptyCart, 'cart', authDispatch);
+      }
+    } else {
+      //desactive coupon
+      const math = user.cart.coupon.existence;
+      await addCoupon(user.cart.coupon.id, math, utilDispatch);
+      const filterService = user.cart.services.filter((s) => s.id !== id);
+      const emptyCart = {
+        ...user.cart,
+        services: [],
+        coupon: null,
+      };
+      if (filterService !== 0) {
+        await updateProfile(emptyCart, 'cart', authDispatch);
+      }
     }
   };
 
@@ -204,6 +222,16 @@ const CartScreen = (props) => {
     await updateProfile({...user.cart, date: handleDate}, 'cart', authDispatch);
     setDatePickerVisibility(false);
   };
+  const activeCuopon = () => {
+    if (user.cart.services.length > 0) {
+      setModalCoupon(true);
+    } else {
+      Alert.alert('Ups', 'Necesitas primero agregar un servicio');
+    }
+  };
+
+  const totalService =
+    user.cart?.services.length > 0 ? _.sumBy(user.cart.services, 'total') : 0;
   return (
     <View style={{height: 650}}>
       <Loading type={'client'} />
@@ -276,7 +304,7 @@ const CartScreen = (props) => {
               Fonts.size.medium,
               'left',
             )}>
-            {'Total Servicios:'}
+            {'Sub Total:'}
           </Text>
           <Text
             style={Fonts.style.regular(Colors.gray, Fonts.size.medium, 'left')}>
@@ -297,6 +325,24 @@ const CartScreen = (props) => {
             {Utilities.formatCOP(_.sumBy(user.cart.services, 'totalAddons'))}
           </Text>
         </View>
+        {user.cart.coupon && (
+          <View style={styles.totalContainer}>
+            <Text
+              style={Fonts.style.regular(
+                Colors.client.primaryColor,
+                Fonts.size.medium,
+                'left',
+              )}>
+              Cupón:
+            </Text>
+            <Text style={Fonts.style.bold('red', Fonts.size.medium, 'left')}>
+              -{' '}
+              {user?.cart.coupon?.typeCoupon === 'percentage'
+                ? `${user?.cart.coupon?.percentage}%`
+                : utilities.formatCOP(user?.cart.coupon?.money)}
+            </Text>
+          </View>
+        )}
 
         <View style={styles.totalContainer}>
           <Text
@@ -309,7 +355,14 @@ const CartScreen = (props) => {
           </Text>
           <Text
             style={Fonts.style.bold(Colors.dark, Fonts.size.medium, 'left')}>
-            {Utilities.formatCOP(_.sumBy(user.cart.services, 'total'))}
+            {user.cart.coupon
+              ? user.cart.coupon.typeCoupon !== 'money'
+                ? utilities.formatCOP(
+                    (user.cart.coupon.percentage / 100) * totalService -
+                      totalService,
+                  )
+                : utilities.formatCOP(totalService - user?.cart.coupon?.money)
+              : utilities.formatCOP(totalService)}
           </Text>
         </View>
 
@@ -433,17 +486,24 @@ const CartScreen = (props) => {
                   Fonts.size.medium,
                   'left',
                 )}>
-                {'¿Tienes algun cupon?'}
+                {!user?.cart.coupon
+                  ? '¿Tienes algun cupón?'
+                  : 'Usaste el cupón'}
               </Text>
             </View>
-            <TouchableOpacity onPress={() => setModalNote(true)}>
+            <TouchableOpacity
+              onPress={() =>
+                !user?.cart.coupon
+                  ? activeCuopon()
+                  : Alert.alert('Ups', 'Solo se permite un cupon por servicio')
+              }>
               <FieldCartConfig
                 key={'cuopons'}
                 textSecondary={''}
-                value={user.cart.notes ? user.cart.notes : false}
-                textActive={user.cart.notes}
-                textInactive={'+ Agrega un cupon'}
-                icon={'tag'}
+                value={user?.cart.coupon ? user?.cart.coupon.coupon : false}
+                textActive={user?.cart.coupon?.coupon}
+                textInactive={'+ Agrega un cupón'}
+                icon={'barcode'}
               />
             </TouchableOpacity>
           </>
@@ -534,6 +594,18 @@ const CartScreen = (props) => {
             {'Agregar comentarios'}
           </Text>
         </TouchableOpacity>
+      </ModalApp>
+
+      <ModalApp open={modalCoupon} setOpen={setModalCoupon}>
+        <ModalCuopon
+          total={_.sumBy(user.cart.services, 'total')}
+          type={
+            user.cart.services.length > 0
+              ? user.cart.services[0].servicesType
+              : []
+          }
+          close={setModalCoupon}
+        />
       </ModalApp>
     </View>
   );
