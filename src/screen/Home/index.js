@@ -55,7 +55,6 @@ const Home = () => {
   const [modalAddAddress, setModalAddAddress] = useState(false);
 
   useEffect(() => {
-    isMountedRef.current = true;
     activeFunctionsFlux();
     return () => {
       return () => (isMountedRef.current = false);
@@ -65,6 +64,7 @@ const Home = () => {
   }, []);
 
   const activeFunctionsFlux = async () => {
+    isMountedRef.current = true;
     setLoading(true, authDispatch);
     getDeviceInfo(utilDispatch);
     await getServices(serviceDispatch);
