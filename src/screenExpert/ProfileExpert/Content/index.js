@@ -727,9 +727,7 @@ const Content = () => {
           </View>
         </ModalApp>
         <ModalApp open={galleryModal} setOpen={setGalleryModal}>
-          <GalleryExpert
-            user={user} //services={activity}
-          />
+          <GalleryExpert user={user} services={user?.activity} />
         </ModalApp>
         <ModalComponent
           type={'expert'}
