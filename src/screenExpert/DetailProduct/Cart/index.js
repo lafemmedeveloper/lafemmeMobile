@@ -39,7 +39,7 @@ const Cart = (props) => {
   const orderSnap = expertOpenOrders.filter((o) => o.id === order.id)[0];
   const {services} = orderSnap;
   const {addOns} = product;
-add   const addonsEnable = addOns.filter((a) => a.isEnabled === true);
+  const addonsEnable = addOns.filter((a) => a.isEnabled === true);
 
   const [guestModal, setGuestModal] = useState(false);
   const [formGuest, setFormGuest] = useState(initial_state);
