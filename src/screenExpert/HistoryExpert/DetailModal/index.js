@@ -284,8 +284,8 @@ const DetailModal = (props) => {
                         style={styles.btnEdit}
                         onPress={() => setModalEdit(true)}>
                         <Icon
-                          name={'plus'}
-                          size={25}
+                          name={'edit'}
+                          size={20}
                           color={Colors.expert.primaryColor}
                         />
                       </TouchableOpacity>
@@ -347,12 +347,12 @@ const DetailModal = (props) => {
                       ]}>
                       Adicionales comunes
                     </Text>
-                    {addons.length > 0 ? (
-                      addons.map((dataAddon) => {
-                        const {addonName, id} = dataAddon;
+                    {addons && addons.length > 0 ? (
+                      addons.map((dataAddon, index) => {
+                        const {addonName} = dataAddon;
 
                         return (
-                          <View key={id} style={styles.contAddons}>
+                          <View key={index} style={styles.contAddons}>
                             <Text
                               style={[
                                 Fonts.style.regular(
@@ -393,10 +393,10 @@ const DetailModal = (props) => {
                       Addicionales contable
                     </Text>
                     {addOnsCount.length > 0 ? (
-                      addOnsCount.map((addonCount) => {
-                        const {name, count, id} = addonCount;
+                      addOnsCount.map((addonCount, index) => {
+                        const {name, count} = addonCount;
                         return (
-                          <Fragment key={id}>
+                          <Fragment key={index}>
                             <Text
                               style={[
                                 Fonts.style.regular(
