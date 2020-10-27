@@ -31,6 +31,7 @@ const UploadPhoto = (props) => {
       close();
     }
   };
+  console.log(services);
   return (
     <View style={styles.container}>
       <Icon
@@ -57,15 +58,17 @@ const UploadPhoto = (props) => {
             style={styles.piker}
             onValueChange={(itemValue) => setServiceName(itemValue)}>
             <Picker.Item label={'---Seleciona un servicio---'} value={''} />
-            {services.map((item) => {
-              return (
-                <Picker.Item
-                  label={utilities.capitalize(item[0].name)}
-                  value={item[0].name}
-                  key={item[0].id}
-                />
-              );
-            })}
+            {services &&
+              services.length > 0 &&
+              services.map((item, index) => {
+                return (
+                  <Picker.Item
+                    label={utilities.capitalize(item.split('-').join(' '))}
+                    value={item}
+                    key={index}
+                  />
+                );
+              })}
           </Picker>
         </View>
       </View>

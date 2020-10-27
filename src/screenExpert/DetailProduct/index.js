@@ -13,8 +13,6 @@ const DetailProduct = (props) => {
   const {product} = params;
   const {order} = product;
 
-  console.log('product ==>', product);
-
   return (
     <>
       <View

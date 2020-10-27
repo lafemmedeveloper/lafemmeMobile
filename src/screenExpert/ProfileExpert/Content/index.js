@@ -546,7 +546,6 @@ const Content = () => {
                     </Text>
                     {user && user?.activity.length > 0 ? (
                       user?.activity.map((item, index) => {
-                        console.log('item ==>', item);
                         return (
                           <View
                             key={index}
@@ -728,9 +727,7 @@ const Content = () => {
           </View>
         </ModalApp>
         <ModalApp open={galleryModal} setOpen={setGalleryModal}>
-          <GalleryExpert
-            user={user} //services={activity}
-          />
+          <GalleryExpert user={user} services={user?.activity} />
         </ModalApp>
         <ModalComponent
           type={'expert'}

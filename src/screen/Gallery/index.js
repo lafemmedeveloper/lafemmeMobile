@@ -9,8 +9,6 @@ const Gallery = () => {
   const {util} = state;
   const {gallery} = util;
 
-  console.log('gallery ==>', gallery);
-
   useEffect(() => {
     getGallery(utilDispatch);
   }, [utilDispatch]);

@@ -46,7 +46,6 @@ const DetailModal = (props) => {
 
   const onRut = async () => {
     let resulTime = utilities.counting(filterOrder.date);
-    console.log('time await  ======>', resulTime.remainHours);
 
     if (resulTime.remainHours > 1) {
       Alert.alert('Ups', 'Lo siento aun falta mas de una hora para esta orden');
@@ -285,8 +284,8 @@ const DetailModal = (props) => {
                         style={styles.btnEdit}
                         onPress={() => setModalEdit(true)}>
                         <Icon
-                          name={'plus'}
-                          size={25}
+                          name={'edit'}
+                          size={20}
                           color={Colors.expert.primaryColor}
                         />
                       </TouchableOpacity>
@@ -348,12 +347,12 @@ const DetailModal = (props) => {
                       ]}>
                       Adicionales comunes
                     </Text>
-                    {addons.length > 0 ? (
-                      addons.map((dataAddon) => {
-                        const {addonName, id} = dataAddon;
+                    {addons && addons.length > 0 ? (
+                      addons.map((dataAddon, index) => {
+                        const {addonName} = dataAddon;
 
                         return (
-                          <View key={id} style={styles.contAddons}>
+                          <View key={index} style={styles.contAddons}>
                             <Text
                               style={[
                                 Fonts.style.regular(
@@ -394,10 +393,10 @@ const DetailModal = (props) => {
                       Addicionales contable
                     </Text>
                     {addOnsCount.length > 0 ? (
-                      addOnsCount.map((addonCount) => {
-                        const {name, count, id} = addonCount;
+                      addOnsCount.map((addonCount, index) => {
+                        const {name, count} = addonCount;
                         return (
-                          <Fragment key={id}>
+                          <Fragment key={index}>
                             <Text
                               style={[
                                 Fonts.style.regular(
@@ -533,6 +532,34 @@ const DetailModal = (props) => {
                           {utilities.formatCOP(totalAddons)}
                         </Text>
                       </Text>
+
+                      {filterOrder && filterOrder.coupon && (
+                        <Text
+                          style={[
+                            Fonts.style.regular(
+                              Colors.dark,
+                              Fonts.size.medium,
+                              'left',
+                            ),
+                            {marginLeft: 20},
+                          ]}>
+                          Descuento por cupón:{' '}
+                          <Text
+                            style={[
+                              Fonts.style.bold(
+                                'red',
+                                Fonts.size.medium,
+                                'left',
+                              ),
+                              {marginLeft: 20},
+                            ]}>
+                            -{' '}
+                            {filterOrder.coupon?.typeCoupon === 'percentage'
+                              ? `${filterOrder.coupon?.percentage}%`
+                              : utilities.formatCOP(filterOrder.coupon?.money)}
+                          </Text>
+                        </Text>
+                      )}
                       <Text
                         style={[
                           Fonts.style.regular(
@@ -552,7 +579,17 @@ const DetailModal = (props) => {
                             ),
                             {marginLeft: 20},
                           ]}>
-                          {utilities.formatCOP(total)}
+                          {filterOrder.coupon
+                            ? filterOrder.coupon.typeCoupon !== 'money'
+                              ? utilities.formatCOP(
+                                  (filterOrder.coupon.percentage / 100) *
+                                    total -
+                                    total,
+                                )
+                              : utilities.formatCOP(
+                                  total - filterOrder.coupon?.money,
+                                )
+                            : utilities.formatCOP(total)}
                         </Text>
                       </Text>
                     </View>

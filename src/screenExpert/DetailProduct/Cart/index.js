@@ -39,17 +39,18 @@ const Cart = (props) => {
   const orderSnap = expertOpenOrders.filter((o) => o.id === order.id)[0];
   const {services} = orderSnap;
   const {addOns} = product;
+  const addonsEnable = addOns.filter((a) => a.isEnabled === true);
 
   const [guestModal, setGuestModal] = useState(false);
   const [formGuest, setFormGuest] = useState(initial_state);
-  const [guestList, setGuestList] = useState([]);
-  const [addonsGuest, setAddonsGuest] = useState([]);
-  const [addOnsFilter] = useState(addOns.filter((a) => a.isEnabled === true));
-
-  const [addonsList, setAddonsList] = useState(services[0].addons);
-  const [addonsListCount, setAddonsListCount] = useState(
-    services[0].addOnsCount,
+  const [guestList, setGuestList] = useState(
+    orderSnap.services[0].clients.filter((c) => c.id !== 'yo'),
   );
+  const [addonsGuest, setAddonsGuest] = useState(services[0].addons);
+  const [addOnsFilter] = useState(addonsEnable);
+
+  const [addonsList, setAddonsList] = useState(services[0].addOnsCount);
+  const [addonsListCount, setAddonsListCount] = useState(services[0].addons);
 
   const [showModalService, setShowModalService] = useState(false);
 
@@ -262,7 +263,7 @@ const Cart = (props) => {
   let addOnCountDuration = _.sumBy(countItems, 'addonsDuration');
 
   let timeTotal =
-    (services[0].duration * (guestList.length + 1) +
+    (product.duration * (guestList.length + 1) +
       addOnDuration +
       addOnCountDuration) /
     1;
@@ -270,7 +271,6 @@ const Cart = (props) => {
   const addCart = () => {
     setShowModalService(true);
   };
-
   return (
     <View
       style={{
@@ -282,7 +282,7 @@ const Cart = (props) => {
         <FastImage
           style={styles.imageProduct}
           source={{
-            uri: product.big,
+            uri: product.imageUrl.big,
             priority: FastImage.priority.normal,
           }}
           resizeMode={FastImage.resizeMode.cover}
@@ -507,6 +507,7 @@ const Cart = (props) => {
           setShowModalService={setShowModalService}
           sendItemCart={sendItemCart}
           lastTotal={services[0].total}
+          order={orderSnap}
         />
       </ModalApp>
     </View>

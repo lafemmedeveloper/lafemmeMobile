@@ -1,4 +1,4 @@
-import React, {Fragment, useContext, useEffect, useState} from 'react';
+import React, {Fragment, useContext, useEffect, useRef, useState} from 'react';
 import {View, ScrollView, StyleSheet, StatusBar} from 'react-native';
 import ExpandHome from '../../components/ExpandHome';
 import {Metrics, Images, Colors} from '../../themes';
@@ -21,11 +21,11 @@ import Loading from '../../components/Loading';
 import auth from '@react-native-firebase/auth';
 import ExpandOrderData from '../ExpandOrderData';
 const Home = () => {
-  const TIME_SET = 500;
   const navigation = useNavigation();
   const {state, serviceDispatch, authDispatch, utilDispatch} = useContext(
     StoreContext,
   );
+  const isMountedRef = useRef(null);
 
   function onAuthStateChanged(user) {
     if (user) {
@@ -56,11 +56,15 @@ const Home = () => {
 
   useEffect(() => {
     activeFunctionsFlux();
+    return () => {
+      return () => (isMountedRef.current = false);
+    };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const activeFunctionsFlux = async () => {
+    isMountedRef.current = true;
     setLoading(true, authDispatch);
     getDeviceInfo(utilDispatch);
     await getServices(serviceDispatch);
@@ -89,9 +93,7 @@ const Home = () => {
     setModalAddress(false);
 
     if (isModalCart) {
-      setTimeout(function () {
-        modalCart(true);
-      }, TIME_SET);
+      modalCart(true);
     }
   };
 
@@ -106,7 +108,6 @@ const Home = () => {
   const activeDetailModal = (order) => {
     navigation.navigate('OrderDetail', order);
   };
-  console.log('nextOrderClient ===> ', nextOrderClient);
 
   return (
     <>

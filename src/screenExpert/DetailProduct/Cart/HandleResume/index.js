@@ -18,6 +18,7 @@ import TitleValue from '../../../../components/TitleValue';
 import Utilities from '../../../../utilities';
 import _ from 'lodash';
 import {minToHours} from '../../../../helpers/MomentHelper';
+import utilities from '../../../../utilities';
 
 const HandleResume = (props) => {
   const {
@@ -31,6 +32,7 @@ const HandleResume = (props) => {
     addonsGuest,
     setShowModalService,
     sendItemCart,
+    order,
   } = props;
 
   let gList = [
@@ -58,6 +60,8 @@ const HandleResume = (props) => {
       product.price * (guestList.length + 1) + addOnPrice + addOnCountPrice,
   };
 
+  const totalService =
+    product.price * (guestList.length + 1) + addOnPrice + addOnCountPrice;
   return (
     <>
       <KeyboardAvoidingView
@@ -352,7 +356,37 @@ const HandleResume = (props) => {
                 }
               </Text>
             </View>
-
+            {order && order.coupon && (
+              <View
+                style={{
+                  flex: 1,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  marginHorizontal: 5,
+                }}>
+                <Text
+                  style={Fonts.style.regular(
+                    Colors.dark,
+                    Fonts.size.small,
+                    'left',
+                    1,
+                  )}>
+                  Cupón
+                </Text>
+                <Text
+                  style={Fonts.style.regular(
+                    'red',
+                    Fonts.size.medium,
+                    'left',
+                    1,
+                  )}>
+                  -{' '}
+                  {order.coupon?.typeCoupon === 'percentage'
+                    ? `${order.coupon?.percentage}%`
+                    : utilities.formatCOP(order.coupon?.money)}
+                </Text>
+              </View>
+            )}
             <View
               style={{
                 flex: 1,
@@ -376,14 +410,14 @@ const HandleResume = (props) => {
                   'left',
                   1,
                 )}>
-                {Utilities.formatCOP(
-                  // eslint-disable-next-line radix
-                  parseInt(
-                    product.price * (guestList.length + 1) +
-                      addOnPrice +
-                      addOnCountPrice,
-                  ),
-                )}
+                {order.coupon
+                  ? order.typeCoupon !== 'money'
+                    ? utilities.formatCOP(
+                        (order.coupon.percentage / 100) * totalService -
+                          totalService,
+                      )
+                    : utilities.formatCOP(totalService - order.coupon?.money)
+                  : utilities.formatCOP(totalService)}
               </Text>
             </View>
           </View>

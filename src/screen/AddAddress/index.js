@@ -71,8 +71,6 @@ const AddAddress = (props) => {
     let coverage = validateCoverage(latitude, longitude, coverageZones);
 
     setIsCoverage(coverage ? addressStatus.coverage : addressStatus.noCoverage);
-
-    console.log('coverage=>', isCoverage);
   };
 
   const saveAddress = async () => {
@@ -93,8 +91,6 @@ const AddAddress = (props) => {
     };
 
     let address = [...user.address, item];
-
-    console.log('=== saveAddress address ==>', address);
 
     await updateProfile(address, 'address', authDispatch);
     setIsCoverage(addressStatus.searching);
@@ -146,10 +142,8 @@ const AddAddress = (props) => {
       `https://maps.googleapis.com/maps/api/geocode/json?latlng=${coordinates.latitude},${coordinates.longitude}&key=${APIKEY}`,
     );
 
-    console.log('res activeApi==>', res);
     setUrl(res.url);
     const json = await res.json();
-    console.log('json ==>', json.results);
     if (json.status !== 'OK') {
       throw new Error(`Geocode error: ${json.status}`);
     } else {
