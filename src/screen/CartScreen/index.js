@@ -495,7 +495,7 @@ const CartScreen = (props) => {
               onPress={() =>
                 !user?.cart.coupon
                   ? activeCuopon()
-                  : Alert.alert('Ups', 'Solo se permite un cupon por servicio')
+                  : Alert.alert('Ups', 'Solo se permite un cupón por servicio')
               }>
               <FieldCartConfig
                 key={'cuopons'}

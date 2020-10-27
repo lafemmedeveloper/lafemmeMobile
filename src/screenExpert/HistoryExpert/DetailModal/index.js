@@ -532,6 +532,34 @@ const DetailModal = (props) => {
                           {utilities.formatCOP(totalAddons)}
                         </Text>
                       </Text>
+
+                      {filterOrder && filterOrder.coupon && (
+                        <Text
+                          style={[
+                            Fonts.style.regular(
+                              Colors.dark,
+                              Fonts.size.medium,
+                              'left',
+                            ),
+                            {marginLeft: 20},
+                          ]}>
+                          Descuento por cupón:{' '}
+                          <Text
+                            style={[
+                              Fonts.style.bold(
+                                'red',
+                                Fonts.size.medium,
+                                'left',
+                              ),
+                              {marginLeft: 20},
+                            ]}>
+                            -{' '}
+                            {filterOrder.coupon?.typeCoupon === 'percentage'
+                              ? `${filterOrder.coupon?.percentage}%`
+                              : utilities.formatCOP(filterOrder.coupon?.money)}
+                          </Text>
+                        </Text>
+                      )}
                       <Text
                         style={[
                           Fonts.style.regular(
@@ -551,7 +579,17 @@ const DetailModal = (props) => {
                             ),
                             {marginLeft: 20},
                           ]}>
-                          {utilities.formatCOP(total)}
+                          {filterOrder.coupon
+                            ? filterOrder.coupon.typeCoupon !== 'money'
+                              ? utilities.formatCOP(
+                                  (filterOrder.coupon.percentage / 100) *
+                                    total -
+                                    total,
+                                )
+                              : utilities.formatCOP(
+                                  total - filterOrder.coupon?.money,
+                                )
+                            : utilities.formatCOP(total)}
                         </Text>
                       </Text>
                     </View>
