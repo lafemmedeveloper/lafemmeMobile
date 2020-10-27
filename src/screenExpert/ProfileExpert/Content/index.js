@@ -37,7 +37,6 @@ const Content = () => {
   const {util, auth} = state;
   const {deviceInfo} = util;
   const {user} = auth;
-  console.log('user ==>', user);
 
   const options = {
     title: 'Selecciona o toma una imagén',

@@ -35,8 +35,6 @@ const Qualify = (props) => {
 
       const result = (parseFloat(rating) + parseFloat(userRef.rating)) / 2;
 
-      console.log('userRef.rating ==> ===================> ', userRef.rating);
-
       const noteSend = note === '' ? 'Perfecto' : note;
       await updateNote(ordersRef.id, noteSend, typeQualification, utilDispatch);
       await userRating(userRef.uid, result, utilDispatch);

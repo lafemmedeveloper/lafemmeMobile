@@ -9,7 +9,6 @@ const Profile = () => {
   const {auth, util} = state;
   const {user} = auth;
   const {deviceInfo} = util;
-  console.log('==> deviceInfo', deviceInfo);
 
   if (!user) {
     return <ButtonLogin />;

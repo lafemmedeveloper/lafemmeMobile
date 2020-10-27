@@ -134,7 +134,6 @@ export const getDeviceInfo = (dispatch) => {
 };
 
 export const getExpertActiveOrders = (dispatch) => {
-  console.log('===> getExpertActiveOrders');
   const uid = auth().currentUser?.uid;
 
   let ordersRef = firestore()
