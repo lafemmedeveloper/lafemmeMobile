@@ -1,4 +1,4 @@
-create uiimport React from 'react';
+import React from 'react';
 import {
   StyleSheet,
   Text,
