@@ -14,6 +14,8 @@ import moment from 'moment';
 import auth from '@react-native-firebase/auth';
 import {saveUser} from '../../flux/auth/actions';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import Referrals from './Referrals';
+import ModalApp from '../../components/ModalApp';
 
 const Register = (props) => {
   const {dispatch, activityLoading, setActivityLoading, setModalAuth} = props;
@@ -21,6 +23,7 @@ const Register = (props) => {
   const [name, setName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
+  const [referrals, setReferrals] = useState(false);
 
   const handleRegister = async () => {
     Keyboard.dismiss();
@@ -180,7 +183,22 @@ const Register = (props) => {
           </Text>
           {activityLoading && <ActivityIndicator size="small" color="white" />}
         </TouchableOpacity>
+        <TouchableOpacity
+          style={{marginVertical: 20}}
+          onPress={() => setReferrals(true)}>
+          <Text
+            style={Fonts.style.underline(
+              Colors.dark,
+              Fonts.size.medium,
+              'center',
+            )}>
+            Soy referido
+          </Text>
+        </TouchableOpacity>
       </View>
+      <ModalApp open={referrals} setOpen={setReferrals}>
+        <Referrals />
+      </ModalApp>
     </>
   );
 };
