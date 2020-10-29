@@ -14,6 +14,9 @@ import moment from 'moment';
 import auth from '@react-native-firebase/auth';
 import {saveUser} from '../../flux/auth/actions';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import Referrals from './Referrals';
+import ModalApp from '../../components/ModalApp';
+import Loading from '../../components/Loading';
 
 const Register = (props) => {
   const {dispatch, activityLoading, setActivityLoading, setModalAuth} = props;
@@ -21,6 +24,8 @@ const Register = (props) => {
   const [name, setName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
+  const [referrals, setReferrals] = useState(false);
+  const [userReferrals, setUserReferrals] = useState(null);
 
   const handleRegister = async () => {
     Keyboard.dismiss();
@@ -57,6 +62,8 @@ const Register = (props) => {
           address: [],
           imageUrl: null,
           tokens: [],
+          referrals: [],
+          guestUser: userReferrals,
         };
         await setDb(data);
         setActivityLoading(false);
@@ -93,8 +100,11 @@ const Register = (props) => {
     console.log('is active registrer');
     saveUser(data, dispatch);
   };
+
   return (
     <>
+      <Loading type={'client'} />
+
       <View style={{marginTop: 20}}>
         <Icon
           name="user-edit"
@@ -159,7 +169,25 @@ const Register = (props) => {
         />
 
         <TouchableOpacity
-          onPress={() => handleRegister()}
+          onPress={() =>
+            Alert.alert(
+              'Hey',
+              '¿Fuiste referido por un usuario de la Femme?',
+              [
+                {
+                  text: 'Si',
+                  onPress: () => setReferrals(true),
+                },
+
+                {
+                  text: 'No',
+                  onPress: () => handleRegister(),
+                  style: 'cancel',
+                },
+              ],
+              {cancelable: false},
+            )
+          }
           style={[
             {
               flex: 0,
@@ -181,6 +209,13 @@ const Register = (props) => {
           {activityLoading && <ActivityIndicator size="small" color="white" />}
         </TouchableOpacity>
       </View>
+      <ModalApp open={referrals} setOpen={setReferrals}>
+        <Referrals
+          setUserReferrals={setUserReferrals}
+          handleRegister={handleRegister}
+          close={setReferrals}
+        />
+      </ModalApp>
     </>
   );
 };

@@ -141,9 +141,6 @@ const DetailModal = (props) => {
     }
   };
   const addServiceClient = async (status) => {
-    console.log('acitve number of service');
-    const mathData = filterOrder.client.numberOfServices + 1;
-    await addService(filterOrder.client.uid, mathData, utilDispatch);
     await updateStatus(status, filterOrder, utilDispatch);
   };
   const close = () => {
