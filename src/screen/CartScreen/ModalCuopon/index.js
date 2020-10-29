@@ -13,6 +13,7 @@ import MyTextInput from '../../../components/MyTextInput';
 import {StoreContext} from '../../../flux';
 import {updateProfile} from '../../../flux/auth/actions';
 import {addCoupon, valdiateCouponDb} from '../../../flux/util/actions';
+import {useKeyboard} from '../../../hooks/useKeyboard';
 import {Colors, Fonts, Metrics} from '../../../themes';
 import utilities from '../../../utilities';
 
@@ -21,6 +22,7 @@ const ModalCuopon = ({total, type, close}) => {
   const [coupon, setCoupon] = useState('');
   const {util, auth} = state;
   const {user} = auth;
+  const [keyboardHeight] = useKeyboard();
 
   const valdiateCoupon = async () => {
     Keyboard.dismiss();
@@ -125,6 +127,7 @@ const ModalCuopon = ({total, type, close}) => {
             </Text>
           )}
         </TouchableOpacity>
+        <View style={{height: keyboardHeight}} />
       </View>
     </View>
   );

@@ -20,6 +20,7 @@ import ModalApp from '../../components/ModalApp';
 import {setUser} from '../../flux/auth/actions';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Loading from '../../components/Loading';
+import {useKeyboard} from '../../hooks/useKeyboard';
 
 const Login = (props) => {
   const {setModalAuth} = props;
@@ -40,7 +41,7 @@ const Login = (props) => {
   const [phone, setPhone] = useState('');
   const [confirmResult, setConfirmResult] = useState(null);
   const [modalRegister, setModalRegister] = useState(false);
-
+  const [keyboardHeight] = useKeyboard();
   const _changeCountry = (country) => {
     setValueState({...stateInitial, country});
   };
@@ -123,7 +124,7 @@ const Login = (props) => {
             style={styles.icon}
           />
           <Text style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
-            {'Verifica tu numero'}
+            {'Ingresa tu número celular'}
           </Text>
           <View
             style={{
@@ -206,6 +207,7 @@ const Login = (props) => {
               <ActivityIndicator size="small" color="white" />
             )}
           </TouchableOpacity>
+          <View style={{height: keyboardHeight}} />
         </View>
       ) : (
         <Register

@@ -13,12 +13,13 @@ import {StoreContext} from '../../../../../flux';
 import {updateProfileItem} from '../../../../../flux/auth/actions';
 import {Colors, Fonts, Metrics} from '../../../../../themes';
 import Loading from '../../../../../components/Loading';
+import {useKeyboard} from '../../../../../hooks/useKeyboard';
 
 const UpdateEmail = (props) => {
   const {state} = useContext(StoreContext);
-
   const {dispatch, user, setModalEmail} = props;
   const [email, setEmail] = useState('');
+  const [keyboardHeight] = useKeyboard();
 
   const updateEmail = async () => {
     if (email === '') {
@@ -85,6 +86,7 @@ const UpdateEmail = (props) => {
             )}
           </Text>
         </TouchableOpacity>
+        <View style={{height: keyboardHeight}} />
       </View>
     </>
   );

@@ -16,6 +16,7 @@ import {
   useBlurOnFulfill,
   useClearByFocusCell,
 } from 'react-native-confirmation-code-field';
+import {useKeyboard} from '../../../hooks/useKeyboard';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
@@ -34,6 +35,8 @@ const InputCode = ({
     value,
     setValue,
   });
+  const [keyboardHeight] = useKeyboard();
+
   const inputVerifyCode = () => {
     Keyboard.dismiss();
     if (value.length < 6) {
@@ -128,6 +131,7 @@ const InputCode = ({
               Volver a intentar
             </Text>
           </TouchableOpacity>
+          <View style={{height: keyboardHeight}} />
         </View>
       </SafeAreaView>
     </>

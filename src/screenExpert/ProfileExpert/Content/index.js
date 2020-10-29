@@ -498,7 +498,7 @@ const Content = () => {
                           name="sync-alt"
                           style={styles.update}
                           color={Colors.expert.primaryColor}
-                          size={25}
+                          size={10}
                         />
                       </TouchableOpacity>
                       <FastImage
@@ -516,7 +516,7 @@ const Content = () => {
                               Fonts.size.medium,
                               'center',
                             ),
-                            {marginTop: 2.5},
+                            {marginTop: 5},
                           ]}>
                           {'Calificación '} {user.rating.toFixed(1)}
                         </Text>
@@ -767,8 +767,8 @@ const styles = StyleSheet.create({
   },
   contUpdate: {
     position: 'absolute',
-    width: 40,
-    height: 40,
+    width: 25,
+    height: 25,
     borderRadius: 20,
     zIndex: 20,
     backgroundColor: Colors.light,
@@ -784,7 +784,9 @@ const styles = StyleSheet.create({
 
     elevation: 6,
     alignSelf: 'flex-end',
-    marginTop: 60,
+    marginBottom: 5,
+    bottom: 0,
+    marginRight: 10,
   },
 });
 export default Content;

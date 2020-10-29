@@ -482,7 +482,7 @@ const Content = (props) => {
                   name="sync-alt"
                   style={styles.update}
                   color={Colors.client.primaryColor}
-                  size={25}
+                  size={15}
                 />
               </TouchableOpacity>
               {user && user.imageUrl ? (
@@ -773,7 +773,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: Metrics.screenWidth,
-    paddingTop: Metrics.addHeader,
+
     flexDirection: 'column',
     backgroundColor: Colors.light,
   },
@@ -796,8 +796,8 @@ const styles = StyleSheet.create({
   },
   contUpdate: {
     position: 'absolute',
-    width: 40,
-    height: 40,
+    width: 25,
+    height: 25,
     borderRadius: 20,
     zIndex: 20,
     backgroundColor: Colors.light,
@@ -813,7 +813,9 @@ const styles = StyleSheet.create({
 
     elevation: 6,
     alignSelf: 'flex-end',
-    marginTop: 60,
+    marginBottom: 5,
+    bottom: 0,
+    marginRight: 10,
   },
 });
 

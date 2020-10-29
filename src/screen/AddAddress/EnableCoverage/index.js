@@ -12,6 +12,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 
 import MyTextInput from '../../../components/MyTextInput';
 import Loading from '../../../components/Loading';
+import {useKeyboard} from '../../../hooks/useKeyboard';
 
 const EnableCoverage = (props) => {
   const {
@@ -29,6 +30,9 @@ const EnableCoverage = (props) => {
     notesAddress,
     setNotesAddress,
   } = props;
+
+  const [keyboardHeight] = useKeyboard();
+
   return (
     <>
       <Loading type={'client'} />
@@ -235,6 +239,7 @@ const EnableCoverage = (props) => {
             {'Guardar'}
           </Text>
         </TouchableOpacity>
+        <View style={{height: keyboardHeight}} />
       </ScrollView>
     </>
   );

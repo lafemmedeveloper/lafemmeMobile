@@ -17,6 +17,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import Referrals from './Referrals';
 import ModalApp from '../../components/ModalApp';
 import Loading from '../../components/Loading';
+import {useKeyboard} from '../../hooks/useKeyboard';
 
 const Register = (props) => {
   const {dispatch, activityLoading, setActivityLoading, setModalAuth} = props;
@@ -26,6 +27,7 @@ const Register = (props) => {
   const [email, setEmail] = useState('');
   const [referrals, setReferrals] = useState(false);
   const [userReferrals, setUserReferrals] = useState(null);
+  const [keyboardHeight] = useKeyboard();
 
   const handleRegister = async () => {
     Keyboard.dismiss();
@@ -208,6 +210,7 @@ const Register = (props) => {
           </Text>
           {activityLoading && <ActivityIndicator size="small" color="white" />}
         </TouchableOpacity>
+        <View style={{height: keyboardHeight}} />
       </View>
       <ModalApp open={referrals} setOpen={setReferrals}>
         <Referrals

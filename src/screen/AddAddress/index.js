@@ -199,13 +199,14 @@ const AddAddress = (props) => {
         style={{
           position: 'absolute',
           width: '90%',
-          bottom: Metrics.screenHeight / 5 - 20,
+          // bottom: Metrics.screenHeight / 5 - 20,
+          top: 80,
           zIndex: 5,
           justifyContent: 'space-between',
           alignSelf: 'center',
           flexDirection: 'row-reverse',
         }}>
-        <View
+        {/* <View
           style={{
             zIndex: 6,
             marginRight: 10,
@@ -220,7 +221,7 @@ const AddAddress = (props) => {
             setGoogleAddress={setGoogleAddress}
             setCurrentLocationActive={setCurrentLocationActive}
           />
-        </View>
+        </View> */}
         <GooglePlacesAutocomplete
           placeholder={'(Ej: carrera 33 #10-20)'}
           autoFocus={false}
@@ -242,30 +243,15 @@ const AddAddress = (props) => {
           }}
           styles={{
             textInputContainer: {
-              backgroundColor: 'white',
-              width: '95%',
-              marginRight: 10,
-              marginLeft: 10,
-              borderRadius: 10,
-              borderTopColor: 'white',
-              borderBottomColor: 'white',
-              shadowColor: '#000',
-              shadowOffset: {
-                width: 0,
-                height: 2,
-              },
-              shadowOpacity: 0.25,
-              shadowRadius: 3.84,
-
-              elevation: 5,
+              backgroundColor: 'transparent',
+              borderTopColor: 'transparent',
+              borderBottomColor: 'transparent',
             },
             poweredContainer: {
               height: 30,
               borderBottomLeftRadius: Metrics.borderRadius,
               borderBottomRightRadius: Metrics.borderRadius,
             },
-            powered: {width: 100, height: 50},
-
             row: {
               padding: 5,
               height: 30,
@@ -274,9 +260,6 @@ const AddAddress = (props) => {
             },
             description: {
               fontWeight: '400',
-            },
-            predefinedPlacesDescription: {
-              color: '#1faadb',
             },
           }}
           currentLocation={false} // Will add a 'Current location' button at the top of the predefined places list

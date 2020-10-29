@@ -12,6 +12,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {validateReferrals} from '../../../flux/auth/actions';
 import Loading from '../../../components/Loading';
 import CountryPicker from 'react-native-country-picker-modal';
+import {useKeyboard} from '../../../hooks/useKeyboard';
 
 const Referrals = ({setUserReferrals, handleRegister, close}) => {
   const initialState = {
@@ -22,6 +23,7 @@ const Referrals = ({setUserReferrals, handleRegister, close}) => {
   };
   const [contact, setContact] = useState('');
   const [stateInitial, setValueState] = useState(initialState);
+  const [keyboardHeight] = useKeyboard();
 
   const handleReferrals = async () => {
     if (contact === '') {
@@ -138,6 +140,7 @@ const Referrals = ({setUserReferrals, handleRegister, close}) => {
             Verificar referido
           </Text>
         </TouchableOpacity>
+        <View style={{height: keyboardHeight}} />
       </View>
     </>
   );

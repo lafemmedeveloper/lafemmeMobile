@@ -11,6 +11,7 @@ import {
 import MyTextInput from '../../../../../components/MyTextInput';
 import {StoreContext} from '../../../../../flux';
 import {updateProfileItem} from '../../../../../flux/auth/actions';
+import {useKeyboard} from '../../../../../hooks/useKeyboard';
 import {Colors, Fonts, Metrics} from '../../../../../themes';
 
 const UpdateName = (props) => {
@@ -22,6 +23,7 @@ const UpdateName = (props) => {
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [keyboardHeight] = useKeyboard();
 
   const updateName = async () => {
     if (firstName === '' || lastName === '') {
@@ -68,6 +70,7 @@ const UpdateName = (props) => {
           {!loading ? 'Actualizar' : <ActivityIndicator color={Colors.light} />}
         </Text>
       </TouchableOpacity>
+      <View style={{height: keyboardHeight}} />
     </View>
   );
 };

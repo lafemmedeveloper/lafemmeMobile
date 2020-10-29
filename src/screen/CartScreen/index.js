@@ -29,6 +29,7 @@ import Loading from '../../components/Loading';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import ModalCuopon from './ModalCuopon';
 import utilities from '../../utilities';
+import {useKeyboard} from '../../hooks/useKeyboard';
 
 const CartScreen = (props) => {
   const {setModalCart, setModalAddress} = props;
@@ -41,6 +42,7 @@ const CartScreen = (props) => {
   const [modalNote, setModalNote] = useState(false);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [modalCoupon, setModalCoupon] = useState(false);
+  const [keyboardHeight] = useKeyboard();
 
   useEffect(() => {
     getServices(serviceDispatch);
@@ -435,11 +437,17 @@ const CartScreen = (props) => {
                 isVisible={isDatePickerVisible}
                 isDarkModeEnabled={false}
                 mode="datetime"
+                maximumDate={moment(new Date())
+                  .subtract(15, 'days')
+                  .format('YYYY-MM-DD')}
+                minimumDate={moment(new Date())
+                  .add(30, 'minutes')
+                  .format('YYYY-MM-DD')}
                 onConfirm={handleConfirmDate}
                 onCancel={hideDatePicker}
                 is24Hour={false}
                 locale="es_ES"
-                headerTextIOS="Elige una Fecha de servicio"
+                headerTextIOS="Elige una fecha de servicio"
                 cancelTextIOS="Cancelar"
                 confirmTextIOS="Confirmar"
               />
@@ -487,7 +495,7 @@ const CartScreen = (props) => {
                   'left',
                 )}>
                 {!user?.cart.coupon
-                  ? '¿Tienes algun cupón?'
+                  ? '¿Tienes algún cupón?'
                   : 'Usaste el cupón'}
               </Text>
             </View>
@@ -594,6 +602,7 @@ const CartScreen = (props) => {
             {'Agregar comentarios'}
           </Text>
         </TouchableOpacity>
+        <View style={{height: keyboardHeight}} />
       </ModalApp>
 
       <ModalApp open={modalCoupon} setOpen={setModalCoupon}>
