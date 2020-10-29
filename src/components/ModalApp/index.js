@@ -13,6 +13,8 @@ export default ({open, children, setOpen}) => {
   return (
     <>
       <Modal
+        onSwipeComplete={() => setOpen(false)}
+        swipeDirection={['down']}
         isVisible={open}
         onBackdropPress={() =>
           setOpen ? setOpen(false) : console.log('not close')
@@ -32,13 +34,12 @@ export default ({open, children, setOpen}) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
+    backgroundColor: Colors.light,
     borderTopEndRadius: 12,
     borderTopStartRadius: 12,
     overflow: 'hidden',
   },
   Modal: {
-    flex: 1,
     margin: 0,
     justifyContent: 'flex-end',
   },

@@ -437,12 +437,8 @@ const CartScreen = (props) => {
                 isVisible={isDatePickerVisible}
                 isDarkModeEnabled={false}
                 mode="datetime"
-                maximumDate={moment(new Date())
-                  .subtract(15, 'days')
-                  .format('YYYY-MM-DD')}
-                minimumDate={moment(new Date())
-                  .add(30, 'minutes')
-                  .format('YYYY-MM-DD')}
+                maximumDate={Date.parse(moment(new Date()).add(15, 'days'))}
+                minimumDate={new Date()}
                 onConfirm={handleConfirmDate}
                 onCancel={hideDatePicker}
                 is24Hour={false}
