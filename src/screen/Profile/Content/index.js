@@ -34,6 +34,7 @@ import AddAddress from '../../AddAddress';
 import Header from '../Header';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import UpdateImage from './Modals/UpdateImage';
+import ModalRef from './Modals/ModalRef';
 
 const modelState = {
   images: [],
@@ -67,6 +68,7 @@ const Content = (props) => {
   const [imageUri, setImageUri] = useState(null);
   const [imgSource, setImgSource] = useState(null);
   const [modalImage, setModalImage] = useState(false);
+  const [modalRef, setModalRef] = useState(false);
 
   const shareRecipe = async (type, data) => {
     console.log('shareItem:', type, data);
@@ -583,19 +585,12 @@ const Content = (props) => {
               }}
               decorationLine={true}
             />
-            <ItemProfile
-              title={'Cupones'}
-              icon={'barcode'}
-              action={() => {
-                console.log('cerrar Sesion');
-              }}
-              decorationLine={true}
-            />
+
             <ItemProfile
               title={'Referidos'}
               icon={'exchange-alt'}
               action={() => {
-                console.log('cerrar Sesion');
+                setModalRef(true);
               }}
               decorationLine={false}
             />
@@ -764,6 +759,14 @@ const Content = (props) => {
           uploadImage={uploadImage}
           close={setModalImage}
         />
+      </ModalComponent>
+      <ModalComponent
+        open={modalRef}
+        setOpen={setModalRef}
+        nameIcon={'exchange-alt'}
+        lastTitle={'Usalos cuando tengo un servicio en el carrito'}
+        title={'Tus referidos'}>
+        <ModalRef user={user} />
       </ModalComponent>
     </>
   );

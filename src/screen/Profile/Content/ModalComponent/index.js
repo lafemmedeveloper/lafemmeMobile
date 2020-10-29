@@ -21,6 +21,7 @@ const ModalComponent = (data) => {
           color={type ? Colors[type].primaryColor : Colors.client.primaryColor}
           style={styles.icon}
         />
+
         <Text style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
           {title}
         </Text>

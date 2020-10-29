@@ -437,7 +437,7 @@ const CartScreen = (props) => {
                 isVisible={isDatePickerVisible}
                 isDarkModeEnabled={false}
                 mode="datetime"
-                maximumDate={Date.parse(moment(new Date()).add(15, 'days'))}
+                maximumDate={new Date(moment(new Date()).add(15, 'days'))}
                 minimumDate={new Date()}
                 onConfirm={handleConfirmDate}
                 onCancel={hideDatePicker}
