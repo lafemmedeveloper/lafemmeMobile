@@ -202,3 +202,42 @@ const saveTokenToDatabase = async (token) => {
     fcm: token,
   });
 };
+
+export const validateReferrals = async (number) => {
+  try {
+    const users = await firestore()
+      .collection('users')
+      .where('phone', '==', number.split(' ').join(''))
+      .get();
+
+    const data = users.docs.map((doc) => {
+      const item = doc.data();
+
+      return {
+        ...item,
+        id: doc.id,
+      };
+    });
+
+    return data.length > 0 ? data[0] : null;
+  } catch (error) {
+    console.log('error ==>', error);
+  }
+};
+export const adddReferralsUser = async (user, data, dispatch) => {
+  try {
+    setLoading(true, dispatch);
+    const ref = firestore().collection('users').doc(user.uid);
+    await ref.set(
+      {
+        referrals: [...user.referrals, data],
+      },
+      {merge: true},
+    );
+    setLoading(true, dispatch);
+  } catch (error) {
+    setLoading(false, dispatch);
+
+    console.log('error', error);
+  }
+};

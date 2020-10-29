@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import StepIndicator from 'react-native-step-indicator';
+import moment from 'moment';
 import {Colors, Metrics, Fonts} from '../../themes';
 import {StoreContext} from '../../flux';
 import MapView, {Marker} from 'react-native-maps';
@@ -20,6 +21,11 @@ import ButtonCoordinate from '../../components/ButtonCoordinate';
 import Geolocation from '@react-native-community/geolocation';
 import {updateStatus} from '../../flux/util/actions';
 import Qualify from '../../components/Qualify';
+import {
+  adddReferralsUser,
+  updateProfile,
+  validateReferrals,
+} from '../../flux/auth/actions';
 
 const customStyles = {
   stepIndicatorSize: 30,
@@ -54,8 +60,10 @@ const OrderDetail = (props) => {
   const {route, navigation} = props;
   const {params} = route;
 
-  const {state, utilDispatch} = useContext(StoreContext);
-  const {util} = state;
+  const {state, utilDispatch, authDispatch} = useContext(StoreContext);
+  const {util, auth} = state;
+  const {user} = auth;
+
   const {ordersAll} = util;
   const [orderUser, setOrderUser] = useState(null);
   const [modalQual, setModalQual] = useState(false);
@@ -83,6 +91,28 @@ const OrderDetail = (props) => {
         longitude: info.coords.longitude,
       }),
     );
+  };
+  const handleRef = async () => {
+    const guest = user.guestUser;
+    if (guest && user.numberOfServices === 0) {
+      const userGuest = await validateReferrals(guest.phone);
+      const data = {
+        firstName: userGuest.firstName,
+        lastName: userGuest.lastName,
+        email: userGuest.email,
+        uid: userGuest.uid,
+        used: false,
+        createRef: moment().format('L'),
+      };
+      await adddReferralsUser(userGuest, data, authDispatch);
+    }
+    await updateProfile(
+      user.numberOfServices + 1,
+      'numberOfServices',
+      authDispatch,
+    );
+
+    await updateStatus(5, orderUser, utilDispatch);
   };
   return (
     <>
@@ -298,7 +328,7 @@ const OrderDetail = (props) => {
                     {
                       text: 'SI',
                       onPress: async () => {
-                        await updateStatus(5, orderUser, utilDispatch);
+                        handleRef();
                       },
                     },
 
