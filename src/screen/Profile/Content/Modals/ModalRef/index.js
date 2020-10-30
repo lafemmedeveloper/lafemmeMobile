@@ -6,10 +6,18 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Image,
 } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 import {StoreContext} from '../../../../../flux';
 import {updateProfile} from '../../../../../flux/auth/actions';
-import {Colors, Fonts, Metrics} from '../../../../../themes';
+import {
+  ApplicationStyles,
+  Colors,
+  Fonts,
+  Images,
+  Metrics,
+} from '../../../../../themes';
 
 const ModalRef = ({user}) => {
   const {authDispatch} = useContext(StoreContext);
@@ -47,6 +55,25 @@ const ModalRef = ({user}) => {
 
   return (
     <View style={styles.container}>
+      <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
+      <Icon
+        name="exchange-alt"
+        size={50}
+        color={Colors.client.primaryColor}
+        style={{
+          alignSelf: 'center',
+          marginBottom: 10,
+        }}
+      />
+
+      <Text style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
+        {'Referidos'}
+      </Text>
+
+      <Text style={Fonts.style.light(Colors.data, Fonts.size.small, 'center')}>
+        {'Comparte tu numero teléfono con tus amigos'}
+      </Text>
+      <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
       <View style={{marginTop: 20}}>
         {user && user.referrals && user.referrals.length > 0 ? (
           user.referrals.map((data, index) => {

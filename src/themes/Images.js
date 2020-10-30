@@ -26,6 +26,10 @@ const images = {
   menuGift: require('../Images/navigation/menuGift.png'),
   address: require('../Images/address.png'),
   pinAddress: require('../Images/addresspin.png'),
+  coverage: require('../Images/mapa.png'),
+  name: require('../Images/username.png'),
+  email: require('../Images/email.png'),
+  ref: require('../Images/referir.png'),
 
   //icons
   next: require('../Images/next.png'),

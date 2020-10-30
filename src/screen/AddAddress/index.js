@@ -5,9 +5,10 @@ import {
   TouchableOpacity,
   StyleSheet,
   Dimensions,
+  Image,
 } from 'react-native';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
-import {Colors, Fonts, Metrics} from '../../themes';
+import {ApplicationStyles, Colors, Fonts, Images, Metrics} from '../../themes';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
@@ -197,31 +198,34 @@ const AddAddress = (props) => {
     <>
       <View
         style={{
+          zIndex: 6,
           position: 'absolute',
-          width: '90%',
+          top: Metrics.screenHeight / 2,
+          alignSelf: 'flex-end',
+          right: 25,
+        }}>
+        <ButtonCoordinates
+          activeApi={activeApi}
+          setName={setName}
+          setCoordinate={setCoordinate}
+          APIKEY={APIKEY}
+          checkCoverage={checkCoverage}
+          setGoogleDetail={setGoogleDetail}
+          setGoogleAddress={setGoogleAddress}
+          setCurrentLocationActive={setCurrentLocationActive}
+        />
+      </View>
+      <View
+        style={{
+          position: 'absolute',
+          width: Metrics.screenWidth - 40,
           // bottom: Metrics.screenHeight / 5 - 20,
-          top: 80,
+          top: Metrics.screenHeight / 2,
           zIndex: 5,
           justifyContent: 'space-between',
           alignSelf: 'center',
           flexDirection: 'row-reverse',
         }}>
-        {/* <View
-          style={{
-            zIndex: 6,
-            marginRight: 10,
-          }}>
-          <ButtonCoordinates
-            activeApi={activeApi}
-            setName={setName}
-            setCoordinate={setCoordinate}
-            APIKEY={APIKEY}
-            checkCoverage={checkCoverage}
-            setGoogleDetail={setGoogleDetail}
-            setGoogleAddress={setGoogleAddress}
-            setCurrentLocationActive={setCurrentLocationActive}
-          />
-        </View> */}
         <GooglePlacesAutocomplete
           placeholder={'(Ej: carrera 33 #10-20)'}
           autoFocus={false}
@@ -243,9 +247,19 @@ const AddAddress = (props) => {
           }}
           styles={{
             textInputContainer: {
-              backgroundColor: 'transparent',
+              backgroundColor: Colors.light,
               borderTopColor: 'transparent',
               borderBottomColor: 'transparent',
+              borderRadius: 10,
+              shadowColor: '#000',
+              shadowOffset: {
+                width: 0,
+                height: 2,
+              },
+              shadowOpacity: 0.25,
+              shadowRadius: 3.84,
+
+              elevation: 5,
             },
             poweredContainer: {
               height: 30,
@@ -287,14 +301,29 @@ const AddAddress = (props) => {
           debounce={200} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
         />
       </View>
-      <View style={{maxHeight: Metrics.screenHeight * 0.8}}>
-        <Text
-          style={[
-            Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center'),
-            {marginVertical: 20},
-          ]}>
-          {' Agregar una direccion'}
+      <View style={{maxHeight: Metrics.screenHeight - 60}}>
+        <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
+
+        <Image
+          source={Images.pinAddress}
+          style={{
+            width: 50,
+            height: 50,
+            resizeMode: 'contain',
+            alignSelf: 'center',
+            marginBottom: 10,
+            tintColor: Colors.client.primaryColor,
+          }}
+        />
+        <Text style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
+          {'Agregar direccion'}
         </Text>
+
+        <Text
+          style={Fonts.style.light(Colors.data, Fonts.size.small, 'center')}>
+          {'Agrega y administra tus direcciones de servicio'}
+        </Text>
+        <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
         <MapView
           provider={__DEV__ ? null : PROVIDER_GOOGLE} // remove if not using Google Maps
           style={{
@@ -358,8 +387,7 @@ const AddAddress = (props) => {
           notifyCoverage={notifyCoverage}
           setIsCoverage={setIsCoverage}
           setNotifyCoverage={setNotifyCoverage}
-          googleAddress={googleAddress}
-          setCurrentLocationActive={setCurrentLocationActive}
+          setGoogleAddress={setGoogleAddress}
         />
       </ModalApp>
       <ModalApp // true coverage

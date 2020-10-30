@@ -72,23 +72,13 @@ const ButtonCoordinates = (props) => {
 };
 const styles = StyleSheet.create({
   ContIcon: {
-    backgroundColor: 'white',
     height: 40,
     width: 40,
     alignSelf: 'center',
     flex: 0,
-    zIndex: 5000,
+    zIndex: 25,
     justifyContent: 'center',
-    borderRadius: 5,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.23,
-    shadowRadius: 2.62,
-
-    elevation: 4,
+    backgroundColor: Colors.light,
   },
 });
 

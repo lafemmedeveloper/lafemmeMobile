@@ -697,26 +697,16 @@ const Content = (props) => {
           </View>
         </ScrollView>
       </View>
-      <ModalComponent
-        nameIcon={'user'}
-        lastTitle={'Actualiza el nombre de usuario'}
-        title={'Actualizar nombre'}
-        open={modalName}
-        setOpen={setModalName}>
+      <ModalApp open={modalName} setOpen={setModalName}>
         <UpdateName user={user} setModalName={setModalName} />
-      </ModalComponent>
-      <ModalComponent
-        nameIcon={'envelope'}
-        lastTitle={'Actualiza tu email'}
-        title={'Actualizar email de tu usuario'}
-        open={modalEmail}
-        setOpen={setModalEmail}>
+      </ModalApp>
+      <ModalApp open={modalEmail} setOpen={setModalEmail}>
         <UpdateEmail
           user={user}
           dispatch={dispatch}
           setModalEmail={setModalEmail}
         />
-      </ModalComponent>
+      </ModalApp>
 
       <ModalApp
         open={modalAddress}
@@ -744,27 +734,17 @@ const Content = (props) => {
           />
         </View>
       </ModalApp>
-      <ModalComponent
-        open={modalImage}
-        setOpen={setModalImage}
-        nameIcon={'image'}
-        lastTitle={'Actualiza tu Foto'}
-        title={'Cambia tu foto de perfil'}>
+      <ModalApp open={modalImage} setOpen={setModalImage}>
         <UpdateImage
           source={imgSource}
           pickImage={pickImage}
           uploadImage={uploadImage}
           close={setModalImage}
         />
-      </ModalComponent>
-      <ModalComponent
-        open={modalRef}
-        setOpen={setModalRef}
-        nameIcon={'exchange-alt'}
-        lastTitle={'Usalos cuando tengo un servicio en el carrito'}
-        title={'Tus referidos'}>
+      </ModalApp>
+      <ModalApp open={modalRef} setOpen={setModalRef}>
         <ModalRef user={user} />
-      </ModalComponent>
+      </ModalApp>
     </>
   );
 };
