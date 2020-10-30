@@ -6,18 +6,11 @@ import {
   Text,
   TouchableOpacity,
   View,
-  Image,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {StoreContext} from '../../../../../flux';
 import {updateProfile} from '../../../../../flux/auth/actions';
-import {
-  ApplicationStyles,
-  Colors,
-  Fonts,
-  Images,
-  Metrics,
-} from '../../../../../themes';
+import {ApplicationStyles, Colors, Fonts, Metrics} from '../../../../../themes';
 
 const ModalRef = ({user}) => {
   const {authDispatch} = useContext(StoreContext);

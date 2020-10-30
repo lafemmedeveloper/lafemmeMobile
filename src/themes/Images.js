@@ -30,6 +30,10 @@ const images = {
   name: require('../Images/username.png'),
   email: require('../Images/email.png'),
   ref: require('../Images/referir.png'),
+  note: require('../Images/nota.png'),
+  coupon: require('../Images/cupon.png'),
+  guest: require('../Images/grupo.png'),
+  photo: require('../Images/foto.png'),
 
   //icons
   next: require('../Images/next.png'),

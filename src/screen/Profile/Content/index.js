@@ -14,7 +14,6 @@ import {
 import {Colors, Fonts, Images, Metrics} from '../../../themes';
 import ItemProfile from '../../../components/ItemProfile';
 import {signOff, setLoading, updateProfile} from '../../../flux/auth/actions';
-import ModalComponent from './ModalComponent';
 import UpdateName from './Modals/UpdateName';
 import UpdateEmail from './Modals/UpdateEmail';
 import ModalApp from '../../../components/ModalApp';

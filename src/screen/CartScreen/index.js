@@ -10,6 +10,7 @@ import {
   StyleSheet,
   TextInput,
   Keyboard,
+  ActivityIndicator,
 } from 'react-native';
 import Utilities from '../../utilities';
 import moment from 'moment';
@@ -534,24 +535,35 @@ const CartScreen = (props) => {
       <ModalApp open={modalNote} setOpen={setModalNote}>
         <Loading type={'client'} />
 
-        <Icon
-          name="comment-dots"
-          size={50}
-          color={Colors.client.primaryColor}
-          style={styles.icon}
+        <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
+        <Image
+          source={Images.note}
+          style={{
+            width: 50,
+            height: 50,
+            resizeMode: 'contain',
+            alignSelf: 'center',
+            marginBottom: 10,
+            tintColor: Colors.client.primaryColor,
+          }}
         />
         <Text style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
-          {'Añade una nota'}
+          {'Añade una nota '}
         </Text>
+
+        <Text
+          style={Fonts.style.light(Colors.data, Fonts.size.small, 'center')}>
+          {'Agrega detalles de tu orden'}
+        </Text>
+        <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
         <TouchableOpacity
           style={{
             alignSelf: 'center',
             justifyContent: 'center',
             alignItems: 'center',
             width: 30,
-            marginVertical: 8,
             backgroundColor: Colors.light,
-            height: 4,
+
             borderRadius: 2.5,
           }}
           onPress={() => setModalNote(false)}
@@ -564,7 +576,6 @@ const CartScreen = (props) => {
           style={{
             width: '90%',
             padding: 20,
-            marginVertical: 20,
             borderRadius: Metrics.borderRadius,
             height: 100,
             backgroundColor: Colors.textInputBg,
@@ -575,27 +586,20 @@ const CartScreen = (props) => {
         />
 
         <TouchableOpacity
-          onPress={() => {
-            updateNotes(notes);
-          }}
+          onPress={() => updateNotes(notes)}
           style={[
+            styles.btnContainerNote,
             {
-              flex: 0,
-              borderRadius: Metrics.textInBr,
-              alignSelf: 'center',
-              flexDirection: 'row',
-              justifyContent: 'center',
-              width: '90%',
-
-              paddingHorizontal: 10,
-              paddingVertical: 10,
               backgroundColor: Colors.client.primaryColor,
-              marginBottom: Metrics.addFooter + 10,
             },
           ]}>
           <Text
             style={Fonts.style.bold(Colors.light, Fonts.size.medium, 'center')}>
-            {'Agregar comentarios'}
+            {!state.auth.loading ? (
+              'Agregar comentarios'
+            ) : (
+              <ActivityIndicator color={Colors.light} />
+            )}
           </Text>
         </TouchableOpacity>
         <View style={{height: keyboardHeight}} />
@@ -682,9 +686,26 @@ const styles = StyleSheet.create({
 
     elevation: 5,
   },
-  icon: {
+  btnContainerNote: {
+    flex: 0,
+    height: 40,
+    width: Metrics.contentWidth,
     alignSelf: 'center',
-    marginTop: 40,
+    borderRadius: Metrics.borderRadius,
+    marginVertical: 20,
+
+    justifyContent: 'center',
+    alignItems: 'center',
+
+    shadowColor: Colors.dark,
+    shadowOffset: {
+      width: 2,
+      height: 1,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 1,
+
+    elevation: 5,
   },
 });
 export default CartScreen;

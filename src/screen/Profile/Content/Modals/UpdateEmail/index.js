@@ -19,7 +19,6 @@ import {
   Images,
   Metrics,
 } from '../../../../../themes';
-import Loading from '../../../../../components/Loading';
 import {useKeyboard} from '../../../../../hooks/useKeyboard';
 
 const UpdateEmail = (props) => {

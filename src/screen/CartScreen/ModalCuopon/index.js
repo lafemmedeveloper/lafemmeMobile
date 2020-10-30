@@ -7,6 +7,7 @@ import {
   Alert,
   ActivityIndicator,
   Keyboard,
+  Image,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import MyTextInput from '../../../components/MyTextInput';
@@ -14,7 +15,13 @@ import {StoreContext} from '../../../flux';
 import {updateProfile} from '../../../flux/auth/actions';
 import {addCoupon, valdiateCouponDb} from '../../../flux/util/actions';
 import {useKeyboard} from '../../../hooks/useKeyboard';
-import {Colors, Fonts, Metrics} from '../../../themes';
+import {
+  ApplicationStyles,
+  Colors,
+  Fonts,
+  Images,
+  Metrics,
+} from '../../../themes';
 import utilities from '../../../utilities';
 
 const ModalCuopon = ({total, type, close}) => {
@@ -90,15 +97,26 @@ const ModalCuopon = ({total, type, close}) => {
 
   return (
     <View>
-      <Icon
-        name="barcode"
-        size={50}
-        color={Colors.client.primaryColor}
-        style={{alignSelf: 'center', marginVertical: 20, paddingTop: 20}}
+      <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
+      <Image
+        source={Images.coupon}
+        style={{
+          width: 50,
+          height: 50,
+          resizeMode: 'contain',
+          alignSelf: 'center',
+          marginBottom: 10,
+          tintColor: Colors.client.primaryColor,
+        }}
       />
       <Text style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
-        {'Agrega un cupón'}
+        {'Agregar cupón'}
       </Text>
+
+      <Text style={Fonts.style.light(Colors.data, Fonts.size.small, 'center')}>
+        {'Agrega descuento a tus servicios con cupones'}
+      </Text>
+      <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
       <View style={styles.contInput}>
         <MyTextInput
           pHolder={'Ingresa tu cupón'}
@@ -110,25 +128,26 @@ const ModalCuopon = ({total, type, close}) => {
           autoCapitalize={'none'}
         />
       </View>
-      <View style={{marginTop: 20}}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => valdiateCoupon()}>
-          {util.loading || auth.loading ? (
-            <ActivityIndicator color={Colors.light} />
-          ) : (
-            <Text
-              style={Fonts.style.bold(
-                Colors.light,
-                Fonts.size.medium,
-                'center',
-              )}>
-              Validar cupón
-            </Text>
-          )}
-        </TouchableOpacity>
-        <View style={{height: keyboardHeight}} />
-      </View>
+
+      <TouchableOpacity
+        onPress={() => valdiateCoupon()}
+        style={[
+          styles.button,
+          {
+            backgroundColor: Colors.client.primaryColor,
+          },
+        ]}>
+        {util.loading || auth.loading ? (
+          <ActivityIndicator color={Colors.light} />
+        ) : (
+          <Text
+            style={Fonts.style.bold(Colors.light, Fonts.size.medium, 'center')}>
+            Validar cupón
+          </Text>
+        )}
+      </TouchableOpacity>
+
+      <View style={{height: keyboardHeight}} />
     </View>
   );
 };
@@ -138,15 +157,24 @@ const styles = StyleSheet.create({
   },
   button: {
     flex: 0,
-    borderRadius: Metrics.textInBr,
+    height: 40,
+    width: Metrics.contentWidth,
     alignSelf: 'center',
-    flexDirection: 'row',
+    borderRadius: Metrics.borderRadius,
+    marginVertical: 20,
+
     justifyContent: 'center',
-    width: '90%',
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-    backgroundColor: Colors.client.primaryColor,
-    marginBottom: Metrics.addFooter + 10,
+    alignItems: 'center',
+
+    shadowColor: Colors.dark,
+    shadowOffset: {
+      width: 2,
+      height: 1,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 1,
+
+    elevation: 5,
   },
 });
 
