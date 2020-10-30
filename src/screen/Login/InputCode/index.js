@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   SafeAreaView,
   Text,
@@ -8,8 +8,15 @@ import {
   ActivityIndicator,
   StyleSheet,
   Keyboard,
+  Image,
 } from 'react-native';
-import {Colors, Metrics, Fonts} from '../../../themes';
+import {
+  Colors,
+  Metrics,
+  Fonts,
+  Images,
+  ApplicationStyles,
+} from '../../../themes';
 import {
   CodeField,
   Cursor,
@@ -17,8 +24,6 @@ import {
   useClearByFocusCell,
 } from 'react-native-confirmation-code-field';
 import {useKeyboard} from '../../../hooks/useKeyboard';
-
-import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const CELL_COUNT = 6;
 
@@ -51,21 +56,46 @@ const InputCode = ({
     setModalCode(false);
   };
 
+  useEffect(() => {
+    if (value.length === 6) {
+      inputVerifyCode();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value]);
   return (
     <>
       <SafeAreaView style={styles.root}>
-        <Icon
-          name="sms"
-          size={50}
-          color={Colors.client.primaryColor}
-          style={styles.icon}
+        <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
+
+        <Image
+          source={Images.message}
+          style={{
+            width: 50,
+            height: 50,
+            resizeMode: 'contain',
+            alignSelf: 'center',
+            marginBottom: 10,
+            tintColor: Colors.client.primaryColor,
+          }}
         />
-        <Text style={styles.title}>
-          Ingresa el código enviado al{'\n'}
-          <Text style={{color: Colors.client.primaryColor, fontSize: 18}}>
+        <Text style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
+          {'Verificación'}
+        </Text>
+
+        <Text
+          style={Fonts.style.light(Colors.data, Fonts.size.small, 'center')}>
+          {'Ingresa el codigo enviado al \n'}
+
+          <Text
+            style={Fonts.style.light(
+              Colors.client.primaryColor,
+              Fonts.size.small,
+              'center',
+            )}>
             {phone}
           </Text>
         </Text>
+        <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
 
         <View style={{marginVertical: 30}}>
           <CodeField
@@ -107,6 +137,15 @@ const InputCode = ({
                 paddingVertical: 10,
                 backgroundColor: Colors.client.primaryColor,
                 marginBottom: Metrics.addFooter + 10,
+                shadowColor: Colors.dark,
+                shadowOffset: {
+                  width: 2,
+                  height: 1,
+                },
+                shadowOpacity: 0.25,
+                shadowRadius: 1,
+
+                elevation: 5,
               },
             ]}>
             <Text
@@ -115,11 +154,12 @@ const InputCode = ({
                 Fonts.size.medium,
                 'center',
               )}>
-              Siguiente
+              {activityLoading ? (
+                <ActivityIndicator size="small" color="white" />
+              ) : (
+                'Siguiente'
+              )}
             </Text>
-            {activityLoading && (
-              <ActivityIndicator size="small" color="white" />
-            )}
           </TouchableOpacity>
           <TouchableOpacity onPress={() => resetcode()}>
             <Text
@@ -139,7 +179,6 @@ const InputCode = ({
 };
 const styles = StyleSheet.create({
   root: {padding: 20, minHeight: 300},
-  title: {textAlign: 'center', fontSize: 25},
   codeFieldRoot: {
     marginTop: 20,
     width: 280,

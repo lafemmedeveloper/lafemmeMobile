@@ -1,14 +1,19 @@
 import React, {useState} from 'react';
 import {
-  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
   Alert,
+  Image,
 } from 'react-native';
-import {Colors, Fonts, Metrics} from '../../../themes';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {
+  ApplicationStyles,
+  Colors,
+  Fonts,
+  Images,
+  Metrics,
+} from '../../../themes';
 import {validateReferrals} from '../../../flux/auth/actions';
 import Loading from '../../../components/Loading';
 import CountryPicker from 'react-native-country-picker-modal';
@@ -59,15 +64,27 @@ const Referrals = ({setUserReferrals, handleRegister, close}) => {
     <>
       <Loading type={'client'} />
       <View>
-        <Icon
-          name="contacts"
-          size={50}
-          color={Colors.client.primaryColor}
-          style={styles.icon}
+        <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
+
+        <Image
+          source={Images.name}
+          style={{
+            width: 50,
+            height: 50,
+            resizeMode: 'contain',
+            alignSelf: 'center',
+            marginBottom: 10,
+            tintColor: Colors.client.primaryColor,
+          }}
         />
         <Text style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
-          {'Ingresa el numero de teléfono de tu referido para continuar'}
+          {'Tienes algún referido'}
         </Text>
+        <Text
+          style={Fonts.style.light(Colors.dark, Fonts.size.small, 'center')}>
+          Ingresa el numero de teléfono de tu referido
+        </Text>
+        <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
         <View
           style={{
             flexDirection: 'row',
@@ -145,11 +162,5 @@ const Referrals = ({setUserReferrals, handleRegister, close}) => {
     </>
   );
 };
-const styles = StyleSheet.create({
-  icon: {
-    alignSelf: 'center',
-    paddingVertical: 20,
-  },
-});
 
 export default Referrals;

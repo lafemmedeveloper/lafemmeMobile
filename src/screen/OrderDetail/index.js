@@ -174,7 +174,7 @@ const OrderDetail = (props) => {
                       latitudeDelta: 0.00002,
                       longitudeDelta: 0.0002 * ASPECT_RATIO,
                     }}>
-                    {orderUser.experts && (
+                    {orderUser.experts && orderUser.experts.coordinates && (
                       <Marker.Animated
                         coordinate={{
                           latitude: orderUser.experts.coordinates.latitude,
