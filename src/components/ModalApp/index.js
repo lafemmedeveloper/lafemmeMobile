@@ -42,6 +42,7 @@ const styles = StyleSheet.create({
   Modal: {
     margin: 0,
     justifyContent: 'flex-end',
+    zIndex: 99,
   },
   musk: {
     backgroundColor: Colors.lightGray,

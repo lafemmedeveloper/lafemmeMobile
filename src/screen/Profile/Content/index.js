@@ -159,14 +159,11 @@ const Content = (props) => {
     });
   };
   const pickImage = async () => {
-    //setLoading(true);
     ImagePicker.showImagePicker(options, async (response) => {
       if (response.didCancel) {
         console.log('Ups...', 'You cancelled image picker 😟');
-        //setLoading(false);
       } else if (response.error) {
         Alert.alert('Ups...', 'And error occured: ', response.error);
-        // setLoading(false);
       } else {
         const source = {uri: response.uri};
         setImageUri(response.uri);

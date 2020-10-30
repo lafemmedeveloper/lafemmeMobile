@@ -18,11 +18,15 @@ const images = {
   defaultUser: require('../Images/defaultUser.jpg'),
 
   billResume: require('../Images/billResume.png'),
+  inspo: require('../Images/gallery.png'),
 
   itemMenu: require('../Images/navigation/itemMenu.png'),
   menuUser: require('../Images/navigation/menuUser.png'),
   menuAppoiment: require('../Images/navigation/menuAppoiment.png'),
   menuGift: require('../Images/navigation/menuGift.png'),
+  address: require('../Images/address.png'),
+  pinAddress: require('../Images/addresspin.png'),
+
   //icons
   next: require('../Images/next.png'),
   time: require('../Images/time.png'),
