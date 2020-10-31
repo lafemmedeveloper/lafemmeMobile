@@ -7,12 +7,19 @@ import {
   Alert,
   ActivityIndicator,
   Keyboard,
+  Image,
 } from 'react-native';
 import MyTextInput from '../../../../../components/MyTextInput';
 import {StoreContext} from '../../../../../flux';
 import {updateProfileItem} from '../../../../../flux/auth/actions';
 import {useKeyboard} from '../../../../../hooks/useKeyboard';
-import {Colors, Fonts, Metrics} from '../../../../../themes';
+import {
+  ApplicationStyles,
+  Colors,
+  Fonts,
+  Images,
+  Metrics,
+} from '../../../../../themes';
 
 const UpdateName = (props) => {
   const {state, authDispatch} = useContext(StoreContext);
@@ -21,8 +28,8 @@ const UpdateName = (props) => {
   const {auth} = state;
   const {loading} = auth;
 
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+  const [firstName, setFirstName] = useState(user ? user.firstName : '');
+  const [lastName, setLastName] = useState(user ? user.lastName : '');
   const [keyboardHeight] = useKeyboard();
 
   const updateName = async () => {
@@ -39,6 +46,27 @@ const UpdateName = (props) => {
   };
   return (
     <View style={styles.container}>
+      <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
+
+      <Image
+        source={Images.name}
+        style={{
+          width: 50,
+          height: 50,
+          resizeMode: 'contain',
+          alignSelf: 'center',
+          marginBottom: 10,
+          tintColor: Colors.client.primaryColor,
+        }}
+      />
+      <Text style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
+        {'Actualizar usuario'}
+      </Text>
+
+      <Text style={Fonts.style.light(Colors.data, Fonts.size.small, 'center')}>
+        {'Cambia tu nombre y apellido'}
+      </Text>
+      <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
       <MyTextInput
         pHolder={`${user.firstName}`}
         text={firstName}

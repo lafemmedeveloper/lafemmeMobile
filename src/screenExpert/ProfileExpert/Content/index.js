@@ -706,7 +706,7 @@ const Content = () => {
           </ScrollView>
         </View>
         <ModalApp open={modalPassword} setOpen={setModalPassword}>
-          <UpdatePassword user={user} />
+          <UpdatePassword close={setModalPassword} />
         </ModalApp>
         <ModalApp open={tyc} setOpen={seTyc}>
           <View style={{height: '90%'}}>

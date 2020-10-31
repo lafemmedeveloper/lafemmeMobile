@@ -6,9 +6,8 @@ import Content from './Content';
 
 const Profile = () => {
   const {state, authDispatch} = useContext(StoreContext);
-  const {auth, util} = state;
+  const {auth} = state;
   const {user} = auth;
-  const {deviceInfo} = util;
 
   if (!user) {
     return <ButtonLogin />;

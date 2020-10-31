@@ -6,11 +6,12 @@ import {
   Text,
   TouchableOpacity,
   Alert,
+  Image,
 } from 'react-native';
 
 import {StoreContext} from '../../flux';
 import CardItemAddress from '../../components/CartItemAddress';
-import {Metrics, Fonts, ApplicationStyles, Colors} from '../../themes';
+import {Metrics, Fonts, ApplicationStyles, Colors, Images} from '../../themes';
 import {updateProfile} from '../../flux/auth/actions';
 import {validateCoverage} from '../../helpers/GeoHelper';
 import {getCoverage} from '../../flux/util/actions';
@@ -71,13 +72,28 @@ const Address = (props) => {
     <View>
       <Loading type={'client'} />
       <ScrollView>
-        <View style={styles.headerContainer}>
-          <View opacity={0.0} style={ApplicationStyles.separatorLine} />
-          <Text style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
-            {'Mis direcciones'}
-          </Text>
-          <View opacity={0.0} style={ApplicationStyles.separatorLine} />
-        </View>
+        <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
+
+        <Image
+          source={Images.address}
+          style={{
+            width: 50,
+            height: 50,
+            resizeMode: 'contain',
+            alignSelf: 'center',
+            marginBottom: 10,
+            tintColor: Colors.client.primaryColor,
+          }}
+        />
+        <Text style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
+          {'Mis direcciones'}
+        </Text>
+
+        <Text
+          style={Fonts.style.light(Colors.data, Fonts.size.small, 'center')}>
+          {'Agrega y selecciona tu dirección de  servicio'}
+        </Text>
+        <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
 
         {user &&
           user.address &&
@@ -150,13 +166,6 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.textInputBg,
     paddingHorizontal: 10,
     paddingVertical: 10,
-  },
-
-  headerContainer: {
-    flex: 0,
-    width: Metrics.screenWidth,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
   },
 });
 

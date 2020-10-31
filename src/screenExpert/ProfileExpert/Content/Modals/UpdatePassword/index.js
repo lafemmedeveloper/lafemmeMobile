@@ -7,18 +7,27 @@ import {
   Alert,
   ActivityIndicator,
   Keyboard,
+  Image,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome5';
 
 import MyTextInput from '../../../../../components/MyTextInput';
-import {Fonts, Colors} from '../../../../../themes';
+import {
+  Fonts,
+  Colors,
+  ApplicationStyles,
+  Images,
+  Metrics,
+} from '../../../../../themes';
 import auth from '@react-native-firebase/auth';
+import {useKeyboard} from '../../../../../hooks/useKeyboard';
 
-const UpdatePassword = () => {
+const UpdatePassword = ({close}) => {
   const [passwordCurrent, setPasswordCurrent] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [newPasswordConfirm, setNewPasswordConfirm] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const [keyboardHeight] = useKeyboard();
 
   const reauthenticate = () => {
     const currentUser = auth().currentUser;
@@ -52,6 +61,7 @@ const UpdatePassword = () => {
               setNewPasswordConfirm('');
               setPasswordCurrent('');
               setLoading(false);
+              close(false);
             })
             .catch((error) => {
               console.log('error ==>', error);
@@ -75,27 +85,27 @@ const UpdatePassword = () => {
 
   return (
     <View styles={styles.container}>
-      <View style={{marginVertical: 20}}>
-        <Icon
-          style={[
-            {
-              color: Colors.expert.primaryColor,
-              fontSize: 30,
-              marginVertical: 10,
-              alignSelf: 'center',
-            },
-          ]}
-          name={'lock'}
-        />
-        <Text
-          style={[Fonts.style.regular(Colors.dark, Fonts.size.h6, 'center')]}>
-          {' Actualizar datos'}
-        </Text>
-        <Text
-          style={Fonts.style.light(Colors.data, Fonts.size.small, 'center')}>
-          {'Por seguridad ingresa tu contraseña'}
-        </Text>
-      </View>
+      <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
+
+      <Image
+        source={Images.password}
+        style={{
+          width: 50,
+          height: 50,
+          resizeMode: 'contain',
+          alignSelf: 'center',
+          marginBottom: 10,
+          tintColor: Colors.expert.primaryColor,
+        }}
+      />
+      <Text style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
+        {'Actualizar perfil'}
+      </Text>
+
+      <Text style={Fonts.style.light(Colors.data, Fonts.size.small, 'center')}>
+        {'Actualiza tu contraseña'}
+      </Text>
+      <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
       <View style={{width: '90%', alignSelf: 'center', marginBottom: 20}}>
         <MyTextInput
           pHolder={'Tu Contraseña actual'}
@@ -124,35 +134,21 @@ const UpdatePassword = () => {
           textContent={'password'}
           autoCapitalize={'none'}
         />
+        <View style={{height: keyboardHeight}} />
       </View>
 
       <TouchableOpacity
         onPress={() => updateProfile()}
-        style={[styles.btnContainer]}>
-        <View style={styles.conText}>
-          <Text
-            style={[
-              Fonts.style.bold(Colors.light, Fonts.size.medium),
-              {alignItems: 'center'},
-            ]}>
-            {'Actualizar contraseña'}{' '}
-            {loading ? (
-              <ActivityIndicator color={Colors.light} />
-            ) : (
-              <Icon
-                style={[
-                  {
-                    color: Colors.light,
-                    fontSize: 15,
-                    marginVertical: 10,
-                    alignSelf: 'center',
-                  },
-                ]}
-                name={'arrow-right'}
-              />
-            )}
-          </Text>
-        </View>
+        style={[
+          styles.btnContainer,
+          {
+            backgroundColor: Colors.expert.primaryColor,
+          },
+        ]}>
+        <Text
+          style={Fonts.style.bold(Colors.light, Fonts.size.medium, 'center')}>
+          {!loading ? 'Actualizar' : <ActivityIndicator color={Colors.light} />}
+        </Text>
       </TouchableOpacity>
     </View>
   );
@@ -164,17 +160,27 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+
   btnContainer: {
-    backgroundColor: Colors.expert.primaryColor,
-    height: 60,
-    borderTopRightRadius: 15,
-    borderTopLeftRadius: 15,
-  },
-  conText: {
+    flex: 0,
+    height: 40,
+    width: Metrics.contentWidth,
     alignSelf: 'center',
-    flexDirection: 'column',
-    flex: 1,
+    borderRadius: Metrics.borderRadius,
+    marginVertical: 20,
+
     justifyContent: 'center',
+    alignItems: 'center',
+
+    shadowColor: Colors.dark,
+    shadowOffset: {
+      width: 2,
+      height: 1,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 1,
+
+    elevation: 5,
   },
 });
 

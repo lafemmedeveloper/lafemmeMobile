@@ -5,8 +5,15 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
+  Image,
 } from 'react-native';
-import {Metrics, Colors, Fonts} from '../../../themes';
+import {
+  Metrics,
+  Colors,
+  Fonts,
+  Images,
+  ApplicationStyles,
+} from '../../../themes';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
@@ -36,11 +43,30 @@ const EnableCoverage = (props) => {
   return (
     <>
       <Loading type={'client'} />
+      <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
+
+      <Image
+        source={Images.pinAddress}
+        style={{
+          width: 50,
+          height: 50,
+          resizeMode: 'contain',
+          alignSelf: 'center',
+          marginBottom: 10,
+          tintColor: Colors.client.primaryColor,
+        }}
+      />
+      <Text style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
+        {'Dirección disponible'}
+      </Text>
+
+      <Text style={Fonts.style.light(Colors.data, Fonts.size.small, 'center')}>
+        {'Agrega y lo detalles de tu dirección '}
+      </Text>
+      <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
       <ScrollView
         contentContainerStyle={{
-          justifyContent: 'center',
-          alignItems: 'center',
-          maxHeight: Metrics.screenHeight * 2,
+          maxHeight: Metrics.screenHeight - 40,
         }}>
         <View
           style={{
@@ -50,19 +76,6 @@ const EnableCoverage = (props) => {
             backdropColor: 'red',
             borderRadius: 10,
           }}>
-          <Icon
-            name="map-marked"
-            size={50}
-            color={Colors.client.primaryColor}
-            style={styles.icon}
-          />
-          <Text
-            style={[
-              Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center'),
-              {marginBottom: 10},
-            ]}>
-            {'Completa tu dirección'}
-          </Text>
           <MapView
             provider={__DEV__ ? null : PROVIDER_GOOGLE} // remove if not using Google Maps
             style={{

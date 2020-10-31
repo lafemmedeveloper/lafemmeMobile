@@ -13,8 +13,8 @@ export default ({open, children, setOpen}) => {
   return (
     <>
       <Modal
-        onSwipeComplete={() => setOpen(false)}
-        swipeDirection={['down']}
+        //onSwipeComplete={() => setOpen(false)}
+        // swipeDirection={['down']}
         isVisible={open}
         onBackdropPress={() =>
           setOpen ? setOpen(false) : console.log('not close')
@@ -42,6 +42,7 @@ const styles = StyleSheet.create({
   Modal: {
     margin: 0,
     justifyContent: 'flex-end',
+    zIndex: 99,
   },
   musk: {
     backgroundColor: Colors.lightGray,

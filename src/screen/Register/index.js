@@ -6,14 +6,13 @@ import {
   TouchableOpacity,
   Alert,
   ActivityIndicator,
-  StyleSheet,
   Keyboard,
+  Image,
 } from 'react-native';
-import {Colors, Metrics, Fonts} from '../../themes';
+import {Colors, Metrics, Fonts, ApplicationStyles, Images} from '../../themes';
 import moment from 'moment';
 import auth from '@react-native-firebase/auth';
 import {saveUser} from '../../flux/auth/actions';
-import Icon from 'react-native-vector-icons/FontAwesome5';
 import Referrals from './Referrals';
 import ModalApp from '../../components/ModalApp';
 import Loading from '../../components/Loading';
@@ -108,15 +107,28 @@ const Register = (props) => {
       <Loading type={'client'} />
 
       <View style={{marginTop: 20}}>
-        <Icon
-          name="user-edit"
-          size={50}
-          color={Colors.client.primaryColor}
-          style={styles.icon}
+        <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
+
+        <Image
+          source={Images.user}
+          style={{
+            width: 50,
+            height: 50,
+            resizeMode: 'contain',
+            alignSelf: 'center',
+            marginBottom: 10,
+            tintColor: Colors.client.primaryColor,
+          }}
         />
         <Text style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
-          {'Completa tus datos para continuar'}
+          {'Registrarte'}
         </Text>
+        <Text
+          style={Fonts.style.light(Colors.dark, Fonts.size.small, 'center')}>
+          Ingresa tus datos para continuar
+        </Text>
+        <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
+
         <View
           style={{
             flex: 0,
@@ -202,13 +214,25 @@ const Register = (props) => {
               paddingVertical: 10,
               backgroundColor: Colors.client.primaryColor,
               marginBottom: Metrics.addFooter + 10,
+              shadowColor: Colors.dark,
+              shadowOffset: {
+                width: 2,
+                height: 1,
+              },
+              shadowOpacity: 0.25,
+              shadowRadius: 1,
+
+              elevation: 5,
             },
           ]}>
           <Text
             style={Fonts.style.bold(Colors.light, Fonts.size.medium, 'center')}>
-            Siguiente
+            {activityLoading ? (
+              <ActivityIndicator size="small" color="white" />
+            ) : (
+              'Siguiente'
+            )}
           </Text>
-          {activityLoading && <ActivityIndicator size="small" color="white" />}
         </TouchableOpacity>
         <View style={{height: keyboardHeight}} />
       </View>
@@ -222,11 +246,5 @@ const Register = (props) => {
     </>
   );
 };
-const styles = StyleSheet.create({
-  icon: {
-    alignSelf: 'center',
-    paddingVertical: 20,
-  },
-});
 
 export default Register;

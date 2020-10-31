@@ -1,6 +1,13 @@
-import React from 'react';
-import {Text, View, TouchableOpacity, StyleSheet} from 'react-native';
-import {Metrics, Colors, Fonts} from '../../../themes';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, {useEffect} from 'react';
+import {Text, View, TouchableOpacity, Image} from 'react-native';
+import {
+  Metrics,
+  Colors,
+  Fonts,
+  ApplicationStyles,
+  Images,
+} from '../../../themes';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
 const NoEnableCoverage = (props) => {
@@ -8,9 +15,12 @@ const NoEnableCoverage = (props) => {
     notifyCoverage,
     setIsCoverage,
     setNotifyCoverage,
-    currentLocationActive,
-    googleAddress,
+    setGoogleAddress,
   } = props;
+
+  useEffect(() => {
+    setGoogleAddress(null);
+  }, []);
   return (
     <>
       <View
@@ -21,39 +31,29 @@ const NoEnableCoverage = (props) => {
           backdropColor: 'red',
           borderRadius: 10,
           marginVertical: 20,
+          zIndex: 10000000,
         }}>
-        <Icon
-          name="frown"
-          size={50}
-          color={Colors.client.primaryColor}
-          style={styles.icon}
+        <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
+
+        <Image
+          source={Images.noConection}
+          style={{
+            height: 90,
+            resizeMode: 'contain',
+            alignSelf: 'center',
+            marginBottom: 10,
+            tintColor: Colors.client.primaryColor,
+          }}
         />
-        <Text
-          style={[
-            Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center'),
-            {marginVertical: 10},
-          ]}>
-          {'Lo Sentimos'}
+        <Text style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
+          {'Dirección no disponible'}
         </Text>
-        {currentLocationActive ? (
-          <Text
-            style={Fonts.style.regular(
-              Colors.dark,
-              Fonts.size.medium,
-              'center',
-            )}>
-            {'La dirección ingresada no tiene cobertura.'}
-          </Text>
-        ) : (
-          <Text
-            style={Fonts.style.regular(
-              Colors.dark,
-              Fonts.size.medium,
-              'center',
-            )}>
-            {`La dirección ${googleAddress} no tiene cobertura. `}
-          </Text>
-        )}
+
+        <Text
+          style={Fonts.style.light(Colors.data, Fonts.size.small, 'center')}>
+          {'Lo sentimos actualmente no tenemos cobertura en esta zona'}
+        </Text>
+        <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
 
         <View
           style={{
@@ -120,12 +120,5 @@ const NoEnableCoverage = (props) => {
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  icon: {
-    alignSelf: 'center',
-    paddingVertical: 20,
-  },
-});
 
 export default NoEnableCoverage;

@@ -1,6 +1,12 @@
 import React from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {Fonts, Images, Metrics, Colors} from '../../../../../themes';
+import {
+  Fonts,
+  Images,
+  Metrics,
+  Colors,
+  ApplicationStyles,
+} from '../../../../../themes';
 
 const UpdateImage = ({source, pickImage, uploadImage, close}) => {
   const handleUploadImage = async () => {
@@ -10,6 +16,27 @@ const UpdateImage = ({source, pickImage, uploadImage, close}) => {
 
   return (
     <View style={styles.container}>
+      <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
+
+      <Image
+        source={Images.photo}
+        style={{
+          width: 50,
+          height: 50,
+          resizeMode: 'contain',
+          alignSelf: 'center',
+          marginBottom: 10,
+          tintColor: Colors.client.primaryColor,
+        }}
+      />
+      <Text style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
+        {'Actualizar usuario'}
+      </Text>
+
+      <Text style={Fonts.style.light(Colors.data, Fonts.size.small, 'center')}>
+        {'Actualzia tu foto de perfil'}
+      </Text>
+      <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
       {source ? (
         <Image source={source} style={styles.img} />
       ) : (
@@ -18,7 +45,27 @@ const UpdateImage = ({source, pickImage, uploadImage, close}) => {
       <View>
         {source ? (
           <TouchableOpacity
-            style={styles.button}
+            style={{
+              flex: 0,
+              height: 40,
+              width: Metrics.contentWidth,
+              alignSelf: 'center',
+              borderRadius: Metrics.borderRadius,
+              marginVertical: 20,
+              backgroundColor: Colors.client.primaryColor,
+              justifyContent: 'center',
+              alignItems: 'center',
+
+              shadowColor: Colors.dark,
+              shadowOffset: {
+                width: 2,
+                height: 1,
+              },
+              shadowOpacity: 0.25,
+              shadowRadius: 1,
+
+              elevation: 5,
+            }}
             onPress={() => handleUploadImage()}>
             <Text
               style={Fonts.style.bold(
@@ -30,7 +77,29 @@ const UpdateImage = ({source, pickImage, uploadImage, close}) => {
             </Text>
           </TouchableOpacity>
         ) : (
-          <TouchableOpacity style={styles.button} onPress={() => pickImage()}>
+          <TouchableOpacity
+            style={{
+              flex: 0,
+              height: 40,
+              width: Metrics.contentWidth,
+              alignSelf: 'center',
+              borderRadius: Metrics.borderRadius,
+              marginVertical: 20,
+              backgroundColor: Colors.client.primaryColor,
+              justifyContent: 'center',
+              alignItems: 'center',
+
+              shadowColor: Colors.dark,
+              shadowOffset: {
+                width: 2,
+                height: 1,
+              },
+              shadowOpacity: 0.25,
+              shadowRadius: 1,
+
+              elevation: 5,
+            }}
+            onPress={() => pickImage()}>
             <Text
               style={Fonts.style.bold(
                 Colors.light,
@@ -50,19 +119,7 @@ const styles = StyleSheet.create({
   container: {
     paddingTop: 20,
   },
-  button: {
-    flex: 0,
-    borderRadius: Metrics.textInBr,
-    alignSelf: 'center',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    width: '90%',
 
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-    backgroundColor: Colors.client.primaryColor,
-    marginBottom: Metrics.addFooter + 10,
-  },
   img: {
     height: 100,
     width: 100,

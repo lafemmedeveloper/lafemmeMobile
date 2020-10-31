@@ -7,18 +7,24 @@ import {
   Alert,
   ActivityIndicator,
   Keyboard,
+  Image,
 } from 'react-native';
 import MyTextInput from '../../../../../components/MyTextInput';
 import {StoreContext} from '../../../../../flux';
 import {updateProfileItem} from '../../../../../flux/auth/actions';
-import {Colors, Fonts, Metrics} from '../../../../../themes';
-import Loading from '../../../../../components/Loading';
+import {
+  ApplicationStyles,
+  Colors,
+  Fonts,
+  Images,
+  Metrics,
+} from '../../../../../themes';
 import {useKeyboard} from '../../../../../hooks/useKeyboard';
 
 const UpdateEmail = (props) => {
   const {state} = useContext(StoreContext);
   const {dispatch, user, setModalEmail} = props;
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState(user ? user.email : '');
   const [keyboardHeight] = useKeyboard();
 
   const updateEmail = async () => {
@@ -57,8 +63,29 @@ const UpdateEmail = (props) => {
   };
   return (
     <>
-      {state.auth.loading && <Loading type={'client'} />}
       <View style={styles.container}>
+        <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
+
+        <Image
+          source={Images.email}
+          style={{
+            width: 50,
+            height: 50,
+            resizeMode: 'contain',
+            alignSelf: 'center',
+            marginBottom: 10,
+            tintColor: Colors.client.primaryColor,
+          }}
+        />
+        <Text style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
+          {'Actualizar usuario'}
+        </Text>
+
+        <Text
+          style={Fonts.style.light(Colors.data, Fonts.size.small, 'center')}>
+          {'Cambia tu correo electrónico'}
+        </Text>
+        <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
         <MyTextInput
           pHolder={`${user.email}`}
           text={email}

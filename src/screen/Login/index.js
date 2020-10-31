@@ -6,10 +6,10 @@ import {
   TextInput,
   Alert,
   ActivityIndicator,
-  StyleSheet,
   Keyboard,
+  Image,
 } from 'react-native';
-import {Colors, Metrics, Fonts} from '../../themes';
+import {Colors, Metrics, Fonts, ApplicationStyles, Images} from '../../themes';
 import auth from '@react-native-firebase/auth';
 import CountryPicker from 'react-native-country-picker-modal';
 import {parsePhoneNumberFromString} from 'libphonenumber-js';
@@ -18,7 +18,6 @@ import Register from '../../screen//Register';
 import {StoreContext} from '../../flux';
 import ModalApp from '../../components/ModalApp';
 import {setUser} from '../../flux/auth/actions';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Loading from '../../components/Loading';
 import {useKeyboard} from '../../hooks/useKeyboard';
 
@@ -117,15 +116,28 @@ const Login = (props) => {
       {!modalRegister ? (
         <View style={{marginTop: 20}}>
           <Loading type={'client'} />
-          <Icon
-            name="email-send-outline"
-            size={50}
-            color={Colors.client.primaryColor}
-            style={styles.icon}
+          <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
+
+          <Image
+            source={Images.message}
+            style={{
+              width: 50,
+              height: 50,
+              resizeMode: 'contain',
+              alignSelf: 'center',
+              marginBottom: 10,
+              tintColor: Colors.client.primaryColor,
+            }}
           />
           <Text style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
-            {'Ingresa tu número celular'}
+            {'Ingresa tu numero de teléfono'}
           </Text>
+
+          <Text
+            style={Fonts.style.light(Colors.data, Fonts.size.small, 'center')}>
+            {'Te enviaremos un mensaje de 6 dígitos'}
+          </Text>
+          <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
           <View
             style={{
               flexDirection: 'row',
@@ -193,6 +205,15 @@ const Login = (props) => {
                 paddingVertical: 10,
                 backgroundColor: Colors.client.primaryColor,
                 marginBottom: Metrics.addFooter + 10,
+                shadowColor: Colors.dark,
+                shadowOffset: {
+                  width: 2,
+                  height: 1,
+                },
+                shadowOpacity: 0.25,
+                shadowRadius: 1,
+
+                elevation: 5,
               },
             ]}>
             <Text
@@ -201,11 +222,12 @@ const Login = (props) => {
                 Fonts.size.medium,
                 'center',
               )}>
-              Verificar
+              {activityLoading ? (
+                <ActivityIndicator size="small" color="white" />
+              ) : (
+                'Verificar'
+              )}
             </Text>
-            {activityLoading && (
-              <ActivityIndicator size="small" color="white" />
-            )}
           </TouchableOpacity>
           <View style={{height: keyboardHeight}} />
         </View>
@@ -232,10 +254,5 @@ const Login = (props) => {
     </>
   );
 };
-const styles = StyleSheet.create({
-  icon: {
-    alignSelf: 'center',
-    paddingVertical: 20,
-  },
-});
+
 export default Login;

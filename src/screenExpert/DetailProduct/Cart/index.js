@@ -478,7 +478,6 @@ const Cart = (props) => {
               alignItems: 'center',
               paddingBottom: Metrics.addFooter,
             },
-            ApplicationStyles.shadowsClientTop,
           ]}>
           <Text
             style={Fonts.style.bold(Colors.light, Fonts.size.h6, 'center', 1)}>
