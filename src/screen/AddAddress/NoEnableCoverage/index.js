@@ -1,5 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useEffect} from 'react';
-import {Text, View, TouchableOpacity, StyleSheet, Image} from 'react-native';
+import {Text, View, TouchableOpacity, Image} from 'react-native';
 import {
   Metrics,
   Colors,
@@ -119,12 +120,5 @@ const NoEnableCoverage = (props) => {
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  icon: {
-    alignSelf: 'center',
-    paddingVertical: 20,
-  },
-});
 
 export default NoEnableCoverage;

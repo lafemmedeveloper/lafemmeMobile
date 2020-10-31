@@ -27,7 +27,6 @@ import AppConfig from '../../config/AppConfig';
 import {topicPush, getCoverage, addCoupon} from '../../flux/util/actions';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import Loading from '../../components/Loading';
-import Icon from 'react-native-vector-icons/FontAwesome5';
 import ModalCuopon from './ModalCuopon';
 import utilities from '../../utilities';
 import {useKeyboard} from '../../hooks/useKeyboard';

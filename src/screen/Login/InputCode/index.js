@@ -202,10 +202,6 @@ const styles = StyleSheet.create({
     borderBottomColor: Colors.client.primaryColor,
     borderBottomWidth: 2,
   },
-  icon: {
-    alignSelf: 'center',
-    paddingVertical: 20,
-  },
 });
 
 export default InputCode;

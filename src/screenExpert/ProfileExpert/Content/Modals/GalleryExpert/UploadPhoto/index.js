@@ -7,8 +7,13 @@ import {
   Alert,
   TouchableOpacity,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome5';
-import {Fonts, Colors, Images, Metrics} from '../../../../../../themes';
+import {
+  Fonts,
+  Colors,
+  Images,
+  Metrics,
+  ApplicationStyles,
+} from '../../../../../../themes';
 import {Picker} from '@react-native-community/picker';
 import utilities from '../../../../../../utilities';
 
@@ -31,18 +36,29 @@ const UploadPhoto = (props) => {
       close();
     }
   };
-  console.log(services);
   return (
     <View style={styles.container}>
-      <Icon
-        name={'camera'}
-        size={50}
-        color={Colors.expert.primaryColor}
-        style={styles.icon}
+      <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
+
+      <Image
+        source={Images.inspo}
+        style={{
+          width: 50,
+          height: 50,
+          resizeMode: 'contain',
+          alignSelf: 'center',
+          marginBottom: 10,
+          tintColor: Colors.expert.primaryColor,
+        }}
       />
       <Text style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
-        {'Sube tu foto'}
+        {'Inspo'}
       </Text>
+
+      <Text style={Fonts.style.light(Colors.data, Fonts.size.small, 'center')}>
+        {'Agrega una foto a tu gallearía Inspo'}
+      </Text>
+      <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
       <View style={styles.contFunc}>
         <Image
           source={source ? source : Images.logoExpertText}
@@ -93,12 +109,11 @@ const UploadPhoto = (props) => {
 };
 const styles = StyleSheet.create({
   container: {
-    height: '90%',
+    height: Metrics.screenHeight - 60,
     paddingTop: 20,
     paddingHorizontal: 20,
   },
   img: {width: 100, height: 100, resizeMode: 'contain', alignSelf: 'center'},
-  icon: {alignSelf: 'center', marginVertical: 20},
   piker: {width: '90%', alignSelf: 'center'},
   button: {
     flex: 0,

@@ -6,8 +6,15 @@ import {
   ScrollView,
   TouchableOpacity,
   Alert,
+  Image,
 } from 'react-native';
-import {Colors, Fonts} from '../../../../../themes';
+import {
+  ApplicationStyles,
+  Colors,
+  Fonts,
+  Images,
+  Metrics,
+} from '../../../../../themes';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {StoreContext} from '../../../../../flux';
 import {
@@ -56,6 +63,8 @@ const GalleryExpert = (props) => {
   const [imageSource, setImageSource] = useState(null);
   const [serviceName, setServiceName] = useState('');
 
+  let isComplete = false;
+
   useEffect(() => {
     getGallery(utilDispatch);
   }, [utilDispatch]);
@@ -74,7 +83,7 @@ const GalleryExpert = (props) => {
       } else {
         const source = {uri: response.uri};
         setImageSource(source);
-        await setImageUri(response.uri);
+        setImageUri(response.uri);
       }
     });
   };
@@ -340,8 +349,10 @@ const GalleryExpert = (props) => {
                       .then((url) => {
                         picture = {...picture, giant: url};
                         updateUser(picture);
+                        return (isComplete = true);
                       });
                   }
+
                   setValue(state);
                 },
                 (error) => {
@@ -361,7 +372,7 @@ const GalleryExpert = (props) => {
     }
   };
   const updateUser = async (picture) => {
-    const images = {...picture};
+    let images = {...picture};
 
     const dataExpert = {
       expertUid: user.uid,
@@ -371,12 +382,14 @@ const GalleryExpert = (props) => {
       date: moment().format(),
       imageUrl: images,
       isApproved: false,
-      id: user.uid,
+      id: utilities.create_UUID(),
       service: serviceName,
     };
-    await addImageGallery(dataExpert, dataExpert.id, utilDispatch);
-    setImageSource(null);
-    setServiceName('');
+    if (isComplete) {
+      await addImageGallery(dataExpert, dataExpert.id, utilDispatch);
+      setImageSource(null);
+      setServiceName('');
+    }
   };
 
   const deletePhoto = async (id) => {
@@ -388,15 +401,28 @@ const GalleryExpert = (props) => {
       <Loading type={'expert'} loading={loading} />
 
       <View style={styles.conatiner}>
-        <Icon
-          name={'images'}
-          size={50}
-          color={Colors.expert.primaryColor}
-          style={styles.icon}
+        <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
+
+        <Image
+          source={Images.inspo}
+          style={{
+            width: 50,
+            height: 50,
+            resizeMode: 'contain',
+            alignSelf: 'center',
+            marginBottom: 10,
+            tintColor: Colors.expert.primaryColor,
+          }}
         />
         <Text style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
-          {'Galeria Inspo'}
+          {'Inspo'}
         </Text>
+
+        <Text
+          style={Fonts.style.light(Colors.data, Fonts.size.small, 'center')}>
+          {'Sube tus trabajos para que tus clientes puedas verlos'}
+        </Text>
+        <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
         {galleryUid && galleryUid.length === 0 && (
           <Text
             style={[
@@ -412,7 +438,7 @@ const GalleryExpert = (props) => {
             galleryUid.map((item) => {
               _.orderBy(item, item.date, 'desc');
               return (
-                <View key={item.id}>
+                <View key={item.id} style={styles.conCard}>
                   <View>
                     <FastImage
                       style={styles.img}
@@ -422,20 +448,22 @@ const GalleryExpert = (props) => {
                       }}
                       resizeMode={FastImage.resizeMode.contain}
                     />
-
                     <Text
                       style={[
-                        Fonts.style.bold(Colors.dark, Fonts.size.medium),
+                        Fonts.style.bold(
+                          Colors.expert.primaryColor,
+                          Fonts.size.medium,
+                        ),
                         {marginLeft: 20},
                       ]}>
-                      {moment(item.date).format('ll')}
+                      {utilities.capitalize(item.service)}
                     </Text>
                     <Text
                       style={[
-                        Fonts.style.bold(Colors.dark, Fonts.size.medium),
+                        Fonts.style.regular(Colors.dark, Fonts.size.medium),
                         {marginLeft: 20},
                       ]}>
-                      {item.service}
+                      {moment(item.date).format('ll')}
                     </Text>
                   </View>
                   <View style={styles.contD}>
@@ -481,7 +509,7 @@ const GalleryExpert = (props) => {
                         style={[
                           Fonts.style.regular(Colors.light, Fonts.size.medium),
                         ]}>
-                        <Icon name={'trash-alt'} size={20} color={'red'} />
+                        <Icon name={'trash-alt'} size={15} color={'red'} />
                       </Text>
                     </TouchableOpacity>
                   </View>
@@ -495,7 +523,7 @@ const GalleryExpert = (props) => {
             onPress={() => setUploadModal(true)}>
             <Icon
               name={'camera'}
-              size={30}
+              size={25}
               color={Colors.expert.primaryColor}
             />
           </TouchableOpacity>
@@ -516,13 +544,12 @@ const GalleryExpert = (props) => {
   );
 };
 const styles = StyleSheet.create({
-  conatiner: {height: '90%', paddingTop: 20},
-  icon: {alignSelf: 'center', marginVertical: 20},
-  img: {width: 200, height: 200},
+  conatiner: {height: Metrics.screenHeight * 0.7},
+  img: {height: 100},
   sendImg: {
     backgroundColor: Colors.light,
-    width: 60,
-    height: 60,
+    width: 50,
+    height: 50,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 30,
@@ -538,6 +565,7 @@ const styles = StyleSheet.create({
   },
   conatinerBnt: {
     alignSelf: 'center',
+    marginVertical: 20,
   },
   approved: {
     borderRadius: 20,
@@ -555,16 +583,16 @@ const styles = StyleSheet.create({
   contD: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginHorizontal: 10,
   },
 
   contGallery: {
     marginVertical: 20,
+    marginHorizontal: 20,
   },
   delete: {
     backgroundColor: Colors.light,
-    width: 50,
-    height: 50,
+    width: 40,
+    height: 40,
     borderRadius: 25,
     justifyContent: 'center',
     alignItems: 'center',
@@ -577,6 +605,9 @@ const styles = StyleSheet.create({
     shadowRadius: 4.65,
 
     elevation: 7,
+  },
+  conCard: {
+    padding: 5,
   },
 });
 export default GalleryExpert;

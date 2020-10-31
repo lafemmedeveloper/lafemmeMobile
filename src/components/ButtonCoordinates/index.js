@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {StyleSheet, TouchableOpacity} from 'react-native';
 import {Colors} from '../../themes';
@@ -16,14 +16,11 @@ const ButtonCoordinates = (props) => {
     setName,
   } = props;
 
-  const [activeCoor, setActiveCoor] = useState(null);
-
   const updateCoordinate = () => {
     Geolocation.getCurrentPosition((info) => activeLocation(info));
   };
 
   const activeLocation = async (info) => {
-    setActiveCoor(info);
     fullState(info);
   };
   const fullState = async (info) => {

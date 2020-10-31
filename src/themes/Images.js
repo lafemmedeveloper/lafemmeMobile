@@ -34,6 +34,9 @@ const images = {
   coupon: require('../Images/cupon.png'),
   guest: require('../Images/grupo.png'),
   photo: require('../Images/foto.png'),
+  delivery: require('../Images/delivery.png'),
+  password: require('../Images/contrasena.png'),
+  edit: require('../Images/editar.png'),
 
   //icons
   next: require('../Images/next.png'),

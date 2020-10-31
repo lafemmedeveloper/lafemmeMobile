@@ -10,7 +10,13 @@ import {
 import FastImage from 'react-native-fast-image';
 import {StoreContext} from '../../../../flux';
 import {getService} from '../../../../flux/services/actions';
-import {Colors, Fonts, Images, Metrics} from '../../../../themes';
+import {
+  ApplicationStyles,
+  Colors,
+  Fonts,
+  Images,
+  Metrics,
+} from '../../../../themes';
 import utilities from '../../../../utilities';
 import _ from 'lodash';
 import {useNavigation} from '@react-navigation/native';
@@ -44,13 +50,27 @@ const ServiceModal = ({order, close}) => {
 
   return (
     <View style={styles.container}>
-      <Text
-        style={[
-          Fonts.style.bold(Colors.dark, Fonts.size.h4),
-          {alignSelf: 'center'},
-        ]}>
-        Editar la orden de tu cliente
+      <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
+
+      <Image
+        source={Images.edit}
+        style={{
+          width: 50,
+          height: 50,
+          resizeMode: 'contain',
+          alignSelf: 'center',
+          marginBottom: 10,
+          tintColor: Colors.expert.primaryColor,
+        }}
+      />
+      <Text style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
+        {'Editar orden'}
       </Text>
+
+      <Text style={Fonts.style.light(Colors.data, Fonts.size.small, 'center')}>
+        {'Elige el producto que quieres editar'}
+      </Text>
+      <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
 
       <ScrollView>
         <Text
@@ -58,7 +78,7 @@ const ServiceModal = ({order, close}) => {
             Fonts.style.bold(Colors.dark, Fonts.size.h6),
             {alignSelf: 'flex-start', marginLeft: 10, marginTop: 20},
           ]}>
-          Products
+          Productos
         </Text>
         <View>
           {products.length > 0 ? (

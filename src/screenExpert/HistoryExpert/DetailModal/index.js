@@ -7,12 +7,19 @@ import {
   TouchableOpacity,
   ScrollView,
   Alert,
+  Image,
 } from 'react-native';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import {Colors, Fonts, ApplicationStyles, Metrics} from '../../../themes';
+import {
+  Colors,
+  Fonts,
+  ApplicationStyles,
+  Metrics,
+  Images,
+} from '../../../themes';
 import utilities from '../../../utilities';
-import {addService, updateStatus} from '../../../flux/util/actions';
+import {updateStatus} from '../../../flux/util/actions';
 import Loading from '../../../components/Loading';
 import {StoreContext} from '../../../flux';
 import ModalApp from '../../../components/ModalApp';
@@ -152,25 +159,36 @@ const DetailModal = (props) => {
       <Loading type={'expert'} loading={loading} />
 
       <View style={styles.container}>
-        <Icon
-          name={'running'}
-          size={30}
-          color={Colors.expert.primaryColor}
-          style={{alignSelf: 'center'}}
+        <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
+
+        <Image
+          source={Images.delivery}
+          style={{
+            width: 50,
+            height: 50,
+            resizeMode: 'contain',
+            alignSelf: 'center',
+            marginBottom: 10,
+            tintColor: Colors.expert.primaryColor,
+          }}
         />
         <Text style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
-          {'Resumen de la Ordén'}{' '}
+          {'Resumen de tu servicio '}
+        </Text>
+
+        <Text
+          style={Fonts.style.light(Colors.data, Fonts.size.small, 'center')}>
+          {'Id de la orden'}{' '}
           <Text
-            style={[
-              Fonts.style.bold(
-                Colors.expert.primaryColor,
-                Fonts.size.h6,
-                'center',
-              ),
-            ]}>
+            style={Fonts.style.bold(
+              Colors.expert.primaryColor,
+              Fonts.size.small,
+              'center',
+            )}>
             {cartId}
           </Text>
         </Text>
+        <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
 
         <ScrollView style={{marginTop: 20}}>
           <TouchableOpacity onPress={() => console.log('ir map')}>
@@ -196,78 +214,113 @@ const DetailModal = (props) => {
                   color={Colors.client.primaryColor}
                 />
               </Marker.Animated>
-              <Marker
-                coordinate={{
-                  latitude: filterOrder.experts.coordinates?.latitude,
-                  longitude: filterOrder.experts.coordinates?.longitude,
-                }}>
-                <Icon
-                  name={'map-marker-alt'}
-                  size={30}
-                  color={Colors.expert.primaryColor}
-                />
-              </Marker>
+              {filterOrder.experts && filterOrder.experts.coordinates && (
+                <Marker
+                  coordinate={{
+                    latitude: filterOrder.experts.coordinates?.latitude,
+                    longitude: filterOrder.experts.coordinates?.longitude,
+                  }}>
+                  <Icon
+                    name={'map-marker-alt'}
+                    size={30}
+                    color={Colors.expert.primaryColor}
+                  />
+                </Marker>
+              )}
             </MapView>
           </TouchableOpacity>
           <View style={{marginTop: 20}}>
             <Text
               style={[
-                Fonts.style.bold(Colors.dark, Fonts.size.medium, 'left'),
+                Fonts.style.bold(
+                  Colors.expert.primaryColor,
+                  Fonts.size.medium,
+                  'center',
+                ),
                 {marginLeft: 20},
               ]}>
-              Dirección de entrega
+              Detalle de direccion
             </Text>
-            <Text
-              style={[
-                Fonts.style.regular(Colors.dark, Fonts.size.medium, 'left'),
-                {marginLeft: 20},
-              ]}>
-              {address.name}
-            </Text>
-            <Text
-              style={[
-                Fonts.style.bold(Colors.dark, Fonts.size.medium, 'left'),
-                {marginLeft: 20},
-              ]}>
-              Nota de entrega
-            </Text>
-            <Text
-              style={[
-                Fonts.style.regular(Colors.dark, Fonts.size.medium, 'left'),
-                {marginLeft: 20},
-              ]}>
-              {address.notesAddress}
-            </Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                marginHorizontal: 20,
+                marginVertical: 10,
+              }}>
+              <Text
+                style={[Fonts.style.regular(Colors.dark, Fonts.size.medium)]}>
+                Direccion
+              </Text>
+              <Text
+                style={[Fonts.style.regular(Colors.dark, Fonts.size.medium)]}>
+                {address.name}
+              </Text>
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                marginHorizontal: 20,
+                marginVertical: 10,
+              }}>
+              <Text
+                style={[
+                  Fonts.style.regular(Colors.dark, Fonts.size.medium, 'left'),
+                ]}>
+                Nota de entrega
+              </Text>
+              <Text
+                style={[
+                  Fonts.style.regular(Colors.dark, Fonts.size.medium, 'left'),
+                ]}>
+                {address.notesAddress}
+              </Text>
+            </View>
+
             <View opacity={0.25} style={styles.separatorLineMini} />
 
             <Text
               style={[
-                Fonts.style.bold(Colors.dark, Fonts.size.medium, 'left'),
-                {marginLeft: 20},
+                Fonts.style.bold(
+                  Colors.expert.primaryColor,
+                  Fonts.size.medium,
+                  'center',
+                ),
               ]}>
-              Cliente
+              Clientes
             </Text>
-            <Text
-              style={[
-                Fonts.style.regular(Colors.dark, Fonts.size.medium, 'left'),
-                {marginLeft: 20},
-              ]}>
-              {`${client.firstName} ${client.lastName}`}
-            </Text>
-            <Text
-              style={[
-                Fonts.style.bold(Colors.dark, Fonts.size.medium, 'left'),
-                {marginLeft: 20},
-              ]}>
-              Télefono
-            </Text>
-            <Text
-              style={[
-                Fonts.style.regular(Colors.dark, Fonts.size.medium, 'left'),
-                {marginLeft: 20},
-              ]}>
-              {client.phone}
-            </Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                marginHorizontal: 20,
+                marginVertical: 10,
+              }}>
+              <Text
+                style={[Fonts.style.regular(Colors.dark, Fonts.size.medium)]}>
+                Cliente
+              </Text>
+              <Text style={[Fonts.style.bold(Colors.dark, Fonts.size.medium)]}>
+                {`${client.firstName} ${client.lastName}`}
+              </Text>
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                marginHorizontal: 20,
+                marginVertical: 10,
+              }}>
+              <Text
+                style={[Fonts.style.regular(Colors.dark, Fonts.size.medium)]}>
+                Teléfono
+              </Text>
+              <Text style={[Fonts.style.bold(Colors.dark, Fonts.size.medium)]}>
+                {client.phone}
+              </Text>
+            </View>
+
             <View opacity={0.25} style={ApplicationStyles.separatorLine} />
 
             {services &&
@@ -276,71 +329,88 @@ const DetailModal = (props) => {
 
                 return (
                   <Fragment key={index}>
-                    <View style={styles.contEdit}>
-                      <TouchableOpacity
-                        style={styles.btnEdit}
-                        onPress={() => setModalEdit(true)}>
-                        <Icon
-                          name={'edit'}
-                          size={20}
-                          color={Colors.expert.primaryColor}
-                        />
-                      </TouchableOpacity>
+                    {filterOrder.status < 4 && (
+                      <View style={styles.contEdit}>
+                        <TouchableOpacity
+                          style={styles.btnEdit}
+                          onPress={() => setModalEdit(true)}>
+                          <Icon
+                            name={'edit'}
+                            size={20}
+                            color={Colors.expert.primaryColor}
+                          />
+                        </TouchableOpacity>
+                      </View>
+                    )}
+
+                    <Text
+                      style={[
+                        Fonts.style.bold(
+                          Colors.expert.primaryColor,
+                          Fonts.size.medium,
+                          'center',
+                        ),
+                      ]}>
+                      Productos
+                    </Text>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        marginHorizontal: 20,
+                        marginVertical: 10,
+                      }}>
+                      <Text
+                        style={[
+                          Fonts.style.regular(Colors.dark, Fonts.size.medium),
+                        ]}>
+                        Producto
+                      </Text>
+                      <Text
+                        style={[
+                          Fonts.style.bold(Colors.dark, Fonts.size.medium),
+                        ]}>
+                        {name}
+                      </Text>
                     </View>
-                    <Text
-                      style={[
-                        Fonts.style.bold(
-                          Colors.dark,
-                          Fonts.size.medium,
-                          'left',
-                        ),
-                        {marginLeft: 20},
-                      ]}>
-                      Producto
-                    </Text>
-                    <Text
-                      style={[
-                        Fonts.style.regular(
-                          Colors.dark,
-                          Fonts.size.medium,
-                          'left',
-                        ),
-                        {marginLeft: 20},
-                      ]}>
-                      {name}
-                    </Text>
-                    <Text
-                      style={[
-                        Fonts.style.bold(
-                          Colors.dark,
-                          Fonts.size.medium,
-                          'left',
-                        ),
-                        {marginLeft: 20},
-                      ]}>
-                      Clientes o invitados
-                    </Text>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        marginHorizontal: 20,
+                        marginVertical: 10,
+                      }}>
+                      <Text
+                        style={[
+                          Fonts.style.regular(Colors.dark, Fonts.size.medium),
+                        ]}>
+                        Invitados
+                      </Text>
 
-                    <Text
-                      style={[
-                        Fonts.style.regular(
-                          Colors.dark,
-                          Fonts.size.medium,
-                          'left',
-                        ),
-                        {marginLeft: 20},
-                      ]}>
-                      {clients.length}
-                    </Text>
+                      <Text
+                        style={[
+                          Fonts.style.bold(
+                            Colors.dark,
+                            Fonts.size.medium,
+                            'left',
+                          ),
+                          {marginLeft: 20},
+                        ]}>
+                        {clients.length === 0 ? 'Ninguno' : clients.length}
+                      </Text>
+                    </View>
+                    <View
+                      opacity={0.25}
+                      style={ApplicationStyles.separatorLine}
+                    />
 
                     <Text
                       style={[
                         Fonts.style.bold(
-                          Colors.dark,
+                          Colors.expert.primaryColor,
                           Fonts.size.medium,
-                          'left',
+                          'center',
                         ),
-                        {marginLeft: 20},
                       ]}>
                       Adicionales comunes
                     </Text>
@@ -370,9 +440,8 @@ const DetailModal = (props) => {
                           Fonts.style.regular(
                             Colors.dark,
                             Fonts.size.medium,
-                            'left',
+                            'center',
                           ),
-                          {marginLeft: 20, marginTop: 10},
                         ]}>
                         No ahi adiciones comunes
                       </Text>
@@ -381,37 +450,42 @@ const DetailModal = (props) => {
                     <Text
                       style={[
                         Fonts.style.bold(
-                          Colors.dark,
+                          Colors.expert.primaryColor,
                           Fonts.size.medium,
-                          'left',
+                          'center',
                         ),
-                        {marginLeft: 20},
                       ]}>
-                      Addicionales contable
+                      Adicionales contable
                     </Text>
                     {addOnsCount.length > 0 ? (
                       addOnsCount.map((addonCount, index) => {
                         const {name, count} = addonCount;
                         return (
                           <Fragment key={index}>
-                            <Text
-                              style={[
-                                Fonts.style.regular(
-                                  Colors.dark,
-                                  Fonts.size.medium,
-                                  'left',
-                                ),
-                                {marginLeft: 20},
-                              ]}>
-                              Adiconal: {name}{' '}
+                            <View
+                              style={{
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                marginHorizontal: 20,
+                                marginVertical: 10,
+                              }}>
                               <Text
                                 style={[
-                                  Fonts.style.bold(
+                                  Fonts.style.regular(
                                     Colors.dark,
                                     Fonts.size.medium,
                                     'left',
                                   ),
                                   {marginLeft: 20},
+                                ]}>
+                                {name}
+                              </Text>
+                              <Text
+                                style={[
+                                  Fonts.style.bold(
+                                    Colors.dark,
+                                    Fonts.size.medium,
+                                  ),
                                 ]}>
                                 X{' '}
                                 <Text
@@ -419,14 +493,12 @@ const DetailModal = (props) => {
                                     Fonts.style.regular(
                                       Colors.dark,
                                       Fonts.size.medium,
-                                      'left',
                                     ),
-                                    {marginLeft: 20},
                                   ]}>
                                   {count}
                                 </Text>
                               </Text>
-                            </Text>
+                            </View>
                           </Fragment>
                         );
                       })
@@ -436,11 +508,10 @@ const DetailModal = (props) => {
                           Fonts.style.regular(
                             Colors.dark,
                             Fonts.size.medium,
-                            'left',
+                            'center',
                           ),
-                          {marginLeft: 20, marginVertical: 10},
                         ]}>
-                        No ahi adiciones comunes
+                        No ahi adiciones Contables
                       </Text>
                     )}
                   </Fragment>
@@ -450,8 +521,11 @@ const DetailModal = (props) => {
 
             <Text
               style={[
-                Fonts.style.bold(Colors.dark, Fonts.size.medium, 'left'),
-                {marginLeft: 20},
+                Fonts.style.bold(
+                  Colors.expert.primaryColor,
+                  Fonts.size.medium,
+                  'center',
+                ),
               ]}>
               Resumen a cobrar
             </Text>
@@ -461,133 +535,121 @@ const DetailModal = (props) => {
 
                 return (
                   <View key={index} style={styles.cont}>
-                    <View>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        marginHorizontal: 20,
+                        marginVertical: 10,
+                      }}>
                       <Text
                         style={[
-                          Fonts.style.regular(
-                            Colors.dark,
-                            Fonts.size.medium,
-                            'left',
-                          ),
-                          {marginLeft: 20},
+                          Fonts.style.regular(Colors.dark, Fonts.size.medium),
                         ]}>
-                        Duracion :{' '}
+                        DURACION{' '}
+                      </Text>
+                      <Text
+                        style={[
+                          Fonts.style.regular(Colors.dark, Fonts.size.medium),
+                        ]}>
+                        {duration} mins
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        marginHorizontal: 20,
+                        marginVertical: 10,
+                      }}>
+                      <Text
+                        style={[
+                          Fonts.style.regular(Colors.dark, Fonts.size.medium),
+                        ]}>
+                        SUBTOTAL
+                      </Text>
+                      <Text
+                        style={[
+                          Fonts.style.regular(Colors.dark, Fonts.size.medium),
+                        ]}>
+                        {utilities.formatCOP(totalServices)}
+                      </Text>
+                    </View>
+
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        marginHorizontal: 20,
+                        marginVertical: 10,
+                      }}>
+                      <Text
+                        style={[
+                          Fonts.style.regular(Colors.dark, Fonts.size.medium),
+                        ]}>
+                        ADICIONES
+                      </Text>
+                      <Text
+                        style={[
+                          Fonts.style.regular(Colors.dark, Fonts.size.medium),
+                        ]}>
+                        {utilities.formatCOP(totalAddons)}
+                      </Text>
+                    </View>
+
+                    {filterOrder && filterOrder.coupon && (
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          justifyContent: 'space-between',
+                          marginHorizontal: 20,
+                          marginVertical: 10,
+                        }}>
                         <Text
                           style={[
-                            Fonts.style.bold(
-                              Colors.dark,
-                              Fonts.size.medium,
-                              'left',
-                            ),
-                            {marginLeft: 20},
+                            Fonts.style.regular(Colors.dark, Fonts.size.medium),
                           ]}>
-                          {duration} mins
+                          DESCUENTO POR CUPÓN
                         </Text>
+                        <Text
+                          style={[
+                            Fonts.style.regular('red', Fonts.size.medium),
+                          ]}>
+                          -{' '}
+                          {filterOrder.coupon?.typeCoupon === 'percentage'
+                            ? `${filterOrder.coupon?.percentage}%`
+                            : utilities.formatCOP(filterOrder.coupon?.money)}
+                        </Text>
+                      </View>
+                    )}
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        marginHorizontal: 20,
+                        marginVertical: 10,
+                      }}>
+                      <Text
+                        style={[
+                          Fonts.style.bold(Colors.dark, Fonts.size.medium),
+                        ]}>
+                        TOTAL DE SERVICIOS
                       </Text>
 
                       <Text
                         style={[
-                          Fonts.style.regular(
-                            Colors.dark,
-                            Fonts.size.medium,
-                            'left',
-                          ),
-                          {marginLeft: 20},
+                          Fonts.style.bold(Colors.dark, Fonts.size.medium),
                         ]}>
-                        SubTotal :{' '}
-                        <Text
-                          style={[
-                            Fonts.style.bold(
-                              Colors.dark,
-                              Fonts.size.medium,
-                              'left',
-                            ),
-                            {marginLeft: 20},
-                          ]}>
-                          {utilities.formatCOP(totalServices)}
-                        </Text>
-                      </Text>
-                      <Text
-                        style={[
-                          Fonts.style.regular(
-                            Colors.dark,
-                            Fonts.size.medium,
-                            'left',
-                          ),
-                          {marginLeft: 20},
-                        ]}>
-                        Adiciones :{' '}
-                        <Text
-                          style={[
-                            Fonts.style.bold(
-                              Colors.dark,
-                              Fonts.size.medium,
-                              'left',
-                            ),
-                            {marginLeft: 20},
-                          ]}>
-                          {utilities.formatCOP(totalAddons)}
-                        </Text>
-                      </Text>
-
-                      {filterOrder && filterOrder.coupon && (
-                        <Text
-                          style={[
-                            Fonts.style.regular(
-                              Colors.dark,
-                              Fonts.size.medium,
-                              'left',
-                            ),
-                            {marginLeft: 20},
-                          ]}>
-                          Descuento por cupón:{' '}
-                          <Text
-                            style={[
-                              Fonts.style.bold(
-                                'red',
-                                Fonts.size.medium,
-                                'left',
-                              ),
-                              {marginLeft: 20},
-                            ]}>
-                            -{' '}
-                            {filterOrder.coupon?.typeCoupon === 'percentage'
-                              ? `${filterOrder.coupon?.percentage}%`
-                              : utilities.formatCOP(filterOrder.coupon?.money)}
-                          </Text>
-                        </Text>
-                      )}
-                      <Text
-                        style={[
-                          Fonts.style.regular(
-                            Colors.dark,
-                            Fonts.size.medium,
-                            'left',
-                          ),
-                          {marginLeft: 20},
-                        ]}>
-                        Total de servicios:{' '}
-                        <Text
-                          style={[
-                            Fonts.style.bold(
-                              Colors.dark,
-                              Fonts.size.medium,
-                              'left',
-                            ),
-                            {marginLeft: 20},
-                          ]}>
-                          {filterOrder.coupon
-                            ? filterOrder.coupon.typeCoupon !== 'money'
-                              ? utilities.formatCOP(
-                                  (filterOrder.coupon.percentage / 100) *
-                                    total -
-                                    total,
-                                )
-                              : utilities.formatCOP(
-                                  total - filterOrder.coupon?.money,
-                                )
-                            : utilities.formatCOP(total)}
-                        </Text>
+                        {filterOrder.coupon
+                          ? filterOrder.coupon.typeCoupon !== 'money'
+                            ? utilities.formatCOP(
+                                (filterOrder.coupon.percentage / 100) * total -
+                                  total,
+                              )
+                            : utilities.formatCOP(
+                                total - filterOrder.coupon?.money,
+                              )
+                          : utilities.formatCOP(total)}
                       </Text>
                     </View>
                   </View>
@@ -682,16 +744,18 @@ const styles = StyleSheet.create({
     marginVertical: 20,
   },
   btnContainer: {
-    backgroundColor: Colors.expert.primaryColor,
+    width: Metrics.screenWidth * 0.5,
     height: 40,
-    width: '90%',
-    borderRadius: 10,
+    marginVertical: 10,
     alignSelf: 'center',
+    borderRadius: Metrics.borderRadius,
+    backgroundColor: Colors.expert.primaryColor,
     justifyContent: 'center',
-    marginVertical: 20,
+    alignItems: 'center',
+    paddingVertical: 20,
   },
   btnEdit: {
-    zIndex: 2,
+    zIndex: 10,
     backgroundColor: Colors.light,
     height: 50,
     width: 50,
@@ -712,7 +776,7 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
     right: 20,
     position: 'absolute',
-    top: 250,
+    top: -30,
   },
   contAddons: {
     flexDirection: 'row',

@@ -167,13 +167,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 10,
   },
-
-  headerContainer: {
-    flex: 0,
-    width: Metrics.screenWidth,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-  },
 });
 
 export default Address;

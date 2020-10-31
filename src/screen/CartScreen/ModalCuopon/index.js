@@ -9,7 +9,6 @@ import {
   Keyboard,
   Image,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome5';
 import MyTextInput from '../../../components/MyTextInput';
 import {StoreContext} from '../../../flux';
 import {updateProfile} from '../../../flux/auth/actions';

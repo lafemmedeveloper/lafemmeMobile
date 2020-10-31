@@ -13,8 +13,8 @@ export default ({open, children, setOpen}) => {
   return (
     <>
       <Modal
-        onSwipeComplete={() => setOpen(false)}
-        swipeDirection={['down']}
+        //onSwipeComplete={() => setOpen(false)}
+        // swipeDirection={['down']}
         isVisible={open}
         onBackdropPress={() =>
           setOpen ? setOpen(false) : console.log('not close')
