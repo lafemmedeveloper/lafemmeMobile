@@ -6,7 +6,6 @@ import {
   ScrollView,
   TouchableOpacity,
   Keyboard,
-  Alert,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {Metrics, Colors, Fonts, ApplicationStyles} from '../../../themes';
