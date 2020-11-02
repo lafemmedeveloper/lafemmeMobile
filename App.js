@@ -18,7 +18,7 @@ const App = () => {
       console.log('Connection type ====>', state.type);
       console.log('Is connected? ====>', state.isConnected);
       if (!state.isConnected) {
-        Alert.alert('Ups', 'Al parecer no tienes conexion a internet');
+        Alert.alert('Ups', 'Al parecer no tienes conexión a internet');
       }
     });
   }, []);

@@ -221,15 +221,6 @@ const Cart = (props) => {
 
   const addOnsFilter = addOns.filter((a) => a.isEnabled === true);
 
-  const addCart = () => {
-    const cart = user.cart.services.length;
-    if (cart < 1) {
-      setShowModalService(true);
-    } else {
-      Alert.alert('Lo siento', 'Solo puedes agregar un servicio por orden');
-    }
-  };
-
   return (
     <View
       style={{
@@ -468,7 +459,7 @@ const Cart = (props) => {
         </View>
         {/*show from  user.cart.services.length */}
         <TouchableOpacity
-          onPress={() => addCart()}
+          onPress={() => setShowModalService(true)}
           style={[
             {
               flex: 1,

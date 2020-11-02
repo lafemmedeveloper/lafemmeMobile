@@ -14,7 +14,6 @@ import {
 } from 'react-native';
 import Utilities from '../../utilities';
 import moment from 'moment';
-import firestore from '@react-native-firebase/firestore';
 import {activeMessage, updateProfile} from '../../flux/auth/actions';
 import {getServices} from '../../flux/services/actions';
 import {StoreContext} from '../../flux';
@@ -24,7 +23,11 @@ import {formatDate} from '../../helpers/MomentHelper';
 import _ from 'lodash';
 import ModalApp from '../../components/ModalApp';
 import AppConfig from '../../config/AppConfig';
-import {topicPush, getCoverage, addCoupon} from '../../flux/util/actions';
+import {
+  getCoverage,
+  addCoupon,
+  sendOrderService,
+} from '../../flux/util/actions';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import Loading from '../../components/Loading';
 import ModalCuopon from './ModalCuopon';
@@ -59,68 +62,21 @@ const CartScreen = (props) => {
   };
 
   const sendOrder = async (data) => {
+    console.log('send order ==>', data);
     await activeMessage(data.id, authDispatch);
-    try {
-      firestore()
-        .collection('orders')
-        .doc(data.id)
-        .set(data)
-        .then(function () {
-          console.log('order:Created');
-
-          let servicesPush = [];
-          for (let i = 0; i < data.services.length; i++) {
-            if (servicesPush.indexOf(data.services[i].name) === -1) {
-              if (i === data.services.length - 1) {
-                servicesPush = [
-                  ...servicesPush,
-                  ` y ${user.cart.services[i].name}`,
-                ];
-              } else {
-                servicesPush = [
-                  ...servicesPush,
-                  ` ${user.cart.services[i].name}`,
-                ];
-              }
-            }
-          }
-
-          let notification = {
-            title: 'Nueva orden de servicio La Femme',
-            body: `-Cuándo: ${data.date}.\n-Dónde: ${data.address.locality}-${
-              data.address.neighborhood
-            }.\n-Servicios: ${servicesPush.toString()}.`,
-            content_available: true,
-            priority: 'high',
-          };
-
-          let dataPush = null;
-
-          topicPush('expert', notification, dataPush);
-
-          try {
-            updateProfile(
-              {
-                ...user.cart,
-                date: null,
-                address: null,
-                notes: null,
-                services: [],
-                coupon: null,
-              },
-              'cart',
-              authDispatch,
-            );
-          } catch (error) {
-            console.log('error sendOrder =>', error);
-          }
-        })
-        .catch(function (error) {
-          console.error('Error saving order : ', error);
-        });
-    } catch (error) {
-      console.log('sendOrder:error', error);
-    }
+    await sendOrderService(data, user, utilDispatch);
+    await updateProfile(
+      {
+        ...user.cart,
+        date: null,
+        address: null,
+        notes: null,
+        services: [],
+        coupon: null,
+      },
+      'cart',
+      authDispatch,
+    );
     setModalCart(false);
   };
 

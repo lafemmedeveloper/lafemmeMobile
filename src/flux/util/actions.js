@@ -420,3 +420,46 @@ export const addCoupon = async (id, math, dispatch) => {
     setLoading(false, dispatch);
   }
 };
+
+export const sendOrderService = async (data, user, dispatch) => {
+  try {
+    firestore()
+      .collection('orders')
+      .doc(data.id)
+      .set(data)
+      .then(function () {
+        console.log('order:Created');
+        let servicesPush = [];
+        for (let i = 0; i < data.services.length; i++) {
+          if (servicesPush.indexOf(data.services[i].name) === -1) {
+            if (i === data.services.length - 1) {
+              servicesPush = [
+                ...servicesPush,
+                ` y ${user.cart.services[i].name}`,
+              ];
+            } else {
+              servicesPush = [
+                ...servicesPush,
+                ` ${user.cart.services[i].name}`,
+              ];
+            }
+          }
+        }
+        let notification = {
+          title: 'Nueva orden de servicio La Femme',
+          body: `-Cuándo: ${data.date}.\n-Dónde: ${data.address.locality}-${
+            data.address.neighborhood
+          }.\n-Servicios: ${servicesPush.toString()}.`,
+          content_available: true,
+          priority: 'high',
+        };
+        let dataPush = null;
+        topicPush('expert', notification, dataPush);
+      })
+      .catch(function (error) {
+        console.error('Error saving order : ', error);
+      });
+  } catch (error) {
+    console.log('sendOrder:error', error);
+  }
+};
