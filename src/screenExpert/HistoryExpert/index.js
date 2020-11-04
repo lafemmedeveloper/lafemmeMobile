@@ -1,4 +1,4 @@
-import React, {useEffect, useContext, useState, Fragment} from 'react';
+import React, {useEffect, useContext, useState, Fragment, useRef} from 'react';
 import {View, StyleSheet, Text} from 'react-native';
 import {StoreContext} from '../../flux';
 import {getExpertActiveOrders, getOrders} from '../../flux/util/actions';
@@ -15,6 +15,8 @@ const HistoryExpert = () => {
   const {util, auth} = state;
   const {user} = auth;
   const {expertOpenOrders, expertHistoryOrders} = util;
+
+  const isMountedRef = useRef(null);
 
   const [menuIndex, setMenuIndex] = useState(0);
   const [modalDetail, setModalDetail] = useState(false);
@@ -33,11 +35,12 @@ const HistoryExpert = () => {
     }
   };
   useEffect(() => {
-    const activeGetOrder = getOrders(utilDispatch);
-    const activeOrder = getExpertActiveOrders(state.auth.user, utilDispatch);
+    isMountedRef.current = true;
+
+    getOrders(utilDispatch);
+    getExpertActiveOrders(state.auth.user, utilDispatch);
     return () => {
-      activeGetOrder();
-      activeOrder();
+      return () => (isMountedRef.current = false);
     };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
