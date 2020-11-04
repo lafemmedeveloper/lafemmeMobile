@@ -29,7 +29,8 @@ import ServiceModal from './ServiceModal';
 
 const DetailModal = (props) => {
   const {state, utilDispatch} = useContext(StoreContext);
-  const {util} = state;
+  const {util, auth} = state;
+  const {user} = auth;
   const {expertOpenOrders, expertHistoryOrders} = util;
 
   const {loading} = util;
@@ -44,6 +45,10 @@ const DetailModal = (props) => {
 
   const filterOrder = modeHistory ? order : dataOrder;
   const {client, services, cartId, address} = filterOrder;
+  const serviceFilter = services.map(
+    (item) => item.servicesType === user.activity,
+  );
+  console.log('service x expert ==>', serviceFilter);
 
   const screen = Dimensions.get('window');
   const ASPECT_RATIO = screen.width * 0.8 - 500 / screen.height;
@@ -214,19 +219,24 @@ const DetailModal = (props) => {
                   color={Colors.client.primaryColor}
                 />
               </Marker.Animated>
-              {filterOrder.experts && filterOrder.experts.coordinates && (
-                <Marker
-                  coordinate={{
-                    latitude: filterOrder.experts.coordinates?.latitude,
-                    longitude: filterOrder.experts.coordinates?.longitude,
-                  }}>
-                  <Icon
-                    name={'map-marker-alt'}
-                    size={30}
-                    color={Colors.expert.primaryColor}
-                  />
-                </Marker>
-              )}
+              {filterOrder.experts &&
+                filterOrder.experts.length > 0 &&
+                filterOrder.experts.map((item) => {
+                  return (
+                    <Marker
+                      key={item.uid}
+                      coordinate={{
+                        latitude: item.coordinates?.latitude,
+                        longitude: item.coordinates?.longitude,
+                      }}>
+                      <Icon
+                        name={'map-marker-alt'}
+                        size={30}
+                        color={Colors.expert.primaryColor}
+                      />
+                    </Marker>
+                  );
+                })}
             </MapView>
           </TouchableOpacity>
           <View style={{marginTop: 20}}>

@@ -47,8 +47,8 @@ const HomeExpert = () => {
     if (state.auth.user) {
       currentCoordinate();
       activeMessage('expert', utilDispatch);
-      getExpertActiveOrders(utilDispatch);
-      getExpertHistoryOrders(utilDispatch);
+      getExpertActiveOrders(state.auth.user, utilDispatch);
+      getExpertHistoryOrders(state.auth.user, utilDispatch);
       activeNameSlug(state.auth.user.activity, utilDispatch);
       getExpertOpenOrders(state.auth.user.activity, utilDispatch);
     }

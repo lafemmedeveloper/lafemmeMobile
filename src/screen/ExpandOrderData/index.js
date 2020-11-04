@@ -67,9 +67,9 @@ export default (dta) => {
                 size={12}
                 color={Colors[appType].primaryColor}
               />{' '}
-              {order.experts
-                ? `${order.experts.firstName} ${order.experts.lastName}`
-                : 'Buscando experto.....'}
+              {order.experts && order.experts.length > 0
+                ? order.experts.length
+                : 'Buscando expertos.....'}
             </Text>
           )}
         </View>

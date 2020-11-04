@@ -119,9 +119,9 @@ const CartScreen = (props) => {
       let data = {
         noteQualtification: '',
         fcmClient: user.fcm,
-        fcmExpert: '',
+        fcmExpert: [],
         id: Utilities.create_UUID(),
-        experts: null,
+        experts: [],
         client: {
           uid: user.uid,
           firstName: user.firstName,

@@ -33,8 +33,13 @@ const HistoryExpert = () => {
     }
   };
   useEffect(() => {
-    getOrders(utilDispatch);
-    getExpertActiveOrders(utilDispatch);
+    const activeGetOrder = getOrders(utilDispatch);
+    const activeOrder = getExpertActiveOrders(state.auth.user, utilDispatch);
+    return () => {
+      activeGetOrder();
+      activeOrder();
+    };
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
