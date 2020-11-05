@@ -151,7 +151,6 @@ export const getExpertActiveOrders = (user, dispatch) => {
         ...item.data(),
       };
     });
-    console.log('ordenes que pertenezcan ==>', listOrders);
     return dispatch({
       type: GET_EXPERT_OPEN_ORDERS,
       payload: listOrders,

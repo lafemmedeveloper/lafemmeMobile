@@ -24,8 +24,8 @@ import Loading from '../../../components/Loading';
 import {StoreContext} from '../../../flux';
 import ModalApp from '../../../components/ModalApp';
 import Qualify from '../../../components/Qualify';
-
 import ServiceModal from './ServiceModal';
+import ButonMenu from '../../../screen/ButonMenu';
 
 const DetailModal = (props) => {
   const {state, utilDispatch} = useContext(StoreContext);
@@ -195,101 +195,66 @@ const DetailModal = (props) => {
         </Text>
         <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
 
+        {services && services.length > 0 && (
+          <ScrollView horizontal style={{marginLeft: 20}}>
+            {services.map((item) => {
+              return (
+                <Fragment key={item.id}>
+                  <ButonMenu item={item} />
+                </Fragment>
+              );
+            })}
+          </ScrollView>
+        )}
+        <ButonMenu />
+
         <ScrollView style={{marginTop: 20}}>
           <TouchableOpacity onPress={() => console.log('ir map')}>
-            <MapView
-              pointerEvents={'none'}
-              provider={__DEV__ ? null : PROVIDER_GOOGLE} // remove if not using Google Maps
-              style={styles.mapView}
-              customMapStyle={mapStyle}
-              region={{
-                latitude: filterOrder.address.coordinates?.latitude,
-                longitude: filterOrder.address.coordinates?.longitude,
-                latitudeDelta: 0.00002,
-                longitudeDelta: 0.0002 * ASPECT_RATIO,
-              }}>
-              <Marker.Animated
-                coordinate={{
+            {false && (
+              <MapView
+                pointerEvents={'none'}
+                provider={__DEV__ ? null : PROVIDER_GOOGLE} // remove if not using Google Maps
+                style={styles.mapView}
+                customMapStyle={mapStyle}
+                region={{
                   latitude: filterOrder.address.coordinates?.latitude,
                   longitude: filterOrder.address.coordinates?.longitude,
+                  latitudeDelta: 0.00002,
+                  longitudeDelta: 0.0002 * ASPECT_RATIO,
                 }}>
-                <Icon
-                  name={'map-marker-alt'}
-                  size={30}
-                  color={Colors.client.primaryColor}
-                />
-              </Marker.Animated>
-              {filterOrder.experts &&
-                filterOrder.experts.length > 0 &&
-                filterOrder.experts.map((item) => {
-                  return (
-                    <Marker
-                      key={item.uid}
-                      coordinate={{
-                        latitude: item.coordinates?.latitude,
-                        longitude: item.coordinates?.longitude,
-                      }}>
-                      <Icon
-                        name={'map-marker-alt'}
-                        size={30}
-                        color={Colors.expert.primaryColor}
-                      />
-                    </Marker>
-                  );
-                })}
-            </MapView>
+                <Marker.Animated
+                  coordinate={{
+                    latitude: filterOrder.address.coordinates?.latitude,
+                    longitude: filterOrder.address.coordinates?.longitude,
+                  }}>
+                  <Icon
+                    name={'map-marker-alt'}
+                    size={30}
+                    color={Colors.client.primaryColor}
+                  />
+                </Marker.Animated>
+                {filterOrder.experts &&
+                  filterOrder.experts.length > 0 &&
+                  filterOrder.experts.map((item) => {
+                    return (
+                      <Marker
+                        key={item.uid}
+                        coordinate={{
+                          latitude: item.coordinates?.latitude,
+                          longitude: item.coordinates?.longitude,
+                        }}>
+                        <Icon
+                          name={'map-marker-alt'}
+                          size={30}
+                          color={Colors.expert.primaryColor}
+                        />
+                      </Marker>
+                    );
+                  })}
+              </MapView>
+            )}
           </TouchableOpacity>
           <View style={{marginTop: 20}}>
-            <Text
-              style={[
-                Fonts.style.bold(
-                  Colors.expert.primaryColor,
-                  Fonts.size.medium,
-                  'center',
-                ),
-                {marginLeft: 20},
-              ]}>
-              Detalle de direccion
-            </Text>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                marginHorizontal: 20,
-                marginVertical: 10,
-              }}>
-              <Text
-                style={[Fonts.style.regular(Colors.dark, Fonts.size.medium)]}>
-                Direccion
-              </Text>
-              <Text
-                style={[Fonts.style.regular(Colors.dark, Fonts.size.medium)]}>
-                {address.name}
-              </Text>
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                marginHorizontal: 20,
-                marginVertical: 10,
-              }}>
-              <Text
-                style={[
-                  Fonts.style.regular(Colors.dark, Fonts.size.medium, 'left'),
-                ]}>
-                Nota de entrega
-              </Text>
-              <Text
-                style={[
-                  Fonts.style.regular(Colors.dark, Fonts.size.medium, 'left'),
-                ]}>
-                {address.notesAddress}
-              </Text>
-            </View>
-
-            <View opacity={0.25} style={styles.separatorLineMini} />
-
             <Text
               style={[
                 Fonts.style.bold(
@@ -305,7 +270,6 @@ const DetailModal = (props) => {
                 flexDirection: 'row',
                 justifyContent: 'space-between',
                 marginHorizontal: 20,
-                marginVertical: 10,
               }}>
               <Text
                 style={[Fonts.style.regular(Colors.dark, Fonts.size.medium)]}>
@@ -320,7 +284,6 @@ const DetailModal = (props) => {
                 flexDirection: 'row',
                 justifyContent: 'space-between',
                 marginHorizontal: 20,
-                marginVertical: 10,
               }}>
               <Text
                 style={[Fonts.style.regular(Colors.dark, Fonts.size.medium)]}>
@@ -328,6 +291,40 @@ const DetailModal = (props) => {
               </Text>
               <Text style={[Fonts.style.bold(Colors.dark, Fonts.size.medium)]}>
                 {client.phone}
+              </Text>
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                marginHorizontal: 20,
+              }}>
+              <Text
+                style={[Fonts.style.regular(Colors.dark, Fonts.size.medium)]}>
+                Direccion
+              </Text>
+              <Text
+                style={[Fonts.style.regular(Colors.dark, Fonts.size.medium)]}>
+                {address.name}
+              </Text>
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                marginHorizontal: 20,
+              }}>
+              <Text
+                style={[
+                  Fonts.style.regular(Colors.dark, Fonts.size.medium, 'left'),
+                ]}>
+                Nota de entrega
+              </Text>
+              <Text
+                style={[
+                  Fonts.style.regular(Colors.dark, Fonts.size.medium, 'left'),
+                ]}>
+                {address.notesAddress}
               </Text>
             </View>
 
@@ -339,7 +336,7 @@ const DetailModal = (props) => {
 
                 return (
                   <Fragment key={index}>
-                    {filterOrder.status < 4 && (
+                    {false && filterOrder.status < 4 && (
                       <View style={styles.contEdit}>
                         <TouchableOpacity
                           style={styles.btnEdit}
@@ -368,7 +365,6 @@ const DetailModal = (props) => {
                         flexDirection: 'row',
                         justifyContent: 'space-between',
                         marginHorizontal: 20,
-                        marginVertical: 10,
                       }}>
                       <Text
                         style={[
@@ -388,7 +384,6 @@ const DetailModal = (props) => {
                         flexDirection: 'row',
                         justifyContent: 'space-between',
                         marginHorizontal: 20,
-                        marginVertical: 10,
                       }}>
                       <Text
                         style={[
@@ -477,7 +472,6 @@ const DetailModal = (props) => {
                                 flexDirection: 'row',
                                 justifyContent: 'space-between',
                                 marginHorizontal: 20,
-                                marginVertical: 10,
                               }}>
                               <Text
                                 style={[
@@ -550,7 +544,6 @@ const DetailModal = (props) => {
                         flexDirection: 'row',
                         justifyContent: 'space-between',
                         marginHorizontal: 20,
-                        marginVertical: 10,
                       }}>
                       <Text
                         style={[
@@ -570,7 +563,6 @@ const DetailModal = (props) => {
                         flexDirection: 'row',
                         justifyContent: 'space-between',
                         marginHorizontal: 20,
-                        marginVertical: 10,
                       }}>
                       <Text
                         style={[
@@ -591,7 +583,6 @@ const DetailModal = (props) => {
                         flexDirection: 'row',
                         justifyContent: 'space-between',
                         marginHorizontal: 20,
-                        marginVertical: 10,
                       }}>
                       <Text
                         style={[
@@ -613,7 +604,6 @@ const DetailModal = (props) => {
                           flexDirection: 'row',
                           justifyContent: 'space-between',
                           marginHorizontal: 20,
-                          marginVertical: 10,
                         }}>
                         <Text
                           style={[
@@ -637,7 +627,6 @@ const DetailModal = (props) => {
                         flexDirection: 'row',
                         justifyContent: 'space-between',
                         marginHorizontal: 20,
-                        marginVertical: 10,
                       }}>
                       <Text
                         style={[

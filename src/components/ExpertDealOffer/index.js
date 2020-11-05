@@ -1,26 +1,46 @@
-import React, {useEffect, useContext, useRef, useState} from 'react';
-import {View, Image, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import React, {useEffect, useContext, useRef, Fragment} from 'react';
+import {
+  View,
+  Image,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {formatDate} from '../../helpers/MomentHelper';
 
-import {Colors, Fonts, Images, Metrics} from '../../themes';
+import {ApplicationStyles, Colors, Fonts, Images, Metrics} from '../../themes';
 import AppConfig from '../../config/AppConfig';
-import {assignExpert, updateStatus} from '../../flux/util/actions';
+import {
+  assignExpert,
+  assingExpertService,
+  updateStatus,
+} from '../../flux/util/actions';
 import {StoreContext} from '../../flux';
-import ModalApp from '../ModalApp';
-import ModalService from '../ModalService';
+import ExpertOrder from '../ExpertOrder';
 
 export default ({order, dispatch, user}) => {
   const {utilDispatch} = useContext(StoreContext);
   const isMountedRef = useRef(null);
-  const [modalService, setModalService] = useState(false);
 
-  const validateService = () => {
-    if (order.services.length > 1) {
-      setModalService(true);
-    } else {
-      assignExpert(user, order, dispatch);
+  const assingService = async (item) => {
+    if (!user.activity.includes(item.servicesType)) {
+      return Alert.alert(
+        'Ups',
+        `Lo siento no puedes tomar el servicio por que no posees la actividad ${item.servicesType
+          .toUpperCase()
+          .split('-')
+          .join(' ')}`,
+      );
     }
+    let orderServices = order;
+    const indexService = order.services.findIndex((i) => i.id === item.id);
+    orderServices.services[indexService].uid = user.uid;
+    orderServices.services[indexService].status = 1;
+
+    await assingExpertService(orderServices, user, dispatch);
+    await assignExpert(user, order, dispatch);
   };
 
   useEffect(() => {
@@ -42,7 +62,7 @@ export default ({order, dispatch, user}) => {
       <>
         <View style={styles.cellContainer}>
           <View style={styles.contentContainer}>
-            <View style={styles.contentText}>
+            <View style={{flexDirection: 'column'}}>
               <Text
                 numberOfLines={1}
                 style={Fonts.style.regular(
@@ -119,18 +139,12 @@ export default ({order, dispatch, user}) => {
                 style={{
                   backgroundColor: Colors.status[order.status],
                   marginTop: 5,
-                  justifyContent: 'center',
-                  alignItems: 'center',
                   borderRadius: 10,
                   paddingHorizontal: 10,
                 }}>
                 <Text
                   numberOfLines={1}
-                  style={Fonts.style.bold(
-                    Colors.light,
-                    Fonts.size.tiny,
-                    'left',
-                  )}>
+                  style={Fonts.style.bold(Colors.light, Fonts.size.tiny)}>
                   {AppConfig.orderStatusStr[order.status]}
                 </Text>
               </View>
@@ -139,41 +153,31 @@ export default ({order, dispatch, user}) => {
 
           {order.services.map((item, index) => {
             return (
-              <View key={index} style={styles.contentText}>
-                <Text
-                  numberOfLines={1}
-                  style={Fonts.style.regular(
-                    Colors.gray,
-                    Fonts.size.small,
-                    'left',
-                  )}>
-                  Servicio:{' '}
-                  <Text
-                    numberOfLines={1}
-                    style={Fonts.style.bold(
-                      Colors.expert.primaryColor,
-                      Fonts.size.small,
-                      'center',
-                    )}>
-                    {item.name}
-                  </Text>
-                </Text>
-                <Text
-                  numberOfLines={1}
-                  style={Fonts.style.regular(
-                    Colors.gray,
-                    Fonts.size.small,
-                    'left',
-                  )}>
-                  Clientes:{' '}
-                  <Text
-                    numberOfLines={1}
-                    style={Fonts.style.bold(
-                      Colors.expert.primaryColor,
-                      Fonts.size.small,
-                      'center',
-                    )}>
-                    {item.clients.length}
+              <Fragment key={index}>
+                {order.services.length > 1 && (
+                  <View
+                    opacity={0.25}
+                    style={[ApplicationStyles.separatorLine]}
+                  />
+                )}
+                <View style={styles.contentText}>
+                  <View>
+                    <Text
+                      numberOfLines={1}
+                      style={Fonts.style.regular(
+                        Colors.gray,
+                        Fonts.size.small,
+                      )}>
+                      Servicio:{' '}
+                      <Text
+                        numberOfLines={1}
+                        style={Fonts.style.bold(
+                          Colors.expert.primaryColor,
+                          Fonts.size.small,
+                        )}>
+                        {item.name}
+                      </Text>
+                    </Text>
                     <Text
                       numberOfLines={1}
                       style={Fonts.style.regular(
@@ -181,51 +185,65 @@ export default ({order, dispatch, user}) => {
                         Fonts.size.small,
                         'left',
                       )}>
-                      , Calificación:{' '}
+                      Clientes:{' '}
                       <Text
                         numberOfLines={1}
                         style={Fonts.style.bold(
                           Colors.expert.primaryColor,
                           Fonts.size.small,
-                          'center',
                         )}>
-                        {(order.client.rating
-                          ? order.client.rating
-                          : 5
-                        ).toFixed(1)}
+                        {item.clients.length}
+                        <Text
+                          numberOfLines={1}
+                          style={Fonts.style.regular(
+                            Colors.gray,
+                            Fonts.size.small,
+                            'left',
+                          )}>
+                          , Calificación:{' '}
+                          <Text
+                            numberOfLines={1}
+                            style={Fonts.style.bold(
+                              Colors.expert.primaryColor,
+                              Fonts.size.small,
+                            )}>
+                            {(order.client.rating
+                              ? order.client.rating
+                              : 5
+                            ).toFixed(1)}
+                          </Text>
+                        </Text>
                       </Text>
                     </Text>
-                  </Text>
-                </Text>
-              </View>
+                  </View>
+                  {!item.uid ? (
+                    <TouchableOpacity
+                      disabled={!user.activity.includes(item.servicesType)}
+                      style={
+                        !user.activity.includes(item.servicesType)
+                          ? styles.btnDisable
+                          : styles.btnContainer
+                      }
+                      onPress={() => assingService(item)}>
+                      <Text
+                        style={Fonts.style.bold(
+                          !user.activity.includes(item.servicesType)
+                            ? Colors.gray
+                            : Colors.light,
+                          Fonts.size.small,
+                          'center',
+                        )}>
+                        Tomar Servicio
+                      </Text>
+                    </TouchableOpacity>
+                  ) : (
+                    <ExpertOrder service={item} order={order} />
+                  )}
+                </View>
+              </Fragment>
             );
           })}
-
-          <View>
-            <TouchableOpacity
-              style={styles.btnContainer}
-              onPress={() => validateService()}>
-              <Text
-                style={Fonts.style.bold(
-                  Colors.light,
-                  Fonts.size.medium,
-                  'center',
-                )}>
-                Tomar
-              </Text>
-            </TouchableOpacity>
-          </View>
         </View>
-
-        <ModalApp setOpen={setModalService} open={modalService}>
-          <ModalService
-            order={order}
-            user={user}
-            dispatch={utilDispatch}
-            close={setModalService}
-            assignExpert={assignExpert}
-          />
-        </ModalApp>
       </>
     );
   }
@@ -235,11 +253,32 @@ const styles = StyleSheet.create({
   btnContainer: {
     flex: 0,
     height: 40,
-    width: Metrics.contentWidth,
+    width: 80,
     alignSelf: 'center',
     borderRadius: Metrics.borderRadius,
     marginVertical: 20,
-    backgroundColor: Colors.expert.secondaryColor,
+    backgroundColor: Colors.expert.primaryColor,
+    justifyContent: 'center',
+    alignItems: 'center',
+
+    shadowColor: Colors.dark,
+    shadowOffset: {
+      width: 2,
+      height: 1,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 1,
+
+    elevation: 5,
+  },
+  btnDisable: {
+    flex: 0,
+    height: 40,
+    width: 80,
+    alignSelf: 'center',
+    borderRadius: Metrics.borderRadius,
+    marginVertical: 20,
+    backgroundColor: Colors.disabledBtn,
     justifyContent: 'center',
     alignItems: 'center',
 
@@ -256,12 +295,13 @@ const styles = StyleSheet.create({
   contentText: {
     flex: 1,
     marginHorizontal: 10,
-    justifyContent: 'center',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 
   cellContainer: {
     backgroundColor: Colors.light,
-    justifyContent: 'center',
     marginHorizontal: 5,
     padding: 10,
     marginTop: 5,
@@ -278,5 +318,5 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
 
-  contentContainer: {flexDirection: 'row'},
+  contentContainer: {flexDirection: 'row', justifyContent: 'space-between'},
 });
