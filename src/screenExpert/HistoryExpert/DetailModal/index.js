@@ -32,22 +32,22 @@ const DetailModal = ({order, modeHistory, setModalDetail}) => {
   const {state, utilDispatch} = useContext(StoreContext);
   const {util, auth} = state;
   const {user} = auth;
-  const {expertOpenOrders, expertHistoryOrders, loading} = util;
+  const {ordersAll, loading} = util;
 
   const mapStyle = require('../../../config/mapStyle.json');
 
-  const dataOrder = !expertOpenOrders.filter((o) => o.id === order.id)[0]
-    ? expertHistoryOrders.filter((o) => o.id === order.id)[0] || order
-    : expertOpenOrders.filter((o) => o.id === order.id)[0];
+  const filterOrder = ordersAll.filter((o) => o.id === order.id)[0];
 
-  const filterOrder = dataOrder ? dataOrder : order;
-  const {client, services, cartId, address} = filterOrder;
+  const {client, cartId, address} = filterOrder;
+
+  const services = filterOrder.services.filter((s) => s.uid === user.uid);
 
   const ASPECT_RATIO = screen.width * 0.8 - 500 / screen.height;
 
   const [qualifyClient, setQualifyClient] = useState(false);
   const [modalEdit, setModalEdit] = useState(false);
   const [serviceFilter, setServiceFilter] = useState([]);
+  const [menuIndex, setMenuIndex] = useState(0);
 
   const onRut = async () => {
     let resulTime = utilities.counting(filterOrder.date);
@@ -198,20 +198,7 @@ const DetailModal = ({order, modeHistory, setModalDetail}) => {
         </Text>
         <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
 
-        {services && services.length > 1 && (
-          <ScrollView horizontal style={{marginLeft: 20}}>
-            {services.map((item) => {
-              return (
-                <Fragment key={item.id}>
-                  <ButonMenu item={item} />
-                </Fragment>
-              );
-            })}
-          </ScrollView>
-        )}
-        <ButonMenu />
-
-        <ScrollView style={{marginTop: 20}}>
+        <ScrollView style={{}}>
           <TouchableOpacity onPress={() => console.log('ir map')}>
             {false && (
               <MapView
@@ -257,6 +244,7 @@ const DetailModal = ({order, modeHistory, setModalDetail}) => {
               </MapView>
             )}
           </TouchableOpacity>
+
           <View style={{marginTop: 20}}>
             <Text
               style={[
@@ -332,194 +320,227 @@ const DetailModal = ({order, modeHistory, setModalDetail}) => {
             </View>
 
             <View opacity={0.25} style={ApplicationStyles.separatorLine} />
-
+            {services && services.length > 1 && (
+              <>
+                <Text
+                  style={[
+                    Fonts.style.bold(Colors.dark, Fonts.size.medium, 'left'),
+                    {marginLeft: 20, marginBottom: 10},
+                  ]}>
+                  Seleciona tus servicios para ver al informacion
+                </Text>
+                <ScrollView
+                  horizontal
+                  contentContainerStyle={{paddingBottom: 40, marginLeft: 20}}>
+                  {services.map((item, index) => {
+                    return (
+                      <Fragment key={item.id}>
+                        {menuIndex === index ? (
+                          <ButonMenu
+                            item={item}
+                            index={index}
+                            menuIndex={menuIndex}
+                            theme={true}
+                            setMenuIndex={setMenuIndex}
+                          />
+                        ) : (
+                          <ButonMenu
+                            item={item}
+                            index={index}
+                            menuIndex={menuIndex}
+                            theme={false}
+                            setMenuIndex={setMenuIndex}
+                          />
+                        )}
+                      </Fragment>
+                    );
+                  })}
+                </ScrollView>
+              </>
+            )}
             {services &&
               services.map((item, index) => {
                 const {name, clients, addOnsCount, addons} = item;
 
                 return (
                   <Fragment key={index}>
-                    {false && filterOrder.status < 4 && (
-                      <View style={styles.contEdit}>
-                        <TouchableOpacity
-                          style={styles.btnEdit}
-                          onPress={() => setModalEdit(true)}>
-                          <Icon
-                            name={'edit'}
-                            size={20}
-                            color={Colors.expert.primaryColor}
-                          />
-                        </TouchableOpacity>
-                      </View>
-                    )}
+                    {menuIndex === index && (
+                      <>
+                        <Text
+                          style={[
+                            Fonts.style.bold(
+                              Colors.expert.primaryColor,
+                              Fonts.size.medium,
+                              'center',
+                            ),
+                          ]}>
+                          Productos
+                        </Text>
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            marginHorizontal: 20,
+                          }}>
+                          <Text
+                            style={[
+                              Fonts.style.regular(
+                                Colors.dark,
+                                Fonts.size.medium,
+                              ),
+                            ]}>
+                            Producto
+                          </Text>
+                          <Text
+                            style={[
+                              Fonts.style.bold(Colors.dark, Fonts.size.medium),
+                            ]}>
+                            {name}
+                          </Text>
+                        </View>
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            marginHorizontal: 20,
+                          }}>
+                          <Text
+                            style={[
+                              Fonts.style.regular(
+                                Colors.dark,
+                                Fonts.size.medium,
+                              ),
+                            ]}>
+                            Invitados
+                          </Text>
 
-                    <Text
-                      style={[
-                        Fonts.style.bold(
-                          Colors.expert.primaryColor,
-                          Fonts.size.medium,
-                          'center',
-                        ),
-                      ]}>
-                      Productos
-                    </Text>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        marginHorizontal: 20,
-                      }}>
-                      <Text
-                        style={[
-                          Fonts.style.regular(Colors.dark, Fonts.size.medium),
-                        ]}>
-                        Producto
-                      </Text>
-                      <Text
-                        style={[
-                          Fonts.style.bold(Colors.dark, Fonts.size.medium),
-                        ]}>
-                        {name}
-                      </Text>
-                    </View>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        marginHorizontal: 20,
-                      }}>
-                      <Text
-                        style={[
-                          Fonts.style.regular(Colors.dark, Fonts.size.medium),
-                        ]}>
-                        Invitados
-                      </Text>
+                          <Text
+                            style={[
+                              Fonts.style.bold(
+                                Colors.dark,
+                                Fonts.size.medium,
+                                'left',
+                              ),
+                              {marginLeft: 20},
+                            ]}>
+                            {clients.length === 0 ? 'Ninguno' : clients.length}
+                          </Text>
+                        </View>
+                        <View
+                          opacity={0.25}
+                          style={ApplicationStyles.separatorLine}
+                        />
 
-                      <Text
-                        style={[
-                          Fonts.style.bold(
-                            Colors.dark,
-                            Fonts.size.medium,
-                            'left',
-                          ),
-                          {marginLeft: 20},
-                        ]}>
-                        {clients.length === 0 ? 'Ninguno' : clients.length}
-                      </Text>
-                    </View>
-                    <View
-                      opacity={0.25}
-                      style={ApplicationStyles.separatorLine}
-                    />
+                        <Text
+                          style={[
+                            Fonts.style.bold(
+                              Colors.expert.primaryColor,
+                              Fonts.size.medium,
+                              'center',
+                            ),
+                          ]}>
+                          Adicionales comunes
+                        </Text>
+                        {addons && addons.length > 0 ? (
+                          addons.map((dataAddon, index) => {
+                            const {addonName} = dataAddon;
 
-                    <Text
-                      style={[
-                        Fonts.style.bold(
-                          Colors.expert.primaryColor,
-                          Fonts.size.medium,
-                          'center',
-                        ),
-                      ]}>
-                      Adicionales comunes
-                    </Text>
-                    {addons && addons.length > 0 ? (
-                      addons.map((dataAddon, index) => {
-                        const {addonName} = dataAddon;
-
-                        return (
-                          <View key={index} style={styles.contAddons}>
-                            <Text
-                              style={[
-                                Fonts.style.regular(
-                                  Colors.dark,
-                                  Fonts.size.medium,
-                                  'left',
-                                ),
-                                {marginLeft: 20},
-                              ]}>
-                              {addonName}{' '}
-                            </Text>
-                          </View>
-                        );
-                      })
-                    ) : (
-                      <Text
-                        style={[
-                          Fonts.style.regular(
-                            Colors.dark,
-                            Fonts.size.medium,
-                            'center',
-                          ),
-                        ]}>
-                        No ahi adiciones comunes
-                      </Text>
-                    )}
-                    <View opacity={0.25} style={styles.separatorLineMini} />
-                    <Text
-                      style={[
-                        Fonts.style.bold(
-                          Colors.expert.primaryColor,
-                          Fonts.size.medium,
-                          'center',
-                        ),
-                      ]}>
-                      Adicionales contable
-                    </Text>
-                    {addOnsCount.length > 0 ? (
-                      addOnsCount.map((addonCount, index) => {
-                        const {name, count} = addonCount;
-                        return (
-                          <Fragment key={index}>
-                            <View
-                              style={{
-                                flexDirection: 'row',
-                                justifyContent: 'space-between',
-                                marginHorizontal: 20,
-                              }}>
-                              <Text
-                                style={[
-                                  Fonts.style.regular(
-                                    Colors.dark,
-                                    Fonts.size.medium,
-                                    'left',
-                                  ),
-                                  {marginLeft: 20},
-                                ]}>
-                                {name}
-                              </Text>
-                              <Text
-                                style={[
-                                  Fonts.style.bold(
-                                    Colors.dark,
-                                    Fonts.size.medium,
-                                  ),
-                                ]}>
-                                X{' '}
+                            return (
+                              <View key={index} style={styles.contAddons}>
                                 <Text
                                   style={[
                                     Fonts.style.regular(
                                       Colors.dark,
                                       Fonts.size.medium,
+                                      'left',
                                     ),
+                                    {marginLeft: 20},
                                   ]}>
-                                  {count}
+                                  {addonName}{' '}
                                 </Text>
-                              </Text>
-                            </View>
-                          </Fragment>
-                        );
-                      })
-                    ) : (
-                      <Text
-                        style={[
-                          Fonts.style.regular(
-                            Colors.dark,
-                            Fonts.size.medium,
-                            'center',
-                          ),
-                        ]}>
-                        No ahi adiciones Contables
-                      </Text>
+                              </View>
+                            );
+                          })
+                        ) : (
+                          <Text
+                            style={[
+                              Fonts.style.regular(
+                                Colors.dark,
+                                Fonts.size.medium,
+                                'center',
+                              ),
+                            ]}>
+                            No ahi adiciones comunes
+                          </Text>
+                        )}
+                        <View opacity={0.25} style={styles.separatorLineMini} />
+                        <Text
+                          style={[
+                            Fonts.style.bold(
+                              Colors.expert.primaryColor,
+                              Fonts.size.medium,
+                              'center',
+                            ),
+                          ]}>
+                          Adicionales contable
+                        </Text>
+                        {addOnsCount.length > 0 ? (
+                          addOnsCount.map((addonCount, index) => {
+                            const {name, count} = addonCount;
+                            return (
+                              <Fragment key={index}>
+                                <View
+                                  style={{
+                                    flexDirection: 'row',
+                                    justifyContent: 'space-between',
+                                    marginHorizontal: 20,
+                                  }}>
+                                  <Text
+                                    style={[
+                                      Fonts.style.regular(
+                                        Colors.dark,
+                                        Fonts.size.medium,
+                                        'left',
+                                      ),
+                                      {marginLeft: 20},
+                                    ]}>
+                                    {name}
+                                  </Text>
+                                  <Text
+                                    style={[
+                                      Fonts.style.bold(
+                                        Colors.dark,
+                                        Fonts.size.medium,
+                                      ),
+                                    ]}>
+                                    X{' '}
+                                    <Text
+                                      style={[
+                                        Fonts.style.regular(
+                                          Colors.dark,
+                                          Fonts.size.medium,
+                                        ),
+                                      ]}>
+                                      {count}
+                                    </Text>
+                                  </Text>
+                                </View>
+                              </Fragment>
+                            );
+                          })
+                        ) : (
+                          <Text
+                            style={[
+                              Fonts.style.regular(
+                                Colors.dark,
+                                Fonts.size.medium,
+                                'center',
+                              ),
+                            ]}>
+                            No ahi adiciones Contables
+                          </Text>
+                        )}
+                      </>
                     )}
                   </Fragment>
                 );
@@ -542,118 +563,146 @@ const DetailModal = ({order, modeHistory, setModalDetail}) => {
 
                 return (
                   <View key={index} style={styles.cont}>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        marginHorizontal: 20,
-                      }}>
-                      <Text
-                        style={[
-                          Fonts.style.regular(Colors.dark, Fonts.size.medium),
-                        ]}>
-                        DURACION{' '}
-                      </Text>
-                      <Text
-                        style={[
-                          Fonts.style.regular(Colors.dark, Fonts.size.medium),
-                        ]}>
-                        {duration} mins
-                      </Text>
-                    </View>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        marginHorizontal: 20,
-                      }}>
-                      <Text
-                        style={[
-                          Fonts.style.regular(Colors.dark, Fonts.size.medium),
-                        ]}>
-                        SUBTOTAL
-                      </Text>
-                      <Text
-                        style={[
-                          Fonts.style.regular(Colors.dark, Fonts.size.medium),
-                        ]}>
-                        {utilities.formatCOP(totalServices)}
-                      </Text>
-                    </View>
+                    {menuIndex === index && (
+                      <>
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            marginHorizontal: 20,
+                          }}>
+                          <Text
+                            style={[
+                              Fonts.style.regular(
+                                Colors.dark,
+                                Fonts.size.medium,
+                              ),
+                            ]}>
+                            DURACION{' '}
+                          </Text>
+                          <Text
+                            style={[
+                              Fonts.style.regular(
+                                Colors.dark,
+                                Fonts.size.medium,
+                              ),
+                            ]}>
+                            {duration} mins
+                          </Text>
+                        </View>
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            marginHorizontal: 20,
+                          }}>
+                          <Text
+                            style={[
+                              Fonts.style.regular(
+                                Colors.dark,
+                                Fonts.size.medium,
+                              ),
+                            ]}>
+                            SUBTOTAL
+                          </Text>
+                          <Text
+                            style={[
+                              Fonts.style.regular(
+                                Colors.dark,
+                                Fonts.size.medium,
+                              ),
+                            ]}>
+                            {utilities.formatCOP(totalServices)}
+                          </Text>
+                        </View>
 
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        marginHorizontal: 20,
-                      }}>
-                      <Text
-                        style={[
-                          Fonts.style.regular(Colors.dark, Fonts.size.medium),
-                        ]}>
-                        ADICIONES
-                      </Text>
-                      <Text
-                        style={[
-                          Fonts.style.regular(Colors.dark, Fonts.size.medium),
-                        ]}>
-                        {utilities.formatCOP(totalAddons)}
-                      </Text>
-                    </View>
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            marginHorizontal: 20,
+                          }}>
+                          <Text
+                            style={[
+                              Fonts.style.regular(
+                                Colors.dark,
+                                Fonts.size.medium,
+                              ),
+                            ]}>
+                            ADICIONES
+                          </Text>
+                          <Text
+                            style={[
+                              Fonts.style.regular(
+                                Colors.dark,
+                                Fonts.size.medium,
+                              ),
+                            ]}>
+                            {utilities.formatCOP(totalAddons)}
+                          </Text>
+                        </View>
 
-                    {filterOrder && filterOrder.coupon && (
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                          justifyContent: 'space-between',
-                          marginHorizontal: 20,
-                        }}>
-                        <Text
-                          style={[
-                            Fonts.style.regular(Colors.dark, Fonts.size.medium),
-                          ]}>
-                          DESCUENTO POR CUPÓN
-                        </Text>
-                        <Text
-                          style={[
-                            Fonts.style.regular('red', Fonts.size.medium),
-                          ]}>
-                          -{' '}
-                          {filterOrder.coupon?.typeCoupon === 'percentage'
-                            ? `${filterOrder.coupon?.percentage}%`
-                            : utilities.formatCOP(filterOrder.coupon?.money)}
-                        </Text>
-                      </View>
+                        {filterOrder && filterOrder.coupon && (
+                          <View
+                            style={{
+                              flexDirection: 'row',
+                              justifyContent: 'space-between',
+                              marginHorizontal: 20,
+                            }}>
+                            <Text
+                              style={[
+                                Fonts.style.regular(
+                                  Colors.dark,
+                                  Fonts.size.medium,
+                                ),
+                              ]}>
+                              DESCUENTO POR CUPÓN
+                            </Text>
+                            <Text
+                              style={[
+                                Fonts.style.regular('red', Fonts.size.medium),
+                              ]}>
+                              -{' '}
+                              {filterOrder.coupon?.typeCoupon === 'percentage'
+                                ? `${filterOrder.coupon?.percentage}%`
+                                : utilities.formatCOP(
+                                    filterOrder.coupon?.money,
+                                  )}
+                            </Text>
+                          </View>
+                        )}
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            marginHorizontal: 20,
+                          }}>
+                          <Text
+                            style={[
+                              Fonts.style.bold(Colors.dark, Fonts.size.medium),
+                            ]}>
+                            TOTAL DE SERVICIOS
+                          </Text>
+
+                          <Text
+                            style={[
+                              Fonts.style.bold(Colors.dark, Fonts.size.medium),
+                            ]}>
+                            {filterOrder.coupon
+                              ? filterOrder.coupon.typeCoupon !== 'money'
+                                ? utilities.formatCOP(
+                                    (filterOrder.coupon.percentage / 100) *
+                                      total -
+                                      total,
+                                  )
+                                : utilities.formatCOP(
+                                    total - filterOrder.coupon?.money,
+                                  )
+                              : utilities.formatCOP(total)}
+                          </Text>
+                        </View>
+                      </>
                     )}
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        marginHorizontal: 20,
-                      }}>
-                      <Text
-                        style={[
-                          Fonts.style.bold(Colors.dark, Fonts.size.medium),
-                        ]}>
-                        TOTAL DE SERVICIOS
-                      </Text>
-
-                      <Text
-                        style={[
-                          Fonts.style.bold(Colors.dark, Fonts.size.medium),
-                        ]}>
-                        {filterOrder.coupon
-                          ? filterOrder.coupon.typeCoupon !== 'money'
-                            ? utilities.formatCOP(
-                                (filterOrder.coupon.percentage / 100) * total -
-                                  total,
-                              )
-                            : utilities.formatCOP(
-                                total - filterOrder.coupon?.money,
-                              )
-                          : utilities.formatCOP(total)}
-                      </Text>
-                    </View>
                   </View>
                 );
               })}

@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     flexDirection: 'row',
+    marginHorizontal: 10,
   },
 });
 export default ExpertOrder;

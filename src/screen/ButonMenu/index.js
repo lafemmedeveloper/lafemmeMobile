@@ -2,15 +2,17 @@ import React from 'react';
 import {Text, TouchableOpacity, StyleSheet} from 'react-native';
 import {Colors, Fonts} from '../../themes';
 
-const ButonMenu = ({item}) => {
-  console.log(item);
+const ButonMenu = ({item, index, theme, setMenuIndex}) => {
+  console.log('index ==>', index);
   return (
     <>
       {item ? (
-        <TouchableOpacity style={styles.container}>
+        <TouchableOpacity
+          onPress={() => setMenuIndex(index)}
+          style={theme ? styles.containerActive : styles.container}>
           <Text
             style={Fonts.style.bold(
-              false ? Colors.light : Colors.expert.primaryColor,
+              theme ? Colors.light : Colors.expert.primaryColor,
               Fonts.size.small,
               'center',
             )}>
@@ -39,9 +41,9 @@ const styles = StyleSheet.create({
     marginRight: 20,
   },
   containerActive: {
+    paddingHorizontal: 10,
     backgroundColor: Colors.expert.primaryColor,
     height: 40,
-    width: 100,
     justifyContent: 'center',
     borderRadius: 20,
     shadowColor: '#000',
@@ -52,6 +54,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+    marginRight: 20,
   },
 });
 export default ButonMenu;
