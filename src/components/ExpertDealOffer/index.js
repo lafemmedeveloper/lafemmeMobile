@@ -1,4 +1,4 @@
-import React, {useEffect, useContext, useRef, Fragment} from 'react';
+import React, {useEffect, useContext, useRef, Fragment, useState} from 'react';
 import {
   View,
   Image,
@@ -6,6 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {formatDate} from '../../helpers/MomentHelper';
@@ -24,6 +25,8 @@ export default ({order, dispatch, user}) => {
   const {utilDispatch} = useContext(StoreContext);
   const isMountedRef = useRef(null);
 
+  const [loading, setLoading] = useState(false);
+
   const assingService = async (item) => {
     try {
       if (!user.activity.includes(item.servicesType)) {
@@ -35,13 +38,17 @@ export default ({order, dispatch, user}) => {
             .join(' ')}`,
         );
       }
+      setLoading(true);
       let orderServices = order;
       const indexService = order.services.findIndex((i) => i.id === item.id);
       orderServices.services[indexService].uid = user.uid;
       orderServices.services[indexService].status = 1;
       await assingExpertService(orderServices, user, dispatch);
       await assignExpert(user, order, dispatch);
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
+
       console.log('errorassing expert ==>', error);
     }
   };
@@ -158,13 +165,10 @@ export default ({order, dispatch, user}) => {
             return (
               <Fragment key={index}>
                 {order.services.length > 1 && (
-                  <View
-                    opacity={0.25}
-                    style={[ApplicationStyles.separatorLine]}
-                  />
+                  <View opacity={0.25} style={styles.separator} />
                 )}
                 <View style={styles.contentText}>
-                  <View>
+                  <View style={{flex: 3}}>
                     <Text
                       numberOfLines={1}
                       style={Fonts.style.regular(
@@ -172,14 +176,14 @@ export default ({order, dispatch, user}) => {
                         Fonts.size.small,
                       )}>
                       Servicio:{' '}
-                      <Text
-                        numberOfLines={1}
-                        style={Fonts.style.bold(
-                          Colors.expert.primaryColor,
-                          Fonts.size.small,
-                        )}>
-                        {item.name}
-                      </Text>
+                    </Text>
+                    <Text
+                      numberOfLines={1}
+                      style={Fonts.style.bold(
+                        Colors.expert.primaryColor,
+                        Fonts.size.small,
+                      )}>
+                      {item.name}
                     </Text>
                     <Text
                       numberOfLines={1}
@@ -196,52 +200,61 @@ export default ({order, dispatch, user}) => {
                           Fonts.size.small,
                         )}>
                         {item.clients.length}
-                        <Text
-                          numberOfLines={1}
-                          style={Fonts.style.regular(
-                            Colors.gray,
-                            Fonts.size.small,
-                            'left',
-                          )}>
-                          , Calificación:{' '}
-                          <Text
-                            numberOfLines={1}
-                            style={Fonts.style.bold(
-                              Colors.expert.primaryColor,
-                              Fonts.size.small,
-                            )}>
-                            {(order.client.rating
-                              ? order.client.rating
-                              : 5
-                            ).toFixed(1)}
-                          </Text>
-                        </Text>
                       </Text>
                     </Text>
-                  </View>
-                  {!item.uid ? (
-                    <TouchableOpacity
-                      disabled={!user.activity.includes(item.servicesType)}
-                      style={
-                        !user.activity.includes(item.servicesType)
-                          ? styles.btnDisable
-                          : styles.btnContainer
-                      }
-                      onPress={() => assingService(item)}>
+
+                    {item.addons.length + item.addOnsCount.length > 1 && (
                       <Text
-                        style={Fonts.style.bold(
-                          !user.activity.includes(item.servicesType)
-                            ? Colors.gray
-                            : Colors.light,
+                        numberOfLines={1}
+                        style={Fonts.style.regular(
+                          Colors.gray,
                           Fonts.size.small,
-                          'center',
+                          'left',
                         )}>
-                        Tomar Servicio
+                        Adicionales:{' '}
+                        <Text
+                          numberOfLines={1}
+                          style={Fonts.style.bold(
+                            Colors.expert.primaryColor,
+                            Fonts.size.small,
+                          )}>
+                          {item.addons.length + item.addOnsCount.length}
+                        </Text>
                       </Text>
-                    </TouchableOpacity>
-                  ) : (
-                    <ExpertOrder service={item} order={order} />
-                  )}
+                    )}
+                  </View>
+                  <View style={{flex: 2}}>
+                    {!item.uid ? (
+                      <TouchableOpacity
+                        disabled={!user.activity.includes(item.servicesType)}
+                        style={
+                          !user.activity.includes(item.servicesType)
+                            ? styles.btnDisable
+                            : styles.btnContainer
+                        }
+                        onPress={() => assingService(item)}>
+                        <Text
+                          style={[
+                            Fonts.style.bold(
+                              !user.activity.includes(item.servicesType)
+                                ? Colors.gray
+                                : Colors.light,
+                              Fonts.size.small,
+                              'center',
+                            ),
+                            {paddingHorizontal: 10},
+                          ]}>
+                          {loading ? (
+                            <ActivityIndicator color={Colors.light} />
+                          ) : (
+                            ' Tomar Servicio'
+                          )}
+                        </Text>
+                      </TouchableOpacity>
+                    ) : (
+                      <ExpertOrder service={item} order={order} />
+                    )}
+                  </View>
                 </View>
               </Fragment>
             );
@@ -256,14 +269,13 @@ const styles = StyleSheet.create({
   btnContainer: {
     flex: 0,
     height: 40,
-    width: 80,
+    width: 120,
     alignSelf: 'center',
     borderRadius: Metrics.borderRadius,
     marginVertical: 20,
     backgroundColor: Colors.expert.primaryColor,
     justifyContent: 'center',
     alignItems: 'center',
-
     shadowColor: Colors.dark,
     shadowOffset: {
       width: 2,
@@ -277,7 +289,7 @@ const styles = StyleSheet.create({
   btnDisable: {
     flex: 0,
     height: 40,
-    width: 80,
+    width: 120,
     alignSelf: 'center',
     borderRadius: Metrics.borderRadius,
     marginVertical: 20,
@@ -296,7 +308,6 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   contentText: {
-    flex: 1,
     marginHorizontal: 10,
     justifyContent: 'space-between',
     flexDirection: 'row',
@@ -306,6 +317,7 @@ const styles = StyleSheet.create({
   cellContainer: {
     backgroundColor: Colors.light,
     marginHorizontal: 5,
+    marginBottom: 10,
     padding: 10,
     marginTop: 5,
     borderRadius: 10,
@@ -322,4 +334,11 @@ const styles = StyleSheet.create({
   },
 
   contentContainer: {flexDirection: 'row', justifyContent: 'space-between'},
+  separator: {
+    width: Metrics.screenWidth * 0.9,
+    alignSelf: 'center',
+    height: 0.5,
+    backgroundColor: Colors.dark,
+    marginVertical: 8,
+  },
 });

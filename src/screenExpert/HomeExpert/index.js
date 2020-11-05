@@ -107,7 +107,7 @@ const HomeExpert = () => {
             bounces={true}>
             <Text
               style={[
-                Fonts.style.bold(Colors.dark, Fonts.size.h6, 'left'),
+                Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center'),
                 {marginVertical: 20, marginLeft: 20},
               ]}>
               {`Tienes ${expertActiveOrders.length} ordén disponible`}

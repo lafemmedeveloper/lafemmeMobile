@@ -1,16 +1,14 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, ActivityIndicator} from 'react-native';
 import FastImage from 'react-native-fast-image';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
-import {Fonts} from '../../themes';
+import {Fonts, Colors} from '../../themes';
 
 const ExpertOrder = ({service, order}) => {
   const expert = order.experts.filter((e) => e.uid === service.uid)[0];
-  console.log('order ==>', expert);
 
   return (
     <>
-      {expert && (
+      {expert ? (
         <View style={styles.container}>
           <FastImage
             style={styles.img}
@@ -19,10 +17,12 @@ const ExpertOrder = ({service, order}) => {
           />
           <Text
             numberOfLines={1}
-            style={Fonts.style.bold(Colors.gray, Fonts.size.small)}>
+            style={Fonts.style.bold(Colors.dark, Fonts.size.small)}>
             {`${expert.firstName} ${expert.lastName}`}
           </Text>
         </View>
+      ) : (
+        <ActivityIndicator color={Colors.expert.primaryColor} />
       )}
     </>
   );
@@ -32,9 +32,11 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
+    marginRight: 10,
   },
   container: {
     alignItems: 'center',
+    flexDirection: 'row',
   },
 });
 export default ExpertOrder;
