@@ -19,21 +19,12 @@ const HistoryExpert = () => {
   const isMountedRef = useRef(null);
 
   const [menuIndex, setMenuIndex] = useState(0);
-  const [modalDetail, setModalDetail] = useState(false);
   const [detailOrder, setDetailOrder] = useState(null);
-  const [modeHistory, setModeHistory] = useState(false);
 
   const activeDetailModal = (order) => {
     setDetailOrder(order);
-
-    if (order.status >= 5) {
-      setModeHistory(true);
-      setModalDetail(true);
-    } else {
-      setModeHistory(false);
-      setModalDetail(true);
-    }
   };
+
   useEffect(() => {
     isMountedRef.current = true;
 
@@ -42,7 +33,6 @@ const HistoryExpert = () => {
     return () => {
       return () => (isMountedRef.current = false);
     };
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -146,13 +136,6 @@ const HistoryExpert = () => {
           </>
         </ScrollView>
       </View>
-      <ModalApp open={modalDetail} setOpen={setModalDetail}>
-        <DetailModal
-          order={detailOrder}
-          setModalDetail={setModalDetail}
-          modeHistory={modeHistory}
-        />
-      </ModalApp>
     </>
   );
 };

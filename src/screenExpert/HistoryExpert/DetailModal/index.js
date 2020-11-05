@@ -1,4 +1,4 @@
-import React, {Fragment, useState, useContext} from 'react';
+import React, {Fragment, useState, useContext, useEffect} from 'react';
 import {
   Text,
   StyleSheet,
@@ -27,34 +27,27 @@ import Qualify from '../../../components/Qualify';
 import ServiceModal from './ServiceModal';
 import ButonMenu from '../../../screen/ButonMenu';
 
-const DetailModal = (props) => {
+const DetailModal = ({order, modeHistory, setModalDetail}) => {
+  const screen = Dimensions.get('window');
   const {state, utilDispatch} = useContext(StoreContext);
   const {util, auth} = state;
   const {user} = auth;
-  const {expertOpenOrders, expertHistoryOrders} = util;
-
-  const {loading} = util;
+  const {expertOpenOrders, expertHistoryOrders, loading} = util;
 
   const mapStyle = require('../../../config/mapStyle.json');
-
-  const {order, modeHistory, setModalDetail} = props;
 
   const dataOrder = !expertOpenOrders.filter((o) => o.id === order.id)[0]
     ? expertHistoryOrders.filter((o) => o.id === order.id)[0] || order
     : expertOpenOrders.filter((o) => o.id === order.id)[0];
 
-  const filterOrder = modeHistory ? order : dataOrder;
+  const filterOrder = dataOrder ? dataOrder : order;
   const {client, services, cartId, address} = filterOrder;
-  const serviceFilter = services.map(
-    (item) => item.servicesType === user.activity,
-  );
-  console.log('service x expert ==>', serviceFilter);
 
-  const screen = Dimensions.get('window');
   const ASPECT_RATIO = screen.width * 0.8 - 500 / screen.height;
 
   const [qualifyClient, setQualifyClient] = useState(false);
   const [modalEdit, setModalEdit] = useState(false);
+  const [serviceFilter, setServiceFilter] = useState([]);
 
   const onRut = async () => {
     let resulTime = utilities.counting(filterOrder.date);
@@ -159,6 +152,16 @@ const DetailModal = (props) => {
     setModalEdit(false);
     setModalDetail(false);
   };
+
+  useEffect(() => {
+    setServiceFilter(filterOrder.services.filter((s) => s.uid === user.uid));
+  }, [filterOrder.services, user.uid]);
+
+  console.log(
+    'service filter =>',
+    filterOrder.services.filter((s) => s.uid === user.uid),
+  );
+
   return (
     <>
       <Loading type={'expert'} loading={loading} />
@@ -195,7 +198,7 @@ const DetailModal = (props) => {
         </Text>
         <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
 
-        {services && services.length > 0 && (
+        {services && services.length > 1 && (
           <ScrollView horizontal style={{marginLeft: 20}}>
             {services.map((item) => {
               return (

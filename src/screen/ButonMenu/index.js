@@ -3,7 +3,7 @@ import {Text, TouchableOpacity, StyleSheet} from 'react-native';
 import {Colors, Fonts} from '../../themes';
 
 const ButonMenu = ({item}) => {
-  console.log('item service ==>', item);
+  console.log(item);
   return (
     <>
       {item ? (

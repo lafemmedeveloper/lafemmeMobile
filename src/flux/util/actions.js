@@ -16,6 +16,7 @@ import DeviceInfo from 'react-native-device-info';
 import auth from '@react-native-firebase/auth';
 import axios from 'axios';
 import {Alert} from 'react-native';
+import {createIconSetFromFontello} from 'react-native-vector-icons';
 
 export const handleError = (dispatch) => {
   dispatch({type: HANDLE_ERROR, payload: true});
@@ -139,9 +140,8 @@ export const getExpertActiveOrders = (user, dispatch) => {
 
   let ordersRef = firestore()
     .collection('orders')
-    .where('status', '>=', 1)
-    .where('status', '<', 5);
-  ordersRef.where('experts', 'array-contains', user);
+    .where('expertsUid', 'array-contains', user.uid);
+
   let listOrders = [];
 
   ordersRef.onSnapshot((orders) => {
@@ -151,33 +151,15 @@ export const getExpertActiveOrders = (user, dispatch) => {
         ...item.data(),
       };
     });
-    return dispatch({
+    console.log('order from Expert ==>', listOrders);
+
+    dispatch({
       type: GET_EXPERT_OPEN_ORDERS,
       payload: listOrders,
     });
   });
 };
 
-export const getExpertHistoryOrders = (user, dispatch) => {
-  // const uid = auth().currentUser.uid;
-
-  let ordersRef = firestore().collection('orders').where('status', '>=', 5);
-
-  ordersRef.where('experts', 'array-contains', user);
-
-  let listOrders = [];
-
-  ordersRef.onSnapshot((orders) => {
-    listOrders = orders.docs.map((item) => {
-      return {
-        id: item.id,
-        ...item.data(),
-      };
-    });
-
-    return dispatch({type: GET_EXPERT_ORDER_HISTORY, payload: listOrders});
-  });
-};
 export const getExpertOpenOrders = (activity, dispatch) => {
   try {
     let ordersRef = firestore()

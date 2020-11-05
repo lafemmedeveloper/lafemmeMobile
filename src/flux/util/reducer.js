@@ -13,6 +13,7 @@ import {
   GET_NAME_SERVICE,
 } from './types';
 import _ from 'lodash';
+import auth from '@react-native-firebase/auth';
 
 export const INITIAL_STATE_UTIL = {
   loading: false,
@@ -89,12 +90,19 @@ const getExpertActiveOrders = (state, action) => {
   };
 };
 const getExpertOpenOrders = (state, action) => {
-  let expertOpenOrders = _.orderBy(action.payload, 'date', 'des');
+  let expertOpenOrders = _.orderBy(action.payload, 'date', 'des')
+    .filter((o) => o.status >= 1)
+    .filter((o) => o.status < 5);
+
+  let expertHistoryOrders = _.orderBy(action.payload, 'date', 'des').filter(
+    (o) => o.status >= 5,
+  );
 
   return {
     ...state,
     expertOpenOrders,
     nextOrder: expertOpenOrders.length > 0 ? [expertOpenOrders[0]] : [],
+    expertHistoryOrders,
   };
 };
 const getCoordinate = (state, action) => {

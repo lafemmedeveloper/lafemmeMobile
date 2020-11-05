@@ -138,6 +138,7 @@ const CartScreen = (props) => {
         hoursServices,
         date: `${user.cart.date}`,
         servicesType,
+        expertsUid: [],
         ...user.cart,
       };
       sendOrder(data);

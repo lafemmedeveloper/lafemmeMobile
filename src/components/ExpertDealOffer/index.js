@@ -25,22 +25,25 @@ export default ({order, dispatch, user}) => {
   const isMountedRef = useRef(null);
 
   const assingService = async (item) => {
-    if (!user.activity.includes(item.servicesType)) {
-      return Alert.alert(
-        'Ups',
-        `Lo siento no puedes tomar el servicio por que no posees la actividad ${item.servicesType
-          .toUpperCase()
-          .split('-')
-          .join(' ')}`,
-      );
+    try {
+      if (!user.activity.includes(item.servicesType)) {
+        return Alert.alert(
+          'Ups',
+          `Lo siento no puedes tomar el servicio por que no posees la actividad ${item.servicesType
+            .toUpperCase()
+            .split('-')
+            .join(' ')}`,
+        );
+      }
+      let orderServices = order;
+      const indexService = order.services.findIndex((i) => i.id === item.id);
+      orderServices.services[indexService].uid = user.uid;
+      orderServices.services[indexService].status = 1;
+      await assingExpertService(orderServices, user, dispatch);
+      await assignExpert(user, order, dispatch);
+    } catch (error) {
+      console.log('errorassing expert ==>', error);
     }
-    let orderServices = order;
-    const indexService = order.services.findIndex((i) => i.id === item.id);
-    orderServices.services[indexService].uid = user.uid;
-    orderServices.services[indexService].status = 1;
-
-    await assingExpertService(orderServices, user, dispatch);
-    await assignExpert(user, order, dispatch);
   };
 
   useEffect(() => {
