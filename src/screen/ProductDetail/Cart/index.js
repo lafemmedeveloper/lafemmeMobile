@@ -56,6 +56,9 @@ const Cart = (props) => {
   const [addonsListCount, setAddonsListCount] = useState([]);
   const [experts, setExperts] = useState(modelExpert);
   const [showModalService, setShowModalService] = useState(false);
+  console.log('addonsGuest, =>', addonsGuest);
+  console.log('addonsList, =>', addonsList);
+  console.log('guestList, =>', guestList);
 
   const addGuest = async () => {
     const guestUser = Object.assign(formGuest, {id: Utilities.create_UUID()});
@@ -101,6 +104,7 @@ const Cart = (props) => {
   };
 
   const selectAddons = (item) => {
+    console.log('hello active');
     let data = addonsList;
     const index = addonsList
       ? addonsList.findIndex((i) => i.id === item.id)
@@ -122,6 +126,19 @@ const Cart = (props) => {
         addonsDuration: item.duration,
         ...item,
       };
+      if (addonsGuest.length === 0) {
+        setAddonsGuest([
+          ...addonsGuest,
+          {
+            addOnPrice: item.price,
+            addonName: item.name,
+            addonsDuration: item.duration,
+            count: 0,
+            guestId: 'yo',
+            id: item.id,
+          },
+        ]);
+      }
     }
 
     if (index !== -1) {
@@ -156,6 +173,9 @@ const Cart = (props) => {
   };
 
   const selectAddonGuest = (addonSelected, guest) => {
+    console.log('active select guest');
+    console.log('guest ==>', guest);
+
     let item = {
       id: addonSelected.id,
       addOnPrice: addonSelected.price,

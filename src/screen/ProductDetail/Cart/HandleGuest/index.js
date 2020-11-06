@@ -4,15 +4,14 @@ import {Metrics, Colors, Fonts} from '../../../../themes';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Utilities from '../../../../utilities';
 
-const HandleGuest = (props) => {
-  const {
-    guest,
-    guestList,
-    selectGuest,
-    deleteGuest,
-    setGuestModal,
-    product,
-  } = props;
+const HandleGuest = ({
+  guest,
+  guestList,
+  selectGuest,
+  deleteGuest,
+  setGuestModal,
+  product,
+}) => {
   return (
     <View>
       <Text
