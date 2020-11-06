@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {
   Image,
   ScrollView,
@@ -21,32 +21,37 @@ import utilities from '../../../../utilities';
 import _ from 'lodash';
 import {useNavigation} from '@react-navigation/native';
 
-const ServiceModal = ({order, close}) => {
+const ServiceModal = ({order, close, itemService}) => {
+  const isMountedRef = useRef(null);
   const navigation = useNavigation();
+
   const {state, serviceDispatch} = useContext(StoreContext);
   const {service} = state;
 
-  console.log('state service', service.service);
-  console.log('state slug ==>', order.servicesType.join());
-
   const [products, setProducts] = useState([]);
   const [addOns, setAddons] = useState([]);
-
-  useEffect(() => {
-    getService(order.servicesType, serviceDispatch);
-  }, [serviceDispatch, order.servicesType]);
-
-  useEffect(() => {
-    if (service.service && service.service.length > 0) {
-      setProducts(service.service[0].products);
-      setAddons(service.service[0].addOns);
-    }
-  }, [service]);
 
   const activeDetailModal = (product) => {
     close();
     navigation.navigate('DetailProduct', {product});
   };
+
+  useEffect(() => {
+    isMountedRef.current = true;
+
+    getService(itemService.servicesType, serviceDispatch);
+
+    return () => {
+      return () => (isMountedRef.current = false);
+    };
+  }, [serviceDispatch, itemService.servicesType]);
+
+  useEffect(() => {
+    if (service && service.service && service.service.length > 0) {
+      setProducts(service.service[0].products);
+      setAddons(service.service[0].addOns);
+    }
+  }, [service, service.service]);
 
   return (
     <View style={styles.container}>
@@ -81,7 +86,7 @@ const ServiceModal = ({order, close}) => {
           Productos
         </Text>
         <View>
-          {products.length > 0 ? (
+          {products && products.length > 0 ? (
             products.map((product, index) => {
               return (
                 <TouchableOpacity

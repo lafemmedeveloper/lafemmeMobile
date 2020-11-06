@@ -11,7 +11,7 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {formatDate} from '../../helpers/MomentHelper';
 
-import {ApplicationStyles, Colors, Fonts, Images, Metrics} from '../../themes';
+import {Colors, Fonts, Images, Metrics} from '../../themes';
 import AppConfig from '../../config/AppConfig';
 import {
   assignExpert,
@@ -223,7 +223,7 @@ export default ({order, dispatch, user}) => {
                       </Text>
                     )}
                   </View>
-                  <View style={{flex: 2}}>
+                  <View style={{flex: 3}}>
                     {!item.uid ? (
                       <TouchableOpacity
                         disabled={!user.activity.includes(item.servicesType)}

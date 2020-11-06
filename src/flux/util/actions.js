@@ -7,7 +7,6 @@ import {
   DEVICE_INFO,
   GET_EXPERT_ACTIVE_ORDERS,
   GET_EXPERT_OPEN_ORDERS,
-  GET_EXPERT_ORDER_HISTORY,
   GET_NAME_SERVICE,
 } from './types';
 
@@ -16,7 +15,6 @@ import DeviceInfo from 'react-native-device-info';
 import auth from '@react-native-firebase/auth';
 import axios from 'axios';
 import {Alert} from 'react-native';
-import {createIconSetFromFontello} from 'react-native-vector-icons';
 
 export const handleError = (dispatch) => {
   dispatch({type: HANDLE_ERROR, payload: true});
@@ -136,8 +134,6 @@ export const getDeviceInfo = (dispatch) => {
 };
 
 export const getExpertActiveOrders = (user, dispatch) => {
-  //const uid = auth().currentUser?.uid;
-
   let ordersRef = firestore()
     .collection('orders')
     .where('expertsUid', 'array-contains', user.uid);
@@ -151,7 +147,6 @@ export const getExpertActiveOrders = (user, dispatch) => {
         ...item.data(),
       };
     });
-    console.log('order from Expert ==>', listOrders);
 
     dispatch({
       type: GET_EXPERT_OPEN_ORDERS,
@@ -342,9 +337,6 @@ export const resetReducer = (dispatch) => {
 };
 
 export const addService = async (uid, calcu, dispatch) => {
-  console.log('calcul number service ==>', calcu);
-  console.log('uid==>', uid);
-
   try {
     setLoading(true, dispatch);
 
@@ -464,5 +456,20 @@ export const assingExpertService = async (order, expert, dispatch) => {
 
     console.lgo('error ==>', error);
     Alert.alert('Ups', 'ocurrio un error inesperado');
+  }
+};
+
+export const updateOrder = async (order, dispatch) => {
+  try {
+    console.log('updateOrder');
+    setLoading(true, dispatch);
+
+    const ref = firestore().collection('orders').doc(order.id);
+    await ref.set(order, {merge: true});
+
+    setLoading(false, dispatch);
+  } catch (error) {
+    setLoading(false, dispatch);
+    console.log('error updateOrder==>', error);
   }
 };

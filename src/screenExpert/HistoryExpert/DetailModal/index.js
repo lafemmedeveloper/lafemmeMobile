@@ -1,4 +1,4 @@
-import React, {Fragment, useState, useContext, useEffect} from 'react';
+import React, {Fragment, useState, useContext} from 'react';
 import {
   Text,
   StyleSheet,
@@ -8,6 +8,7 @@ import {
   ScrollView,
   Alert,
   Image,
+  ActivityIndicator,
 } from 'react-native';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import Icon from 'react-native-vector-icons/FontAwesome5';
@@ -19,7 +20,9 @@ import {
   Images,
 } from '../../../themes';
 import utilities from '../../../utilities';
-import {updateStatus} from '../../../flux/util/actions';
+import {
+  updateOrder, // updateStatus
+} from '../../../flux/util/actions';
 import Loading from '../../../components/Loading';
 import {StoreContext} from '../../../flux';
 import ModalApp from '../../../components/ModalApp';
@@ -27,7 +30,7 @@ import Qualify from '../../../components/Qualify';
 import ServiceModal from './ServiceModal';
 import ButonMenu from '../../../screen/ButonMenu';
 
-const DetailModal = ({order, modeHistory, setModalDetail}) => {
+const DetailModal = ({order, setModalDetail}) => {
   const screen = Dimensions.get('window');
   const {state, utilDispatch} = useContext(StoreContext);
   const {util, auth} = state;
@@ -46,21 +49,11 @@ const DetailModal = ({order, modeHistory, setModalDetail}) => {
 
   const [qualifyClient, setQualifyClient] = useState(false);
   const [modalEdit, setModalEdit] = useState(false);
-  const [serviceFilter, setServiceFilter] = useState([]);
   const [menuIndex, setMenuIndex] = useState(0);
+  const [itemService, setItemService] = useState(null);
+  const changeStatus = (item) => {
+    let onService = services;
 
-  const onRut = async () => {
-    let resulTime = utilities.counting(filterOrder.date);
-
-    if (resulTime.remainHours > 1) {
-      Alert.alert('Ups', 'Lo siento aun falta mas de una hora para esta orden');
-    } else {
-      const status = 2;
-      updateStatus(status, filterOrder, utilDispatch);
-    }
-  };
-
-  const changeStatus = (status) => {
     if (filterOrder.status === 1) {
       Alert.alert(
         'Hola',
@@ -68,8 +61,24 @@ const DetailModal = ({order, modeHistory, setModalDetail}) => {
         [
           {
             text: 'Si',
-            onPress: () => {
-              onRut(status);
+            onPress: async () => {
+              let resulTime = utilities.counting(filterOrder.date);
+              console.log('time order expert', resulTime);
+              if (resulTime.remainHours > 1) {
+                Alert.alert(
+                  'Ups',
+                  'Lo siento aun falta mas de una hora para esta orden',
+                );
+              } else {
+                let currentOrder = filterOrder;
+                let indexService = filterOrder.services.findIndex(
+                  (s) => s.id === item.id,
+                );
+                currentOrder.services[indexService].status = 2;
+
+                await updateOrder(currentOrder, utilDispatch);
+                //validateStatusGlobal(2);
+              }
             },
           },
           {
@@ -89,8 +98,13 @@ const DetailModal = ({order, modeHistory, setModalDetail}) => {
         [
           {
             text: 'Si',
-            onPress: () => {
-              updateStatus(status, filterOrder, utilDispatch);
+            onPress: async () => {
+              for (let i = 0; i < services.length; i++) {
+                onService[i].status = 3;
+              }
+              console.log('onService last exit ==> ', onService);
+              await updateOrder(onService, filterOrder, utilDispatch);
+              validateStatusGlobal(status);
             },
           },
           {
@@ -110,8 +124,13 @@ const DetailModal = ({order, modeHistory, setModalDetail}) => {
         [
           {
             text: 'Si',
-            onPress: () => {
-              addServiceClient(status);
+            onPress: async () => {
+              for (let i = 0; i < services.length; i++) {
+                onService[i].status = 4;
+              }
+              console.log('onService last exit ==> ', onService);
+              await updateOrder(onService, filterOrder, utilDispatch);
+              validateStatusGlobal(status);
             },
           },
           {
@@ -131,8 +150,13 @@ const DetailModal = ({order, modeHistory, setModalDetail}) => {
         [
           {
             text: 'Si',
-            onPress: () => {
-              updateStatus(status, filterOrder, utilDispatch);
+            onPress: async () => {
+              for (let i = 0; i < services.length; i++) {
+                onService[i].status = 5;
+              }
+              console.log('onService last exit ==> ', onService);
+              await updateOrder(onService, filterOrder, utilDispatch);
+              validateStatusGlobal(status);
             },
           },
           {
@@ -145,27 +169,29 @@ const DetailModal = ({order, modeHistory, setModalDetail}) => {
       );
     }
   };
-  const addServiceClient = async (status) => {
-    await updateStatus(status, filterOrder, utilDispatch);
-  };
+
   const close = () => {
     setModalEdit(false);
     setModalDetail(false);
   };
-
-  useEffect(() => {
-    setServiceFilter(filterOrder.services.filter((s) => s.uid === user.uid));
-  }, [filterOrder.services, user.uid]);
-
-  console.log(
-    'service filter =>',
-    filterOrder.services.filter((s) => s.uid === user.uid),
-  );
+  const activeModalEdit = (item) => {
+    setItemService(item);
+    setModalEdit(true);
+  };
+  if (!filterOrder) {
+    return <Loading type={'expert'} loading={loading} />;
+  }
+  const validateStatusGlobal = async (status) => {
+    for (let i = 0; i < filterOrder.services.length; i++) {
+      console.log('son iguales ==> i', filterOrder.services[i]);
+      if (filterOrder.services[i] === 2) {
+        console.log('update order');
+      }
+    }
+  };
 
   return (
     <>
-      <Loading type={'expert'} loading={loading} />
-
       <View style={styles.container}>
         <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
 
@@ -708,58 +734,61 @@ const DetailModal = ({order, modeHistory, setModalDetail}) => {
               })}
           </View>
         </ScrollView>
-        {filterOrder.status === 1 && (
-          <TouchableOpacity
-            onPress={() => changeStatus(2)}
-            style={[styles.btnContainer]}>
-            <Text
-              style={[
-                Fonts.style.bold(Colors.light, Fonts.size.medium),
-                {alignSelf: 'center'},
-              ]}>
-              Colocarme en ruta
-            </Text>
-          </TouchableOpacity>
-        )}
-        {filterOrder.status === 2 && (
-          <TouchableOpacity
-            onPress={() => changeStatus(3)}
-            style={[styles.btnContainer]}>
-            <Text
-              style={[
-                Fonts.style.bold(Colors.light, Fonts.size.medium),
-                {alignSelf: 'center'},
-              ]}>
-              Colocarme en servicio
-            </Text>
-          </TouchableOpacity>
-        )}
-        {filterOrder.status === 3 && (
-          <TouchableOpacity
-            onPress={() => changeStatus(4)}
-            style={[styles.btnContainer]}>
-            <Text
-              style={[
-                Fonts.style.bold(Colors.light, Fonts.size.medium),
-                {alignSelf: 'center'},
-              ]}>
-              Finalizando servicio
-            </Text>
-          </TouchableOpacity>
-        )}
-        {filterOrder.status >= 4 && filterOrder.qualtificationClient === '' && (
-          <TouchableOpacity
-            onPress={() => setQualifyClient(true)}
-            style={[styles.btnContainer]}>
-            <Text
-              style={[
-                Fonts.style.bold(Colors.light, Fonts.size.medium),
-                {alignSelf: 'center'},
-              ]}>
-              Calificar cliente
-            </Text>
-          </TouchableOpacity>
-        )}
+
+        {services &&
+          services.length > 0 &&
+          services.map((item, index) => {
+            return (
+              <Fragment key={item.id}>
+                {menuIndex === index && (
+                  <>
+                    <TouchableOpacity
+                      onPress={() => changeStatus(item)}
+                      style={[styles.btnContainer]}>
+                      <Text
+                        style={[
+                          Fonts.style.bold(Colors.light, Fonts.size.medium),
+                          {alignSelf: 'center'},
+                        ]}>
+                        {loading ? (
+                          <ActivityIndicator color={Colors.light} />
+                        ) : (
+                          <>
+                            {item.status === 1 && 'Colocarme en ruta'}
+                            {item.status === 2 && 'Colocarme en servicio'}
+                            {item.status === 3 && 'Finalizando servicio'}
+                            {item.status === 4 && 'Calificar cliente'}
+                          </>
+                        )}
+                      </Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                      onPress={() => activeModalEdit(item)}
+                      style={{
+                        width: Metrics.screenWidth * 0.5,
+                        marginVertical: 10,
+                        alignSelf: 'center',
+                        borderRadius: Metrics.borderRadius,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}>
+                      <Text
+                        style={Fonts.style.regular(
+                          Colors.dark,
+                          Fonts.size.medium,
+                          'center',
+                          1,
+                        )}>
+                        Editar servicio
+                      </Text>
+                    </TouchableOpacity>
+                    <View style={{height: Metrics.addFooter + 10}} />
+                  </>
+                )}
+              </Fragment>
+            );
+          })}
       </View>
 
       <ModalApp setOpen={setQualifyClient} open={qualifyClient}>
@@ -772,7 +801,11 @@ const DetailModal = ({order, modeHistory, setModalDetail}) => {
         />
       </ModalApp>
       <ModalApp setOpen={setModalEdit} open={modalEdit}>
-        <ServiceModal close={close} order={filterOrder} />
+        <ServiceModal
+          close={close}
+          order={filterOrder}
+          itemService={itemService}
+        />
       </ModalApp>
     </>
   );
@@ -805,30 +838,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 20,
   },
-  btnEdit: {
-    zIndex: 10,
-    backgroundColor: Colors.light,
-    height: 50,
-    width: 50,
-    borderRadius: 25,
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 4.65,
 
-    elevation: 8,
-  },
-  contEdit: {
-    alignSelf: 'flex-end',
-    right: 20,
-    position: 'absolute',
-    top: -30,
-  },
   contAddons: {
     flexDirection: 'row',
   },

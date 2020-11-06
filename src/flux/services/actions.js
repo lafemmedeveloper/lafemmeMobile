@@ -36,7 +36,7 @@ export const getService = async (servicesType, dispatch) => {
     const services = await firestore()
       .collection('services')
       .where('isEnabled', '==', true)
-      .where('slug', '==', servicesType.join())
+      .where('slug', '==', servicesType)
       .get();
     const data = services.docs.map((doc) => {
       const item = doc.data();
@@ -46,7 +46,6 @@ export const getService = async (servicesType, dispatch) => {
       };
     });
 
-    console.log('response data service ==>', data);
     dispatch({type: GET_SERVICE, payload: data});
   } catch (error) {
     console.log('error get service=>', error);
