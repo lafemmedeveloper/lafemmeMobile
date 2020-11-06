@@ -5,18 +5,17 @@ import Utilities from '../../../../utilities';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import TitleValue from '../../../../components/TitleValue';
 
-const HandleAddOns = (props) => {
-  const {
-    addOnsFilter,
-    user,
-    countItems,
-    selectAddons,
-    countableAddOrRemove,
-    guestList,
-    addonsGuest,
-    addonsList,
-    selectAddonGuest,
-  } = props;
+const HandleAddOns = ({
+  addOnsFilter,
+  user,
+  countItems,
+  selectAddons,
+  countableAddOrRemove,
+  guestList,
+  addonsGuest,
+  addonsList,
+  selectAddonGuest,
+}) => {
   return (
     <>
       {addOnsFilter && addOnsFilter.length > 0 && (
@@ -257,7 +256,7 @@ const HandleAddOns = (props) => {
                         {addonsGuest &&
                         addonsGuest.length > 0 &&
                         addonsGuest.findIndex(
-                          (i) => i.addonId === data.id && i.guestId === 'yo',
+                          (i) => i.id === data.id && i.guestId === 'yo',
                         ) !== -1 ? (
                           <Icon
                             name="toggle-on"
@@ -292,7 +291,7 @@ const HandleAddOns = (props) => {
                         {addonsGuest &&
                         addonsGuest.length > 0 &&
                         addonsGuest.findIndex(
-                          (i) => i.addonId === data.id && i.guestId === 'yo',
+                          (i) => i.id === data.id && i.guestId === 'yo',
                         ) !== -1 ? (
                           <Text
                             style={Fonts.style.regular(
@@ -336,8 +335,7 @@ const HandleAddOns = (props) => {
                           {addonsGuest &&
                           addonsGuest.length > 0 &&
                           addonsGuest.findIndex(
-                            (i) =>
-                              i.addonId === data.id && i.guestId === item.id,
+                            (i) => i.id === data.id && i.guestId === item.id,
                           ) !== -1 ? (
                             <Icon
                               name="toggle-on"
@@ -373,8 +371,7 @@ const HandleAddOns = (props) => {
                           {addonsGuest &&
                           addonsGuest.length > 0 &&
                           addonsGuest.findIndex(
-                            (i) =>
-                              i.addonId === data.id && i.guestId === item.id,
+                            (i) => i.id === data.id && i.guestId === item.id,
                           ) !== -1 ? (
                             <Text
                               style={Fonts.style.regular(

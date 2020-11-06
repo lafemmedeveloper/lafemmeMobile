@@ -10,7 +10,7 @@ const DetailProduct = (props) => {
   const {route, navigation} = props;
   const {goBack} = navigation;
   const {params} = route;
-  const {product} = params;
+  const {product, currentService} = params;
   const {order} = product;
 
   return (
@@ -39,7 +39,7 @@ const DetailProduct = (props) => {
         </TouchableOpacity>
       </View>
       <View style={styles.container}>
-        <Cart product={product} order={order} />
+        <Cart product={product} order={order} currentService={currentService} />
       </View>
     </>
   );

@@ -22,7 +22,7 @@ import HandleAddOns from './HandleAddOns';
 import HandleResume from './HandleResume';
 import {updateClient, updateOrder} from '../../../flux/services/actions';
 
-const Cart = (props) => {
+const Cart = ({product, order, currentService}) => {
   const navigation = useNavigation();
 
   const initial_state = {
@@ -31,29 +31,36 @@ const Cart = (props) => {
     email: '',
     phone: '',
   };
+
   const {state, serviceDispatch} = useContext(StoreContext);
   const {util} = state;
   const {expertOpenOrders} = util;
 
-  const {product, order} = props;
   const orderSnap = expertOpenOrders.filter((o) => o.id === order.id)[0];
   const {services} = orderSnap;
+
+  const indexService = services.findIndex((s) => s.id === currentService.id);
+
   const {addOns} = product;
   const addonsEnable = addOns.filter((a) => a.isEnabled === true);
 
   const [guestModal, setGuestModal] = useState(false);
   const [formGuest, setFormGuest] = useState(initial_state);
   const [guestList, setGuestList] = useState(
-    orderSnap.services[0].clients.filter((c) => c.id !== 'yo'),
+    orderSnap.services[indexService].clients.filter((c) => c.id !== 'yo'),
   );
-  const [addonsGuest, setAddonsGuest] = useState(services[0].addons);
+  const [addonsGuest, setAddonsGuest] = useState(services[indexService].addons);
   const [addOnsFilter] = useState(addonsEnable);
 
-  const [addonsList, setAddonsList] = useState(services[0].addOnsCount);
-  const [addonsListCount, setAddonsListCount] = useState(services[0].addons);
+  const [addonsList, setAddonsList] = useState(
+    services[indexService].addOnsCount.concat(services[indexService].addons),
+  );
+  const [addonsListCount, setAddonsListCount] = useState(
+    services[indexService].addons,
+  );
 
   const [showModalService, setShowModalService] = useState(false);
-
+  console.log('last addons ==>', addonsList);
   const addGuest = async () => {
     const guestUser = Object.assign(formGuest, {id: Utilities.create_UUID()});
 
@@ -171,19 +178,16 @@ const Cart = (props) => {
     }
 
     if (index !== -1) {
-      let addonsGuest = _.filter(
-        addonsGuest,
-        ({addonId}) => addonId !== item.id,
-      );
+      let addonsGuest = _.filter(addonsGuest, ({id}) => id !== item.id);
 
       setAddonsList(addonsGuest);
 
       data = [...addonsList.slice(0, index), ...addonsList.slice(index + 1)];
-      setAddonsGuest([]);
+      //setAddonsGuest([]);
     } else {
       data = addonsList && addonsList ? [...addonsList, itemData] : [itemData];
-      setAddonsList(data);
     }
+    setAddonsList(data);
   };
 
   const countableAddOrRemove = (add, indexItem) => {
@@ -207,7 +211,7 @@ const Cart = (props) => {
 
   const selectAddonGuest = (addonSelected, guest) => {
     let item = {
-      addonId: addonSelected.id,
+      id: addonSelected.id,
       addOnPrice: addonSelected.price,
       guestId: guest.id,
       addonName: addonSelected.name,
@@ -218,7 +222,7 @@ const Cart = (props) => {
 
     const indexAddonId = addonsGuest
       ? addonsGuest.findIndex(
-          (i) => i.addonId === addonSelected.id && i.guestId === guest.id,
+          (i) => i.id === addonSelected.id && i.guestId === guest.id,
         )
       : -1;
 

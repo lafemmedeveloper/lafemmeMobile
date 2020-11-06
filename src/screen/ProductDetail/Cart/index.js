@@ -125,19 +125,15 @@ const Cart = (props) => {
     }
 
     if (index !== -1) {
-      let addonsGuest = _.filter(
-        addonsGuest,
-        ({addonId}) => addonId !== item.id,
-      );
+      let addonsGuest = _.filter(addonsGuest, ({id}) => id !== item.id);
 
       setAddonsList(addonsGuest);
 
       data = [...addonsList.slice(0, index), ...addonsList.slice(index + 1)];
-      setAddonsGuest([]);
     } else {
       data = addonsList && addonsList ? [...addonsList, itemData] : [itemData];
-      setAddonsList(data);
     }
+    setAddonsList(data);
   };
 
   const countableAddOrRemove = (add, indexItem) => {
@@ -161,18 +157,19 @@ const Cart = (props) => {
 
   const selectAddonGuest = (addonSelected, guest) => {
     let item = {
-      addonId: addonSelected.id,
+      id: addonSelected.id,
       addOnPrice: addonSelected.price,
       guestId: guest.id,
       addonName: addonSelected.name,
       addonsDuration: addonSelected.duration,
+      count: 0,
     };
 
     let data = addonsGuest ? addonsGuest : [];
 
     const indexAddonId = addonsGuest
       ? addonsGuest.findIndex(
-          (i) => i.addonId === addonSelected.id && i.guestId === guest.id,
+          (i) => i.id === addonSelected.id && i.guestId === guest.id,
         )
       : -1;
 

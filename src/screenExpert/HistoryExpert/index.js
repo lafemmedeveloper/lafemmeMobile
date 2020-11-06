@@ -20,11 +20,12 @@ const HistoryExpert = () => {
 
   const [menuIndex, setMenuIndex] = useState(0);
   const [detailOrder, setDetailOrder] = useState(null);
+  const [modalDetail, setModalDetail] = useState(false);
 
   const activeDetailModal = (order) => {
     setDetailOrder(order);
+    setModalDetail(true);
   };
-
   useEffect(() => {
     isMountedRef.current = true;
 
@@ -136,6 +137,9 @@ const HistoryExpert = () => {
           </>
         </ScrollView>
       </View>
+      <ModalApp open={modalDetail} setOpen={setModalDetail}>
+        <DetailModal order={detailOrder} setModalDetail={setModalDetail} />
+      </ModalApp>
     </>
   );
 };

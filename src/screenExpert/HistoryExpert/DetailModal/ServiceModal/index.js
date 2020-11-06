@@ -33,7 +33,10 @@ const ServiceModal = ({order, close, itemService}) => {
 
   const activeDetailModal = (product) => {
     close();
-    navigation.navigate('DetailProduct', {product});
+    navigation.navigate('DetailProduct', {
+      product,
+      currentService: itemService,
+    });
   };
 
   useEffect(() => {

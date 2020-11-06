@@ -39,9 +39,9 @@ const DetailModal = ({order, setModalDetail}) => {
 
   const mapStyle = require('../../../config/mapStyle.json');
 
-  const filterOrder = ordersAll.filter((o) => o.id === order.id)[0];
-
-  const {client, cartId, address} = filterOrder;
+  const filterOrder = ordersAll.filter((o) => o.id === order.id)[0]
+    ? ordersAll.filter((o) => o.id === order.id)[0]
+    : null;
 
   const services = filterOrder.services.filter((s) => s.uid === user.uid);
 
@@ -219,7 +219,7 @@ const DetailModal = ({order, setModalDetail}) => {
               Fonts.size.small,
               'center',
             )}>
-            {cartId}
+            {filterOrder && filterOrder.cartId}
           </Text>
         </Text>
         <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
@@ -293,7 +293,9 @@ const DetailModal = ({order, setModalDetail}) => {
                 Cliente
               </Text>
               <Text style={[Fonts.style.bold(Colors.dark, Fonts.size.medium)]}>
-                {`${client.firstName} ${client.lastName}`}
+                {filterOrder &&
+                  filterOrder.client &&
+                  `${filterOrder.client.firstName} ${filterOrder.client.lastName}`}
               </Text>
             </View>
             <View
@@ -307,7 +309,7 @@ const DetailModal = ({order, setModalDetail}) => {
                 Teléfono
               </Text>
               <Text style={[Fonts.style.bold(Colors.dark, Fonts.size.medium)]}>
-                {client.phone}
+                {filterOrder.client && filterOrder.client.phone}
               </Text>
             </View>
             <View
@@ -322,7 +324,7 @@ const DetailModal = ({order, setModalDetail}) => {
               </Text>
               <Text
                 style={[Fonts.style.regular(Colors.dark, Fonts.size.medium)]}>
-                {address.name}
+                {filterOrder && filterOrder.address && filterOrder.address.name}
               </Text>
             </View>
             <View
@@ -341,7 +343,7 @@ const DetailModal = ({order, setModalDetail}) => {
                 style={[
                   Fonts.style.regular(Colors.dark, Fonts.size.medium, 'left'),
                 ]}>
-                {address.notesAddress}
+                {filterOrder && filterOrder.address.notesAddress}
               </Text>
             </View>
 
