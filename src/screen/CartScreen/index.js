@@ -34,22 +34,26 @@ import ModalCuopon from './ModalCuopon';
 import utilities from '../../utilities';
 import {useKeyboard} from '../../hooks/useKeyboard';
 
-const CartScreen = (props) => {
-  const {setModalCart, setModalAddress} = props;
+const CartScreen = ({setModalCart, setModalAddress}) => {
   const {state, serviceDispatch, authDispatch, utilDispatch} = useContext(
     StoreContext,
   );
-  const {auth} = state;
+  const {auth, util} = state;
   const {user} = auth;
+  const {config} = util;
+
+  console.log('config ==>', config.timeBetweenServices);
+
   const [notes, setNotes] = useState('');
   const [modalNote, setModalNote] = useState(false);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [modalCoupon, setModalCoupon] = useState(false);
+
   const [keyboardHeight] = useKeyboard();
 
   useEffect(() => {
     getServices(serviceDispatch);
-  }, [serviceDispatch]);
+  }, [serviceDispatch, user.cart.services]);
 
   const updateNotes = async (notes) => {
     Keyboard.dismiss();
@@ -62,7 +66,6 @@ const CartScreen = (props) => {
   };
 
   const sendOrder = async (data) => {
-    console.log('send order ==>', data);
     await activeMessage(data.id, authDispatch);
     await sendOrderService(data, user, utilDispatch);
     await updateProfile(
@@ -108,7 +111,10 @@ const CartScreen = (props) => {
         hoursServices = [
           ...hoursServices,
           moment(user.cart.date, 'YYYY-MM-DD HH:mm')
-            .add(user.cart.services[i - 1].duration, 'minutes')
+            .add(
+              user.cart.services[i].duration + config.timeBetweenServices,
+              'minutes',
+            )
             .format('YYYY-MM-DD HH:mm'),
         ];
       }
@@ -189,6 +195,29 @@ const CartScreen = (props) => {
     }
   };
 
+  const up = async (index) => {
+    const newOrder = move(user.cart?.services, index, -1);
+    if (newOrder) {
+      await updateProfile({services: [newOrder]}, 'cart', authDispatch);
+    }
+  };
+
+  const down = async (index) => {
+    const newOrder = move(user.cart?.services, index, 1);
+    if (newOrder) {
+      await updateProfile({services: [newOrder]}, 'cart', authDispatch);
+    }
+  };
+
+  const move = (array, index, delta) => {
+    let newIndex = index + delta;
+    if (newIndex < 0 || newIndex === array.length) {
+      return;
+    }
+    let indexes = [index, newIndex].sort((a, b) => a - b);
+    return array.splice(indexes[0], 2, array[indexes[1]], array[indexes[0]]);
+  };
+
   const totalService =
     user.cart?.services.length > 0 ? _.sumBy(user.cart.services, 'total') : 0;
   return (
@@ -222,7 +251,7 @@ const CartScreen = (props) => {
         {user &&
           user.cart &&
           user.cart.services &&
-          user.cart.services.map((item, index) => {
+          user.cart?.services.map((item, index) => {
             return (
               <CardItemCart
                 key={index}
@@ -230,6 +259,9 @@ const CartScreen = (props) => {
                 showExperts={false}
                 data={item}
                 removeItem={removeItem}
+                index={index}
+                down={down}
+                up={up}
               />
             );
           })}

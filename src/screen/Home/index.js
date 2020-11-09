@@ -16,7 +16,7 @@ import CartScreen from '../CartScreen';
 import Address from '../Address';
 import AddAddress from '../AddAddress';
 import Header from '../../components/Header';
-import {getOrders, getDeviceInfo} from '../../flux/util/actions';
+import {getOrders, getDeviceInfo, getConfig} from '../../flux/util/actions';
 import Loading from '../../components/Loading';
 import auth from '@react-native-firebase/auth';
 import ExpandOrderData from '../ExpandOrderData';
@@ -55,21 +55,22 @@ const Home = () => {
   const [modalAddAddress, setModalAddAddress] = useState(false);
 
   useEffect(() => {
+    isMountedRef.current = true;
     activeFunctionsFlux();
     return () => {
       return () => (isMountedRef.current = false);
     };
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const activeFunctionsFlux = async () => {
-    isMountedRef.current = true;
     setLoading(true, authDispatch);
     getDeviceInfo(utilDispatch);
     await getServices(serviceDispatch);
     await activeMessage('client', authDispatch);
+    await getConfig(utilDispatch);
     getOrders(utilDispatch);
+
     setLoading(false, authDispatch);
   };
 

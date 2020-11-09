@@ -1,4 +1,4 @@
-import React, {Fragment, useState, useContext} from 'react';
+import React, {Fragment, useState, useContext, useEffect} from 'react';
 import {
   Text,
   StyleSheet,
@@ -21,7 +21,8 @@ import {
 } from '../../../themes';
 import utilities from '../../../utilities';
 import {
-  updateOrder, // updateStatus
+  updateOrder,
+  updateStatusDb, // updateStatus
 } from '../../../flux/util/actions';
 import Loading from '../../../components/Loading';
 import {StoreContext} from '../../../flux';
@@ -43,7 +44,10 @@ const DetailModal = ({order, setModalDetail}) => {
     ? ordersAll.filter((o) => o.id === order.id)[0]
     : null;
 
-  const services = filterOrder.services.filter((s) => s.uid === user.uid);
+  const services =
+    filterOrder.services.filter((s) => s.uid === user.uid).length > 0
+      ? filterOrder.services.filter((s) => s.uid === user.uid)
+      : [];
 
   const ASPECT_RATIO = screen.width * 0.8 - 500 / screen.height;
 
@@ -52,9 +56,7 @@ const DetailModal = ({order, setModalDetail}) => {
   const [menuIndex, setMenuIndex] = useState(0);
   const [itemService, setItemService] = useState(null);
   const changeStatus = (item) => {
-    let onService = services;
-
-    if (filterOrder.status === 1) {
+    if (item.status === 1) {
       Alert.alert(
         'Hola',
         'Estas seguro(a) que quieres cambiar de estado.',
@@ -75,9 +77,8 @@ const DetailModal = ({order, setModalDetail}) => {
                   (s) => s.id === item.id,
                 );
                 currentOrder.services[indexService].status = 2;
-
-                await updateOrder(currentOrder, utilDispatch);
-                //validateStatusGlobal(2);
+                await updateOrder(filterOrder, utilDispatch);
+                validateStatusGlobal(2);
               }
             },
           },
@@ -89,9 +90,7 @@ const DetailModal = ({order, setModalDetail}) => {
         ],
         {cancelable: true},
       );
-    } else if (filterOrder.status === 2) {
-      const status = 3;
-
+    } else if (item.status === 2) {
       Alert.alert(
         'Hola',
         'Estas seguro(a) que quieres cambiar de estado.',
@@ -99,11 +98,16 @@ const DetailModal = ({order, setModalDetail}) => {
           {
             text: 'Si',
             onPress: async () => {
-              for (let i = 0; i < services.length; i++) {
-                onService[i].status = 3;
-              }
-              console.log('onService last exit ==> ', onService);
-              await updateOrder(onService, filterOrder, utilDispatch);
+              const status = 3;
+
+              let currentOrder = filterOrder;
+              let indexService = filterOrder.services.findIndex(
+                (s) => s.id === item.id,
+              );
+              currentOrder.services[indexService].status = 3;
+              console.log('currente order ', filterOrder);
+
+              await updateOrder(filterOrder, utilDispatch);
               validateStatusGlobal(status);
             },
           },
@@ -115,7 +119,7 @@ const DetailModal = ({order, setModalDetail}) => {
         ],
         {cancelable: true},
       );
-    } else if (filterOrder.status === 3) {
+    } else if (item.status === 3) {
       const status = 4;
 
       Alert.alert(
@@ -125,12 +129,14 @@ const DetailModal = ({order, setModalDetail}) => {
           {
             text: 'Si',
             onPress: async () => {
-              for (let i = 0; i < services.length; i++) {
-                onService[i].status = 4;
-              }
-              console.log('onService last exit ==> ', onService);
-              await updateOrder(onService, filterOrder, utilDispatch);
-              validateStatusGlobal(status);
+              let currentOrder = filterOrder;
+              let indexService = filterOrder.services.findIndex(
+                (s) => s.id === item.id,
+              );
+              currentOrder.services[indexService].status = 4;
+
+              await updateOrder(filterOrder, utilDispatch);
+              return validateStatusGlobal(status);
             },
           },
           {
@@ -141,7 +147,7 @@ const DetailModal = ({order, setModalDetail}) => {
         ],
         {cancelable: true},
       );
-    } else if (filterOrder.status === 4) {
+    } else if (item.status === 4) {
       const status = 5;
 
       Alert.alert(
@@ -151,12 +157,13 @@ const DetailModal = ({order, setModalDetail}) => {
           {
             text: 'Si',
             onPress: async () => {
-              for (let i = 0; i < services.length; i++) {
-                onService[i].status = 5;
-              }
-              console.log('onService last exit ==> ', onService);
-              await updateOrder(onService, filterOrder, utilDispatch);
-              validateStatusGlobal(status);
+              let currentOrder = filterOrder;
+              let indexService = filterOrder.services.findIndex(
+                (s) => s.id === item.id,
+              );
+              currentOrder.services[indexService].status = 5;
+              await updateOrder(filterOrder, utilDispatch);
+              return validateStatusGlobal(status);
             },
           },
           {
@@ -182,11 +189,24 @@ const DetailModal = ({order, setModalDetail}) => {
     return <Loading type={'expert'} loading={loading} />;
   }
   const validateStatusGlobal = async (status) => {
+    console.log('active global status');
+    let updateOrder = false;
+
     for (let i = 0; i < filterOrder.services.length; i++) {
-      console.log('son iguales ==> i', filterOrder.services[i]);
-      if (filterOrder.services[i] === 2) {
-        console.log('update order');
+      console.log('services all', filterOrder.services[i]);
+
+      if (filterOrder.services[i].status < 4) {
+        console.log('son menor a 4 ');
+        updateOrder = false;
+      } else if (filterOrder.services[i].status >= 4) {
+        updateOrder = true;
+        console.log('son mayor o igual a 4 ');
       }
+    }
+
+    console.log('updateOrder ==>', updateOrder);
+    if (updateOrder) {
+      await updateStatusDb(filterOrder, status, utilDispatch);
     }
   };
 

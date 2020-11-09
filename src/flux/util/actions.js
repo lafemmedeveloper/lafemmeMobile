@@ -8,6 +8,7 @@ import {
   GET_EXPERT_ACTIVE_ORDERS,
   GET_EXPERT_OPEN_ORDERS,
   GET_NAME_SERVICE,
+  GET_CONFIG,
 } from './types';
 
 import firestore from '@react-native-firebase/firestore';
@@ -373,9 +374,6 @@ export const valdiateCouponDb = async (coupon, dispatch) => {
 
     let cuoponRes = data.filter((c) => c.existence > 0);
     let dataRes = cuoponRes.length > 0 ? cuoponRes[0] : null;
-    console.log('dataRes ==>', dataRes);
-    console.log('cuoponRes ==>', cuoponRes);
-    console.log('coupons ==>', data);
 
     return dataRes;
   } catch (error) {
@@ -471,5 +469,29 @@ export const updateOrder = async (order, dispatch) => {
   } catch (error) {
     setLoading(false, dispatch);
     console.log('error updateOrder==>', error);
+  }
+};
+export const updateStatusDb = async (order, status, dispatch) => {
+  try {
+    setLoading(true, dispatch);
+    const ref = firestore().collection('orders').doc(order.id);
+
+    await ref.set({status}, {merge: true});
+    setLoading(false, dispatch);
+  } catch (error) {
+    console.log('error ==>', error);
+    setLoading(false, dispatch);
+  }
+};
+export const getConfig = async (dispatch) => {
+  try {
+    setLoading(true, dispatch);
+    const ref = await firestore().collection('config').doc('globals').get();
+    setLoading(false, dispatch);
+    console.log('ref.data() ==>', ref.data());
+    dispatch({type: GET_CONFIG, payload: ref.data()});
+  } catch (error) {
+    console.log('error ==>', error);
+    setLoading(false, dispatch);
   }
 };

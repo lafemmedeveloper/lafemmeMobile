@@ -5,12 +5,36 @@ import {Fonts, Colors, ApplicationStyles, Metrics} from '../../themes';
 import {minToHours} from '../../helpers/MomentHelper';
 import moment from 'moment';
 
-export default ({isCart, data, dateOrder, showExperts, removeItem}) => {
+export default ({
+  isCart,
+  data,
+  dateOrder,
+  showExperts,
+  removeItem,
+  index,
+  down,
+  up,
+}) => {
   const {name, duration, clients, id} = data;
-
   return (
     <>
       <View style={[styles.container, ApplicationStyles.shadowsClient]}>
+        <View style={styles.contBtns}>
+          <TouchableOpacity onPress={() => up(index)}>
+            <Icon
+              name="caret-up"
+              size={25}
+              color={Colors.client.primaryColor}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => down(index)}>
+            <Icon
+              name="caret-down"
+              size={25}
+              color={Colors.client.primaryColor}
+            />
+          </TouchableOpacity>
+        </View>
         <View style={styles.productContainer}>
           <Text
             style={Fonts.style.bold(Colors.dark, Fonts.size.medium, 'left')}>
@@ -125,5 +149,9 @@ const styles = StyleSheet.create({
     height: 40,
     borderColor: 'transparent',
     borderWidth: 1,
+  },
+  contBtns: {
+    justifyContent: 'space-between',
+    marginHorizontal: 10,
   },
 });
