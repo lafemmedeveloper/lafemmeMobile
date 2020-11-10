@@ -8,7 +8,6 @@ import {
   getExpertOpenOrders,
   getDeviceInfo,
   getExpertActiveOrders,
-  getExpertHistoryOrders,
   activeNameSlug,
 } from '../../flux/util/actions';
 

@@ -21,7 +21,9 @@ import utilities from '../../../../utilities';
 import _ from 'lodash';
 import {useNavigation} from '@react-navigation/native';
 
-const ServiceModal = ({order, close, itemService}) => {
+const ServiceModal = (props) => {
+  const {order, close, itemService} = props;
+
   const isMountedRef = useRef(null);
   const navigation = useNavigation();
 
@@ -103,7 +105,7 @@ const ServiceModal = ({order, close, itemService}) => {
                     activeDetailModal({
                       ...product,
                       addOns: result,
-                      slug: order.servicesType,
+                      slug: itemService.servicesType,
                       order,
                     });
                   }}>

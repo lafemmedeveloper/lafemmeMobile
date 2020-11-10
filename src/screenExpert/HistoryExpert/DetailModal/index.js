@@ -1,4 +1,4 @@
-import React, {Fragment, useState, useContext, useEffect} from 'react';
+import React, {Fragment, useState, useContext} from 'react';
 import {
   Text,
   StyleSheet,
@@ -690,7 +690,9 @@ const DetailModal = ({order, setModalDetail}) => {
                           </Text>
                         </View>
 
-                        {filterOrder && filterOrder.coupon && (
+                        {filterOrder.coupon.type.includes(
+                          item.servicesType,
+                        ) && (
                           <View
                             style={{
                               flexDirection: 'row',
@@ -736,7 +738,8 @@ const DetailModal = ({order, setModalDetail}) => {
                             style={[
                               Fonts.style.bold(Colors.dark, Fonts.size.medium),
                             ]}>
-                            {filterOrder.coupon
+                            {filterOrder.coupon &&
+                            filterOrder.coupon.type.includes(item.servicesType)
                               ? filterOrder.coupon.typeCoupon !== 'money'
                                 ? utilities.formatCOP(
                                     (filterOrder.coupon.percentage / 100) *

@@ -1,4 +1,4 @@
-import React, {useEffect, useContext, useRef, Fragment, useState} from 'react';
+import React, {useEffect, useContext, useRef, Fragment} from 'react';
 import {
   View,
   Image,
@@ -6,7 +6,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   Alert,
-  ActivityIndicator,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {formatDate} from '../../helpers/MomentHelper';
@@ -25,8 +24,6 @@ export default ({order, dispatch, user}) => {
   const {utilDispatch} = useContext(StoreContext);
   const isMountedRef = useRef(null);
 
-  const [loading, setLoading] = useState(false);
-
   const assingService = async (item) => {
     try {
       if (!user.activity.includes(item.servicesType)) {
@@ -38,17 +35,13 @@ export default ({order, dispatch, user}) => {
             .join(' ')}`,
         );
       }
-      setLoading(true);
       let orderServices = order;
       const indexService = order.services.findIndex((i) => i.id === item.id);
       orderServices.services[indexService].uid = user.uid;
       orderServices.services[indexService].status = 1;
       await assingExpertService(orderServices, user, dispatch);
       await assignExpert(user, order, dispatch);
-      setLoading(false);
     } catch (error) {
-      setLoading(false);
-
       console.log('errorassing expert ==>', error);
     }
   };
@@ -244,11 +237,7 @@ export default ({order, dispatch, user}) => {
                             ),
                             {paddingHorizontal: 10},
                           ]}>
-                          {loading ? (
-                            <ActivityIndicator color={Colors.light} />
-                          ) : (
-                            ' Tomar Servicio'
-                          )}
+                          Tomar Servicio
                         </Text>
                       </TouchableOpacity>
                     ) : (

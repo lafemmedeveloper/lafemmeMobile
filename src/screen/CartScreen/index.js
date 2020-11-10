@@ -23,11 +23,7 @@ import {formatDate} from '../../helpers/MomentHelper';
 import _ from 'lodash';
 import ModalApp from '../../components/ModalApp';
 import AppConfig from '../../config/AppConfig';
-import {
-  getCoverage,
-  addCoupon,
-  sendOrderService,
-} from '../../flux/util/actions';
+import {getCoverage, sendOrderService} from '../../flux/util/actions';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import Loading from '../../components/Loading';
 import ModalCuopon from './ModalCuopon';
@@ -95,6 +91,8 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
     user.cart.address && user.cart.date && user.cart.services.length > 0;
 
   const activeSendOrder = () => {
+    // let services = user.cart.services;
+
     let servicesType = [];
     for (let i = 0; i < user.cart.services.length; i++) {
       if (servicesType.indexOf(user.cart.services[i].servicesType) === -1) {
@@ -119,6 +117,21 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
         ];
       }
     }
+    //    if (user.cart.coupon) {
+    //     for (let index = 0; index < services.length; index++) {
+    //     if (user.cart.coupon.type.includes(services[index].servicesType)) {
+    //     services[index].totalServices = user.cart.coupon
+    //     ? user.cart.coupon.typeCoupon !== 'money'
+    //     ? utilities.formatCOP(
+    //       (user.cart.coupon.percentage / 100) *
+    //       services[index].totalServices -
+    //     services[index].totalServices,
+    //)
+    //: services[index].totalServices - user.cart.coupon.money
+    // : services[index].totalServices;
+    //  }
+    // }
+    //}
 
     if (isCompleted) {
       console.log('isCompleted');
@@ -157,28 +170,19 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
   };
 
   const removeItem = async (id) => {
-    if (!user.cart.coupon) {
-      const filterService = user.cart.services.filter((s) => s.id !== id);
-      const emptyCart = {
-        ...user.cart,
-        services: [],
-      };
-      if (filterService !== 0) {
-        await updateProfile(emptyCart, 'cart', authDispatch);
-      }
+    console.log('no ahi cupon ');
+    const filterService = user.cart.services.filter((s) => s.id !== id);
+
+    console.log('delete services =>', filterService);
+
+    if (user.coupon || user.cart.services.length === 1) {
+      await updateProfile(
+        {coupon: null, services: filterService},
+        'cart',
+        authDispatch,
+      );
     } else {
-      //desactive coupon
-      const math = user.cart.coupon.existence;
-      await addCoupon(user.cart.coupon.id, math, utilDispatch);
-      const filterService = user.cart.services.filter((s) => s.id !== id);
-      const emptyCart = {
-        ...user.cart,
-        services: [],
-        coupon: null,
-      };
-      if (filterService !== 0) {
-        await updateProfile(emptyCart, 'cart', authDispatch);
-      }
+      await updateProfile({services: filterService}, 'cart', authDispatch);
     }
   };
 
@@ -488,7 +492,28 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
               onPress={() =>
                 !user?.cart.coupon
                   ? activeCuopon()
-                  : Alert.alert('Ups', 'Solo se permite un cupón por servicio')
+                  : Alert.alert(
+                      'Alerta',
+                      'Realmente desea eliminar este cupon de tu orden',
+                      [
+                        {
+                          text: 'Eliminar',
+                          onPress: async () => {
+                            await updateProfile(
+                              {...user.cart, coupon: null},
+                              'cart',
+                              authDispatch,
+                            );
+                          },
+                        },
+                        {
+                          text: 'Cancelar',
+                          onPress: () => console.log('Cancel Pressed'),
+                          style: 'cancel',
+                        },
+                      ],
+                      {cancelable: true},
+                    )
               }>
               <FieldCartConfig
                 key={'cuopons'}
@@ -596,11 +621,7 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
       <ModalApp open={modalCoupon} setOpen={setModalCoupon}>
         <ModalCuopon
           total={_.sumBy(user.cart.services, 'total')}
-          type={
-            user.cart.services.length > 0
-              ? user.cart.services[0].servicesType
-              : []
-          }
+          type={user.cart.services.length > 0 ? user.cart.services : []}
           close={setModalCoupon}
         />
       </ModalApp>

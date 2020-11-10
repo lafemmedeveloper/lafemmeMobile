@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {
   Text,
   StyleSheet,
@@ -7,6 +7,7 @@ import {
   StatusBar,
   Alert,
   TouchableOpacity,
+  ScrollView,
 } from 'react-native';
 import StepIndicator from 'react-native-step-indicator';
 import moment from 'moment';
@@ -26,38 +27,16 @@ import {
   updateProfile,
   validateReferrals,
 } from '../../flux/auth/actions';
+import ButonMenu from '../ButonMenu';
+import utilities from '../../utilities';
+import {customStyles} from './CustomStyles';
 
-const customStyles = {
-  stepIndicatorSize: 30,
-  currentStepIndicatorSize: 30,
-  separatorStrokeWidth: 2,
-  currentStepStrokeWidth: 3,
-  stepStrokeCurrentColor: Colors.expert.primaryColor,
-  stepStrokeWidth: 2,
-  stepStrokeFinishedColor: Colors.expert.secondaryColor,
-  stepStrokeUnFinishedColor: '#aaaaaa',
-  separatorFinishedColor: Colors.expert.secondaryColor,
-  separatorUnFinishedColor: '#aaaaaa',
-  stepIndicatorFinishedColor: Colors.expert.primaryColor,
-  stepIndicatorUnFinishedColor: '#ffffff',
-  stepIndicatorCurrentColor: '#ffffff',
-  stepIndicatorLabelFontSize: 16,
-  currentStepIndicatorLabelFontSize: 16,
-  stepIndicatorLabelCurrentColor: Colors.expert.primaryColor,
-  stepIndicatorLabelFinishedColor: '#ffffff',
-  stepIndicatorLabelUnFinishedColor: '#aaaaaa',
-  labelColor: '#999999',
-  labelSize: 15,
-  labelAlign: 'flex-start',
-  currentStepLabelColor: Colors.expert.primaryColor,
-};
-const OrderDetail = (props) => {
+const OrderDetail = ({route, navigation}) => {
   /* config map */
   const screen = Dimensions.get('window');
   const ASPECT_RATIO = screen.width * 0.8 - 500 / screen.height;
   const mapStyle = require('../../config/mapStyle.json');
 
-  const {route, navigation} = props;
   const {params} = route;
 
   const {state, utilDispatch, authDispatch} = useContext(StoreContext);
@@ -67,8 +46,8 @@ const OrderDetail = (props) => {
   const {ordersAll} = util;
   const [orderUser, setOrderUser] = useState(null);
   const [modalQual, setModalQual] = useState(false);
-
   const [coordinate, setCoordinate] = useState(null);
+  const [menuIndex, setMenuIndex] = useState(0);
 
   const {goBack} = navigation;
 
@@ -114,14 +93,12 @@ const OrderDetail = (props) => {
 
     await updateStatus(5, orderUser, utilDispatch);
   };
+
   return (
     <>
-      {util.Loading && <Loading type="client" />}
+      <Loading type="client" />
 
-      <StatusBar
-        backgroundColor={Colors.expert.primaryColor}
-        barStyle={'light-content'}
-      />
+      <StatusBar backgroundColor={Colors.light} barStyle={'dark-content'} />
       <View style={styles.container}>
         {orderUser ? (
           <>
@@ -174,19 +151,28 @@ const OrderDetail = (props) => {
                       latitudeDelta: 0.00002,
                       longitudeDelta: 0.0002 * ASPECT_RATIO,
                     }}>
-                    {orderUser.experts && orderUser.experts.coordinates && (
-                      <Marker.Animated
-                        coordinate={{
-                          latitude: orderUser.experts.coordinates.latitude,
-                          longitude: orderUser.experts.coordinates.longitude,
-                        }}>
-                        <Icon
-                          name={'map-marker-alt'}
-                          size={30}
-                          color={Colors.expert.primaryColor}
-                        />
-                      </Marker.Animated>
-                    )}
+                    {orderUser.experts &&
+                      orderUser.experts.length > 0 &&
+                      orderUser.experts.map((expert) => {
+                        const {coordinates} = expert;
+                        return (
+                          <Fragment key={expert.uid}>
+                            {coordinates && (
+                              <Marker.Animated
+                                coordinate={{
+                                  latitude: coordinates.latitude,
+                                  longitude: coordinates.longitude,
+                                }}>
+                                <Icon
+                                  name={'map-marker-alt'}
+                                  size={30}
+                                  color={Colors.expert.primaryColor}
+                                />
+                              </Marker.Animated>
+                            )}
+                          </Fragment>
+                        );
+                      })}
                     <Marker.Animated
                       coordinate={{
                         latitude: orderUser.address.coordinates.latitude,
@@ -201,6 +187,7 @@ const OrderDetail = (props) => {
                   </MapView>
                 </>
               )}
+
               <View
                 style={{
                   height: 40 + Metrics.addHeader,
@@ -225,7 +212,21 @@ const OrderDetail = (props) => {
               </View>
             </View>
 
-            <ExpertCall expert={orderUser.experts} />
+            {orderUser &&
+              orderUser.services &&
+              orderUser.services.length > 0 &&
+              orderUser.services.map((service, index) => {
+                return (
+                  <Fragment key={service.id}>
+                    {menuIndex === index && (
+                      <ExpertCall
+                        experts={orderUser.experts}
+                        uid={service.uid}
+                      />
+                    )}
+                  </Fragment>
+                );
+              })}
             <View>
               <View
                 style={{
@@ -265,39 +266,148 @@ const OrderDetail = (props) => {
                   />{' '}
                   {orderUser.address.name}
                 </Text>
-                <Text
-                  style={Fonts.style.regular(
-                    Colors.dark,
-                    Fonts.size.medium,
-                    'left',
-                  )}>
-                  <Icon
-                    name={'calendar'}
-                    size={12}
-                    color={Colors.expert.primaryColor}
-                  />{' '}
-                  {orderUser.date}
-                </Text>
+                {orderUser &&
+                  orderUser.hoursServices.length > 0 &&
+                  orderUser.hoursServices.map((hour, index) => {
+                    return (
+                      <Fragment key={index}>
+                        {menuIndex === index && (
+                          <Text
+                            style={Fonts.style.regular(
+                              Colors.dark,
+                              Fonts.size.medium,
+                              'left',
+                            )}>
+                            <Icon
+                              name={'calendar'}
+                              size={12}
+                              color={Colors.expert.primaryColor}
+                            />{' '}
+                            {hour}
+                          </Text>
+                        )}
+                      </Fragment>
+                    );
+                  })}
+                {orderUser &&
+                  orderUser.services &&
+                  orderUser.services.length > 0 &&
+                  orderUser.services.map((service, index) => {
+                    return (
+                      <Fragment key={index}>
+                        {menuIndex === index && (
+                          <>
+                            <Text
+                              style={Fonts.style.regular(
+                                Colors.dark,
+                                Fonts.size.medium,
+                                'left',
+                              )}>
+                              <Icon
+                                name={'clock'}
+                                size={12}
+                                color={Colors.expert.primaryColor}
+                              />{' '}
+                              {service.duration} mins
+                            </Text>
+                            {orderUser.coupon.type.includes(
+                              service.servicesType,
+                            ) && (
+                              <>
+                                <Text
+                                  style={Fonts.style.regular(
+                                    'red',
+                                    Fonts.size.medium,
+                                    'left',
+                                  )}>
+                                  <Icon name={'tag'} size={12} color={'red'} />{' '}
+                                  -{' '}
+                                  {orderUser.coupon?.typeCoupon === 'percentage'
+                                    ? `${orderUser.coupon?.percentage}%`
+                                    : utilities.formatCOP(
+                                        orderUser.coupon?.money,
+                                      )}
+                                </Text>
+                              </>
+                            )}
+                            <Text
+                              style={Fonts.style.regular(
+                                Colors.dark,
+                                Fonts.size.medium,
+                                'left',
+                              )}>
+                              <Icon
+                                name={'coins'}
+                                size={12}
+                                color={Colors.expert.primaryColor}
+                              />{' '}
+                              {utilities.formatCOP(service.total)}
+                            </Text>
+                          </>
+                        )}
+                      </Fragment>
+                    );
+                  })}
               </View>
-
+              {orderUser.services && orderUser.services.length > 1 && (
+                <>
+                  <ScrollView
+                    horizontal
+                    style={{
+                      marginBottom: 10,
+                      marginHorizontal: 10,
+                      paddingVertical: 10,
+                    }}>
+                    {orderUser.services.map((item, index) => {
+                      return (
+                        <Fragment key={item.id}>
+                          {menuIndex === index ? (
+                            <ButonMenu
+                              item={item}
+                              index={index}
+                              menuIndex={menuIndex}
+                              theme={true}
+                              setMenuIndex={setMenuIndex}
+                            />
+                          ) : (
+                            <ButonMenu
+                              item={item}
+                              index={index}
+                              menuIndex={menuIndex}
+                              theme={false}
+                              setMenuIndex={setMenuIndex}
+                            />
+                          )}
+                        </Fragment>
+                      );
+                    })}
+                  </ScrollView>
+                </>
+              )}
               <View style={styles.cont}>
-                {orderUser.status < 6 && (
-                  <View style={styles.step}>
-                    <StepIndicator
-                      customStyles={customStyles}
-                      currentPosition={orderUser.status}
-                      direction={'vertical'}
-                      stepCount={5}
-                      labels={[
-                        'Buscando Experto',
-                        'Preparando Orden',
-                        'En ruta',
-                        'En Servicio',
-                        'Completado',
-                      ]}
-                    />
-                  </View>
-                )}
+                {orderUser.services &&
+                  orderUser.services.length > 0 &&
+                  orderUser.services.map((service, index) => {
+                    return (
+                      menuIndex === index && (
+                        <View style={styles.step}>
+                          <StepIndicator
+                            customStyles={customStyles}
+                            currentPosition={service.status}
+                            direction={'vertical'}
+                            stepCount={5}
+                            labels={[
+                              'Buscando Experto',
+                              'Preparando Orden',
+                              'En ruta',
+                              'En Servicio',
+                              'Completado',
+                            ]}
+                          />
+                        </View>
+                      )
+                    );
+                  })}
               </View>
             </View>
             <ModalApp setOpen={setModalQual} open={modalQual}>
@@ -407,40 +517,12 @@ const styles = StyleSheet.create({
     marginLeft: 20,
   },
 
-  containerPosition: {
-    marginVertical: 20,
-    width: '100%',
-    justifyContent: 'center',
-    flex: 1,
-  },
   mapView: {
-    height: Metrics.screenHeight / 4,
+    height: Metrics.screenHeight / 6,
     width: '100%',
     zIndex: 1,
   },
-  back: {
-    backgroundColor: Colors.light,
-    height: 50,
-    width: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 25,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 6,
-    },
-    shadowOpacity: 0.39,
-    shadowRadius: 8.3,
 
-    elevation: 13,
-  },
-  contBack: {
-    position: 'absolute',
-    zIndex: 2,
-    marginLeft: 10,
-    marginTop: 10,
-  },
   containerBack: {
     marginLeft: 20,
     backgroundColor: 'white',
@@ -455,7 +537,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: '100%',
     zIndex: 2,
-    bottom: 20,
+    bottom: 10,
     right: 20,
     alignItems: 'flex-end',
   },
