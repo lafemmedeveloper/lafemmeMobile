@@ -11,12 +11,14 @@ import {
   GET_COORDINATE,
   GET_EXPERT_ORDER_HISTORY,
   GET_NAME_SERVICE,
+  GET_CONFIG,
 } from './types';
 import _ from 'lodash';
 
 export const INITIAL_STATE_UTIL = {
   loading: false,
   error: false,
+  config: null,
   gallery: [],
   coverageZones: [],
   orders: [],
@@ -89,12 +91,20 @@ const getExpertActiveOrders = (state, action) => {
   };
 };
 const getExpertOpenOrders = (state, action) => {
-  let expertOpenOrders = _.orderBy(action.payload, 'date', 'des');
+  let expertOpenOrders = _.orderBy(action.payload, 'date', 'des')
+    .filter((o) => o.status >= 1)
+    .filter((o) => o.status < 5);
+
+  let expertHistoryOrders = _.orderBy(action.payload, 'date', 'des').filter(
+    (o) => o.status >= 5,
+  );
 
   return {
     ...state,
     expertOpenOrders,
     nextOrder: expertOpenOrders.length > 0 ? [expertOpenOrders[0]] : [],
+    expertHistoryOrders,
+    ordersAll: action.payload,
   };
 };
 const getCoordinate = (state, action) => {
@@ -115,6 +125,12 @@ const getNameService = (state, action) => {
     activity: action.payload,
   };
 };
+const getConfig = (state, action) => {
+  return {
+    ...state,
+    config: action.payload,
+  };
+};
 
 export default createReducer(INITIAL_STATE_UTIL, {
   [LOADING]: setLoading,
@@ -128,4 +144,5 @@ export default createReducer(INITIAL_STATE_UTIL, {
   [GET_COORDINATE]: getCoordinate,
   [GET_EXPERT_ORDER_HISTORY]: getOrderHistory,
   [GET_NAME_SERVICE]: getNameService,
+  [GET_CONFIG]: getConfig,
 });

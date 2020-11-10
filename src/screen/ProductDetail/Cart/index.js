@@ -6,7 +6,6 @@ import {
   ScrollView,
   TouchableOpacity,
   Keyboard,
-  Alert,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {Metrics, Colors, Fonts, ApplicationStyles} from '../../../themes';
@@ -57,6 +56,9 @@ const Cart = (props) => {
   const [addonsListCount, setAddonsListCount] = useState([]);
   const [experts, setExperts] = useState(modelExpert);
   const [showModalService, setShowModalService] = useState(false);
+  console.log('addonsGuest, =>', addonsGuest);
+  console.log('addonsList, =>', addonsList);
+  console.log('guestList, =>', guestList);
 
   const addGuest = async () => {
     const guestUser = Object.assign(formGuest, {id: Utilities.create_UUID()});
@@ -102,6 +104,7 @@ const Cart = (props) => {
   };
 
   const selectAddons = (item) => {
+    console.log('hello active');
     let data = addonsList;
     const index = addonsList
       ? addonsList.findIndex((i) => i.id === item.id)
@@ -123,22 +126,31 @@ const Cart = (props) => {
         addonsDuration: item.duration,
         ...item,
       };
+      if (addonsGuest.length === 0) {
+        setAddonsGuest([
+          ...addonsGuest,
+          {
+            addOnPrice: item.price,
+            addonName: item.name,
+            addonsDuration: item.duration,
+            count: 0,
+            guestId: 'yo',
+            id: item.id,
+          },
+        ]);
+      }
     }
 
     if (index !== -1) {
-      let addonsGuest = _.filter(
-        addonsGuest,
-        ({addonId}) => addonId !== item.id,
-      );
+      let addonsGuest = _.filter(addonsGuest, ({id}) => id !== item.id);
 
       setAddonsList(addonsGuest);
 
       data = [...addonsList.slice(0, index), ...addonsList.slice(index + 1)];
-      setAddonsGuest([]);
     } else {
       data = addonsList && addonsList ? [...addonsList, itemData] : [itemData];
-      setAddonsList(data);
     }
+    setAddonsList(data);
   };
 
   const countableAddOrRemove = (add, indexItem) => {
@@ -161,19 +173,23 @@ const Cart = (props) => {
   };
 
   const selectAddonGuest = (addonSelected, guest) => {
+    console.log('active select guest');
+    console.log('guest ==>', guest);
+
     let item = {
-      addonId: addonSelected.id,
+      id: addonSelected.id,
       addOnPrice: addonSelected.price,
       guestId: guest.id,
       addonName: addonSelected.name,
       addonsDuration: addonSelected.duration,
+      count: 0,
     };
 
     let data = addonsGuest ? addonsGuest : [];
 
     const indexAddonId = addonsGuest
       ? addonsGuest.findIndex(
-          (i) => i.addonId === addonSelected.id && i.guestId === guest.id,
+          (i) => i.id === addonSelected.id && i.guestId === guest.id,
         )
       : -1;
 
@@ -220,15 +236,6 @@ const Cart = (props) => {
     1;
 
   const addOnsFilter = addOns.filter((a) => a.isEnabled === true);
-
-  const addCart = () => {
-    const cart = user.cart.services.length;
-    if (cart < 1) {
-      setShowModalService(true);
-    } else {
-      Alert.alert('Lo siento', 'Solo puedes agregar un servicio por orden');
-    }
-  };
 
   return (
     <View
@@ -468,7 +475,7 @@ const Cart = (props) => {
         </View>
         {/*show from  user.cart.services.length */}
         <TouchableOpacity
-          onPress={() => addCart()}
+          onPress={() => setShowModalService(true)}
           style={[
             {
               flex: 1,

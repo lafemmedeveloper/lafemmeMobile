@@ -30,6 +30,8 @@ const ModalCuopon = ({total, type, close}) => {
   const {user} = auth;
   const [keyboardHeight] = useKeyboard();
 
+  let services = type;
+
   const valdiateCoupon = async () => {
     Keyboard.dismiss();
     if (coupon === '') {
@@ -53,7 +55,7 @@ const ModalCuopon = ({total, type, close}) => {
       }
 
       if (currentDate > experedCuopon) {
-        //validate date
+        //  validate date
         return Alert.alert('Ups', 'Lo siento, tu cupón ya expiro');
       }
 
@@ -67,17 +69,17 @@ const ModalCuopon = ({total, type, close}) => {
           )}`,
         );
       }
-      if (!response.type.includes(type)) {
-        //Validate service
-        return Alert.alert(
-          'Ups',
-          `Lo siento tu cupón no es valido para el servicio de  ${utilities.capitalize(
-            type.split('-').join(' '),
-          )}`,
-        );
+
+      for (let index = 0; index < services.length; index++) {
+        if (!response.type.includes(services[index].servicesType)) {
+          Alert.alert(
+            'Hey',
+            'Este cupón no es valido para todos tus servicios',
+          );
+        }
       }
 
-      //Active coupon
+      //Active coupon|
       await updateProfile(
         {...user.cart, coupon: response},
         'cart',
@@ -85,6 +87,7 @@ const ModalCuopon = ({total, type, close}) => {
       );
       const math = response.existence - 1;
       await addCoupon(response.id, math, utilDispatch);
+
       Alert.alert(
         'Excelente',
         'Tu cupón fue agregado con éxito, veras reflejado el descuento en el en el total de tu carrito ',

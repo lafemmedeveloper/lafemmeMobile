@@ -8,7 +8,6 @@ import {
   getExpertOpenOrders,
   getDeviceInfo,
   getExpertActiveOrders,
-  getExpertHistoryOrders,
   activeNameSlug,
 } from '../../flux/util/actions';
 
@@ -47,8 +46,8 @@ const HomeExpert = () => {
     if (state.auth.user) {
       currentCoordinate();
       activeMessage('expert', utilDispatch);
-      getExpertActiveOrders(utilDispatch);
-      getExpertHistoryOrders(utilDispatch);
+      getExpertActiveOrders(state.auth.user, utilDispatch);
+      //  getExpertHistoryOrders(state.auth.user, utilDispatch);
       activeNameSlug(state.auth.user.activity, utilDispatch);
       getExpertOpenOrders(state.auth.user.activity, utilDispatch);
     }
@@ -107,7 +106,7 @@ const HomeExpert = () => {
             bounces={true}>
             <Text
               style={[
-                Fonts.style.bold(Colors.dark, Fonts.size.h6, 'left'),
+                Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center'),
                 {marginVertical: 20, marginLeft: 20},
               ]}>
               {`Tienes ${expertActiveOrders.length} ordén disponible`}

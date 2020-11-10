@@ -8,15 +8,15 @@ const ButtonCoordinate = (props) => {
 
   return (
     <TouchableOpacity style={styles.container} onPress={() => activeCoor()}>
-      <Icon name="crosshairs-gps" size={30} color={Colors.dark} />
+      <Icon name="crosshairs-gps" size={20} color={Colors.dark} />
     </TouchableOpacity>
   );
 };
 const styles = StyleSheet.create({
   container: {
     backgroundColor: Colors.light,
-    width: 50,
-    height: 50,
+    width: 35,
+    height: 35,
     justifyContent: 'center',
     alignItems: 'center',
 

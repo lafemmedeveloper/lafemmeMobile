@@ -38,7 +38,7 @@ const FormGuest = (props) => {
           onChangeText={(text) => setForm({...form, lastName: text})}
           secureText={false}
           textContent={'name'}
-          autoCapitalize={'none'}
+          autoCapitalize={'words'}
         />
 
         <MyTextInput
@@ -47,7 +47,7 @@ const FormGuest = (props) => {
           onChangeText={(text) => setForm({...form, email: text})}
           secureText={false}
           textContent={'name'}
-          autoCapitalize={''}
+          autoCapitalize={'words'}
         />
         <MyTextInput
           pHolder={'Teléfono (opcional)'}

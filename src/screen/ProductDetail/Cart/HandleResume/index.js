@@ -19,20 +19,18 @@ import Utilities from '../../../../utilities';
 import _ from 'lodash';
 import {minToHours} from '../../../../helpers/MomentHelper';
 
-const HandleResume = (props) => {
-  const {
-    guestList,
-    countItems,
-    product,
-    addOnPrice,
-    user,
-    timeTotal,
-    addOnCountPrice,
-    addonsGuest,
-    setShowModalService,
-    sendItemCart,
-  } = props;
-
+const HandleResume = ({
+  guestList,
+  countItems,
+  product,
+  addOnPrice,
+  user,
+  timeTotal,
+  addOnCountPrice,
+  addonsGuest,
+  setShowModalService,
+  sendItemCart,
+}) => {
   let gList = [
     {
       email: user.email,
@@ -46,8 +44,11 @@ const HandleResume = (props) => {
 
   let data = {
     name: product.name,
+    img: product.imageUrl.medium,
     servicesType: product.slug,
     clients: gList,
+    status: 0,
+    uid: null,
     id: Utilities.create_UUID(),
     addons: addonsGuest,
     addOnsCount: countItems,

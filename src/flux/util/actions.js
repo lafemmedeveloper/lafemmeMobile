@@ -7,14 +7,15 @@ import {
   DEVICE_INFO,
   GET_EXPERT_ACTIVE_ORDERS,
   GET_EXPERT_OPEN_ORDERS,
-  GET_EXPERT_ORDER_HISTORY,
   GET_NAME_SERVICE,
+  GET_CONFIG,
 } from './types';
 
 import firestore from '@react-native-firebase/firestore';
 import DeviceInfo from 'react-native-device-info';
 import auth from '@react-native-firebase/auth';
 import axios from 'axios';
+import {Alert} from 'react-native';
 
 export const handleError = (dispatch) => {
   dispatch({type: HANDLE_ERROR, payload: true});
@@ -133,14 +134,11 @@ export const getDeviceInfo = (dispatch) => {
   });
 };
 
-export const getExpertActiveOrders = (dispatch) => {
-  const uid = auth().currentUser?.uid;
-
+export const getExpertActiveOrders = (user, dispatch) => {
   let ordersRef = firestore()
     .collection('orders')
-    .where('status', '>=', 1)
-    .where('status', '<', 5);
-  ordersRef.where('experts.uid', '==', uid);
+    .where('expertsUid', 'array-contains', user.uid);
+
   let listOrders = [];
 
   ordersRef.onSnapshot((orders) => {
@@ -151,77 +149,63 @@ export const getExpertActiveOrders = (dispatch) => {
       };
     });
 
-    return dispatch({
+    dispatch({
       type: GET_EXPERT_OPEN_ORDERS,
-      payload: listOrders.filter((o) => o.experts.uid === uid),
+      payload: listOrders,
     });
   });
 };
 
-export const getExpertHistoryOrders = (dispatch) => {
-  const uid = auth().currentUser.uid;
-
-  let ordersRef = firestore().collection('orders').where('status', '>=', 5);
-
-  ordersRef.where('experts.uid', '==', uid);
-
-  let listOrders = [];
-
-  ordersRef.onSnapshot((orders) => {
-    listOrders = orders.docs.map((item) => {
-      return {
-        id: item.id,
-        ...item.data(),
-      };
-    });
-
-    return dispatch({type: GET_EXPERT_ORDER_HISTORY, payload: listOrders});
-  });
-};
 export const getExpertOpenOrders = (activity, dispatch) => {
-  let ordersRef = firestore()
-    .collection('orders')
-    .where('status', '==', 0)
-    .where('servicesType', 'array-contains-any', activity);
-  ordersRef.orderBy('createDate', 'desc');
+  try {
+    let ordersRef = firestore()
+      .collection('orders')
+      .where('status', '==', 0)
+      .where('servicesType', 'array-contains-any', activity);
 
-  let listOrders = [];
+    ordersRef.orderBy('createDate', 'desc');
 
-  ordersRef.onSnapshot((orders) => {
-    listOrders = orders.docs.map((item) => {
-      return {
-        id: item.id,
-        ...item.data(),
-      };
+    let listOrders = [];
+
+    ordersRef.onSnapshot((orders) => {
+      listOrders = orders.docs.map((item) => {
+        return {
+          id: item.id,
+          ...item.data(),
+        };
+      });
+
+      dispatch({type: GET_EXPERT_ACTIVE_ORDERS, payload: listOrders});
     });
-    return dispatch({type: GET_EXPERT_ACTIVE_ORDERS, payload: listOrders});
-  });
+  } catch (error) {
+    console.log('error get open order ==>', error);
+  }
 };
 
 export const assignExpert = async (user, order, dispatch) => {
   const assingExpertUrl =
     'https://us-central1-lafemme-5017a.cloudfunctions.net/assignExpert';
-
-  const updateOrderStatus =
-    'https://us-central1-lafemme-5017a.cloudfunctions.net/updateOrderStatus';
   try {
+    console.warn('active assign');
     setLoading(true, dispatch);
 
     const res = await axios.post(assingExpertUrl, {
       expert: user,
-      idOrder: order.id,
+      idOrder: order,
     });
+    console.log('status ==>', res.status);
+    console.log('ress ==>', res.data.msn);
     if (res.status === 200) {
-      await axios.post(updateOrderStatus, {
-        newOrderStatus: 1,
-        order,
-      });
+      if (!res.data.status) {
+        setLoading(false, dispatch);
+        return Alert.alert('Ups', res.data.msn);
+      }
     }
+
     setLoading(false, dispatch);
   } catch (error) {
     setLoading(false, dispatch);
-
-    console.error('assignExpert ==>', error);
+    return console.error('assignExpert ==>', error);
   }
 };
 export const sendCoordinate = async (data, typeData, dispatch) => {
@@ -354,9 +338,6 @@ export const resetReducer = (dispatch) => {
 };
 
 export const addService = async (uid, calcu, dispatch) => {
-  console.log('calcul number service ==>', calcu);
-  console.log('uid==>', uid);
-
   try {
     setLoading(true, dispatch);
 
@@ -393,9 +374,6 @@ export const valdiateCouponDb = async (coupon, dispatch) => {
 
     let cuoponRes = data.filter((c) => c.existence > 0);
     let dataRes = cuoponRes.length > 0 ? cuoponRes[0] : null;
-    console.log('dataRes ==>', dataRes);
-    console.log('cuoponRes ==>', cuoponRes);
-    console.log('coupons ==>', data);
 
     return dataRes;
   } catch (error) {
@@ -417,6 +395,103 @@ export const addCoupon = async (id, math, dispatch) => {
     setLoading(false, dispatch);
   } catch (error) {
     console.log('error add cuopon ==>', error);
+    setLoading(false, dispatch);
+  }
+};
+
+export const sendOrderService = async (data, user, dispatch) => {
+  try {
+    firestore()
+      .collection('orders')
+      .doc(data.id)
+      .set(data)
+      .then(function () {
+        console.log('order:Created');
+        let servicesPush = [];
+        for (let i = 0; i < data.services.length; i++) {
+          if (servicesPush.indexOf(data.services[i].name) === -1) {
+            if (i === data.services.length - 1) {
+              servicesPush = [
+                ...servicesPush,
+                ` y ${user.cart.services[i].name}`,
+              ];
+            } else {
+              servicesPush = [
+                ...servicesPush,
+                ` ${user.cart.services[i].name}`,
+              ];
+            }
+          }
+        }
+        let notification = {
+          title: 'Nueva orden de servicio La Femme',
+          body: `-Cuándo: ${data.date}.\n-Dónde: ${data.address.locality}-${
+            data.address.neighborhood
+          }.\n-Servicios: ${servicesPush.toString()}.`,
+          content_available: true,
+          priority: 'high',
+        };
+        let dataPush = null;
+        topicPush('expert', notification, dataPush);
+      })
+      .catch(function (error) {
+        console.error('Error saving order : ', error);
+      });
+  } catch (error) {
+    console.log('sendOrder:error', error);
+  }
+};
+
+export const assingExpertService = async (order, expert, dispatch) => {
+  try {
+    setLoading(true, dispatch);
+
+    const ref = firestore().collection('orders').doc(order.id);
+    await ref.set(order, {merge: true});
+    setLoading(false, dispatch);
+  } catch (error) {
+    setLoading(false, dispatch);
+
+    console.lgo('error ==>', error);
+    Alert.alert('Ups', 'ocurrio un error inesperado');
+  }
+};
+
+export const updateOrder = async (order, dispatch) => {
+  try {
+    console.log('updateOrder');
+    setLoading(true, dispatch);
+
+    const ref = firestore().collection('orders').doc(order.id);
+    await ref.set(order, {merge: true});
+
+    setLoading(false, dispatch);
+  } catch (error) {
+    setLoading(false, dispatch);
+    console.log('error updateOrder==>', error);
+  }
+};
+export const updateStatusDb = async (order, status, dispatch) => {
+  try {
+    setLoading(true, dispatch);
+    const ref = firestore().collection('orders').doc(order.id);
+
+    await ref.set({status}, {merge: true});
+    setLoading(false, dispatch);
+  } catch (error) {
+    console.log('error ==>', error);
+    setLoading(false, dispatch);
+  }
+};
+export const getConfig = async (dispatch) => {
+  try {
+    setLoading(true, dispatch);
+    const ref = await firestore().collection('config').doc('globals').get();
+    setLoading(false, dispatch);
+    console.log('ref.data() ==>', ref.data());
+    dispatch({type: GET_CONFIG, payload: ref.data()});
+  } catch (error) {
+    console.log('error ==>', error);
     setLoading(false, dispatch);
   }
 };

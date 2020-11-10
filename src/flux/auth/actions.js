@@ -93,7 +93,7 @@ export const updateProfile = async (data, typeData, dispatch) => {
       // await setUser(currentUser.uid, dispatch);
       setLoading(false, dispatch);
     } catch (error) {
-      console.log('error', error);
+      console.log('error updateProfile', error);
       setLoading(false, dispatch);
     }
   }

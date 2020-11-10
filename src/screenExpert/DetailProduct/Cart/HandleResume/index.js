@@ -20,21 +20,20 @@ import _ from 'lodash';
 import {minToHours} from '../../../../helpers/MomentHelper';
 import utilities from '../../../../utilities';
 
-const HandleResume = (props) => {
-  const {
-    guestList,
-    countItems,
-    product,
-    addOnPrice,
-    user,
-    timeTotal,
-    addOnCountPrice,
-    addonsGuest,
-    setShowModalService,
-    sendItemCart,
-    order,
-  } = props;
-
+const HandleResume = ({
+  guestList,
+  countItems,
+  product,
+  addOnPrice,
+  user,
+  timeTotal,
+  addOnCountPrice,
+  addonsGuest,
+  setShowModalService,
+  sendItemCart,
+  order,
+  currentService,
+}) => {
   let gList = [
     {
       email: user.email,
@@ -50,7 +49,7 @@ const HandleResume = (props) => {
     name: product.name,
     servicesType: product.slug,
     clients: gList,
-    id: Utilities.create_UUID(),
+    id: currentService.id,
     addons: addonsGuest,
     addOnsCount: countItems,
     duration: timeTotal,
@@ -58,10 +57,13 @@ const HandleResume = (props) => {
     totalAddons: addOnPrice + addOnCountPrice,
     total:
       product.price * (guestList.length + 1) + addOnPrice + addOnCountPrice,
+    uid: currentService.uid,
+    status: currentService.status,
   };
 
   const totalService =
     product.price * (guestList.length + 1) + addOnPrice + addOnCountPrice;
+
   return (
     <>
       <KeyboardAvoidingView
@@ -356,7 +358,7 @@ const HandleResume = (props) => {
                 }
               </Text>
             </View>
-            {order && order.coupon && (
+            {order.coupon && order.coupon.type.includes(product.slug) && (
               <View
                 style={{
                   flex: 1,
@@ -371,7 +373,7 @@ const HandleResume = (props) => {
                     'left',
                     1,
                   )}>
-                  Cupón
+                  CUPÓN
                 </Text>
                 <Text
                   style={Fonts.style.regular(
@@ -410,8 +412,8 @@ const HandleResume = (props) => {
                   'left',
                   1,
                 )}>
-                {order.coupon
-                  ? order.typeCoupon !== 'money'
+                {order.coupon && order.coupon.type.includes(product.slug)
+                  ? order.coupon.typeCoupon !== 'money'
                     ? utilities.formatCOP(
                         (order.coupon.percentage / 100) * totalService -
                           totalService,

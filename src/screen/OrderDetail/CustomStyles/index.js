@@ -1,0 +1,26 @@
+import {Colors} from '../../../themes';
+
+export const customStyles = {
+  stepIndicatorSize: 30,
+  currentStepIndicatorSize: 30,
+  separatorStrokeWidth: 2,
+  currentStepStrokeWidth: 3,
+  stepStrokeCurrentColor: Colors.expert.primaryColor,
+  stepStrokeWidth: 2,
+  stepStrokeFinishedColor: Colors.expert.secondaryColor,
+  stepStrokeUnFinishedColor: '#aaaaaa',
+  separatorFinishedColor: Colors.expert.secondaryColor,
+  separatorUnFinishedColor: '#aaaaaa',
+  stepIndicatorFinishedColor: Colors.expert.primaryColor,
+  stepIndicatorUnFinishedColor: '#ffffff',
+  stepIndicatorCurrentColor: '#ffffff',
+  stepIndicatorLabelFontSize: 16,
+  currentStepIndicatorLabelFontSize: 16,
+  stepIndicatorLabelCurrentColor: Colors.expert.primaryColor,
+  stepIndicatorLabelFinishedColor: '#ffffff',
+  stepIndicatorLabelUnFinishedColor: '#aaaaaa',
+  labelColor: '#999999',
+  labelSize: 15,
+  labelAlign: 'flex-start',
+  currentStepLabelColor: Colors.expert.primaryColor,
+};

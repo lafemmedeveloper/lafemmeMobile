@@ -23,6 +23,7 @@ import HandleResume from './HandleResume';
 import {updateClient, updateOrder} from '../../../flux/services/actions';
 
 const Cart = (props) => {
+  const {product, order, currentService} = props;
   const navigation = useNavigation();
 
   const initial_state = {
@@ -31,51 +32,47 @@ const Cart = (props) => {
     email: '',
     phone: '',
   };
+
   const {state, serviceDispatch} = useContext(StoreContext);
   const {util} = state;
   const {expertOpenOrders} = util;
 
-  const {product, order} = props;
   const orderSnap = expertOpenOrders.filter((o) => o.id === order.id)[0];
   const {services} = orderSnap;
+
+  const indexService = services.findIndex((s) => s.id === currentService.id);
+
   const {addOns} = product;
   const addonsEnable = addOns.filter((a) => a.isEnabled === true);
 
   const [guestModal, setGuestModal] = useState(false);
   const [formGuest, setFormGuest] = useState(initial_state);
   const [guestList, setGuestList] = useState(
-    orderSnap.services[0].clients.filter((c) => c.id !== 'yo'),
+    orderSnap.services[indexService].clients.filter((c) => c.id !== 'yo'),
   );
-  const [addonsGuest, setAddonsGuest] = useState(services[0].addons);
+  const [addonsGuest, setAddonsGuest] = useState(services[indexService].addons);
   const [addOnsFilter] = useState(addonsEnable);
 
-  const [addonsList, setAddonsList] = useState(services[0].addOnsCount);
-  const [addonsListCount, setAddonsListCount] = useState(services[0].addons);
+  const [addonsList, setAddonsList] = useState(
+    services[indexService].addOnsCount.concat(services[indexService].addons),
+  );
+  const [addonsListCount, setAddonsListCount] = useState(
+    services[indexService].addons,
+  );
 
   const [showModalService, setShowModalService] = useState(false);
-
   const addGuest = async () => {
-    const guestUser = Object.assign(formGuest, {id: Utilities.create_UUID()});
+    Keyboard.dismiss();
 
-    await updateOrder(
-      [
-        {
-          clients: [...orderSnap.client.guest, guestUser],
-          addons: addonsList,
-          addOnsCount: addonsListCount,
-          id: services[0].id,
-          name: services[0].name,
-          servicesType: services[0].servicesType,
-          total: services[0].total,
-          totalAddons: services[0].totalAddons,
-          totalServices: services[0].totalServices,
-          duration: services[0].duration,
-        },
-      ],
-      'services',
-      orderSnap.id,
-      serviceDispatch,
-    );
+    const guestUser = Object.assign(formGuest, {id: Utilities.create_UUID()});
+    let currentService = orderSnap;
+
+    currentService.services[indexService].clients = [
+      ...orderSnap.services[indexService].clients,
+      guestUser,
+    ];
+    await updateOrder(currentService, 'services', order.id, serviceDispatch);
+
     await updateClient(
       [...orderSnap.client.guest, guestUser],
       'guest',
@@ -83,47 +80,19 @@ const Cart = (props) => {
       serviceDispatch,
     );
 
-    //await updateOrder(order, order.id, serviceDispatch);
-
-    Keyboard.dismiss();
-
     setGuestModal(false);
     setFormGuest(initial_state);
   };
 
   const deleteGuest = async (guestId) => {
-    let data = [];
-    const index = services[0].clients
-      ? services[0].clients.findIndex((i) => i.id === guestId)
-      : -1;
+    let currentService = orderSnap;
 
-    if (index !== -1) {
-      data = [
-        ...services[0].clients.slice(0, index),
-        ...services[0].clients.slice(index + 1),
-      ];
+    let delGuest = orderSnap.services[indexService].clients.filter(
+      (c) => c.id !== guestId,
+    );
+    currentService.services[indexService].clients = delGuest;
 
-      await updateOrder(
-        [
-          {
-            addons: addonsList,
-            addOnsCount: addonsListCount,
-            clients: [data],
-            id: services[0].id,
-            name: services[0].name,
-            servicesType: services[0].servicesType,
-            total: services[0].total,
-            totalAddons: services[0].totalAddons,
-            totalServices: services[0].totalServices,
-            duration: services[0].duration,
-          },
-        ],
-        'services',
-        order.id,
-        serviceDispatch,
-      );
-      await updateClient(data, 'guest', order.client.uid, serviceDispatch);
-    }
+    await updateOrder(delGuest, 'services', order.id, serviceDispatch);
   };
 
   const selectGuest = async (item) => {
@@ -171,19 +140,15 @@ const Cart = (props) => {
     }
 
     if (index !== -1) {
-      let addonsGuest = _.filter(
-        addonsGuest,
-        ({addonId}) => addonId !== item.id,
-      );
+      let addonsGuest = _.filter(addonsGuest, ({id}) => id !== item.id);
 
       setAddonsList(addonsGuest);
 
       data = [...addonsList.slice(0, index), ...addonsList.slice(index + 1)];
-      setAddonsGuest([]);
     } else {
       data = addonsList && addonsList ? [...addonsList, itemData] : [itemData];
-      setAddonsList(data);
     }
+    setAddonsList(data);
   };
 
   const countableAddOrRemove = (add, indexItem) => {
@@ -207,7 +172,7 @@ const Cart = (props) => {
 
   const selectAddonGuest = (addonSelected, guest) => {
     let item = {
-      addonId: addonSelected.id,
+      id: addonSelected.id,
       addOnPrice: addonSelected.price,
       guestId: guest.id,
       addonName: addonSelected.name,
@@ -218,7 +183,7 @@ const Cart = (props) => {
 
     const indexAddonId = addonsGuest
       ? addonsGuest.findIndex(
-          (i) => i.addonId === addonSelected.id && i.guestId === guest.id,
+          (i) => i.id === addonSelected.id && i.guestId === guest.id,
         )
       : -1;
 
@@ -235,19 +200,9 @@ const Cart = (props) => {
   };
 
   const sendItemCart = async (item) => {
-    let old = services ? services : [];
-
-    let services = [...old, item];
-
-    console.log('services', services);
-
-    await updateOrder(
-      services,
-
-      'services',
-      order.id,
-      serviceDispatch,
-    );
+    let currentService = orderSnap;
+    currentService.services[indexService] = item;
+    await updateOrder(services, 'services', order.id, serviceDispatch);
 
     setShowModalService(false);
 
@@ -360,7 +315,9 @@ const Cart = (props) => {
 
             {/* Guest */}
             <HandleGuest
-              guest={orderSnap.services[0].clients.filter((c) => c.id !== 'yo')}
+              guest={orderSnap.services[indexService].clients.filter(
+                (c) => c.id !== 'yo',
+              )}
               guestList={guestList}
               selectGuest={selectGuest}
               deleteGuest={deleteGuest}
@@ -505,8 +462,9 @@ const Cart = (props) => {
           addonsGuest={addonsGuest}
           setShowModalService={setShowModalService}
           sendItemCart={sendItemCart}
-          lastTotal={services[0].total}
+          lastTotal={services[indexService].total}
           order={orderSnap}
+          currentService={currentService}
         />
       </ModalApp>
     </View>

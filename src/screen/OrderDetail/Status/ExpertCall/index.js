@@ -11,7 +11,8 @@ import {
 import {Fonts, Colors, Images} from '../../../../themes';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
-const ExpertCall = ({expert}) => {
+const ExpertCall = ({experts, uid}) => {
+  const expert = experts.filter((e) => e.uid === uid)[0];
   return (
     <>
       <View style={styles.contExpert}>

@@ -1,4 +1,4 @@
-import React, {useEffect, useContext, useState, Fragment} from 'react';
+import React, {useEffect, useContext, useState, Fragment, useRef} from 'react';
 import {View, StyleSheet, Text} from 'react-native';
 import {StoreContext} from '../../flux';
 import {getExpertActiveOrders, getOrders} from '../../flux/util/actions';
@@ -16,25 +16,24 @@ const HistoryExpert = () => {
   const {user} = auth;
   const {expertOpenOrders, expertHistoryOrders} = util;
 
+  const isMountedRef = useRef(null);
+
   const [menuIndex, setMenuIndex] = useState(0);
-  const [modalDetail, setModalDetail] = useState(false);
   const [detailOrder, setDetailOrder] = useState(null);
-  const [modeHistory, setModeHistory] = useState(false);
+  const [modalDetail, setModalDetail] = useState(false);
 
   const activeDetailModal = (order) => {
     setDetailOrder(order);
-
-    if (order.status >= 5) {
-      setModeHistory(true);
-      setModalDetail(true);
-    } else {
-      setModeHistory(false);
-      setModalDetail(true);
-    }
+    setModalDetail(true);
   };
   useEffect(() => {
+    isMountedRef.current = true;
+
     getOrders(utilDispatch);
-    getExpertActiveOrders(utilDispatch);
+    getExpertActiveOrders(state.auth.user, utilDispatch);
+    return () => {
+      return () => (isMountedRef.current = false);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -139,11 +138,7 @@ const HistoryExpert = () => {
         </ScrollView>
       </View>
       <ModalApp open={modalDetail} setOpen={setModalDetail}>
-        <DetailModal
-          order={detailOrder}
-          setModalDetail={setModalDetail}
-          modeHistory={modeHistory}
-        />
+        <DetailModal order={detailOrder} setModalDetail={setModalDetail} />
       </ModalApp>
     </>
   );

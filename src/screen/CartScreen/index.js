@@ -14,7 +14,6 @@ import {
 } from 'react-native';
 import Utilities from '../../utilities';
 import moment from 'moment';
-import firestore from '@react-native-firebase/firestore';
 import {activeMessage, updateProfile} from '../../flux/auth/actions';
 import {getServices} from '../../flux/services/actions';
 import {StoreContext} from '../../flux';
@@ -24,29 +23,33 @@ import {formatDate} from '../../helpers/MomentHelper';
 import _ from 'lodash';
 import ModalApp from '../../components/ModalApp';
 import AppConfig from '../../config/AppConfig';
-import {topicPush, getCoverage, addCoupon} from '../../flux/util/actions';
+import {getCoverage, sendOrderService} from '../../flux/util/actions';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import Loading from '../../components/Loading';
 import ModalCuopon from './ModalCuopon';
 import utilities from '../../utilities';
 import {useKeyboard} from '../../hooks/useKeyboard';
 
-const CartScreen = (props) => {
-  const {setModalCart, setModalAddress} = props;
+const CartScreen = ({setModalCart, setModalAddress}) => {
   const {state, serviceDispatch, authDispatch, utilDispatch} = useContext(
     StoreContext,
   );
-  const {auth} = state;
+  const {auth, util} = state;
   const {user} = auth;
+  const {config} = util;
+
+  console.log('config ==>', config.timeBetweenServices);
+
   const [notes, setNotes] = useState('');
   const [modalNote, setModalNote] = useState(false);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [modalCoupon, setModalCoupon] = useState(false);
+
   const [keyboardHeight] = useKeyboard();
 
   useEffect(() => {
     getServices(serviceDispatch);
-  }, [serviceDispatch]);
+  }, [serviceDispatch, user.cart.services]);
 
   const updateNotes = async (notes) => {
     Keyboard.dismiss();
@@ -60,67 +63,19 @@ const CartScreen = (props) => {
 
   const sendOrder = async (data) => {
     await activeMessage(data.id, authDispatch);
-    try {
-      firestore()
-        .collection('orders')
-        .doc(data.id)
-        .set(data)
-        .then(function () {
-          console.log('order:Created');
-
-          let servicesPush = [];
-          for (let i = 0; i < data.services.length; i++) {
-            if (servicesPush.indexOf(data.services[i].name) === -1) {
-              if (i === data.services.length - 1) {
-                servicesPush = [
-                  ...servicesPush,
-                  ` y ${user.cart.services[i].name}`,
-                ];
-              } else {
-                servicesPush = [
-                  ...servicesPush,
-                  ` ${user.cart.services[i].name}`,
-                ];
-              }
-            }
-          }
-
-          let notification = {
-            title: 'Nueva orden de servicio La Femme',
-            body: `-Cuándo: ${data.date}.\n-Dónde: ${data.address.locality}-${
-              data.address.neighborhood
-            }.\n-Servicios: ${servicesPush.toString()}.`,
-            content_available: true,
-            priority: 'high',
-          };
-
-          let dataPush = null;
-
-          topicPush('expert', notification, dataPush);
-
-          try {
-            updateProfile(
-              {
-                ...user.cart,
-                date: null,
-                address: null,
-                notes: null,
-                services: [],
-                coupon: null,
-              },
-              'cart',
-              authDispatch,
-            );
-          } catch (error) {
-            console.log('error sendOrder =>', error);
-          }
-        })
-        .catch(function (error) {
-          console.error('Error saving order : ', error);
-        });
-    } catch (error) {
-      console.log('sendOrder:error', error);
-    }
+    await sendOrderService(data, user, utilDispatch);
+    await updateProfile(
+      {
+        ...user.cart,
+        date: null,
+        address: null,
+        notes: null,
+        services: [],
+        coupon: null,
+      },
+      'cart',
+      authDispatch,
+    );
     setModalCart(false);
   };
 
@@ -136,6 +91,8 @@ const CartScreen = (props) => {
     user.cart.address && user.cart.date && user.cart.services.length > 0;
 
   const activeSendOrder = () => {
+    // let services = user.cart.services;
+
     let servicesType = [];
     for (let i = 0; i < user.cart.services.length; i++) {
       if (servicesType.indexOf(user.cart.services[i].servicesType) === -1) {
@@ -152,20 +109,38 @@ const CartScreen = (props) => {
         hoursServices = [
           ...hoursServices,
           moment(user.cart.date, 'YYYY-MM-DD HH:mm')
-            .add(user.cart.services[i - 1].duration, 'minutes')
+            .add(
+              user.cart.services[i].duration + config.timeBetweenServices,
+              'minutes',
+            )
             .format('YYYY-MM-DD HH:mm'),
         ];
       }
     }
+    //    if (user.cart.coupon) {
+    //     for (let index = 0; index < services.length; index++) {
+    //     if (user.cart.coupon.type.includes(services[index].servicesType)) {
+    //     services[index].totalServices = user.cart.coupon
+    //     ? user.cart.coupon.typeCoupon !== 'money'
+    //     ? utilities.formatCOP(
+    //       (user.cart.coupon.percentage / 100) *
+    //       services[index].totalServices -
+    //     services[index].totalServices,
+    //)
+    //: services[index].totalServices - user.cart.coupon.money
+    // : services[index].totalServices;
+    //  }
+    // }
+    //}
 
     if (isCompleted) {
       console.log('isCompleted');
       let data = {
         noteQualtification: '',
         fcmClient: user.fcm,
-        fcmExpert: '',
+        fcmExpert: [],
         id: Utilities.create_UUID(),
-        experts: null,
+        experts: [],
         client: {
           uid: user.uid,
           firstName: user.firstName,
@@ -182,6 +157,7 @@ const CartScreen = (props) => {
         hoursServices,
         date: `${user.cart.date}`,
         servicesType,
+        expertsUid: [],
         ...user.cart,
       };
       sendOrder(data);
@@ -194,28 +170,19 @@ const CartScreen = (props) => {
   };
 
   const removeItem = async (id) => {
-    if (!user.cart.coupon) {
-      const filterService = user.cart.services.filter((s) => s.id !== id);
-      const emptyCart = {
-        ...user.cart,
-        services: [],
-      };
-      if (filterService !== 0) {
-        await updateProfile(emptyCart, 'cart', authDispatch);
-      }
+    console.log('no ahi cupon ');
+    const filterService = user.cart.services.filter((s) => s.id !== id);
+
+    console.log('delete services =>', filterService);
+
+    if (user.coupon || user.cart.services.length === 1) {
+      await updateProfile(
+        {coupon: null, services: filterService},
+        'cart',
+        authDispatch,
+      );
     } else {
-      //desactive coupon
-      const math = user.cart.coupon.existence;
-      await addCoupon(user.cart.coupon.id, math, utilDispatch);
-      const filterService = user.cart.services.filter((s) => s.id !== id);
-      const emptyCart = {
-        ...user.cart,
-        services: [],
-        coupon: null,
-      };
-      if (filterService !== 0) {
-        await updateProfile(emptyCart, 'cart', authDispatch);
-      }
+      await updateProfile({services: filterService}, 'cart', authDispatch);
     }
   };
 
@@ -230,6 +197,29 @@ const CartScreen = (props) => {
     } else {
       Alert.alert('Ups', 'Necesitas primero agregar un servicio');
     }
+  };
+
+  const up = async (index) => {
+    const newOrder = move(user.cart?.services, index, -1);
+    if (newOrder) {
+      await updateProfile({services: [newOrder]}, 'cart', authDispatch);
+    }
+  };
+
+  const down = async (index) => {
+    const newOrder = move(user.cart?.services, index, 1);
+    if (newOrder) {
+      await updateProfile({services: [newOrder]}, 'cart', authDispatch);
+    }
+  };
+
+  const move = (array, index, delta) => {
+    let newIndex = index + delta;
+    if (newIndex < 0 || newIndex === array.length) {
+      return;
+    }
+    let indexes = [index, newIndex].sort((a, b) => a - b);
+    return array.splice(indexes[0], 2, array[indexes[1]], array[indexes[0]]);
   };
 
   const totalService =
@@ -265,7 +255,7 @@ const CartScreen = (props) => {
         {user &&
           user.cart &&
           user.cart.services &&
-          user.cart.services.map((item, index) => {
+          user.cart?.services.map((item, index) => {
             return (
               <CardItemCart
                 key={index}
@@ -273,6 +263,9 @@ const CartScreen = (props) => {
                 showExperts={false}
                 data={item}
                 removeItem={removeItem}
+                index={index}
+                down={down}
+                up={up}
               />
             );
           })}
@@ -499,7 +492,28 @@ const CartScreen = (props) => {
               onPress={() =>
                 !user?.cart.coupon
                   ? activeCuopon()
-                  : Alert.alert('Ups', 'Solo se permite un cupón por servicio')
+                  : Alert.alert(
+                      'Alerta',
+                      'Realmente desea eliminar este cupon de tu orden',
+                      [
+                        {
+                          text: 'Eliminar',
+                          onPress: async () => {
+                            await updateProfile(
+                              {...user.cart, coupon: null},
+                              'cart',
+                              authDispatch,
+                            );
+                          },
+                        },
+                        {
+                          text: 'Cancelar',
+                          onPress: () => console.log('Cancel Pressed'),
+                          style: 'cancel',
+                        },
+                      ],
+                      {cancelable: true},
+                    )
               }>
               <FieldCartConfig
                 key={'cuopons'}
@@ -607,11 +621,7 @@ const CartScreen = (props) => {
       <ModalApp open={modalCoupon} setOpen={setModalCoupon}>
         <ModalCuopon
           total={_.sumBy(user.cart.services, 'total')}
-          type={
-            user.cart.services.length > 0
-              ? user.cart.services[0].servicesType
-              : []
-          }
+          type={user.cart.services.length > 0 ? user.cart.services : []}
           close={setModalCoupon}
         />
       </ModalApp>
