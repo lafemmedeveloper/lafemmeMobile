@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Dimensions,
   Image,
+  Alert,
 } from 'react-native';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 import {ApplicationStyles, Colors, Fonts, Images, Metrics} from '../../themes';
@@ -75,6 +76,12 @@ const AddAddress = (props) => {
   };
 
   const saveAddress = async () => {
+    if (notesAddress === '') {
+      return Alert.alert(
+        'Ups',
+        'Lo sentimos la nota de entrega es obligatoria',
+      );
+    }
     let item = {
       type: buildType,
       name,
@@ -200,7 +207,7 @@ const AddAddress = (props) => {
         style={{
           zIndex: 6,
           position: 'absolute',
-          top: Metrics.screenHeight / 2,
+          top: Metrics.screenHeight / 4,
           alignSelf: 'flex-end',
           right: 25,
         }}>
@@ -219,8 +226,7 @@ const AddAddress = (props) => {
         style={{
           position: 'absolute',
           width: Metrics.screenWidth - 40,
-          // bottom: Metrics.screenHeight / 5 - 20,
-          top: Metrics.screenHeight / 2,
+          top: Metrics.screenHeight / 4,
           zIndex: 5,
           justifyContent: 'space-between',
           alignSelf: 'center',
@@ -301,6 +307,7 @@ const AddAddress = (props) => {
           debounce={200} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
         />
       </View>
+
       <View style={{maxHeight: Metrics.screenHeight - 60}}>
         <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
 

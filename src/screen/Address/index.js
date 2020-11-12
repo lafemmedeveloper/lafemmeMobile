@@ -65,7 +65,7 @@ const Address = (props) => {
   const changeScreen = () => {
     closeModal && closeModal(false);
     setModalCart && setModalCart(false);
-    setModalAddAddress && setModalAddAddress(true);
+    return setModalAddAddress(true);
   };
 
   return (

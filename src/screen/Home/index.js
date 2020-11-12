@@ -43,6 +43,7 @@ const Home = () => {
   const {service, util} = state;
   const {user} = state.auth;
   const {services} = service;
+
   const {deviceInfo, orders, nextOrderClient} = util;
 
   const appType = deviceInfo;

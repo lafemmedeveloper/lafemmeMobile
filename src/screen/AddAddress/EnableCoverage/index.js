@@ -21,23 +21,21 @@ import MyTextInput from '../../../components/MyTextInput';
 import Loading from '../../../components/Loading';
 import {useKeyboard} from '../../../hooks/useKeyboard';
 
-const EnableCoverage = (props) => {
-  const {
-    mapStyle,
-    LATITUDE_DELTA,
-    LONGITUDE_DELTA,
-    ASPECT_RATIO,
-    buildType,
-    setAddressDetail,
-    addressDetail,
-    coordinate,
-    setBuildType,
-    saveAddress,
-    googleAddress,
-    notesAddress,
-    setNotesAddress,
-  } = props;
-
+const EnableCoverage = ({
+  mapStyle,
+  LATITUDE_DELTA,
+  LONGITUDE_DELTA,
+  ASPECT_RATIO,
+  buildType,
+  setAddressDetail,
+  addressDetail,
+  coordinate,
+  setBuildType,
+  saveAddress,
+  googleAddress,
+  notesAddress,
+  setNotesAddress,
+}) => {
   const [keyboardHeight] = useKeyboard();
 
   return (

@@ -38,8 +38,6 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
   const {user} = auth;
   const {config} = util;
 
-  console.log('config ==>', config.timeBetweenServices);
-
   const [notes, setNotes] = useState('');
   const [modalNote, setModalNote] = useState(false);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -91,8 +89,6 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
     user.cart.address && user.cart.date && user.cart.services.length > 0;
 
   const activeSendOrder = () => {
-    // let services = user.cart.services;
-
     let servicesType = [];
     for (let i = 0; i < user.cart.services.length; i++) {
       if (servicesType.indexOf(user.cart.services[i].servicesType) === -1) {
@@ -117,21 +113,6 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
         ];
       }
     }
-    //    if (user.cart.coupon) {
-    //     for (let index = 0; index < services.length; index++) {
-    //     if (user.cart.coupon.type.includes(services[index].servicesType)) {
-    //     services[index].totalServices = user.cart.coupon
-    //     ? user.cart.coupon.typeCoupon !== 'money'
-    //     ? utilities.formatCOP(
-    //       (user.cart.coupon.percentage / 100) *
-    //       services[index].totalServices -
-    //     services[index].totalServices,
-    //)
-    //: services[index].totalServices - user.cart.coupon.money
-    // : services[index].totalServices;
-    //  }
-    // }
-    //}
 
     if (isCompleted) {
       console.log('isCompleted');
@@ -200,14 +181,14 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
   };
 
   const up = async (index) => {
-    const newOrder = move(user.cart?.services, index, -1);
+    const newOrder = await move(user.cart?.services, index, -1);
     if (newOrder) {
       await updateProfile({services: [newOrder]}, 'cart', authDispatch);
     }
   };
 
   const down = async (index) => {
-    const newOrder = move(user.cart?.services, index, 1);
+    const newOrder = await move(user.cart?.services, index, 1);
     if (newOrder) {
       await updateProfile({services: [newOrder]}, 'cart', authDispatch);
     }

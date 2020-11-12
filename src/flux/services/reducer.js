@@ -25,7 +25,7 @@ const setError = (state, action) => {
 const getServices = (state, action) => {
   return {
     ...state,
-    services: action.payload,
+    services: action.payload.filter((s) => s.products.length > 0),
   };
 };
 

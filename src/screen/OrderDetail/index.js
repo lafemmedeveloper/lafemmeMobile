@@ -30,6 +30,7 @@ import {
 import ButonMenu from '../ButonMenu';
 import utilities from '../../utilities';
 import {customStyles} from './CustomStyles';
+import Detail from './Detail';
 
 const OrderDetail = ({route, navigation}) => {
   /* config map */
@@ -48,6 +49,7 @@ const OrderDetail = ({route, navigation}) => {
   const [modalQual, setModalQual] = useState(false);
   const [coordinate, setCoordinate] = useState(null);
   const [menuIndex, setMenuIndex] = useState(0);
+  const [detail, setDetail] = useState(false);
 
   const {goBack} = navigation;
 
@@ -211,7 +213,6 @@ const OrderDetail = ({route, navigation}) => {
                 </TouchableOpacity>
               </View>
             </View>
-
             {orderUser &&
               orderUser.services &&
               orderUser.services.length > 0 &&
@@ -222,200 +223,216 @@ const OrderDetail = ({route, navigation}) => {
                       <ExpertCall
                         experts={orderUser.experts}
                         uid={service.uid}
+                        setDetail={setDetail}
+                        detail={detail}
                       />
                     )}
                   </Fragment>
                 );
               })}
-            <View>
-              <View
-                style={{
-                  justifyContent: 'center',
-                  backgroundColor: Colors.light,
-                  marginLeft: 40,
-                  marginVertical: 20,
-                }}>
-                <Text
-                  numberOfLines={1}
-                  style={Fonts.style.regular(
-                    Colors.gray,
-                    Fonts.size.medium,
-                    'left',
-                  )}>
-                  Orden:{' '}
-                  <Text
-                    numberOfLines={1}
-                    style={Fonts.style.bold(
-                      Colors.expert.primaryColor,
-                      Fonts.size.medium,
-                      'center',
-                    )}>
-                    {orderUser.cartId}
-                  </Text>
-                </Text>
-                <Text
-                  style={Fonts.style.regular(
-                    Colors.dark,
-                    Fonts.size.medium,
-                    'left',
-                  )}>
-                  <Icon
-                    name={'map-marker-alt'}
-                    size={12}
-                    color={Colors.expert.primaryColor}
-                  />{' '}
-                  {orderUser.address.name}
-                </Text>
-                {orderUser &&
-                  orderUser.hoursServices.length > 0 &&
-                  orderUser.hoursServices.map((hour, index) => {
-                    return (
-                      <Fragment key={index}>
-                        {menuIndex === index && (
-                          <Text
-                            style={Fonts.style.regular(
-                              Colors.dark,
-                              Fonts.size.medium,
-                              'left',
-                            )}>
-                            <Icon
-                              name={'calendar'}
-                              size={12}
-                              color={Colors.expert.primaryColor}
-                            />{' '}
-                            {hour}
-                          </Text>
-                        )}
-                      </Fragment>
-                    );
-                  })}
-                {orderUser &&
-                  orderUser.services &&
-                  orderUser.services.length > 0 &&
-                  orderUser.services.map((service, index) => {
-                    return (
-                      <Fragment key={index}>
-                        {menuIndex === index && (
-                          <>
-                            <Text
-                              style={Fonts.style.regular(
-                                Colors.dark,
-                                Fonts.size.medium,
-                                'left',
-                              )}>
-                              <Icon
-                                name={'clock'}
-                                size={12}
-                                color={Colors.expert.primaryColor}
-                              />{' '}
-                              {service.duration} mins
-                            </Text>
-                            {orderUser.coupon &&
-                              orderUser.coupon.type.includes(
-                                service.servicesType,
-                              ) && (
-                                <>
-                                  <Text
-                                    style={Fonts.style.regular(
-                                      'red',
-                                      Fonts.size.medium,
-                                      'left',
-                                    )}>
-                                    <Icon
-                                      name={'tag'}
-                                      size={12}
-                                      color={'red'}
-                                    />{' '}
-                                    -{' '}
-                                    {orderUser.coupon?.typeCoupon ===
-                                    'percentage'
-                                      ? `${orderUser.coupon?.percentage}%`
-                                      : utilities.formatCOP(
-                                          orderUser.coupon?.money,
-                                        )}
-                                  </Text>
-                                </>
-                              )}
-                            <Text
-                              style={Fonts.style.regular(
-                                Colors.dark,
-                                Fonts.size.medium,
-                                'left',
-                              )}>
-                              <Icon
-                                name={'coins'}
-                                size={12}
-                                color={Colors.expert.primaryColor}
-                              />{' '}
-                              {utilities.formatCOP(service.total)}
-                            </Text>
-                          </>
-                        )}
-                      </Fragment>
-                    );
-                  })}
-              </View>
-              {orderUser.services && orderUser.services.length > 1 && (
-                <>
-                  <ScrollView
-                    horizontal
+
+            {!detail ? (
+              <>
+                <View>
+                  <View
                     style={{
-                      marginBottom: 10,
-                      marginHorizontal: 10,
-                      paddingVertical: 10,
+                      justifyContent: 'center',
+                      backgroundColor: Colors.light,
+                      marginLeft: 40,
+                      marginVertical: 20,
                     }}>
-                    {orderUser.services.map((item, index) => {
-                      return (
-                        <Fragment key={item.id}>
-                          {menuIndex === index ? (
-                            <ButonMenu
-                              item={item}
-                              index={index}
-                              menuIndex={menuIndex}
-                              theme={true}
-                              setMenuIndex={setMenuIndex}
-                            />
-                          ) : (
-                            <ButonMenu
-                              item={item}
-                              index={index}
-                              menuIndex={menuIndex}
-                              theme={false}
-                              setMenuIndex={setMenuIndex}
-                            />
-                          )}
-                        </Fragment>
-                      );
-                    })}
-                  </ScrollView>
-                </>
-              )}
-              <View style={styles.cont}>
-                {orderUser.services &&
-                  orderUser.services.length > 0 &&
-                  orderUser.services.map((service, index) => {
-                    return (
-                      menuIndex === index && (
-                        <View style={styles.step}>
-                          <StepIndicator
-                            customStyles={customStyles}
-                            currentPosition={service.status}
-                            direction={'vertical'}
-                            stepCount={5}
-                            labels={[
-                              'Buscando Experto',
-                              'Preparando Orden',
-                              'En ruta',
-                              'En Servicio',
-                              'Completado',
-                            ]}
-                          />
-                        </View>
-                      )
-                    );
-                  })}
-              </View>
-            </View>
+                    <Text
+                      numberOfLines={1}
+                      style={Fonts.style.regular(
+                        Colors.gray,
+                        Fonts.size.medium,
+                        'left',
+                      )}>
+                      Orden:{' '}
+                      <Text
+                        numberOfLines={1}
+                        style={Fonts.style.bold(
+                          Colors.expert.primaryColor,
+                          Fonts.size.medium,
+                          'center',
+                        )}>
+                        {orderUser.cartId}
+                      </Text>
+                    </Text>
+                    <Text
+                      style={Fonts.style.regular(
+                        Colors.dark,
+                        Fonts.size.medium,
+                        'left',
+                      )}>
+                      <Icon
+                        name={'map-marker-alt'}
+                        size={12}
+                        color={Colors.expert.primaryColor}
+                      />{' '}
+                      {orderUser.address.name}
+                    </Text>
+                    {orderUser &&
+                      orderUser.hoursServices.length > 0 &&
+                      orderUser.hoursServices.map((hour, index) => {
+                        return (
+                          <Fragment key={index}>
+                            {menuIndex === index && (
+                              <Text
+                                style={Fonts.style.regular(
+                                  Colors.dark,
+                                  Fonts.size.medium,
+                                  'left',
+                                )}>
+                                <Icon
+                                  name={'calendar'}
+                                  size={12}
+                                  color={Colors.expert.primaryColor}
+                                />{' '}
+                                {hour}
+                              </Text>
+                            )}
+                          </Fragment>
+                        );
+                      })}
+                    {orderUser &&
+                      orderUser.services &&
+                      orderUser.services.length > 0 &&
+                      orderUser.services.map((service, index) => {
+                        return (
+                          <Fragment key={index}>
+                            {menuIndex === index && (
+                              <>
+                                <Text
+                                  style={Fonts.style.regular(
+                                    Colors.dark,
+                                    Fonts.size.medium,
+                                    'left',
+                                  )}>
+                                  <Icon
+                                    name={'clock'}
+                                    size={12}
+                                    color={Colors.expert.primaryColor}
+                                  />{' '}
+                                  {service.duration} mins
+                                </Text>
+                                {orderUser.coupon &&
+                                  orderUser.coupon.type.includes(
+                                    service.servicesType,
+                                  ) && (
+                                    <>
+                                      <Text
+                                        style={Fonts.style.regular(
+                                          'red',
+                                          Fonts.size.medium,
+                                          'left',
+                                        )}>
+                                        <Icon
+                                          name={'tag'}
+                                          size={12}
+                                          color={'red'}
+                                        />{' '}
+                                        -{' '}
+                                        {orderUser.coupon?.typeCoupon ===
+                                        'percentage'
+                                          ? `${orderUser.coupon?.percentage}%`
+                                          : utilities.formatCOP(
+                                              orderUser.coupon?.money,
+                                            )}
+                                      </Text>
+                                    </>
+                                  )}
+                                <Text
+                                  style={Fonts.style.regular(
+                                    Colors.dark,
+                                    Fonts.size.medium,
+                                    'left',
+                                  )}>
+                                  <Icon
+                                    name={'coins'}
+                                    size={12}
+                                    color={Colors.expert.primaryColor}
+                                  />{' '}
+                                  {utilities.formatCOP(service.total)}
+                                </Text>
+                              </>
+                            )}
+                          </Fragment>
+                        );
+                      })}
+                  </View>
+                  {orderUser.services && orderUser.services.length > 1 && (
+                    <>
+                      <ScrollView
+                        horizontal
+                        style={{
+                          marginBottom: 10,
+                          marginHorizontal: 10,
+                          paddingVertical: 10,
+                        }}>
+                        {orderUser.services.map((item, index) => {
+                          return (
+                            <Fragment key={item.id}>
+                              {menuIndex === index ? (
+                                <ButonMenu
+                                  item={item}
+                                  index={index}
+                                  menuIndex={menuIndex}
+                                  theme={true}
+                                  setMenuIndex={setMenuIndex}
+                                />
+                              ) : (
+                                <ButonMenu
+                                  item={item}
+                                  index={index}
+                                  menuIndex={menuIndex}
+                                  theme={false}
+                                  setMenuIndex={setMenuIndex}
+                                />
+                              )}
+                            </Fragment>
+                          );
+                        })}
+                      </ScrollView>
+                    </>
+                  )}
+                  <View style={styles.cont}>
+                    {orderUser.services &&
+                      orderUser.services.length > 0 &&
+                      orderUser.services.map((service, index) => {
+                        return (
+                          menuIndex === index && (
+                            <View style={styles.step} key={service.id}>
+                              <StepIndicator
+                                customStyles={customStyles}
+                                currentPosition={service.status}
+                                direction={'vertical'}
+                                stepCount={5}
+                                labels={[
+                                  'Buscando Experto',
+                                  'Preparando Orden',
+                                  'En ruta',
+                                  'En Servicio',
+                                  'Completado',
+                                ]}
+                              />
+                            </View>
+                          )
+                        );
+                      })}
+                  </View>
+                </View>
+              </>
+            ) : (
+              <>
+                <Detail
+                  filterOrder={orderUser}
+                  setMenuIndex={setMenuIndex}
+                  menuIndex={menuIndex}
+                />
+              </>
+            )}
+
             <ModalApp setOpen={setModalQual} open={modalQual}>
               <Qualify
                 type="expert"

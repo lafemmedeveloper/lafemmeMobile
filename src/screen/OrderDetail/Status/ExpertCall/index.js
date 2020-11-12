@@ -11,7 +11,7 @@ import {
 import {Fonts, Colors, Images} from '../../../../themes';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
-const ExpertCall = ({experts, uid}) => {
+const ExpertCall = ({experts, uid, setDetail, detail}) => {
   const expert = experts.filter((e) => e.uid === uid)[0];
   return (
     <>
@@ -82,11 +82,15 @@ const ExpertCall = ({experts, uid}) => {
               color={Colors.expert.primaryColor}
             />
           </TouchableOpacity>
-          {/* <TouchableOpacity
+          <TouchableOpacity
             style={styles.buttonCall}
-            onPress={() => Linking.openURL(`tel:${expert.phone}`)}>
-            <Icon name={'heart'} size={20} color={Colors.expert.primaryColor} />
-          </TouchableOpacity> */}
+            onPress={() => setDetail(!detail)}>
+            <Icon
+              name={!detail ? 'info' : 'route'}
+              size={20}
+              color={Colors.expert.primaryColor}
+            />
+          </TouchableOpacity>
         </View>
       </View>
     </>
