@@ -310,26 +310,32 @@ const OrderDetail = ({route, navigation}) => {
                               />{' '}
                               {service.duration} mins
                             </Text>
-                            {orderUser.coupon.type.includes(
-                              service.servicesType,
-                            ) && (
-                              <>
-                                <Text
-                                  style={Fonts.style.regular(
-                                    'red',
-                                    Fonts.size.medium,
-                                    'left',
-                                  )}>
-                                  <Icon name={'tag'} size={12} color={'red'} />{' '}
-                                  -{' '}
-                                  {orderUser.coupon?.typeCoupon === 'percentage'
-                                    ? `${orderUser.coupon?.percentage}%`
-                                    : utilities.formatCOP(
-                                        orderUser.coupon?.money,
-                                      )}
-                                </Text>
-                              </>
-                            )}
+                            {orderUser.coupon &&
+                              orderUser.coupon.type.includes(
+                                service.servicesType,
+                              ) && (
+                                <>
+                                  <Text
+                                    style={Fonts.style.regular(
+                                      'red',
+                                      Fonts.size.medium,
+                                      'left',
+                                    )}>
+                                    <Icon
+                                      name={'tag'}
+                                      size={12}
+                                      color={'red'}
+                                    />{' '}
+                                    -{' '}
+                                    {orderUser.coupon?.typeCoupon ===
+                                    'percentage'
+                                      ? `${orderUser.coupon?.percentage}%`
+                                      : utilities.formatCOP(
+                                          orderUser.coupon?.money,
+                                        )}
+                                  </Text>
+                                </>
+                              )}
                             <Text
                               style={Fonts.style.regular(
                                 Colors.dark,

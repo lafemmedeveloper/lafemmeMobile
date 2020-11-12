@@ -690,37 +690,38 @@ const DetailModal = ({order, setModalDetail}) => {
                           </Text>
                         </View>
 
-                        {filterOrder.coupon.type.includes(
-                          item.servicesType,
-                        ) && (
-                          <View
-                            style={{
-                              flexDirection: 'row',
-                              justifyContent: 'space-between',
-                              marginHorizontal: 20,
-                            }}>
-                            <Text
-                              style={[
-                                Fonts.style.regular(
-                                  Colors.dark,
-                                  Fonts.size.medium,
-                                ),
-                              ]}>
-                              DESCUENTO POR CUPÓN
-                            </Text>
-                            <Text
-                              style={[
-                                Fonts.style.regular('red', Fonts.size.medium),
-                              ]}>
-                              -{' '}
-                              {filterOrder.coupon?.typeCoupon === 'percentage'
-                                ? `${filterOrder.coupon?.percentage}%`
-                                : utilities.formatCOP(
-                                    filterOrder.coupon?.money,
-                                  )}
-                            </Text>
-                          </View>
-                        )}
+                        {filterOrder.coupon &&
+                          filterOrder.coupon.type.includes(
+                            item.servicesType,
+                          ) && (
+                            <View
+                              style={{
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                marginHorizontal: 20,
+                              }}>
+                              <Text
+                                style={[
+                                  Fonts.style.regular(
+                                    Colors.dark,
+                                    Fonts.size.medium,
+                                  ),
+                                ]}>
+                                DESCUENTO POR CUPÓN
+                              </Text>
+                              <Text
+                                style={[
+                                  Fonts.style.regular('red', Fonts.size.medium),
+                                ]}>
+                                -{' '}
+                                {filterOrder.coupon?.typeCoupon === 'percentage'
+                                  ? `${filterOrder.coupon?.percentage}%`
+                                  : utilities.formatCOP(
+                                      filterOrder.coupon?.money,
+                                    )}
+                              </Text>
+                            </View>
+                          )}
                         <View
                           style={{
                             flexDirection: 'row',
