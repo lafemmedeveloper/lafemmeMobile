@@ -82,11 +82,11 @@ const ExpertCall = ({experts, uid}) => {
               color={Colors.expert.primaryColor}
             />
           </TouchableOpacity>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={styles.buttonCall}
             onPress={() => Linking.openURL(`tel:${expert.phone}`)}>
             <Icon name={'heart'} size={20} color={Colors.expert.primaryColor} />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </View>
     </>

@@ -3,7 +3,7 @@
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17126"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -22,9 +22,8 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logoExpertText" translatesAutoresizingMaskIntoConstraints="NO" id="lBF-mN-8jK">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logoLaFemme" translatesAutoresizingMaskIntoConstraints="NO" id="lBF-mN-8jK">
                                 <rect key="frame" x="88" y="302.5" width="199" height="62"/>
-                                <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="62" id="6oJ-bf-TyP"/>
                                     <constraint firstAttribute="width" constant="199" id="GVJ-rz-gFQ"/>
@@ -32,7 +31,7 @@
                             </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Bcu-3y-fUS"/>
-                        <color key="backgroundColor" red="1" green="0.28235294117647058" blue="0.47450980392156861" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" red="0.94901960784313721" green="0.40784313725490196" blue="0.33725490196078434" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="lBF-mN-8jK" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="1mO-De-9me"/>
                             <constraint firstItem="Bcu-3y-fUS" firstAttribute="centerX" secondItem="obG-Y5-kRd" secondAttribute="centerX" id="5cz-MP-9tL"/>
@@ -48,6 +47,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="logoExpertText" width="199" height="62"/>
+        <image name="logoLaFemme" width="5993" height="2875"/>
     </resources>
 </document>

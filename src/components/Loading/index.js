@@ -7,6 +7,8 @@ import {Colors, Metrics} from '../../themes';
 export default ({type}) => {
   const {state} = useContext(StoreContext);
   const {auth, service, util} = state;
+  console.log('loading ==>', auth.loading, service.loading, util.loading);
+
   if (auth.loading || service.loading || util.loading) {
     return (
       <View
@@ -32,6 +34,8 @@ const styles = StyleSheet.create({
   container: {
     width: Metrics.screenWidth,
     height: Metrics.screenHeight,
+    justifyContent: 'center',
+    alignItems: 'center',
     position: 'absolute',
     zIndex: 1000,
   },

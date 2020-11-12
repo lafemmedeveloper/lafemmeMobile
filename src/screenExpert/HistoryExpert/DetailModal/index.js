@@ -55,6 +55,22 @@ const DetailModal = ({order, setModalDetail}) => {
   const [modalEdit, setModalEdit] = useState(false);
   const [menuIndex, setMenuIndex] = useState(0);
   const [itemService, setItemService] = useState(null);
+
+  const getServiceStatus = (status) => {
+    switch (status) {
+      case 1:
+        return 'Colocarme en ruta';
+      case 2:
+        return 'Colocarme en servicio';
+      case 3:
+        return 'Finalizando servicio';
+      case 4:
+        return 'Calificar cliente';
+      case 5:
+        return 'Servicio finalizado';
+    }
+  };
+
   const changeStatus = (item) => {
     if (item.status === 1) {
       Alert.alert(
@@ -770,7 +786,7 @@ const DetailModal = ({order, setModalDetail}) => {
                   <>
                     <TouchableOpacity
                       onPress={() => changeStatus(item)}
-                      style={[styles.btnContainer]}>
+                      style={styles.btnContainer}>
                       <Text
                         style={[
                           Fonts.style.bold(Colors.light, Fonts.size.medium),
@@ -779,36 +795,38 @@ const DetailModal = ({order, setModalDetail}) => {
                         {loading ? (
                           <ActivityIndicator color={Colors.light} />
                         ) : (
-                          <>
-                            {item.status === 1 && 'Colocarme en ruta'}
-                            {item.status === 2 && 'Colocarme en servicio'}
-                            {item.status === 3 && 'Finalizando servicio'}
-                            {item.status === 4 && 'Calificar cliente'}
-                          </>
+                          <Text
+                            style={[
+                              Fonts.style.bold(Colors.light, Fonts.size.medium),
+                              {alignSelf: 'center'},
+                            ]}>
+                            {getServiceStatus(item.status)}
+                          </Text>
                         )}
                       </Text>
                     </TouchableOpacity>
-
-                    <TouchableOpacity
-                      onPress={() => activeModalEdit(item)}
-                      style={{
-                        width: Metrics.screenWidth * 0.5,
-                        marginVertical: 10,
-                        alignSelf: 'center',
-                        borderRadius: Metrics.borderRadius,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                      }}>
-                      <Text
-                        style={Fonts.style.regular(
-                          Colors.dark,
-                          Fonts.size.medium,
-                          'center',
-                          1,
-                        )}>
-                        Editar servicio
-                      </Text>
-                    </TouchableOpacity>
+                    {item.status < 4 && (
+                      <TouchableOpacity
+                        onPress={() => activeModalEdit(item)}
+                        style={{
+                          width: Metrics.screenWidth * 0.5,
+                          marginVertical: 10,
+                          alignSelf: 'center',
+                          borderRadius: Metrics.borderRadius,
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}>
+                        <Text
+                          style={Fonts.style.regular(
+                            Colors.dark,
+                            Fonts.size.medium,
+                            'center',
+                            1,
+                          )}>
+                          Editar servicio
+                        </Text>
+                      </TouchableOpacity>
+                    )}
                     <View style={{height: Metrics.addFooter + 10}} />
                   </>
                 )}
@@ -862,7 +880,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.expert.primaryColor,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: 20,
+    paddingVertical: 10,
   },
 
   contAddons: {
