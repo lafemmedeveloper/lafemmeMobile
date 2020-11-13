@@ -1,4 +1,4 @@
-import React, {useEffect, useContext, useState} from 'react';
+import React, {useEffect, useContext, useState, useMemo, memo} from 'react';
 import {ApplicationStyles, Images, Fonts, Colors, Metrics} from '../../themes';
 import {
   Text,
@@ -42,6 +42,7 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
   const [modalNote, setModalNote] = useState(false);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [modalCoupon, setModalCoupon] = useState(false);
+  const [orderTotal, setOrderTotal] = useState(0);
 
   const [keyboardHeight] = useKeyboard();
 
@@ -181,16 +182,19 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
   };
 
   const up = async (index) => {
-    const newOrder = await move(user.cart?.services, index, -1);
+    const newOrder = move(user.cart?.services, index, -1);
+    console.log('order services', newOrder);
     if (newOrder) {
-      await updateProfile({services: [newOrder]}, 'cart', authDispatch);
+      await updateProfile({services: newOrder}, 'cart', authDispatch);
     }
   };
 
   const down = async (index) => {
-    const newOrder = await move(user.cart?.services, index, 1);
+    const newOrder = move(user.cart?.services, index, 1);
+    console.log('order services', newOrder);
+
     if (newOrder) {
-      await updateProfile({services: [newOrder]}, 'cart', authDispatch);
+      await updateProfile({services: newOrder}, 'cart', authDispatch);
     }
   };
 
@@ -205,6 +209,33 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
 
   const totalService =
     user.cart?.services.length > 0 ? _.sumBy(user.cart.services, 'total') : 0;
+
+  const validateTotal = async () => {
+    let servicesUser = [...user.cart.services];
+    if (user.cart.coupon) {
+      for (let index = 0; index < servicesUser.length; index++) {
+        if (user.cart.coupon.type.includes(servicesUser[index].servicesType)) {
+          servicesUser[index].total =
+            user.cart.coupon.typeCoupon !== 'money'
+              ? (user.cart.coupon.percentage / 100) *
+                  servicesUser[index].total -
+                servicesUser[index].total
+              : servicesUser[index].total - user.cart.coupon.money;
+
+          setOrderTotal(_.sumBy(servicesUser, 'total'));
+        }
+      }
+    } else {
+      setOrderTotal(totalService);
+    }
+  };
+
+  useMemo(() => {
+    validateTotal();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user.cart.coupon]);
+
   return (
     <View style={{height: 650}}>
       <Loading type={'client'} />
@@ -331,14 +362,7 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
           </Text>
           <Text
             style={Fonts.style.bold(Colors.dark, Fonts.size.medium, 'left')}>
-            {user.cart.coupon
-              ? user.cart.coupon.typeCoupon !== 'money'
-                ? utilities.formatCOP(
-                    (user.cart.coupon.percentage / 100) * totalService -
-                      totalService,
-                  )
-                : utilities.formatCOP(totalService - user?.cart.coupon?.money)
-              : utilities.formatCOP(totalService)}
+            {utilities.formatCOP(orderTotal)}
           </Text>
         </View>
 
@@ -698,4 +722,4 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
 });
-export default CartScreen;
+export default memo(CartScreen);

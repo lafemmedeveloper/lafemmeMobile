@@ -488,7 +488,6 @@ export const getConfig = async (dispatch) => {
     setLoading(true, dispatch);
     const ref = await firestore().collection('config').doc('globals').get();
     setLoading(false, dispatch);
-    console.log('ref.data() ==>', ref.data());
     dispatch({type: GET_CONFIG, payload: ref.data()});
   } catch (error) {
     console.log('error ==>', error);
