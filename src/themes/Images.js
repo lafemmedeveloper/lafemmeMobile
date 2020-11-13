@@ -37,6 +37,7 @@ const images = {
   delivery: require('../Images/delivery.png'),
   password: require('../Images/contrasena.png'),
   edit: require('../Images/editar.png'),
+  cancel: require('../Images/prohibido.png'),
 
   //icons
   next: require('../Images/next.png'),

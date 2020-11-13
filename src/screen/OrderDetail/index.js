@@ -31,6 +31,7 @@ import ButonMenu from '../ButonMenu';
 import utilities from '../../utilities';
 import {customStyles} from './CustomStyles';
 import Detail from './Detail';
+import ModalCancel from './ModalCancel';
 
 const OrderDetail = ({route, navigation}) => {
   /* config map */
@@ -50,6 +51,7 @@ const OrderDetail = ({route, navigation}) => {
   const [coordinate, setCoordinate] = useState(null);
   const [menuIndex, setMenuIndex] = useState(0);
   const [detail, setDetail] = useState(false);
+  const [modalCancel, setModalCancel] = useState(false);
 
   const {goBack} = navigation;
 
@@ -95,7 +97,42 @@ const OrderDetail = ({route, navigation}) => {
 
     await updateStatus(5, orderUser, utilDispatch);
   };
+  const handleCancel = () => {
+    if (orderUser.status >= 2) {
+      return Alert.alert(
+        'Ups',
+        'Lo siento no puedes cancelar mientras el experto va en camino, por favor comunicate con soporte',
+      );
+    }
+    if (orderUser.services[menuIndex].status >= 2) {
+      return Alert.alert(
+        'Ups',
+        'Lo siento no puedes cancelar mientras el experto va en camino, por favor comunicate con soporte',
+      );
+    }
+    if (orderUser.services.length === 1) {
+      return Alert.alert(
+        'Confirmación',
+        '¿Realmente desea cancelar todos los servicios?',
+        [
+          {
+            text: 'SI',
+            onPress: async () => {
+              await updateStatus(7, orderUser, utilDispatch);
+            },
+          },
+          {
+            text: 'NO',
+            onPress: () => console.log('Cancel Pressed'),
+            style: 'cancel',
+          },
+        ],
+        {cancelable: true},
+      );
+    }
 
+    setModalCancel(true);
+  };
   return (
     <>
       <Loading type="client" />
@@ -104,42 +141,24 @@ const OrderDetail = ({route, navigation}) => {
       <View style={styles.container}>
         {orderUser ? (
           <>
+            {orderUser.services[menuIndex].status < 2 && (
+              <View style={styles.contBtnC}>
+                <TouchableOpacity onPress={() => handleCancel()}>
+                  <Text
+                    style={Fonts.style.bold(
+                      Colors.client.primaryColor,
+                      Fonts.size.medium,
+                    )}>
+                    Cancelar
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            )}
             <View>
               {coordinate && (
                 <>
                   <View style={styles.contBtn}>
                     <ButtonCoordinate activeCoor={activeCoor} />
-                  </View>
-                  <View style={styles.contBtnC}>
-                    <TouchableOpacity
-                      onPress={() =>
-                        Alert.alert(
-                          '¡HEY!',
-                          'Realmente deseas cancelar esta orden',
-                          [
-                            {
-                              text: 'SI CANCELAR',
-                              onPress: () => {
-                                updateStatus(7, orderUser, utilDispatch);
-                              },
-                            },
-                            {
-                              text: 'Cancelar',
-                              onPress: () => console.log('Cancel Pressed'),
-                              style: 'cancel',
-                            },
-                          ],
-                          {cancelable: true},
-                        )
-                      }>
-                      <Text
-                        style={Fonts.style.bold(
-                          Colors.client.primaryColor,
-                          Fonts.size.medium,
-                        )}>
-                        Cancelar
-                      </Text>
-                    </TouchableOpacity>
                   </View>
 
                   <MapView
@@ -525,6 +544,18 @@ const OrderDetail = ({route, navigation}) => {
           </TouchableOpacity>
         </View>
       </View>
+
+      <ModalApp setOpen={setModalCancel} open={modalCancel}>
+        <ModalCancel
+          close={setModalCancel}
+          service={
+            orderUser && orderUser.services && orderUser.services[menuIndex]
+          }
+          order={orderUser}
+          dispatch={utilDispatch}
+          menuIndex={menuIndex}
+        />
+      </ModalApp>
     </>
   );
 };

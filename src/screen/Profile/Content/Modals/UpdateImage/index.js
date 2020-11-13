@@ -34,7 +34,7 @@ const UpdateImage = ({source, pickImage, uploadImage, close}) => {
       </Text>
 
       <Text style={Fonts.style.light(Colors.data, Fonts.size.small, 'center')}>
-        {'Actualzia tu foto de perfil'}
+        {'Actualiza tu foto de perfil'}
       </Text>
       <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
       {source ? (

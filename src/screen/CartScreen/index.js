@@ -1,4 +1,4 @@
-import React, {useEffect, useContext, useState, useMemo, memo} from 'react';
+import React, {useEffect, useContext, useState} from 'react';
 import {ApplicationStyles, Images, Fonts, Colors, Metrics} from '../../themes';
 import {
   Text,
@@ -29,6 +29,7 @@ import Loading from '../../components/Loading';
 import ModalCuopon from './ModalCuopon';
 import utilities from '../../utilities';
 import {useKeyboard} from '../../hooks/useKeyboard';
+import {calculeTotal} from '../../helpers/CouponHelper';
 
 const CartScreen = ({setModalCart, setModalAddress}) => {
   const {state, serviceDispatch, authDispatch, utilDispatch} = useContext(
@@ -152,12 +153,15 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
   };
 
   const removeItem = async (id) => {
-    console.log('no ahi cupon ');
     const filterService = user.cart.services.filter((s) => s.id !== id);
 
-    console.log('delete services =>', filterService);
+    const serviceDelete = user.cart.services.filter((s) => s.id === id);
 
-    if (user.coupon || user.cart.services.length === 1) {
+    if (
+      user.coupon ||
+      user.cart.services.length === 1 ||
+      user.cart.coupon.type.includes(serviceDelete[0]?.servicesType)
+    ) {
       await updateProfile(
         {coupon: null, services: filterService},
         'cart',
@@ -183,7 +187,6 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
 
   const up = async (index) => {
     const newOrder = move(user.cart?.services, index, -1);
-    console.log('order services', newOrder);
     if (newOrder) {
       await updateProfile({services: newOrder}, 'cart', authDispatch);
     }
@@ -191,7 +194,6 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
 
   const down = async (index) => {
     const newOrder = move(user.cart?.services, index, 1);
-    console.log('order services', newOrder);
 
     if (newOrder) {
       await updateProfile({services: newOrder}, 'cart', authDispatch);
@@ -210,28 +212,11 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
   const totalService =
     user.cart?.services.length > 0 ? _.sumBy(user.cart.services, 'total') : 0;
 
-  const validateTotal = async () => {
-    let servicesUser = [...user.cart.services];
-    if (user.cart.coupon) {
-      for (let index = 0; index < servicesUser.length; index++) {
-        if (user.cart.coupon.type.includes(servicesUser[index].servicesType)) {
-          servicesUser[index].total =
-            user.cart.coupon.typeCoupon !== 'money'
-              ? (user.cart.coupon.percentage / 100) *
-                  servicesUser[index].total -
-                servicesUser[index].total
-              : servicesUser[index].total - user.cart.coupon.money;
-
-          setOrderTotal(_.sumBy(servicesUser, 'total'));
-        }
-      }
-    } else {
-      setOrderTotal(totalService);
+  useEffect(() => {
+    const result = calculeTotal(user, totalService);
+    if (result) {
+      setOrderTotal(totalService - Math.abs(result));
     }
-  };
-
-  useMemo(() => {
-    validateTotal();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user.cart.coupon]);
@@ -362,7 +347,9 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
           </Text>
           <Text
             style={Fonts.style.bold(Colors.dark, Fonts.size.medium, 'left')}>
-            {utilities.formatCOP(orderTotal)}
+            {user.cart.coupon
+              ? utilities.formatCOP(orderTotal)
+              : utilities.formatCOP(totalService)}
           </Text>
         </View>
 
@@ -722,4 +709,4 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
 });
-export default memo(CartScreen);
+export default CartScreen;
