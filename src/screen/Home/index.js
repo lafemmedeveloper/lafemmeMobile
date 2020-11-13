@@ -14,7 +14,6 @@ import CartFooter from '../../components/CartFooter';
 import _ from 'lodash';
 import CartScreen from '../CartScreen';
 import Address from '../Address';
-import AddAddress from '../AddAddress';
 import Header from '../../components/Header';
 import {getOrders, getDeviceInfo, getConfig} from '../../flux/util/actions';
 import Loading from '../../components/Loading';
@@ -52,8 +51,6 @@ const Home = () => {
   const [modalInspo, setModalInspo] = useState(false);
   const [modalCart, setModalCart] = useState(false);
   const [modalAddress, setModalAddress] = useState(false);
-  const [isModalCart, setIsModalCart] = useState(false);
-  const [modalAddAddress, setModalAddAddress] = useState(false);
 
   useEffect(() => {
     isMountedRef.current = true;
@@ -84,18 +81,6 @@ const Home = () => {
       }
     } else {
       setModalAuth(true);
-    }
-  };
-
-  const addAddressState = () => {
-    setIsModalCart(false);
-    setModalAddAddress(true);
-  };
-  const closeModal = () => {
-    setModalAddress(false);
-
-    if (isModalCart) {
-      modalCart(true);
     }
   };
 
@@ -217,20 +202,7 @@ const Home = () => {
       </ModalApp>
 
       <ModalApp open={modalAddress} setOpen={setModalAddress}>
-        <Address
-          addAddressState={addAddressState}
-          closeModal={closeModal}
-          setModalAddAddress={setModalAddAddress}
-          setModalCart={setModalCart}
-        />
-      </ModalApp>
-
-      <ModalApp open={modalAddAddress} setOpen={setModalAddAddress}>
-        <AddAddress
-          addAddress={() => setModalAddAddress(true)}
-          closeAddAddress={() => setModalAddAddress(false)}
-          setModalCart={setModalCart}
-        />
+        <Address />
       </ModalApp>
 
       {/* Modals close */}

@@ -26,7 +26,7 @@ import {getCoverage} from '../../flux/util/actions';
 import ButtonCoordinates from '../../components/ButtonCoordinates';
 
 const AddAddress = (props) => {
-  const {closeAddAddress} = props;
+  const {closeAddAddress, setAddAddress} = props;
   const APIKEY = 'AIzaSyArVhfk_wHVACPwunlCi1VP9EUgYZcnFpQ';
   const {state, authDispatch, utilDispatch} = useContext(StoreContext);
   const {auth, util} = state;
@@ -102,6 +102,8 @@ const AddAddress = (props) => {
 
     await updateProfile(address, 'address', authDispatch);
     setIsCoverage(addressStatus.searching);
+    setAddAddress(false);
+    setNotesAddress('');
     closeAddAddress(false);
   };
 

@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   View,
   ScrollView,
@@ -16,14 +16,14 @@ import {updateProfile} from '../../flux/auth/actions';
 import {validateCoverage} from '../../helpers/GeoHelper';
 import {getCoverage} from '../../flux/util/actions';
 import Loading from '../../components/Loading';
+import AddAddress from '../AddAddress';
 
-const Address = (props) => {
-  const {closeModal, setModalCart, setModalAddAddress} = props;
-
+const Address = ({closeModal}) => {
   const {authDispatch, state, utilDispatch} = useContext(StoreContext);
   const {auth, util} = state;
   const {user} = auth;
   const {coverageZones} = util;
+  const [addAddress, setAddAddress] = useState(false);
 
   useEffect(() => {
     getCoverage('Medellín', utilDispatch);
@@ -62,95 +62,97 @@ const Address = (props) => {
     }
   };
 
-  const changeScreen = () => {
-    closeModal && closeModal(false);
-    setModalCart && setModalCart(false);
-    return setModalAddAddress(true);
-  };
-
   return (
     <View>
       <Loading type={'client'} />
-      <ScrollView>
-        <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
+      {!addAddress ? (
+        <ScrollView>
+          <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
 
-        <Image
-          source={Images.address}
-          style={{
-            width: 50,
-            height: 50,
-            resizeMode: 'contain',
-            alignSelf: 'center',
-            marginBottom: 10,
-            tintColor: Colors.client.primaryColor,
-          }}
-        />
-        <Text style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
-          {'Mis direcciones'}
-        </Text>
-
-        <Text
-          style={Fonts.style.light(Colors.data, Fonts.size.small, 'center')}>
-          {'Agrega y selecciona tu dirección de  servicio'}
-        </Text>
-        <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
-
-        {user &&
-          user.address &&
-          user.address.map((item) => {
-            return (
-              <CardItemAddress
-                key={item.id}
-                data={item}
-                selectAddress={() => selectAddress(item)}
-                removeAddress={(id) => {
-                  Alert.alert(
-                    'Alerta',
-                    'Realmente desea eliminar esta dirección de tu lista.',
-                    [
-                      {
-                        text: 'Eliminar',
-                        onPress: () => {
-                          console.log('DeleteAddresss', id);
-                          removeAddress(id);
-                        },
-                      },
-                      {
-                        text: 'Cancelar',
-                        onPress: () => console.log('Cancel Pressed'),
-                        style: 'cancel',
-                      },
-                    ],
-                    {cancelable: true},
-                  );
-                }}
-              />
-            );
-          })}
-
-        {user && user.address && user.address.length <= 0 && (
-          <View style={{marginVertical: 50}}>
-            <Text
-              style={Fonts.style.bold(Colors.gray, Fonts.size.small, 'center')}>
-              {'No tienes direcciones, agrega una para continuar.'}
-            </Text>
-          </View>
-        )}
-
-        <TouchableOpacity
-          onPress={() => changeScreen()}
-          style={styles.productContainer}>
-          <Text
-            style={Fonts.style.bold(
-              Colors.client.primaryColor,
-              Fonts.size.medium,
-              'center',
-            )}>
-            {'+ Agregar dirección'}
+          <Image
+            source={Images.address}
+            style={{
+              width: 50,
+              height: 50,
+              resizeMode: 'contain',
+              alignSelf: 'center',
+              marginBottom: 10,
+              tintColor: Colors.client.primaryColor,
+            }}
+          />
+          <Text style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
+            {'Mis direcciones'}
           </Text>
-        </TouchableOpacity>
-        <View opacity={0.0} style={ApplicationStyles.separatorLine} />
-      </ScrollView>
+
+          <Text
+            style={Fonts.style.light(Colors.data, Fonts.size.small, 'center')}>
+            {'Agrega y selecciona tu dirección de  servicio'}
+          </Text>
+          <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
+
+          {user &&
+            user.address &&
+            user.address.map((item) => {
+              return (
+                <CardItemAddress
+                  key={item.id}
+                  data={item}
+                  selectAddress={() => selectAddress(item)}
+                  removeAddress={(id) => {
+                    Alert.alert(
+                      'Alerta',
+                      'Realmente desea eliminar esta dirección de tu lista.',
+                      [
+                        {
+                          text: 'Eliminar',
+                          onPress: () => {
+                            console.log('DeleteAddresss', id);
+                            removeAddress(id);
+                          },
+                        },
+                        {
+                          text: 'Cancelar',
+                          onPress: () => console.log('Cancel Pressed'),
+                          style: 'cancel',
+                        },
+                      ],
+                      {cancelable: true},
+                    );
+                  }}
+                />
+              );
+            })}
+
+          {user && user.address && user.address.length <= 0 && (
+            <View style={{marginVertical: 50}}>
+              <Text
+                style={Fonts.style.bold(
+                  Colors.gray,
+                  Fonts.size.small,
+                  'center',
+                )}>
+                {'No tienes direcciones, agrega una para continuar.'}
+              </Text>
+            </View>
+          )}
+
+          <TouchableOpacity
+            onPress={() => setAddAddress(true)}
+            style={styles.productContainer}>
+            <Text
+              style={Fonts.style.bold(
+                Colors.client.primaryColor,
+                Fonts.size.medium,
+                'center',
+              )}>
+              {'+ Agregar dirección'}
+            </Text>
+          </TouchableOpacity>
+          <View opacity={0.0} style={ApplicationStyles.separatorLine} />
+        </ScrollView>
+      ) : (
+        <AddAddress setAddAddress={setAddAddress} />
+      )}
     </View>
   );
 };

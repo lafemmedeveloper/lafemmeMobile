@@ -29,7 +29,6 @@ import ImageResizer from 'react-native-image-resizer';
 import utilities from '../../../utilities';
 import {resetReducer} from '../../../flux/util/actions';
 import {StoreContext} from '../../../flux';
-import AddAddress from '../../AddAddress';
 import Header from '../Header';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import UpdateImage from './Modals/UpdateImage';
@@ -710,14 +709,7 @@ const Content = (props) => {
       <ModalApp
         open={modalAddress}
         setOpen={modalAddAddress ? setModalAddAddress : setModalAddress}>
-        {!modalAddAddress ? (
-          <Address setModalAddAddress={setModalAddAddress} />
-        ) : (
-          <AddAddress
-            addAddress={() => setModalAddAddress(true)}
-            closeAddAddress={() => setModalAddress(false)}
-          />
-        )}
+        <Address />
       </ModalApp>
       <ModalApp open={tyc} setOpen={setTyc}>
         <View style={{height: '90%'}}>
