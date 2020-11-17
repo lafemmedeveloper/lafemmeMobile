@@ -1,14 +1,26 @@
-import React from 'react';
+import React, {useContext, useEffect} from 'react';
 import {View, TouchableOpacity, StyleSheet} from 'react-native';
 import {Metrics, Colors} from '../../themes';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Cart from './Cart';
+import {productViewAddress} from '../../flux/util/actions';
+import {StoreContext} from '../../flux';
 
 const ProductDetail = (props) => {
   const {route, navigation} = props;
   const {goBack} = navigation;
   const {params} = route;
   const {product, authDispatch} = params;
+
+  const {utilDispatch, state} = useContext(StoreContext);
+  const {util} = state;
+  const {productView} = util;
+
+  useEffect(() => {
+    if (productView.view) {
+      productViewAddress(null, false, utilDispatch);
+    }
+  }, [productView.view, utilDispatch]);
 
   return (
     <>

@@ -15,7 +15,12 @@ import _ from 'lodash';
 import CartScreen from '../CartScreen';
 import Address from '../Address';
 import Header from '../../components/Header';
-import {getOrders, getDeviceInfo, getConfig} from '../../flux/util/actions';
+import {
+  getOrders,
+  getDeviceInfo,
+  getConfig,
+  productViewAddress,
+} from '../../flux/util/actions';
 import Loading from '../../components/Loading';
 import auth from '@react-native-firebase/auth';
 import ExpandOrderData from '../ExpandOrderData';
@@ -77,6 +82,7 @@ const Home = () => {
       if (user && user.cart && user.cart.address) {
         navigation.navigate('ProductDetail', {product});
       } else {
+        productViewAddress(product, true, utilDispatch);
         setModalAddress(true);
       }
     } else {
@@ -202,7 +208,7 @@ const Home = () => {
       </ModalApp>
 
       <ModalApp open={modalAddress} setOpen={setModalAddress}>
-        <Address />
+        <Address closeModal={setModalAddress} />
       </ModalApp>
 
       {/* Modals close */}

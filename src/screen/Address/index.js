@@ -17,12 +17,14 @@ import {validateCoverage} from '../../helpers/GeoHelper';
 import {getCoverage} from '../../flux/util/actions';
 import Loading from '../../components/Loading';
 import AddAddress from '../AddAddress';
+import {useNavigation} from '@react-navigation/native';
 
 const Address = ({closeModal}) => {
+  const navigation = useNavigation();
   const {authDispatch, state, utilDispatch} = useContext(StoreContext);
   const {auth, util} = state;
   const {user} = auth;
-  const {coverageZones} = util;
+  const {coverageZones, productView} = util;
   const [addAddress, setAddAddress] = useState(false);
 
   useEffect(() => {
@@ -40,7 +42,14 @@ const Address = ({closeModal}) => {
         'cart',
         authDispatch,
       );
-      closeModal();
+
+      closeModal(false);
+
+      if (productView.view) {
+        const {product} = productView;
+
+        navigation.navigate('ProductDetail', {product});
+      }
     } else {
       Alert.alert(
         'Lo sentimos',

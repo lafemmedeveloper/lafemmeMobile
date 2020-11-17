@@ -9,6 +9,7 @@ import {
   GET_EXPERT_OPEN_ORDERS,
   GET_NAME_SERVICE,
   GET_CONFIG,
+  ADD_PRODUCT_ADDRESS,
 } from './types';
 
 import firestore from '@react-native-firebase/firestore';
@@ -493,4 +494,8 @@ export const getConfig = async (dispatch) => {
     console.log('error ==>', error);
     setLoading(false, dispatch);
   }
+};
+
+export const productViewAddress = (product, bool, dispatch) => {
+  dispatch({type: ADD_PRODUCT_ADDRESS, payload: {view: bool, product}});
 };

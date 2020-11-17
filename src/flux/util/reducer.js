@@ -12,6 +12,7 @@ import {
   GET_EXPERT_ORDER_HISTORY,
   GET_NAME_SERVICE,
   GET_CONFIG,
+  ADD_PRODUCT_ADDRESS,
 } from './types';
 import _ from 'lodash';
 
@@ -36,6 +37,10 @@ export const INITIAL_STATE_UTIL = {
   nextOrder: [],
   nextOrderClient: [],
   activity: [],
+  productView: {
+    view: false,
+    product: null,
+  },
 };
 
 const setLoading = (state, action) => {
@@ -131,6 +136,12 @@ const getConfig = (state, action) => {
     config: action.payload,
   };
 };
+const addProductAddress = (state, action) => {
+  return {
+    ...state,
+    productView: action.payload,
+  };
+};
 
 export default createReducer(INITIAL_STATE_UTIL, {
   [LOADING]: setLoading,
@@ -145,4 +156,5 @@ export default createReducer(INITIAL_STATE_UTIL, {
   [GET_EXPERT_ORDER_HISTORY]: getOrderHistory,
   [GET_NAME_SERVICE]: getNameService,
   [GET_CONFIG]: getConfig,
+  [ADD_PRODUCT_ADDRESS]: addProductAddress,
 });

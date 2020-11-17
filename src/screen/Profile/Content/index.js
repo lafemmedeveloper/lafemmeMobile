@@ -709,7 +709,7 @@ const Content = (props) => {
       <ModalApp
         open={modalAddress}
         setOpen={modalAddAddress ? setModalAddAddress : setModalAddress}>
-        <Address />
+        <Address closeModal={setModalAddress} />
       </ModalApp>
       <ModalApp open={tyc} setOpen={setTyc}>
         <View style={{height: '90%'}}>
