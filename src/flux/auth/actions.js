@@ -35,27 +35,7 @@ export const setUser = async (data, dispatch) => {
       if (result.exists) {
         const user = result.data();
         dispatch({type: SET_USER, payload: user});
-      } /*  else {
-        const userData = {
-          address: [],
-          email: '',
-          firstName: '',
-          lastName: '',
-          numberOfServices: 0,
-          phone: currentUser.phoneNumber,
-          uid: currentUser.uid,
-          role: 'client',
-          tyc: moment(new Date()).format('LLLL'),
-          guest: [],
-          rating: 5.0,
-          cart: null,
-          imageUrl: null,
-          token: null,
-        };
-        //usersRef.set(userData);
-
-        // dispatch({type: SET_USER, payload: userData});
-      } */
+      }
     });
   } catch (error) {
     setLoading(false, dispatch);
