@@ -9,6 +9,8 @@ import {
   Alert,
   Image,
   ActivityIndicator,
+  Linking,
+  Platform,
 } from 'react-native';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import Icon from 'react-native-vector-icons/FontAwesome5';
@@ -244,6 +246,17 @@ const DetailModal = ({order, setModalDetail}) => {
       await updateStatusDb(filterOrder, status, utilDispatch);
     }
   };
+  const handleMaps = () => {
+    const scheme = Platform.select({ios: 'maps:0,0?q=', android: 'geo:0,0?q='});
+    const latLng = `${filterOrder.address.coordinates.latitude}, ${filterOrder.address.coordinates.longitude}`;
+    const label = filterOrder.address.name;
+    const url = Platform.select({
+      ios: `${scheme}${label}@${latLng}`,
+      android: `${scheme}${latLng}(${label})`,
+    });
+
+    Linking.openURL(url);
+  };
 
   return (
     <>
@@ -335,7 +348,7 @@ const DetailModal = ({order, setModalDetail}) => {
                   'center',
                 ),
               ]}>
-              Clientes
+              Cliente
             </Text>
             <View
               style={{
@@ -401,6 +414,21 @@ const DetailModal = ({order, setModalDetail}) => {
                 {filterOrder && filterOrder.address.notesAddress}
               </Text>
             </View>
+            <TouchableOpacity
+              onPress={() => handleMaps()}
+              style={styles.btnMaps}>
+              <Image
+                source={Images.maps}
+                style={{width: 20, height: 20, marginRight: 5}}
+              />
+              <Text
+                style={[
+                  Fonts.style.regular(Colors.dark, Fonts.size.medium),
+                  {alignSelf: 'center'},
+                ]}>
+                Navegar usando Maps
+              </Text>
+            </TouchableOpacity>
 
             <View opacity={0.25} style={ApplicationStyles.separatorLine} />
             {filterOrder && services && services.length > 1 && (
@@ -910,6 +938,27 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingVertical: 10,
+  },
+  btnMaps: {
+    width: Metrics.screenWidth * 0.5,
+    height: 40,
+    marginVertical: 10,
+    alignSelf: 'center',
+    borderRadius: Metrics.borderRadius,
+    backgroundColor: Colors.light,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 10,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.29,
+    shadowRadius: 4.65,
+
+    elevation: 7,
+    flexDirection: 'row',
   },
 
   contAddons: {
