@@ -1,13 +1,28 @@
 import React from 'react';
 import {Image, Text, View, TouchableOpacity, Alert} from 'react-native';
 import Loading from '../../../components/Loading';
-import {updateOrder, updateStatus} from '../../../flux/util/actions';
+import {
+  sendPushFcm,
+  updateOrder,
+  updateStatus,
+} from '../../../flux/util/actions';
 import {ApplicationStyles, Colors, Fonts, Images} from '../../../themes';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-const ModalCancel = ({service, order, dispatch, menuIndex, close}) => {
+const ModalCancel = ({service, order, dispatch, menuIndex, close, user}) => {
   const handleCancel = async () => {
     await updateStatus(7, order, dispatch);
+
+    let notification = {
+      title: 'Servicio cancelado',
+      body: `El client ${
+        user.firstName + ' ' + user.lastName
+      } a cancelado todo el servicio `,
+      content_available: true,
+      priority: 'high',
+    };
+    let dataPush = null;
+    sendPushFcm(order.fcmExpert, notification, dataPush);
     close(false);
   };
 
@@ -15,6 +30,16 @@ const ModalCancel = ({service, order, dispatch, menuIndex, close}) => {
     let handleOrder = order;
     handleOrder.services[menuIndex].status = 7;
     await updateOrder(handleOrder, dispatch);
+    let notification = {
+      title: 'Servicio cancelado',
+      body: `El client ${
+        user.firstName + ' ' + user.lastName
+      } a cancelado el servicio de ${service.servicesType}`,
+      content_available: true,
+      priority: 'high',
+    };
+    let dataPush = null;
+    sendPushFcm(order.fcmExpert[menuIndex], notification, dataPush);
     close(false);
   };
   return (

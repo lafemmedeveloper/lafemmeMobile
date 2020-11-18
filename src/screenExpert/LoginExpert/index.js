@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
   Keyboard,
   Linking,
+  StatusBar,
 } from 'react-native';
 import {Images, Colors, Fonts, Metrics} from '../../themes';
 import MyTextInput from '../../components/MyTextInput';
@@ -47,6 +48,8 @@ const LoginExpert = () => {
 
   return (
     <>
+      <StatusBar backgroundColor={'white'} barStyle={'dark-content'} />
+
       <View style={styles.contentContainer}>
         <Image
           style={{

@@ -21,6 +21,7 @@ import {
 } from '../../../themes';
 import utilities from '../../../utilities';
 import {
+  sendPushFcm,
   updateOrder,
   updateStatusDb, // updateStatus
 } from '../../../flux/util/actions';
@@ -42,13 +43,12 @@ const DetailModal = ({order, setModalDetail}) => {
 
   const filterOrder = ordersAll.filter((o) => o.id === order.id)[0]
     ? ordersAll.filter((o) => o.id === order.id)[0]
-    : null;
+    : order;
 
   const services =
-    filterOrder.services.filter((s) => s.uid === user.uid).length > 0
+    filterOrder?.services.filter((s) => s.uid === user.uid).length > 0
       ? filterOrder.services.filter((s) => s.uid === user.uid)
       : [];
-
   const ASPECT_RATIO = screen.width * 0.8 - 500 / screen.height;
 
   const [qualifyClient, setQualifyClient] = useState(false);
@@ -68,6 +68,8 @@ const DetailModal = ({order, setModalDetail}) => {
         return 'Calificar cliente';
       case 5:
         return 'Servicio finalizado';
+      case 7:
+        return 'Servicio cancelado';
     }
   };
 
@@ -95,6 +97,20 @@ const DetailModal = ({order, setModalDetail}) => {
                 currentOrder.services[indexService].status = 2;
                 await updateOrder(filterOrder, utilDispatch);
                 validateStatusGlobal(2);
+                if (currentOrder.services.length === 1) {
+                  currentOrder.status = 2;
+                  await updateOrder(filterOrder, utilDispatch);
+                }
+                let notification = {
+                  title: 'Actualización de la orden',
+                  body: `El experto  ${
+                    user.firstName + ' ' + user.lastName
+                  } va en camino  `,
+                  content_available: true,
+                  priority: 'high',
+                };
+                let dataPush = null;
+                sendPushFcm(order.fcmClient, notification, dataPush);
               }
             },
           },
@@ -121,10 +137,24 @@ const DetailModal = ({order, setModalDetail}) => {
                 (s) => s.id === item.id,
               );
               currentOrder.services[indexService].status = 3;
-              console.log('currente order ', filterOrder);
 
               await updateOrder(filterOrder, utilDispatch);
               validateStatusGlobal(status);
+              if (currentOrder.services.length === 1) {
+                currentOrder.status = 3;
+                await updateOrder(filterOrder, utilDispatch);
+              }
+
+              let notification = {
+                title: 'Servicio cancelado',
+                body: `El cliente  ${
+                  user.firstName + ' ' + user.lastName
+                } a cancelado el servicio`,
+                content_available: true,
+                priority: 'high',
+              };
+              let dataPush = null;
+              sendPushFcm(order.fcmExpert, notification, dataPush);
             },
           },
           {
@@ -152,7 +182,26 @@ const DetailModal = ({order, setModalDetail}) => {
               currentOrder.services[indexService].status = 4;
 
               await updateOrder(filterOrder, utilDispatch);
-              return validateStatusGlobal(status);
+              validateStatusGlobal(status);
+              if (currentOrder.services.length === 1) {
+                currentOrder.status = 4;
+                await updateOrder(filterOrder, utilDispatch);
+              }
+              let notification = {
+                title: 'Actualización de la orden',
+                body: `El experto  ${
+                  user.firstName + ' ' + user.lastName
+                } a finalizado el servicio de  ${currentOrder.services[
+                  indexService
+                ].servicesType
+                  .toUpperCase()
+                  .split('-')
+                  .join(' ')}`,
+                content_available: true,
+                priority: 'high',
+              };
+              let dataPush = null;
+              sendPushFcm(order.fcmClient, notification, dataPush);
             },
           },
           {
@@ -164,32 +213,7 @@ const DetailModal = ({order, setModalDetail}) => {
         {cancelable: true},
       );
     } else if (item.status === 4) {
-      const status = 5;
-
-      Alert.alert(
-        'Hola',
-        'Estas seguro(a) que quieres cambiar de estado.',
-        [
-          {
-            text: 'Si',
-            onPress: async () => {
-              let currentOrder = filterOrder;
-              let indexService = filterOrder.services.findIndex(
-                (s) => s.id === item.id,
-              );
-              currentOrder.services[indexService].status = 5;
-              await updateOrder(filterOrder, utilDispatch);
-              return validateStatusGlobal(status);
-            },
-          },
-          {
-            text: 'Cancelar',
-            onPress: () => console.log('Cancel Pressed'),
-            style: 'cancel',
-          },
-        ],
-        {cancelable: true},
-      );
+      setQualifyClient(true);
     }
   };
 
@@ -209,18 +233,13 @@ const DetailModal = ({order, setModalDetail}) => {
     let updateOrder = false;
 
     for (let i = 0; i < filterOrder.services.length; i++) {
-      console.log('services all', filterOrder.services[i]);
-
       if (filterOrder.services[i].status < 4) {
-        console.log('son menor a 4 ');
         updateOrder = false;
       } else if (filterOrder.services[i].status >= 4) {
         updateOrder = true;
-        console.log('son mayor o igual a 4 ');
       }
     }
 
-    console.log('updateOrder ==>', updateOrder);
     if (updateOrder) {
       await updateStatusDb(filterOrder, status, utilDispatch);
     }
@@ -356,7 +375,7 @@ const DetailModal = ({order, setModalDetail}) => {
               }}>
               <Text
                 style={[Fonts.style.regular(Colors.dark, Fonts.size.medium)]}>
-                Direccion
+                Dirección
               </Text>
               <Text
                 style={[Fonts.style.regular(Colors.dark, Fonts.size.medium)]}>
@@ -384,14 +403,14 @@ const DetailModal = ({order, setModalDetail}) => {
             </View>
 
             <View opacity={0.25} style={ApplicationStyles.separatorLine} />
-            {services && services.length > 1 && (
+            {filterOrder && services && services.length > 1 && (
               <>
                 <Text
                   style={[
                     Fonts.style.bold(Colors.dark, Fonts.size.medium, 'left'),
                     {marginLeft: 20, marginBottom: 10},
                   ]}>
-                  Seleciona tus servicios para ver al informacion
+                  Selecciona tus servicios para ver al información
                 </Text>
                 <ScrollView
                   horizontal
@@ -422,7 +441,8 @@ const DetailModal = ({order, setModalDetail}) => {
                 </ScrollView>
               </>
             )}
-            {services &&
+            {filterOrder &&
+              services &&
               services.map((item, index) => {
                 const {name, clients, addOnsCount, addons} = item;
 
@@ -621,7 +641,8 @@ const DetailModal = ({order, setModalDetail}) => {
               ]}>
               Resumen a cobrar
             </Text>
-            {services &&
+            {filterOrder &&
+              services &&
               services.map((item, index) => {
                 const {duration, total, totalAddons, totalServices} = item;
 
@@ -642,7 +663,7 @@ const DetailModal = ({order, setModalDetail}) => {
                                 Fonts.size.medium,
                               ),
                             ]}>
-                            DURACION{' '}
+                            DURACIÓN{' '}
                           </Text>
                           <Text
                             style={[
@@ -777,34 +798,41 @@ const DetailModal = ({order, setModalDetail}) => {
           </View>
         </ScrollView>
 
-        {services &&
+        {filterOrder &&
+          services &&
           services.length > 0 &&
           services.map((item, index) => {
             return (
               <Fragment key={item.id}>
                 {menuIndex === index && (
                   <>
-                    <TouchableOpacity
-                      onPress={() => changeStatus(item)}
-                      style={styles.btnContainer}>
-                      <Text
-                        style={[
-                          Fonts.style.bold(Colors.light, Fonts.size.medium),
-                          {alignSelf: 'center'},
-                        ]}>
-                        {loading ? (
-                          <ActivityIndicator color={Colors.light} />
-                        ) : (
-                          <Text
-                            style={[
-                              Fonts.style.bold(Colors.light, Fonts.size.medium),
-                              {alignSelf: 'center'},
-                            ]}>
-                            {getServiceStatus(item.status)}
-                          </Text>
-                        )}
-                      </Text>
-                    </TouchableOpacity>
+                    {filterOrder && filterOrder.status <= 4 && (
+                      <TouchableOpacity
+                        onPress={() => changeStatus(item)}
+                        style={styles.btnContainer}>
+                        <Text
+                          style={[
+                            Fonts.style.bold(Colors.light, Fonts.size.medium),
+                            {alignSelf: 'center'},
+                          ]}>
+                          {loading ? (
+                            <ActivityIndicator color={Colors.light} />
+                          ) : (
+                            <Text
+                              style={[
+                                Fonts.style.bold(
+                                  Colors.light,
+                                  Fonts.size.medium,
+                                ),
+                                {alignSelf: 'center'},
+                              ]}>
+                              {getServiceStatus(item.status)}
+                            </Text>
+                          )}
+                        </Text>
+                      </TouchableOpacity>
+                    )}
+
                     {item.status < 4 && (
                       <TouchableOpacity
                         onPress={() => activeModalEdit(item)}
@@ -842,6 +870,7 @@ const DetailModal = ({order, setModalDetail}) => {
           ordersRef={filterOrder}
           close={setQualifyClient}
           typeQualification={'qualtificationClient'}
+          menuIndex={menuIndex}
         />
       </ModalApp>
       <ModalApp setOpen={setModalEdit} open={modalEdit}>

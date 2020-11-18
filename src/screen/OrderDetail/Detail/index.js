@@ -312,7 +312,7 @@ const Detail = ({filterOrder, menuIndex, setMenuIndex}) => {
               'center',
             ),
           ]}>
-          Resumen a cobrar
+          Resumen a pagar
         </Text>
         {services &&
           services.map((item, index) => {

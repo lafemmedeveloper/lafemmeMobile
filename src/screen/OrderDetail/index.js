@@ -8,6 +8,7 @@ import {
   Alert,
   TouchableOpacity,
   ScrollView,
+  Linking,
 } from 'react-native';
 import StepIndicator from 'react-native-step-indicator';
 import moment from 'moment';
@@ -20,7 +21,7 @@ import Loading from '../../components/Loading';
 import ModalApp from '../../components/ModalApp';
 import ButtonCoordinate from '../../components/ButtonCoordinate';
 import Geolocation from '@react-native-community/geolocation';
-import {updateStatus} from '../../flux/util/actions';
+import {sendPushFcm, updateOrder, updateStatus} from '../../flux/util/actions';
 import Qualify from '../../components/Qualify';
 import {
   adddReferralsUser,
@@ -32,6 +33,7 @@ import utilities from '../../utilities';
 import {customStyles} from './CustomStyles';
 import Detail from './Detail';
 import ModalCancel from './ModalCancel';
+import MenuTab from './MenuTab';
 
 const OrderDetail = ({route, navigation}) => {
   /* config map */
@@ -45,7 +47,7 @@ const OrderDetail = ({route, navigation}) => {
   const {util, auth} = state;
   const {user} = auth;
 
-  const {ordersAll} = util;
+  const {ordersAll, config} = util;
   const [orderUser, setOrderUser] = useState(null);
   const [modalQual, setModalQual] = useState(false);
   const [coordinate, setCoordinate] = useState(null);
@@ -118,7 +120,28 @@ const OrderDetail = ({route, navigation}) => {
           {
             text: 'SI',
             onPress: async () => {
+              let handleOrder = orderUser;
+              handleOrder.services[menuIndex].status = 7;
+              await updateOrder(handleOrder, utilDispatch);
               await updateStatus(7, orderUser, utilDispatch);
+              let notification = {
+                title: 'Servicio cancelado',
+                body: `El client ${
+                  user.firstName + ' ' + user.lastName
+                } a cancelado el servicio de ${orderUser.services[
+                  menuIndex
+                ].servicesType
+                  .toUpperCase()
+                  .split('-')
+                  .join(' ')}`,
+                content_available: true,
+                priority: 'high',
+              };
+              let dataPush = null;
+
+              for (let index = 0; index < orderUser.fcmExpert.length; index++) {
+                sendPushFcm(orderUser.fcmExpert[index], notification, dataPush);
+              }
             },
           },
           {
@@ -242,17 +265,17 @@ const OrderDetail = ({route, navigation}) => {
                       <ExpertCall
                         experts={orderUser.experts}
                         uid={service.uid}
-                        setDetail={setDetail}
-                        detail={detail}
                       />
                     )}
                   </Fragment>
                 );
               })}
 
+            <MenuTab setDetail={setDetail} detail={detail} />
+
             {!detail ? (
               <>
-                <View>
+                <ScrollView>
                   <View
                     style={{
                       justifyContent: 'center',
@@ -289,7 +312,7 @@ const OrderDetail = ({route, navigation}) => {
                         size={12}
                         color={Colors.expert.primaryColor}
                       />{' '}
-                      {orderUser.address.name}
+                      Dirección: {orderUser.address.name}
                     </Text>
                     {orderUser &&
                       orderUser.hoursServices.length > 0 &&
@@ -308,7 +331,7 @@ const OrderDetail = ({route, navigation}) => {
                                   size={12}
                                   color={Colors.expert.primaryColor}
                                 />{' '}
-                                {hour}
+                                Hora del servicio: {hour}
                               </Text>
                             )}
                           </Fragment>
@@ -333,7 +356,35 @@ const OrderDetail = ({route, navigation}) => {
                                     size={12}
                                     color={Colors.expert.primaryColor}
                                   />{' '}
-                                  {service.duration} mins
+                                  Duración del servicio: {service.duration} mins
+                                </Text>
+                                <Text
+                                  style={Fonts.style.regular(
+                                    Colors.dark,
+                                    Fonts.size.medium,
+                                    'left',
+                                  )}>
+                                  <Icon
+                                    name={'dollar-sign'}
+                                    size={12}
+                                    color={Colors.expert.primaryColor}
+                                  />{' '}
+                                  Sub Total:{' '}
+                                  {utilities.formatCOP(service.totalServices)}
+                                </Text>
+                                <Text
+                                  style={Fonts.style.regular(
+                                    Colors.dark,
+                                    Fonts.size.medium,
+                                    'left',
+                                  )}>
+                                  <Icon
+                                    name={'dollar-sign'}
+                                    size={12}
+                                    color={Colors.expert.primaryColor}
+                                  />{' '}
+                                  Total de adiciones:{' '}
+                                  {utilities.formatCOP(service.totalAddons)}
                                 </Text>
                                 {orderUser.coupon &&
                                   orderUser.coupon.type.includes(
@@ -351,7 +402,7 @@ const OrderDetail = ({route, navigation}) => {
                                           size={12}
                                           color={'red'}
                                         />{' '}
-                                        -{' '}
+                                        Descuento por cupón: -{' '}
                                         {orderUser.coupon?.typeCoupon ===
                                         'percentage'
                                           ? `${orderUser.coupon?.percentage}%`
@@ -368,10 +419,11 @@ const OrderDetail = ({route, navigation}) => {
                                     'left',
                                   )}>
                                   <Icon
-                                    name={'coins'}
+                                    name={'dollar-sign'}
                                     size={12}
                                     color={Colors.expert.primaryColor}
                                   />{' '}
+                                  Total del a pagar:{' '}
                                   {utilities.formatCOP(service.total)}
                                 </Text>
                               </>
@@ -440,7 +492,7 @@ const OrderDetail = ({route, navigation}) => {
                         );
                       })}
                   </View>
-                </View>
+                </ScrollView>
               </>
             ) : (
               <>
@@ -454,12 +506,13 @@ const OrderDetail = ({route, navigation}) => {
 
             <ModalApp setOpen={setModalQual} open={modalQual}>
               <Qualify
-                type="expert"
-                userRef={orderUser.experts}
+                type="client"
+                userRef={orderUser.experts[menuIndex]}
                 ordersRef={orderUser}
                 close={setModalQual}
                 typeQualification={'qualtificationExpert'}
                 updateStatus={updateStatus}
+                menuIndex={menuIndex}
               />
             </ModalApp>
           </>
@@ -521,7 +574,7 @@ const OrderDetail = ({route, navigation}) => {
             </>
           )}
           <TouchableOpacity
-            onPress={() => console.log('call soport')}
+            onPress={() => Linking.openURL(`tel:${config.phone}`)}
             style={{
               width: Metrics.screenWidth,
               paddingVertical: 20,
@@ -554,6 +607,7 @@ const OrderDetail = ({route, navigation}) => {
           order={orderUser}
           dispatch={utilDispatch}
           menuIndex={menuIndex}
+          user={user}
         />
       </ModalApp>
     </>

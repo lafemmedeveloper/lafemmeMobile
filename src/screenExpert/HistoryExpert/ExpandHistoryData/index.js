@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Image, Text, StyleSheet} from 'react-native';
+import {View, Image, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
 import {Colors, Fonts, Images} from '../../../themes';
@@ -7,7 +7,6 @@ import {Colors, Fonts, Images} from '../../../themes';
 import AppConfig from '../../../config/AppConfig';
 
 import moment from 'moment';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 
 export default (dta) => {
   const {order, appType, activeDetailModal} = dta;

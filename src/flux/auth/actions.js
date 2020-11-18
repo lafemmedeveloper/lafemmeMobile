@@ -173,7 +173,10 @@ export const activeMessage = async (topic, dispatch) => {
     messaging().setBackgroundMessageHandler(async (remoteMessage) => {
       console.log('push notification backgraund', remoteMessage);
     });
-    sendTokenUser();
+    const userId = auth().currentUser;
+    if (userId) {
+      sendTokenUser();
+    }
     setLoading(false, dispatch);
   } catch (error) {
     setLoading(false, dispatch);

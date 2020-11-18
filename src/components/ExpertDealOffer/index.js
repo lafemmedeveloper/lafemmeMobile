@@ -15,6 +15,7 @@ import AppConfig from '../../config/AppConfig';
 import {
   assignExpert,
   assingExpertService,
+  sendPushFcm,
   updateStatus,
 } from '../../flux/util/actions';
 import {StoreContext} from '../../flux';
@@ -41,6 +42,20 @@ export default ({order, dispatch, user}) => {
       orderServices.services[indexService].status = 1;
       await assingExpertService(orderServices, user, dispatch);
       await assignExpert(user, order, dispatch);
+
+      let notification = {
+        title: 'Actualización de la orden',
+        body: `El experto ${
+          user.firstName + ' ' + user.lastName
+        }  tomo su servicio de  ${item.servicesType
+          .toUpperCase()
+          .split('-')
+          .join(' ')}`,
+        content_available: true,
+        priority: 'high',
+      };
+      let dataPush = null;
+      sendPushFcm(order.fcmClient, notification, dataPush);
     } catch (error) {
       console.log('errorassing expert ==>', error);
     }

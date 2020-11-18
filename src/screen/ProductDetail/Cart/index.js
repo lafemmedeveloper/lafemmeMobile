@@ -56,9 +56,6 @@ const Cart = (props) => {
   const [addonsListCount, setAddonsListCount] = useState([]);
   const [experts, setExperts] = useState(modelExpert);
   const [showModalService, setShowModalService] = useState(false);
-  console.log('addonsGuest, =>', addonsGuest);
-  console.log('addonsList, =>', addonsList);
-  console.log('guestList, =>', guestList);
 
   const addGuest = async () => {
     const guestUser = Object.assign(formGuest, {id: Utilities.create_UUID()});

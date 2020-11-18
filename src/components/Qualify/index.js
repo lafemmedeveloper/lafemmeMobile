@@ -13,19 +13,17 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import {Colors, Fonts, Metrics} from '../../themes';
 import {AirbnbRating} from 'react-native-ratings';
 import {StoreContext} from '../../flux';
-import {userRating, updateNote} from '../../flux/util/actions';
+import {
+  userRating,
+  updateNote,
+  updateStatus,
+  sendPushFcm,
+} from '../../flux/util/actions';
 
 const Qualify = (props) => {
   const {state, utilDispatch} = useContext(StoreContext);
 
-  const {
-    type,
-    userRef,
-    close,
-    typeQualification,
-    ordersRef,
-    updateStatus,
-  } = props;
+  const {type, userRef, close, typeQualification, ordersRef, menuIndex} = props;
   const [note, setNote] = useState('');
   const [rating, setRating] = useState(5);
 
@@ -38,7 +36,38 @@ const Qualify = (props) => {
       const noteSend = note === '' ? 'Perfecto' : note;
       await updateNote(ordersRef.id, noteSend, typeQualification, utilDispatch);
       await userRating(userRef.uid, result, utilDispatch);
-      updateStatus ? await updateStatus(6, ordersRef, utilDispatch) : null;
+      if (type === 'expert') {
+        await updateStatus(5, ordersRef, utilDispatch);
+        let notification = {
+          title: 'Actualización de la orden',
+          body: `El experto  ${
+            state.auth.user.firstName + ' ' + state.auth.user.lastName
+          } esta esperando por tu calificación `,
+          content_available: true,
+          priority: 'high',
+        };
+        let dataPush = null;
+        sendPushFcm(ordersRef.fcmClient, notification, dataPush);
+        close(false);
+        return;
+      }
+      let notification = {
+        title: 'Actualización de la orden',
+        body: `El cliente ${
+          state.auth.user.firstName + ' ' + state.auth.user.lastName
+        } a finalizado la el servicio de ${ordersRef.services[
+          menuIndex
+        ].servicesType
+          .toUpperCase()
+          .split('-')
+          .join(' ')}`,
+        content_available: true,
+        priority: 'high',
+      };
+      let dataPush = null;
+      sendPushFcm(ordersRef.fcmExpert[menuIndex], notification, dataPush);
+      await updateStatus(6, ordersRef, utilDispatch);
+
       close(false);
       Alert.alert('Excelente', 'Gracias por calificar');
     } catch (error) {
@@ -51,12 +80,12 @@ const Qualify = (props) => {
       <>
         <Icon
           name={'star'}
-          color={Colors[type].primaryColor}
+          color={Colors.expert.primaryColor}
           size={40}
           style={{alignSelf: 'center', marginVertical: 20}}
         />
         <Text style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
-          {'Calificame'}
+          {'Calificarme'}
         </Text>
 
         <Text
@@ -111,7 +140,7 @@ const Qualify = (props) => {
 
                 paddingHorizontal: 10,
                 paddingVertical: 10,
-                backgroundColor: Colors[type].primaryColor,
+                backgroundColor: Colors.expert.primaryColor,
                 marginBottom: Metrics.addFooter + 10,
                 marginTop: 20,
               },

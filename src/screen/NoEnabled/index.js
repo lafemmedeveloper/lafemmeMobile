@@ -1,12 +1,13 @@
 import React, {useContext} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Colors, Fonts, Metrics} from '../../themes';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {signOff} from '../../flux/auth/actions';
 import {StoreContext} from '../../flux';
 
 const NoEnabled = () => {
-  const {authDispatch} = useContext(StoreContext);
+  const {authDispatch, util} = useContext(StoreContext);
+  const {config} = util;
 
   return (
     <View style={styles.container}>
@@ -49,7 +50,9 @@ const NoEnabled = () => {
           </TouchableOpacity>
         </View>
       </View>
-      <View style={styles.btnContainer}>
+      <TouchableOpacity
+        onPress={() => Linking.openURL(`tel:${config.phone}`)}
+        style={styles.btnContainer}>
         <Text
           style={Fonts.style.underline(
             Colors.dark,
@@ -58,7 +61,7 @@ const NoEnabled = () => {
           )}>
           Contactar a soporte
         </Text>
-      </View>
+      </TouchableOpacity>
     </View>
   );
 };

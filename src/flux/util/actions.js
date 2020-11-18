@@ -58,6 +58,23 @@ export const topicPush = (topic, notification, data) => {
     }),
   });
 };
+export const sendPushFcm = (fcm, notification, data) => {
+  console.log('fcm =>', fcm);
+  fetch('https://fcm.googleapis.com/fcm/send', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization:
+        'key=AAAAKBT0Dt4:APA91bEFw5WX5PdNrg-I7C3lWdc1P7lOno7V-jLarijN6jp5VZIFpzOyV-9e5XC2qkGEW5YFQ7M2oUUCpYihRIXZMclZIQHemle-hOWHvRinCWH5HT2hS_nXImJa92cUWBcciL-_G3cE',
+    },
+    body: JSON.stringify({
+      to: `/fcm/${fcm}`,
+      notification,
+      data,
+    }),
+  });
+};
 export const getCoverage = async (city, dispatch) => {
   try {
     setLoading(true, dispatch);
@@ -228,17 +245,12 @@ export const sendCoordinate = async (data, typeData, dispatch) => {
   }
 };
 export const updateStatus = async (status, order, dispatch) => {
-  const urlOrderStatus =
-    'https://us-central1-lafemme-5017a.cloudfunctions.net/updateOrderStatus';
-
   try {
     setLoading(true, dispatch);
 
-    await axios.post(urlOrderStatus, {
-      newOrderStatus: status,
-      order,
-    });
+    const ref = firestore().collection('orders').doc(order.id);
 
+    await ref.set({status}, {merge: true});
     setLoading(false, dispatch);
   } catch (error) {
     setLoading(false, dispatch);
