@@ -14,7 +14,6 @@ import {
 } from 'react-native';
 import Utilities from '../../utilities';
 import moment from 'moment';
-import firestore from '@react-native-firebase/firestore';
 
 import {activeMessage, updateProfile} from '../../flux/auth/actions';
 import {getServices} from '../../flux/services/actions';
