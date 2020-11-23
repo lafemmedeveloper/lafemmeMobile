@@ -8,11 +8,8 @@ const Orders = () => {
   const {state} = useContext(StoreContext);
   const {auth} = state;
   const {user} = auth;
-  if (!user) {
-    return <ButtonLogin />;
-  } else {
-    return <Content />;
-  }
+
+  return <>{user ? <Content /> : <ButtonLogin />}</>;
 };
 
 export default Orders;

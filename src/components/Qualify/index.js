@@ -26,6 +26,7 @@ const Qualify = (props) => {
   const {type, userRef, close, typeQualification, ordersRef, menuIndex} = props;
   const [note, setNote] = useState('');
   const [rating, setRating] = useState(5);
+  console.log('rating ==>', userRef.rating);
 
   const calQuantity = async () => {
     try {

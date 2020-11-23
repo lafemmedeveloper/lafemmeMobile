@@ -5,15 +5,11 @@ import ButtonLogin from '../../components/ButtonLogin';
 import Content from './Content';
 
 const Profile = () => {
-  const {state, authDispatch} = useContext(StoreContext);
+  const {state} = useContext(StoreContext);
   const {auth} = state;
   const {user} = auth;
 
-  if (!user) {
-    return <ButtonLogin />;
-  } else {
-    return <Content state={state} dispatch={authDispatch} />;
-  }
+  return <>{user ? <Content /> : <ButtonLogin />}</>;
 };
 
 export default Profile;

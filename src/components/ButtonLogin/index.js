@@ -13,7 +13,7 @@ const ButtonLogin = () => {
       <View style={{justifyContent: 'center', flex: 1}}>
         <View style={styles.containerTitle}>
           <Text style={styles.title}>¡Ups! lo sentimos</Text>
-          <Text style={styles.title}> No hemos podido itentificarte</Text>
+          <Text style={styles.title}> No hemos podido identificarte</Text>
         </View>
         <TouchableOpacity
           style={styles.button}

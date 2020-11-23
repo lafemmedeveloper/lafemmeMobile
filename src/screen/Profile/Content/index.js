@@ -50,11 +50,11 @@ const options = {
 
 const Content = (props) => {
   const {utilDispatch} = useContext(StoreContext);
-  const {state, dispatch} = props;
+  const {state, authDispatch} = useContext(StoreContext);
+
   const {auth, util} = state;
   const {user} = auth;
   const {deviceInfo} = util;
-  console.log('state', state);
   const [modalName, setModalName] = useState(false);
   const [modalEmail, setModalEmail] = useState(false);
   const [tyc, setTyc] = useState(false);
@@ -177,7 +177,7 @@ const Content = (props) => {
     await prepareImage(user.uid, filename);
   };
   const prepareImage = async (uid, filename) => {
-    setLoading(true, dispatch);
+    setLoading(true, authDispatch);
     let picture = {
       thumbnail: null,
       small: null,
@@ -228,12 +228,12 @@ const Content = (props) => {
                 setValue(state);
               },
               (error) => {
-                setLoading(false, dispatch);
+                setLoading(false, authDispatch);
                 Alert.alert('Sorry, Try again.', error);
               },
             );
         } catch (error) {
-          setLoading(false, dispatch);
+          setLoading(false, authDispatch);
           console.log('err', error);
         }
       })
@@ -286,13 +286,13 @@ const Content = (props) => {
               },
             );
         } catch (error) {
-          setLoading(false, dispatch);
+          setLoading(false, authDispatch);
           console.log('err', error);
         }
       })
       .catch((error) => {
         console.log('error', error);
-        setLoading(false, dispatch);
+        setLoading(false, authDispatch);
       });
     ImageResizer.createResizedImage(x, 256, 256, 'JPEG', 30, 0)
       .then((RES) => {
@@ -339,12 +339,12 @@ const Content = (props) => {
               },
             );
         } catch (error) {
-          setLoading(false, dispatch);
+          setLoading(false, authDispatch);
           console.log('err', error);
         }
       })
       .catch((error) => {
-        setLoading(false, dispatch);
+        setLoading(false, authDispatch);
         console.log('error', error);
       });
     ImageResizer.createResizedImage(x, 512, 512, 'JPEG', 30, 0)
@@ -393,12 +393,12 @@ const Content = (props) => {
             );
         } catch (error) {
           console.log('err', error);
-          setLoading(false, dispatch);
+          setLoading(false, authDispatch);
         }
       })
       .catch((error) => {
         console.log('error', error);
-        setLoading(false, dispatch);
+        setLoading(false, authDispatch);
       });
     ImageResizer.createResizedImage(x, 1024, 1024, 'JPEG', 30, 0)
       .then((RES) => {
@@ -450,16 +450,16 @@ const Content = (props) => {
       })
       .catch((error) => {
         console.log('error', error);
-        setLoading(false, dispatch);
+        setLoading(false, authDispatch);
       });
   };
 
   const updateUser = async (picture) => {
-    await updateProfile({...picture}, 'imageUrl', dispatch);
+    await updateProfile({...picture}, 'imageUrl', authDispatch);
   };
   const signOffUser = async () => {
     resetReducer(utilDispatch);
-    await signOff(dispatch);
+    await signOff(authDispatch);
   };
 
   return (
@@ -701,7 +701,7 @@ const Content = (props) => {
       <ModalApp open={modalEmail} setOpen={setModalEmail}>
         <UpdateEmail
           user={user}
-          dispatch={dispatch}
+          dispatch={authDispatch}
           setModalEmail={setModalEmail}
         />
       </ModalApp>

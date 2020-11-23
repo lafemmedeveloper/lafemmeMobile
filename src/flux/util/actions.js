@@ -249,8 +249,18 @@ export const updateStatus = async (status, order, dispatch) => {
     setLoading(true, dispatch);
 
     const ref = firestore().collection('orders').doc(order.id);
+    if (status === 6) {
+      await ref.set(
+        {
+          status,
+          timeLast: Date.now(),
+        },
+        {merge: true},
+      );
+    } else {
+      await ref.set({status}, {merge: true});
+    }
 
-    await ref.set({status}, {merge: true});
     setLoading(false, dispatch);
   } catch (error) {
     setLoading(false, dispatch);
@@ -272,6 +282,7 @@ export const addImageGallery = async (data, id, dispatch) => {
   }
 };
 export const userRating = async (uid, rating, dispatch) => {
+  console.log('result =>', rating);
   try {
     setLoading(true, dispatch);
     const userRef = firestore().collection('users').doc(uid);

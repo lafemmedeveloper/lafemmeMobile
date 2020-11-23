@@ -1,4 +1,4 @@
-import React, {useContext, useState, Fragment, useEffect} from 'react';
+import React, {useContext, useState, Fragment, useEffect, useRef} from 'react';
 import {View, StyleSheet, TouchableOpacity, Text} from 'react-native';
 import {Fonts, Colors, Metrics} from '../../../themes';
 import {StoreContext} from '../../../flux';
@@ -11,6 +11,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const Content = () => {
   const {utilDispatch} = useContext(StoreContext);
+  const isMountedRef = useRef(null);
 
   const navigation = useNavigation();
   const {state} = useContext(StoreContext);
@@ -19,7 +20,11 @@ const Content = () => {
   const [menuIndex, setMenuIndex] = useState(0);
 
   useEffect(() => {
+    isMountedRef.current = true;
     getOrders(utilDispatch);
+    return () => {
+      return () => (isMountedRef.current = false);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const activeDetailModal = (order) => {
