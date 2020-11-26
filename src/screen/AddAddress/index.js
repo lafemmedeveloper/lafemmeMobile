@@ -13,20 +13,21 @@ import {ApplicationStyles, Colors, Fonts, Images, Metrics} from '../../themes';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
-import {validateCoverage} from '../../helpers/GeoHelper';
+import {filterResultsByTypes, validateCoverage} from '../../helpers/GeoHelper';
 
 import Utilities from '../../utilities';
 import {updateProfile} from '../../flux/auth/actions';
 import {StoreContext} from '../../flux';
-import Geocode from 'react-geocode';
 import ModalApp from '../../components/ModalApp';
 import EnableCoverage from './EnableCoverage';
 import NoEnableCoverage from './NoEnableCoverage';
 import {getCoverage} from '../../flux/util/actions';
 import ButtonCoordinates from '../../components/ButtonCoordinates';
+import Config from 'react-native-config';
 
 const AddAddress = ({setAddAddress}) => {
-  const APIKEY = 'AIzaSyArVhfk_wHVACPwunlCi1VP9EUgYZcnFpQ';
+  //  const APIKEY = 'AIzaSyArVhfk_wHVACPwunlCi1VP9EUgYZcnFpQ';
+  const APIKEY = Config.GOOGLE_APIKEY;
   const {state, authDispatch, utilDispatch} = useContext(StoreContext);
   const {auth, util} = state;
   const {user} = auth;
@@ -50,7 +51,6 @@ const AddAddress = ({setAddAddress}) => {
     hotel: 2,
     otro: 3,
   };
-  const [url, setUrl] = useState('');
   const [googleAddress, setGoogleAddress] = useState(null);
   const [googleDetail, setGoogleDetail] = useState(null);
   const [name, setName] = useState(null);
@@ -60,6 +60,7 @@ const AddAddress = ({setAddAddress}) => {
   const [addressDetail, setAddressDetail] = useState('');
   const [notesAddress, setNotesAddress] = useState('');
   const [currentLocationActive, setCurrentLocationActive] = useState(false);
+  const [coverageNotification, setCoverageNotification] = useState([]);
   const [coordinate, setCoordinate] = useState({
     latitude: 6.2458077,
     longitude: -75.5680703,
@@ -69,9 +70,11 @@ const AddAddress = ({setAddAddress}) => {
   }, [utilDispatch]);
 
   const checkCoverage = (latitude, longitude) => {
-    let coverage = validateCoverage(latitude, longitude, coverageZones);
-
-    setIsCoverage(coverage ? addressStatus.coverage : addressStatus.noCoverage);
+    let result = validateCoverage(latitude, longitude, coverageZones);
+    setCoverageNotification(result.name);
+    setIsCoverage(
+      result.isCoverage ? addressStatus.coverage : addressStatus.noCoverage,
+    );
   };
 
   const saveAddress = async () => {
@@ -88,13 +91,13 @@ const AddAddress = ({setAddAddress}) => {
       administrative_area_level_2: googleDetail.administrative_area_level_2,
       neighborhood: googleDetail.neighborhood,
       country: googleDetail.country,
-      addressDetail,
-      notesAddress: notesAddress,
       locality: googleDetail.locality,
+      notesAddress: notesAddress,
+      addressDetail,
       coordinates: coordinate,
       formattedAddress: googleAddress,
       id: Utilities.create_UUID(),
-      url,
+      coverageNotification,
     };
 
     let address = [...user.address, item];
@@ -105,38 +108,6 @@ const AddAddress = ({setAddAddress}) => {
     setAddAddress(false);
   };
 
-  const updateLocation = async (data, details) => {
-    const {structured_formatting} = data;
-    const {main_text} = structured_formatting;
-
-    Geocode.setApiKey(APIKEY);
-    Geocode.setLanguage('es');
-    Geocode.setRegion('co');
-    Geocode.enableDebug();
-
-    const addressSerch = details.formatted_address;
-
-    setName(main_text);
-    await Geocode.fromAddress(addressSerch).then(
-      (response) => {
-        const dataResponse = response.results[0];
-        const {lat, lng} = dataResponse.geometry.location;
-        activeApi({
-          latitude: lat,
-          longitude: lng,
-        });
-        setCoordinate({
-          latitude: lat,
-          longitude: lng,
-        });
-
-        setGoogleAddress(addressSerch);
-      },
-      (error) => {
-        console.error('error updateLocation =>', error);
-      },
-    );
-  };
   const closeModalCoverage = (data) => {
     if (!data) {
       setIsCoverage(addressStatus.searching);
@@ -145,62 +116,24 @@ const AddAddress = ({setAddAddress}) => {
     }
   };
 
-  const activeApi = async (coordinates) => {
-    const res = await fetch(
-      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${coordinates.latitude},${coordinates.longitude}&key=${APIKEY}`,
-    );
+  const handleAddress = async (data, details) => {
+    const result = await filterResultsByTypes(details.address_components);
 
-    setUrl(res.url);
-    const json = await res.json();
-    if (json.status !== 'OK') {
-      throw new Error(`Geocode error: ${json.status}`);
-    } else {
-      filterResultsByTypes(json.results, [
-        'locality',
-        'neighborhood',
-        'political',
-        'administrative_area_level_3',
-        'administrative_area_level_2',
-        'administrative_area_level_1',
-      ]);
-    }
+    console.log('handleAddress:data =>', data);
+    console.log('handleAddress:details =>', details);
+
+    console.log('filterResultsByTypes:result =>', result);
+    setName(data.description);
+    setGoogleAddress(data.description);
+    setGoogleDetail({
+      ...result,
+    });
+    setCoordinate({
+      latitude: details.geometry.location.lat,
+      longitude: details.geometry.location.lng,
+    });
   };
 
-  const filterResultsByTypes = (unfilteredResults, types) => {
-    const results = [];
-    for (let i = 0; i < unfilteredResults.length; i++) {
-      let found = false;
-
-      for (let j = 0; j < types.length; j++) {
-        if (unfilteredResults[i].types.indexOf(types[j]) !== -1) {
-          found = true;
-          break;
-        }
-      }
-
-      if (found === true) {
-        results.push(unfilteredResults[i]);
-      }
-    }
-
-    let data = {};
-    if (results.length > 0) {
-      for (
-        let index = 0;
-        index < results[0].address_components.length;
-        index++
-      ) {
-        let doc = results[0].address_components[index];
-        let key = doc.types[0];
-        let value = doc.long_name;
-        let item = {[key]: value};
-
-        data = {...data, ...item};
-      }
-    }
-
-    setGoogleDetail(data);
-  };
   return (
     <>
       <View
@@ -212,7 +145,6 @@ const AddAddress = ({setAddAddress}) => {
           right: 25,
         }}>
         <ButtonCoordinates
-          activeApi={activeApi}
           setName={setName}
           setCoordinate={setCoordinate}
           APIKEY={APIKEY}
@@ -233,24 +165,43 @@ const AddAddress = ({setAddAddress}) => {
           flexDirection: 'row-reverse',
         }}>
         <GooglePlacesAutocomplete
-          placeholder={'(Ej: carrera 33 #10-20)'}
+          placeholder={'Ej: Ciudad, barrio, dirección, lugar...'}
           autoFocus={false}
-          returnKeyType={'search'} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
-          keyboardAppearance={'light'} // Can be left out for default keyboardAppearance https://facebook.github.io/react-native/docs/textinput.html#keyboardappearance
-          listViewDisplayed={false} // true/false/undefined
+          returnKeyType={'search'}
+          keyboardAppearance={'light'}
           fetchDetails={true}
-          renderDescription={(row) => row.description} // custom description render
-          onPress={(data, details = null) => updateLocation(data, details)}
+          renderDescription={(row) => row.description}
+          onPress={(data, details) => {
+            handleAddress(data, details);
+          }}
+          getDefaultValue={() => ''}
           query={{
-            // available options: https://developers.google.com/places/web-service/autocomplete
             key: APIKEY,
-            language: 'es', // language of the results
-            types: 'geocode', // default: 'geocode'
+            language: 'es',
+            types: 'geocode',
             components: 'country:co',
             location: '6.2690007,-75.734792',
-            radius: '55000', //15 km
+            radius: '55000',
             strictbounds: true,
           }}
+          textInputProps={{
+            onChangeText: (text) => {
+              console.log('value input', text);
+            },
+          }}
+          onFail={(error) => console.log('AddressModal -> onFail', error)}
+          onNotFound={(error) =>
+            console.log('AddressModal -> onNotFound', error)
+          }
+          nearbyPlacesAPI={'GooglePlacesSearch'}
+          GooglePlacesDetailsQuery={{
+            fields: ['formatted_address', 'geometry', 'vicinity'],
+          }}
+          filterReverseGeocodingByTypes={[
+            'locality',
+            'administrative_area_level_3',
+          ]}
+          debounce={200}
           styles={{
             textInputContainer: {
               backgroundColor: Colors.light,
@@ -282,29 +233,6 @@ const AddAddress = ({setAddAddress}) => {
               fontWeight: '400',
             },
           }}
-          currentLocation={false} // Will add a 'Current location' button at the top of the predefined places list
-          currentLocationLabel={'Mi ubicación actual'}
-          nearbyPlacesAPI={'GooglePlacesSearch'} // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
-          GoogleReverseGeocodingQuery={
-            {
-              // available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro
-            }
-          }
-          GooglePlacesSearchQuery={{
-            // available options for GooglePlacesSearch API : https://developers.google.com/places/web-service/search
-            rankby: 'distance',
-            type: 'cafe',
-          }}
-          GooglePlacesDetailsQuery={{
-            // available options for GooglePlacesDetails API : https://developers.google.com/places/web-service/details
-            fields: 'formatted_address',
-          }}
-          filterReverseGeocodingByTypes={[
-            'locality',
-            'administrative_area_level_3',
-          ]}
-          // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
-          debounce={200} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
         />
       </View>
 
