@@ -45,6 +45,7 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [modalCoupon, setModalCoupon] = useState(false);
   const [orderTotal, setOrderTotal] = useState(0);
+  const [orderServices, setOrderServices] = useState([]);
 
   const [keyboardHeight] = useKeyboard();
 
@@ -120,6 +121,8 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
     if (isCompleted) {
       console.log('isCompleted');
       let data = {
+        loquidedBy: null,
+        timeLastCurrent: null,
         timeInit: Date.now(),
         timeLast: null,
         noteQualtification: '',
@@ -216,13 +219,17 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
     user.cart?.services.length > 0 ? _.sumBy(user.cart.services, 'total') : 0;
 
   useEffect(() => {
-    const result = calculeTotal(user, totalService);
-    if (result) {
-      setOrderTotal(totalService - Math.abs(result));
+    if (user.cart?.services.length > 0) {
+      setOrderServices(user.cart?.services);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user.cart.coupon]);
+
+  useEffect(() => {
+    calculeTotal(user.cart.coupon, orderServices, setOrderTotal);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [orderServices]);
 
   return (
     <View style={{height: 650}}>
@@ -350,9 +357,7 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
           </Text>
           <Text
             style={Fonts.style.bold(Colors.dark, Fonts.size.medium, 'left')}>
-            {user.cart.coupon
-              ? utilities.formatCOP(orderTotal)
-              : utilities.formatCOP(totalService)}
+            {1213}
           </Text>
         </View>
 

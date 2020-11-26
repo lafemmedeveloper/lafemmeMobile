@@ -1,22 +1,20 @@
-export const calculeTotal = (user, totalService) => {
-  const {cart} = user;
-  const {coupon, services} = cart;
-  let result = 0;
-
+import _ from 'lodash';
+export const calculeTotal = async (coupon, services, setOrderTotal) => {
+  let currentService = services;
   if (coupon) {
-    for (let index = 0; index < services.length; index++) {
-      if (user.cart.coupon.type.includes(services[index].servicesType)) {
-        const resultSuma =
+    for (let index = 0; index < currentService.length; index++) {
+      if (coupon.type.includes(currentService[index].servicesType)) {
+        const calculate =
           coupon.typeCoupon !== 'money'
-            ? (coupon.percentage / 100) * services[index].total -
-              services[index].total
-            : services[index].total - coupon.money;
-
-        result = resultSuma;
+            ? (coupon.percentage / 100) * currentService[index].total -
+              currentService[index].total
+            : currentService[index].total - coupon.money;
+        currentService[index].total = calculate;
       }
     }
-    return result;
+    console.log('currentService ==>', currentService);
+    setOrderTotal(_.sumBy(currentService, 'total'));
   } else {
-    return totalService;
+    setOrderTotal(_.sumBy(services, 'total'));
   }
 };

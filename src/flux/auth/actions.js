@@ -40,7 +40,7 @@ export const setUser = async (data, dispatch) => {
   } catch (error) {
     setLoading(false, dispatch);
 
-    console.lgo('error', error);
+    console.log('error', error);
   }
 };
 
@@ -141,12 +141,11 @@ export const updateProfileItem = async (newData, uid, dispatch) => {
   }
 };
 
-export const activeMessage = async (topic, dispatch) => {
+export const activeMessage = async (topic) => {
   try {
-    setLoading(true, dispatch);
     messaging()
       .subscribeToTopic(topic)
-      .then(() => console.log('Subscribed to topic!'));
+      .then(() => console.log('Subscribed to topic!', topic));
     messaging().onMessage(async (remoteMessage) => {
       console.log('A new FCM message arrived!', JSON.stringify(remoteMessage));
     });
@@ -157,13 +156,31 @@ export const activeMessage = async (topic, dispatch) => {
     if (userId) {
       sendTokenUser();
     }
-    setLoading(false, dispatch);
   } catch (error) {
-    setLoading(false, dispatch);
-
     console.log('error activeMessage =>', error);
   }
 };
+export const suscribeCoverage = async (arrayTopics) => {
+  try {
+    for (let index = 0; index < arrayTopics.length; index++) {
+      console.log(
+        'arrayTopics[index] ===>',
+        arrayTopics[index].split(' ').join('').toLowerCase(),
+      );
+      messaging()
+        .subscribeToTopic(arrayTopics[index].split(' ').join('').toLowerCase())
+        .then(() =>
+          console.log(
+            'Subscribed to topic!',
+            arrayTopics[index].split(' ').join('').toLowerCase(),
+          ),
+        );
+    }
+  } catch (error) {
+    console.log('error activeMessage =>', error);
+  }
+};
+
 const sendTokenUser = () => {
   messaging()
     .getToken()

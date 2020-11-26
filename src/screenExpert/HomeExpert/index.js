@@ -3,7 +3,12 @@ import {View, ScrollView, StyleSheet, Text, StatusBar} from 'react-native';
 import {Colors, Metrics, ApplicationStyles, Fonts} from '../../themes';
 import ExpertDealOffer from '../../components/ExpertDealOffer';
 import {StoreContext} from '../../flux';
-import {activeMessage, setUser, updateProfile} from '../../flux/auth/actions';
+import {
+  activeMessage,
+  setUser,
+  suscribeCoverage,
+  updateProfile,
+} from '../../flux/auth/actions';
 import {
   getExpertOpenOrders,
   getDeviceInfo,
@@ -45,7 +50,8 @@ const HomeExpert = () => {
     getDeviceInfo(utilDispatch);
     if (state.auth.user) {
       currentCoordinate();
-      activeMessage('expert', utilDispatch);
+      activeMessage('expert');
+      suscribeCoverage(state.auth.user.coverage);
       getExpertActiveOrders(state.auth.user, utilDispatch);
       //  getExpertHistoryOrders(state.auth.user, utilDispatch);
       activeNameSlug(state.auth.user.activity, utilDispatch);

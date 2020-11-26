@@ -17,6 +17,7 @@ import DeviceInfo from 'react-native-device-info';
 import auth from '@react-native-firebase/auth';
 import axios from 'axios';
 import {Alert} from 'react-native';
+import moment from 'moment';
 
 export const handleError = (dispatch) => {
   dispatch({type: HANDLE_ERROR, payload: true});
@@ -254,6 +255,7 @@ export const updateStatus = async (status, order, dispatch) => {
         {
           status,
           timeLast: Date.now(),
+          timeLastCurrent: moment(new Date()).format('L'),
         },
         {merge: true},
       );
