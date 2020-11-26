@@ -57,3 +57,5 @@ fastlane/screenshots
 # CocoaPods
 /ios/Pods/
 fastlane/report.xml
+.env
+.env.staging
