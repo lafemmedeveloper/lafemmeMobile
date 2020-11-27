@@ -6,13 +6,15 @@ import {
   StyleSheet,
   Dimensions,
   Image,
+  KeyboardAvoidingView,
+  Platform,
   Alert,
 } from 'react-native';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 import {ApplicationStyles, Colors, Fonts, Images, Metrics} from '../../themes';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-
+import Config from 'react-native-config';
 import {validateCoverage} from '../../helpers/GeoHelper';
 
 import Utilities from '../../utilities';
@@ -26,7 +28,8 @@ import {getCoverage} from '../../flux/util/actions';
 import ButtonCoordinates from '../../components/ButtonCoordinates';
 
 const AddAddress = ({setAddAddress}) => {
-  const APIKEY = 'AIzaSyArVhfk_wHVACPwunlCi1VP9EUgYZcnFpQ';
+  const APIKEY = Config.APIKEY;
+  console.log('🚀 ~ file: index.js ~ line 32 ~ AddAddress ~ APIKEY', APIKEY);
   const {state, authDispatch, utilDispatch} = useContext(StoreContext);
   const {auth, util} = state;
   const {user} = auth;
@@ -121,10 +124,10 @@ const AddAddress = ({setAddAddress}) => {
       (response) => {
         const dataResponse = response.results[0];
         const {lat, lng} = dataResponse.geometry.location;
-        activeApi({
-          latitude: lat,
-          longitude: lng,
-        });
+        // activeApi({
+        //   latitude: lat,
+        //   longitude: lng,
+        // });
         setCoordinate({
           latitude: lat,
           longitude: lng,
@@ -207,9 +210,10 @@ const AddAddress = ({setAddAddress}) => {
         style={{
           zIndex: 6,
           position: 'absolute',
-          top: Metrics.screenHeight / 4,
+          // top: Metrics.screenHeight / 4,
+          right: 10,
+          bottom: 90,
           alignSelf: 'flex-end',
-          right: 25,
         }}>
         <ButtonCoordinates
           activeApi={activeApi}
@@ -222,149 +226,158 @@ const AddAddress = ({setAddAddress}) => {
           setCurrentLocationActive={setCurrentLocationActive}
         />
       </View>
-      <View
-        style={{
-          position: 'absolute',
-          width: Metrics.screenWidth - 40,
-          top: Metrics.screenHeight / 4,
-          zIndex: 5,
-          justifyContent: 'space-between',
-          alignSelf: 'center',
-          flexDirection: 'row-reverse',
-        }}>
-        <GooglePlacesAutocomplete
-          placeholder={'(Ej: carrera 33 #10-20)'}
-          autoFocus={false}
-          returnKeyType={'search'} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
-          keyboardAppearance={'light'} // Can be left out for default keyboardAppearance https://facebook.github.io/react-native/docs/textinput.html#keyboardappearance
-          listViewDisplayed={false} // true/false/undefined
-          fetchDetails={true}
-          renderDescription={(row) => row.description} // custom description render
-          onPress={(data, details = null) => updateLocation(data, details)}
-          query={{
-            // available options: https://developers.google.com/places/web-service/autocomplete
-            key: APIKEY,
-            language: 'es', // language of the results
-            types: 'geocode', // default: 'geocode'
-            components: 'country:co',
-            location: '6.2690007,-75.734792',
-            radius: '55000', //15 km
-            strictbounds: true,
-          }}
-          styles={{
-            textInputContainer: {
-              backgroundColor: Colors.light,
-              borderTopColor: 'transparent',
-              borderBottomColor: 'transparent',
-              borderRadius: 10,
-              shadowColor: '#000',
-              shadowOffset: {
-                width: 0,
-                height: 2,
-              },
-              shadowOpacity: 0.25,
-              shadowRadius: 3.84,
+      <View>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? null : 'height'}
+          style={{maxHeight: Metrics.screenHeight - 60}}>
+          <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
 
-              elevation: 5,
-            },
-            poweredContainer: {
-              height: 30,
-              borderBottomLeftRadius: Metrics.borderRadius,
-              borderBottomRightRadius: Metrics.borderRadius,
-            },
-            row: {
-              padding: 5,
-              height: 30,
-              flexDirection: 'row',
-              backgroundColor: Colors.light,
-            },
-            description: {
-              fontWeight: '400',
-            },
-          }}
-          currentLocation={false} // Will add a 'Current location' button at the top of the predefined places list
-          currentLocationLabel={'Mi ubicación actual'}
-          nearbyPlacesAPI={'GooglePlacesSearch'} // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
-          GoogleReverseGeocodingQuery={
-            {
-              // available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro
-            }
-          }
-          GooglePlacesSearchQuery={{
-            // available options for GooglePlacesSearch API : https://developers.google.com/places/web-service/search
-            rankby: 'distance',
-            type: 'cafe',
-          }}
-          GooglePlacesDetailsQuery={{
-            // available options for GooglePlacesDetails API : https://developers.google.com/places/web-service/details
-            fields: 'formatted_address',
-          }}
-          filterReverseGeocodingByTypes={[
-            'locality',
-            'administrative_area_level_3',
-          ]}
-          // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
-          debounce={200} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
-        />
-      </View>
+          <Image
+            source={Images.pinAddress}
+            style={{
+              width: 50,
+              height: 50,
+              resizeMode: 'contain',
+              alignSelf: 'center',
+              marginBottom: 10,
+              tintColor: Colors.client.primaryColor,
+            }}
+          />
+          <Text style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
+            {'Agregar direccion'}
+          </Text>
 
-      <View style={{maxHeight: Metrics.screenHeight - 60}}>
-        <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
+          <Text
+            style={Fonts.style.light(Colors.data, Fonts.size.small, 'center')}>
+            {'Agrega y administra tus direcciones de servicio'}
+          </Text>
 
-        <Image
-          source={Images.pinAddress}
-          style={{
-            width: 50,
-            height: 50,
-            resizeMode: 'contain',
-            alignSelf: 'center',
-            marginBottom: 10,
-            tintColor: Colors.client.primaryColor,
-          }}
-        />
-        <Text style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
-          {'Agregar direccion'}
-        </Text>
+          <View
+            style={{
+              // position: 'absolute',
+              width: Metrics.screenWidth - 40,
+              // top: 10,
+              marginVertical: 10,
+              zIndex: 5,
+              justifyContent: 'space-between',
+              alignSelf: 'center',
+              flexDirection: 'row-reverse',
+            }}>
+            <GooglePlacesAutocomplete
+              placeholder={'(Ej: carrera 33 #10-20)'}
+              autoFocus={false}
+              returnKeyType={'search'} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
+              keyboardAppearance={'light'} // Can be left out for default keyboardAppearance https://facebook.github.io/react-native/docs/textinput.html#keyboardappearance
+              listViewDisplayed={false} // true/false/undefined
+              fetchDetails={true}
+              renderDescription={(row) => row.description} // custom description render
+              onPress={(data, details = null) => updateLocation(data, details)}
+              query={{
+                // available options: https://developers.google.com/places/web-service/autocomplete
+                key: APIKEY,
+                language: 'es', // language of the results
+                types: 'geocode', // default: 'geocode'
+                components: 'country:co',
+                location: '6.2690007,-75.734792',
+                radius: '55000', //15 km
+                strictbounds: true,
+              }}
+              styles={{
+                textInputContainer: {
+                  backgroundColor: Colors.light,
+                  borderTopColor: 'transparent',
+                  borderBottomColor: 'transparent',
+                  borderRadius: 10,
 
-        <Text
-          style={Fonts.style.light(Colors.data, Fonts.size.small, 'center')}>
-          {'Agrega y administra tus direcciones de servicio'}
-        </Text>
-        <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
-        <MapView
-          provider={__DEV__ ? null : PROVIDER_GOOGLE} // remove if not using Google Maps
-          style={{
-            width: Metrics.screenWidth,
-            height: Metrics.screenHeight,
-          }}
-          customMapStyle={mapStyle}
-          mapPadding={{
-            bottom: 10,
-          }}
-          initialRegion={{
-            latitude: 6.2458077,
-            longitude: -75.5680703,
-            latitudeDelta: LATITUDE_DELTA,
-            longitudeDelta: LONGITUDE_DELTA,
-          }}
-          region={{
-            latitude: coordinate.latitude,
-            longitude: coordinate.longitude,
-            latitudeDelta: 0.00001,
-            longitudeDelta: 0.00001 * ASPECT_RATIO,
-          }}>
-          <Marker.Animated
-            coordinate={{
+                  shadowColor: '#000',
+                  shadowOffset: {
+                    width: 0,
+                    height: 2,
+                  },
+                  shadowOpacity: 0.25,
+                  shadowRadius: 3.84,
+
+                  elevation: 5,
+                },
+                poweredContainer: {
+                  height: 30,
+                  borderBottomLeftRadius: Metrics.borderRadius,
+                  borderBottomRightRadius: Metrics.borderRadius,
+                },
+                row: {
+                  padding: 5,
+                  height: 30,
+                  flexDirection: 'row',
+                  backgroundColor: Colors.light,
+                },
+                description: {
+                  fontWeight: '400',
+                },
+              }}
+              currentLocation={false} // Will add a 'Current location' button at the top of the predefined places list
+              currentLocationLabel={'Mi ubicación actual'}
+              nearbyPlacesAPI={'GooglePlacesSearch'} // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
+              GoogleReverseGeocodingQuery={
+                {
+                  // available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro
+                }
+              }
+              GooglePlacesSearchQuery={{
+                // available options for GooglePlacesSearch API : https://developers.google.com/places/web-service/search
+                rankby: 'distance',
+                type: 'cafe',
+              }}
+              GooglePlacesDetailsQuery={{
+                // available options for GooglePlacesDetails API : https://developers.google.com/places/web-service/details
+                fields: 'formatted_address',
+              }}
+              filterReverseGeocodingByTypes={[
+                'locality',
+                'administrative_area_level_3',
+              ]}
+              // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
+              debounce={200} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
+            />
+          </View>
+
+          {/* <View opacity={0.0} style={ApplicationStyles.separatorLineMini} /> */}
+
+          <MapView
+            provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+            style={{
+              width: Metrics.screenWidth,
+              height: Metrics.screenHeight * 0.6,
+              paddingBottom: 200,
+            }}
+            customMapStyle={mapStyle}
+            mapPadding={{
+              bottom: 10,
+            }}
+            initialRegion={{
+              latitude: 6.2458077,
+              longitude: -75.5680703,
+              latitudeDelta: LATITUDE_DELTA,
+              longitudeDelta: LONGITUDE_DELTA,
+            }}
+            region={{
               latitude: coordinate.latitude,
               longitude: coordinate.longitude,
+              latitudeDelta: 0.00001,
+              longitudeDelta: 0.00001 * ASPECT_RATIO,
             }}>
-            <Icon
-              name={'map-marker-alt'}
-              size={30}
-              color={Colors.client.primaryColor}
-            />
-          </Marker.Animated>
-        </MapView>
+            <Marker.Animated
+              coordinate={{
+                latitude: coordinate.latitude,
+                longitude: coordinate.longitude,
+              }}>
+              <Icon
+                name={'map-marker-alt'}
+                size={30}
+                color={Colors.client.primaryColor}
+              />
+            </Marker.Animated>
+          </MapView>
+        </KeyboardAvoidingView>
       </View>
 
       <TouchableOpacity
@@ -373,7 +386,7 @@ const AddAddress = ({setAddAddress}) => {
         style={[
           styles.btnContainer,
           {
-            position: 'absolute',
+            // position: 'absolute',
             bottom: 0,
             backgroundColor: googleAddress
               ? Colors.client.primaryColor
@@ -384,8 +397,6 @@ const AddAddress = ({setAddAddress}) => {
           style={Fonts.style.bold(Colors.light, Fonts.size.medium, 'center')}>
           {'Verificar Cobertura'}
         </Text>
-
-        {/* Modals */}
       </TouchableOpacity>
       <ModalApp // false coverage
         open={isCoverage === addressStatus.noCoverage}

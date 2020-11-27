@@ -71,6 +71,7 @@ const styles = StyleSheet.create({
   ContIcon: {
     height: 40,
     width: 40,
+    borderRadius: 20,
     alignSelf: 'center',
     flex: 0,
     zIndex: 25,
