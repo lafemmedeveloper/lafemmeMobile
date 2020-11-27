@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {
   View,
   ScrollView,
@@ -20,6 +20,8 @@ import AddAddress from '../AddAddress';
 import {useNavigation} from '@react-navigation/native';
 
 const Address = ({closeModal}) => {
+  const isMountedRef = useRef(null);
+
   const navigation = useNavigation();
   const {authDispatch, state, utilDispatch} = useContext(StoreContext);
   const {auth, util} = state;
@@ -28,15 +30,19 @@ const Address = ({closeModal}) => {
   const [addAddress, setAddAddress] = useState(false);
 
   useEffect(() => {
+    isMountedRef.current = true;
     getCoverage('Medellín', utilDispatch);
+    return () => {
+      return () => (isMountedRef.current = false);
+    };
   }, [utilDispatch]);
 
   const selectAddress = async (address) => {
     const {latitude, longitude} = address.coordinates;
 
-    let coverage = validateCoverage(latitude, longitude, coverageZones);
+    let result = validateCoverage(latitude, longitude, coverageZones);
     let services = user?.cart?.services ?? [];
-    if (coverage) {
+    if (result.isCoverage) {
       await updateProfile(
         {...user.cart, address, services},
         'cart',
