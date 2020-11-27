@@ -76,33 +76,6 @@ export const sendPushFcm = (fcm, notification, data) => {
     }),
   });
 };
-export const topicPushArray = (arrayTopic, notification, data) => {
-  console.log('arrayTopic =>', arrayTopic);
-  try {
-    for (let index = 0; index < arrayTopic.length; index++) {
-      console.log(
-        'topic coverage =>',
-        arrayTopic[index].split(' ').join('').toLowerCase(),
-      );
-      fetch('https://fcm.googleapis.com/fcm/send', {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          Authorization:
-            'key=AAAAKBT0Dt4:APA91bEFw5WX5PdNrg-I7C3lWdc1P7lOno7V-jLarijN6jp5VZIFpzOyV-9e5XC2qkGEW5YFQ7M2oUUCpYihRIXZMclZIQHemle-hOWHvRinCWH5HT2hS_nXImJa92cUWBcciL-_G3cE',
-        },
-        body: JSON.stringify({
-          to: `/topics/${arrayTopic[index].split(' ').join('').toLowerCase()}`,
-          notification,
-          data,
-        }),
-      });
-    }
-  } catch (error) {
-    console.log('error:topicPushArray', error);
-  }
-};
 
 export const getCoverage = async (city, dispatch) => {
   try {
@@ -485,14 +458,26 @@ export const sendOrderService = async (data, user, dispatch) => {
           content_available: true,
           priority: 'high',
         };
-        let dataPush = null;
-        topicPushArray(data.address.coverage, notification, dataPush);
+        sendNotificationTopics(notification, data.address.coverageNotification);
       })
       .catch(function (error) {
         console.error('Error saving order : ', error);
       });
   } catch (error) {
     console.log('sendOrder:error', error);
+  }
+};
+export const sendNotificationTopics = async (notification, topics) => {
+  try {
+    const url =
+      'https://us-central1-lafemme-5017a.cloudfunctions.net/senPushTopics';
+    await axios.post(url, {
+      title: notification.title,
+      message: notification.body,
+      topics,
+    });
+  } catch (error) {
+    console.log('error:sendNotificationTopics', error);
   }
 };
 
