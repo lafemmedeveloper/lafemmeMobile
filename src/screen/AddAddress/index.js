@@ -6,30 +6,28 @@ import {
   StyleSheet,
   Dimensions,
   Image,
-  KeyboardAvoidingView,
-  Platform,
   Alert,
 } from 'react-native';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 import {ApplicationStyles, Colors, Fonts, Images, Metrics} from '../../themes';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import Config from 'react-native-config';
-import {validateCoverage} from '../../helpers/GeoHelper';
+
+import {filterResultsByTypes, validateCoverage} from '../../helpers/GeoHelper';
 
 import Utilities from '../../utilities';
 import {updateProfile} from '../../flux/auth/actions';
 import {StoreContext} from '../../flux';
-import Geocode from 'react-geocode';
 import ModalApp from '../../components/ModalApp';
 import EnableCoverage from './EnableCoverage';
 import NoEnableCoverage from './NoEnableCoverage';
 import {getCoverage} from '../../flux/util/actions';
 import ButtonCoordinates from '../../components/ButtonCoordinates';
+import Config from 'react-native-config';
 
 const AddAddress = ({setAddAddress}) => {
-  const APIKEY = Config.APIKEY;
-  console.log('🚀 ~ file: index.js ~ line 32 ~ AddAddress ~ APIKEY', APIKEY);
+  //  const APIKEY = 'AIzaSyArVhfk_wHVACPwunlCi1VP9EUgYZcnFpQ';
+  const APIKEY = Config.GOOGLE_APIKEY;
   const {state, authDispatch, utilDispatch} = useContext(StoreContext);
   const {auth, util} = state;
   const {user} = auth;
@@ -53,7 +51,6 @@ const AddAddress = ({setAddAddress}) => {
     hotel: 2,
     otro: 3,
   };
-  const [url, setUrl] = useState('');
   const [googleAddress, setGoogleAddress] = useState(null);
   const [googleDetail, setGoogleDetail] = useState(null);
   const [name, setName] = useState(null);
@@ -63,6 +60,7 @@ const AddAddress = ({setAddAddress}) => {
   const [addressDetail, setAddressDetail] = useState('');
   const [notesAddress, setNotesAddress] = useState('');
   const [currentLocationActive, setCurrentLocationActive] = useState(false);
+  const [coverageNotification, setCoverageNotification] = useState([]);
   const [coordinate, setCoordinate] = useState({
     latitude: 6.2458077,
     longitude: -75.5680703,
@@ -72,9 +70,11 @@ const AddAddress = ({setAddAddress}) => {
   }, [utilDispatch]);
 
   const checkCoverage = (latitude, longitude) => {
-    let coverage = validateCoverage(latitude, longitude, coverageZones);
-
-    setIsCoverage(coverage ? addressStatus.coverage : addressStatus.noCoverage);
+    let result = validateCoverage(latitude, longitude, coverageZones);
+    setCoverageNotification(result.name);
+    setIsCoverage(
+      result.isCoverage ? addressStatus.coverage : addressStatus.noCoverage,
+    );
   };
 
   const saveAddress = async () => {
@@ -91,13 +91,13 @@ const AddAddress = ({setAddAddress}) => {
       administrative_area_level_2: googleDetail.administrative_area_level_2,
       neighborhood: googleDetail.neighborhood,
       country: googleDetail.country,
-      addressDetail,
-      notesAddress: notesAddress,
       locality: googleDetail.locality,
+      notesAddress: notesAddress,
+      addressDetail,
       coordinates: coordinate,
       formattedAddress: googleAddress,
       id: Utilities.create_UUID(),
-      url,
+      coverageNotification,
     };
 
     let address = [...user.address, item];
@@ -108,38 +108,6 @@ const AddAddress = ({setAddAddress}) => {
     setAddAddress(false);
   };
 
-  const updateLocation = async (data, details) => {
-    const {structured_formatting} = data;
-    const {main_text} = structured_formatting;
-
-    Geocode.setApiKey(APIKEY);
-    Geocode.setLanguage('es');
-    Geocode.setRegion('co');
-    Geocode.enableDebug();
-
-    const addressSerch = details.formatted_address;
-
-    setName(main_text);
-    await Geocode.fromAddress(addressSerch).then(
-      (response) => {
-        const dataResponse = response.results[0];
-        const {lat, lng} = dataResponse.geometry.location;
-        // activeApi({
-        //   latitude: lat,
-        //   longitude: lng,
-        // });
-        setCoordinate({
-          latitude: lat,
-          longitude: lng,
-        });
-
-        setGoogleAddress(addressSerch);
-      },
-      (error) => {
-        console.error('error updateLocation =>', error);
-      },
-    );
-  };
   const closeModalCoverage = (data) => {
     if (!data) {
       setIsCoverage(addressStatus.searching);
@@ -148,75 +116,35 @@ const AddAddress = ({setAddAddress}) => {
     }
   };
 
-  const activeApi = async (coordinates) => {
-    const res = await fetch(
-      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${coordinates.latitude},${coordinates.longitude}&key=${APIKEY}`,
-    );
+  const handleAddress = async (data, details) => {
+    const result = await filterResultsByTypes(details.address_components);
 
-    setUrl(res.url);
-    const json = await res.json();
-    if (json.status !== 'OK') {
-      throw new Error(`Geocode error: ${json.status}`);
-    } else {
-      filterResultsByTypes(json.results, [
-        'locality',
-        'neighborhood',
-        'political',
-        'administrative_area_level_3',
-        'administrative_area_level_2',
-        'administrative_area_level_1',
-      ]);
-    }
+    console.log('handleAddress:data =>', data);
+    console.log('handleAddress:details =>', details);
+
+    console.log('filterResultsByTypes:result =>', result);
+    setName(data.description);
+    setGoogleAddress(data.description);
+    setGoogleDetail({
+      ...result,
+    });
+    setCoordinate({
+      latitude: details.geometry.location.lat,
+      longitude: details.geometry.location.lng,
+    });
   };
 
-  const filterResultsByTypes = (unfilteredResults, types) => {
-    const results = [];
-    for (let i = 0; i < unfilteredResults.length; i++) {
-      let found = false;
-
-      for (let j = 0; j < types.length; j++) {
-        if (unfilteredResults[i].types.indexOf(types[j]) !== -1) {
-          found = true;
-          break;
-        }
-      }
-
-      if (found === true) {
-        results.push(unfilteredResults[i]);
-      }
-    }
-
-    let data = {};
-    if (results.length > 0) {
-      for (
-        let index = 0;
-        index < results[0].address_components.length;
-        index++
-      ) {
-        let doc = results[0].address_components[index];
-        let key = doc.types[0];
-        let value = doc.long_name;
-        let item = {[key]: value};
-
-        data = {...data, ...item};
-      }
-    }
-
-    setGoogleDetail(data);
-  };
   return (
     <>
       <View
         style={{
           zIndex: 6,
           position: 'absolute',
-          // top: Metrics.screenHeight / 4,
-          right: 10,
-          bottom: 90,
+          top: Metrics.screenHeight / 4,
           alignSelf: 'flex-end',
+          right: 25,
         }}>
         <ButtonCoordinates
-          activeApi={activeApi}
           setName={setName}
           setCoordinate={setCoordinate}
           APIKEY={APIKEY}
@@ -226,158 +154,145 @@ const AddAddress = ({setAddAddress}) => {
           setCurrentLocationActive={setCurrentLocationActive}
         />
       </View>
-      <View>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? null : 'height'}
-          style={{maxHeight: Metrics.screenHeight - 60}}>
-          <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
+      <View
+        style={{
+          position: 'absolute',
+          width: Metrics.screenWidth - 40,
+          top: Metrics.screenHeight / 4,
+          zIndex: 5,
+          justifyContent: 'space-between',
+          alignSelf: 'center',
+          flexDirection: 'row-reverse',
+        }}>
+        <GooglePlacesAutocomplete
+          placeholder={'Ej: Ciudad, barrio, dirección, lugar...'}
+          autoFocus={false}
+          returnKeyType={'search'}
+          keyboardAppearance={'light'}
+          fetchDetails={true}
+          renderDescription={(row) => row.description}
+          onPress={(data, details) => {
+            handleAddress(data, details);
+          }}
+          getDefaultValue={() => ''}
+          query={{
+            key: APIKEY,
+            language: 'es',
+            types: 'geocode',
+            components: 'country:co',
+            location: '6.2690007,-75.734792',
+            radius: '55000',
+            strictbounds: true,
+          }}
+          textInputProps={{
+            onChangeText: (text) => {
+              console.log('value input', text);
+            },
+          }}
+          onFail={(error) => console.log('AddressModal -> onFail', error)}
+          onNotFound={(error) =>
+            console.log('AddressModal -> onNotFound', error)
+          }
+          nearbyPlacesAPI={'GooglePlacesSearch'}
+          GooglePlacesDetailsQuery={{
+            fields: ['formatted_address', 'geometry', 'vicinity'],
+          }}
+          filterReverseGeocodingByTypes={[
+            'locality',
+            'administrative_area_level_3',
+          ]}
+          debounce={200}
+          styles={{
+            textInputContainer: {
+              backgroundColor: Colors.light,
+              borderTopColor: 'transparent',
+              borderBottomColor: 'transparent',
+              borderRadius: 10,
+              shadowColor: '#000',
+              shadowOffset: {
+                width: 0,
+                height: 2,
+              },
+              shadowOpacity: 0.25,
+              shadowRadius: 3.84,
 
-          <Image
-            source={Images.pinAddress}
-            style={{
-              width: 50,
-              height: 50,
-              resizeMode: 'contain',
-              alignSelf: 'center',
-              marginBottom: 10,
-              tintColor: Colors.client.primaryColor,
-            }}
-          />
-          <Text style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
-            {'Agregar direccion'}
-          </Text>
+              elevation: 5,
+            },
+            poweredContainer: {
+              height: 30,
+              borderBottomLeftRadius: Metrics.borderRadius,
+              borderBottomRightRadius: Metrics.borderRadius,
+            },
+            row: {
+              padding: 5,
+              height: 30,
+              flexDirection: 'row',
+              backgroundColor: Colors.light,
+            },
+            description: {
+              fontWeight: '400',
+            },
+          }}
+        />
+      </View>
 
-          <Text
-            style={Fonts.style.light(Colors.data, Fonts.size.small, 'center')}>
-            {'Agrega y administra tus direcciones de servicio'}
-          </Text>
+      <View style={{maxHeight: Metrics.screenHeight - 60}}>
+        <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
 
-          <View
-            style={{
-              // position: 'absolute',
-              width: Metrics.screenWidth - 40,
-              // top: 10,
-              marginVertical: 10,
-              zIndex: 5,
-              justifyContent: 'space-between',
-              alignSelf: 'center',
-              flexDirection: 'row-reverse',
-            }}>
-            <GooglePlacesAutocomplete
-              placeholder={'(Ej: carrera 33 #10-20)'}
-              autoFocus={false}
-              returnKeyType={'search'} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
-              keyboardAppearance={'light'} // Can be left out for default keyboardAppearance https://facebook.github.io/react-native/docs/textinput.html#keyboardappearance
-              listViewDisplayed={false} // true/false/undefined
-              fetchDetails={true}
-              renderDescription={(row) => row.description} // custom description render
-              onPress={(data, details = null) => updateLocation(data, details)}
-              query={{
-                // available options: https://developers.google.com/places/web-service/autocomplete
-                key: APIKEY,
-                language: 'es', // language of the results
-                types: 'geocode', // default: 'geocode'
-                components: 'country:co',
-                location: '6.2690007,-75.734792',
-                radius: '55000', //15 km
-                strictbounds: true,
-              }}
-              styles={{
-                textInputContainer: {
-                  backgroundColor: Colors.light,
-                  borderTopColor: 'transparent',
-                  borderBottomColor: 'transparent',
-                  borderRadius: 10,
+        <Image
+          source={Images.pinAddress}
+          style={{
+            width: 50,
+            height: 50,
+            resizeMode: 'contain',
+            alignSelf: 'center',
+            marginBottom: 10,
+            tintColor: Colors.client.primaryColor,
+          }}
+        />
+        <Text style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
+          {'Agregar direccion'}
+        </Text>
 
-                  shadowColor: '#000',
-                  shadowOffset: {
-                    width: 0,
-                    height: 2,
-                  },
-                  shadowOpacity: 0.25,
-                  shadowRadius: 3.84,
-
-                  elevation: 5,
-                },
-                poweredContainer: {
-                  height: 30,
-                  borderBottomLeftRadius: Metrics.borderRadius,
-                  borderBottomRightRadius: Metrics.borderRadius,
-                },
-                row: {
-                  padding: 5,
-                  height: 30,
-                  flexDirection: 'row',
-                  backgroundColor: Colors.light,
-                },
-                description: {
-                  fontWeight: '400',
-                },
-              }}
-              currentLocation={false} // Will add a 'Current location' button at the top of the predefined places list
-              currentLocationLabel={'Mi ubicación actual'}
-              nearbyPlacesAPI={'GooglePlacesSearch'} // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
-              GoogleReverseGeocodingQuery={
-                {
-                  // available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro
-                }
-              }
-              GooglePlacesSearchQuery={{
-                // available options for GooglePlacesSearch API : https://developers.google.com/places/web-service/search
-                rankby: 'distance',
-                type: 'cafe',
-              }}
-              GooglePlacesDetailsQuery={{
-                // available options for GooglePlacesDetails API : https://developers.google.com/places/web-service/details
-                fields: 'formatted_address',
-              }}
-              filterReverseGeocodingByTypes={[
-                'locality',
-                'administrative_area_level_3',
-              ]}
-              // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
-              debounce={200} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
-            />
-          </View>
-
-          {/* <View opacity={0.0} style={ApplicationStyles.separatorLineMini} /> */}
-
-          <MapView
-            provider={PROVIDER_GOOGLE} // remove if not using Google Maps
-            style={{
-              width: Metrics.screenWidth,
-              height: Metrics.screenHeight * 0.6,
-              paddingBottom: 200,
-            }}
-            customMapStyle={mapStyle}
-            mapPadding={{
-              bottom: 10,
-            }}
-            initialRegion={{
-              latitude: 6.2458077,
-              longitude: -75.5680703,
-              latitudeDelta: LATITUDE_DELTA,
-              longitudeDelta: LONGITUDE_DELTA,
-            }}
-            region={{
+        <Text
+          style={Fonts.style.light(Colors.data, Fonts.size.small, 'center')}>
+          {'Agrega y administra tus direcciones de servicio'}
+        </Text>
+        <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
+        <MapView
+          provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+          style={{
+            width: Metrics.screenWidth,
+            height: Metrics.screenHeight,
+          }}
+          customMapStyle={mapStyle}
+          mapPadding={{
+            bottom: 10,
+          }}
+          initialRegion={{
+            latitude: 6.2458077,
+            longitude: -75.5680703,
+            latitudeDelta: LATITUDE_DELTA,
+            longitudeDelta: LONGITUDE_DELTA,
+          }}
+          region={{
+            latitude: coordinate.latitude,
+            longitude: coordinate.longitude,
+            latitudeDelta: 0.00001,
+            longitudeDelta: 0.00001 * ASPECT_RATIO,
+          }}>
+          <Marker.Animated
+            coordinate={{
               latitude: coordinate.latitude,
               longitude: coordinate.longitude,
-              latitudeDelta: 0.00001,
-              longitudeDelta: 0.00001 * ASPECT_RATIO,
             }}>
-            <Marker.Animated
-              coordinate={{
-                latitude: coordinate.latitude,
-                longitude: coordinate.longitude,
-              }}>
-              <Icon
-                name={'map-marker-alt'}
-                size={30}
-                color={Colors.client.primaryColor}
-              />
-            </Marker.Animated>
-          </MapView>
-        </KeyboardAvoidingView>
+            <Icon
+              name={'map-marker-alt'}
+              size={30}
+              color={Colors.client.primaryColor}
+            />
+          </Marker.Animated>
+        </MapView>
       </View>
 
       <TouchableOpacity
@@ -386,7 +301,7 @@ const AddAddress = ({setAddAddress}) => {
         style={[
           styles.btnContainer,
           {
-            // position: 'absolute',
+            position: 'absolute',
             bottom: 0,
             backgroundColor: googleAddress
               ? Colors.client.primaryColor
@@ -397,6 +312,8 @@ const AddAddress = ({setAddAddress}) => {
           style={Fonts.style.bold(Colors.light, Fonts.size.medium, 'center')}>
           {'Verificar Cobertura'}
         </Text>
+
+        {/* Modals */}
       </TouchableOpacity>
       <ModalApp // false coverage
         open={isCoverage === addressStatus.noCoverage}
