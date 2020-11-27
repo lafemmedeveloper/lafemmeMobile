@@ -7,6 +7,8 @@ import {
   Dimensions,
   Image,
   Alert,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 import {ApplicationStyles, Colors, Fonts, Images, Metrics} from '../../themes';
@@ -140,9 +142,9 @@ const AddAddress = ({setAddAddress}) => {
         style={{
           zIndex: 6,
           position: 'absolute',
-          top: Metrics.screenHeight / 4,
+          bottom: 90,
           alignSelf: 'flex-end',
-          right: 25,
+          right: 20,
         }}>
         <ButtonCoordinates
           setName={setName}
@@ -154,145 +156,173 @@ const AddAddress = ({setAddAddress}) => {
           setCurrentLocationActive={setCurrentLocationActive}
         />
       </View>
-      <View
-        style={{
-          position: 'absolute',
-          width: Metrics.screenWidth - 40,
-          top: Metrics.screenHeight / 4,
-          zIndex: 5,
-          justifyContent: 'space-between',
-          alignSelf: 'center',
-          flexDirection: 'row-reverse',
-        }}>
-        <GooglePlacesAutocomplete
-          placeholder={'Ej: Ciudad, barrio, dirección, lugar...'}
-          autoFocus={false}
-          returnKeyType={'search'}
-          keyboardAppearance={'light'}
-          fetchDetails={true}
-          renderDescription={(row) => row.description}
-          onPress={(data, details) => {
-            handleAddress(data, details);
-          }}
-          getDefaultValue={() => ''}
-          query={{
-            key: APIKEY,
-            language: 'es',
-            types: 'geocode',
-            components: 'country:co',
-            location: '6.2690007,-75.734792',
-            radius: '55000',
-            strictbounds: true,
-          }}
-          textInputProps={{
-            onChangeText: (text) => {
-              console.log('value input', text);
-            },
-          }}
-          onFail={(error) => console.log('AddressModal -> onFail', error)}
-          onNotFound={(error) =>
-            console.log('AddressModal -> onNotFound', error)
-          }
-          nearbyPlacesAPI={'GooglePlacesSearch'}
-          GooglePlacesDetailsQuery={{
-            fields: ['formatted_address', 'geometry', 'vicinity'],
-          }}
-          filterReverseGeocodingByTypes={[
-            'locality',
-            'administrative_area_level_3',
-          ]}
-          debounce={200}
-          styles={{
-            textInputContainer: {
-              backgroundColor: Colors.light,
-              borderTopColor: 'transparent',
-              borderBottomColor: 'transparent',
-              borderRadius: 10,
-              shadowColor: '#000',
-              shadowOffset: {
-                width: 0,
-                height: 2,
-              },
-              shadowOpacity: 0.25,
-              shadowRadius: 3.84,
-
-              elevation: 5,
-            },
-            poweredContainer: {
-              height: 30,
-              borderBottomLeftRadius: Metrics.borderRadius,
-              borderBottomRightRadius: Metrics.borderRadius,
-            },
-            row: {
-              padding: 5,
-              height: 30,
-              flexDirection: 'row',
-              backgroundColor: Colors.light,
-            },
-            description: {
-              fontWeight: '400',
-            },
-          }}
-        />
-      </View>
 
       <View style={{maxHeight: Metrics.screenHeight - 60}}>
-        <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
-
-        <Image
-          source={Images.pinAddress}
-          style={{
-            width: 50,
-            height: 50,
-            resizeMode: 'contain',
-            alignSelf: 'center',
-            marginBottom: 10,
-            tintColor: Colors.client.primaryColor,
-          }}
-        />
-        <Text style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
-          {'Agregar direccion'}
-        </Text>
-
-        <Text
-          style={Fonts.style.light(Colors.data, Fonts.size.small, 'center')}>
-          {'Agrega y administra tus direcciones de servicio'}
-        </Text>
-        <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
-        <MapView
-          provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+        <View
           style={{
             width: Metrics.screenWidth,
-            height: Metrics.screenHeight,
-          }}
-          customMapStyle={mapStyle}
-          mapPadding={{
-            bottom: 10,
-          }}
-          initialRegion={{
-            latitude: 6.2458077,
-            longitude: -75.5680703,
-            latitudeDelta: LATITUDE_DELTA,
-            longitudeDelta: LONGITUDE_DELTA,
-          }}
-          region={{
-            latitude: coordinate.latitude,
-            longitude: coordinate.longitude,
-            latitudeDelta: 0.00001,
-            longitudeDelta: 0.00001 * ASPECT_RATIO,
+            height: Metrics.screenHeight * 0.8,
+
+            flexDirection: 'column',
           }}>
-          <Marker.Animated
-            coordinate={{
-              latitude: coordinate.latitude,
-              longitude: coordinate.longitude,
+          <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
+          <View
+            style={{
+              paddingVertical: 10,
+              flex: 0,
             }}>
-            <Icon
-              name={'map-marker-alt'}
-              size={30}
-              color={Colors.client.primaryColor}
+            <Image
+              source={Images.pinAddress}
+              style={{
+                width: 50,
+                height: 50,
+                resizeMode: 'contain',
+                alignSelf: 'center',
+                marginBottom: 10,
+                tintColor: Colors.client.primaryColor,
+              }}
             />
-          </Marker.Animated>
-        </MapView>
+            <Text
+              style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
+              {'Agregar direccion'}
+            </Text>
+
+            <Text
+              style={Fonts.style.light(
+                Colors.data,
+                Fonts.size.small,
+                'center',
+              )}>
+              {'Agrega y administra tus direcciones de servicio'}
+            </Text>
+          </View>
+
+          <View
+            style={{
+              // backgroundColor: 'purple',
+
+              flex: 4,
+            }}>
+            <View
+              style={{
+                flex: 0,
+                position: 'absolute',
+                width: Metrics.screenWidth - 40,
+
+                zIndex: 5,
+                marginVertical: 10,
+                justifyContent: 'space-between',
+                alignSelf: 'center',
+                flexDirection: 'row-reverse',
+              }}>
+              <GooglePlacesAutocomplete
+                placeholder={'Ej: Ciudad, barrio, dirección, lugar...'}
+                autoFocus={false}
+                returnKeyType={'search'}
+                keyboardAppearance={'light'}
+                fetchDetails={true}
+                renderDescription={(row) => row.description}
+                onPress={(data, details) => {
+                  handleAddress(data, details);
+                }}
+                getDefaultValue={() => ''}
+                query={{
+                  key: APIKEY,
+                  language: 'es',
+                  types: 'geocode',
+                  components: 'country:co',
+                  location: '6.2690007,-75.734792',
+                  radius: '55000',
+                  strictbounds: true,
+                }}
+                textInputProps={{
+                  onChangeText: (text) => {
+                    console.log('value input', text);
+                  },
+                }}
+                onFail={(error) => console.log('AddressModal -> onFail', error)}
+                onNotFound={(error) =>
+                  console.log('AddressModal -> onNotFound', error)
+                }
+                nearbyPlacesAPI={'GooglePlacesSearch'}
+                GooglePlacesDetailsQuery={{
+                  fields: ['formatted_address', 'geometry', 'vicinity'],
+                }}
+                filterReverseGeocodingByTypes={[
+                  'locality',
+                  'administrative_area_level_3',
+                ]}
+                debounce={200}
+                styles={{
+                  textInputContainer: {
+                    backgroundColor: Colors.light,
+                    borderTopColor: 'transparent',
+                    borderBottomColor: 'transparent',
+                    borderRadius: 10,
+                    shadowColor: '#000',
+                    shadowOffset: {
+                      width: 0,
+                      height: 2,
+                    },
+                    shadowOpacity: 0.25,
+                    shadowRadius: 3.84,
+
+                    elevation: 5,
+                  },
+                  poweredContainer: {
+                    height: 30,
+                    borderBottomLeftRadius: Metrics.borderRadius,
+                    borderBottomRightRadius: Metrics.borderRadius,
+                  },
+                  row: {
+                    padding: 5,
+                    height: 30,
+                    flexDirection: 'row',
+                    backgroundColor: Colors.light,
+                  },
+                  description: {
+                    fontWeight: '400',
+                  },
+                }}
+              />
+            </View>
+            <MapView
+              provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+              style={{
+                width: Metrics.screenWidth,
+                height: '100%',
+              }}
+              customMapStyle={mapStyle}
+              mapPadding={{
+                bottom: 10,
+              }}
+              initialRegion={{
+                latitude: 6.2458077,
+                longitude: -75.5680703,
+                latitudeDelta: LATITUDE_DELTA,
+                longitudeDelta: LONGITUDE_DELTA,
+              }}
+              region={{
+                latitude: coordinate.latitude,
+                longitude: coordinate.longitude,
+                latitudeDelta: 0.00001,
+                longitudeDelta: 0.00001 * ASPECT_RATIO,
+              }}>
+              <Marker.Animated
+                coordinate={{
+                  latitude: coordinate.latitude,
+                  longitude: coordinate.longitude,
+                }}>
+                <Icon
+                  name={'map-marker-alt'}
+                  size={30}
+                  color={Colors.client.primaryColor}
+                />
+              </Marker.Animated>
+            </MapView>
+          </View>
+        </View>
+        {/* <View opacity={0.0} style={ApplicationStyles.separatorLineMini} /> */}
       </View>
 
       <TouchableOpacity
@@ -301,7 +331,7 @@ const AddAddress = ({setAddAddress}) => {
         style={[
           styles.btnContainer,
           {
-            position: 'absolute',
+            // position: 'absolute',
             bottom: 0,
             backgroundColor: googleAddress
               ? Colors.client.primaryColor
