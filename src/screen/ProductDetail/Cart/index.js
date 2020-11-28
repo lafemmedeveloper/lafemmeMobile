@@ -46,7 +46,7 @@ const Cart = (props) => {
   const {auth} = state;
   const {user} = auth;
   const {guest} = user;
-  const {product} = props;
+  const {product, generalDescription} = props;
 
   const [guestModal, setGuestModal] = useState(false);
   const [formGuest, setFormGuest] = useState(initial_state);
@@ -411,7 +411,7 @@ const Cart = (props) => {
                 'left',
                 0,
               )}>
-              {product.description}
+              {generalDescription}
             </Text>
           </View>
         </View>

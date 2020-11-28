@@ -158,7 +158,7 @@ const AddAddress = ({setAddAddress}) => {
       */}
 
       <KeyboardAvoidingView
-        behavior={Platform !== 'ios' && 'height'}
+        behavior={Platform.OS !== 'ios' && 'height'}
         keyboardVerticalOffset={-55}
         style={{maxHeight: Metrics.screenHeight - 60}}>
         <View

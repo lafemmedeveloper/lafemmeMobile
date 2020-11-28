@@ -6,13 +6,13 @@ import FastImage from 'react-native-fast-image';
 import Utilities from '../../utilities';
 import _ from 'lodash';
 
-export default (dta) => {
+export default (service) => {
   const [expanded, onChangeExpanded] = React.useState(true);
   const [animation] = useState(new Animated.Value(0));
   const [animationItem] = useState(new Animated.Value(0));
   const [opacity] = useState(new Animated.Value(0));
 
-  const {data, slug} = dta;
+  const {data, slug} = service;
   const {products, addOns} = data;
 
   let sortedProduct = _.sortBy(products, 'order');
@@ -104,7 +104,7 @@ export default (dta) => {
                     (o) => o.idProduct === product.id,
                   );
 
-                  dta.selectService({...product, addOns: result, slug});
+                  service.selectService({...product, addOns: result, slug});
                 }}>
                 {index !== 0 && (
                   <Animated.View

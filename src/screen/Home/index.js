@@ -77,10 +77,13 @@ const Home = () => {
     setLoading(false, authDispatch);
   };
 
-  const selectService = (product) => {
+  const selectService = (product, description) => {
     if (user !== null) {
       if (user && user.cart && user.cart.address) {
-        navigation.navigate('ProductDetail', {product});
+        navigation.navigate('ProductDetail', {
+          product,
+          generalDescription: description,
+        });
       } else {
         productViewAddress(product, true, utilDispatch);
         setModalAddress(true);
@@ -144,7 +147,9 @@ const Home = () => {
                   data={data}
                   image={{uri: data.imageUrl.medium}}
                   slug={data.slug}
-                  selectService={(data) => selectService(data)}
+                  selectService={(product) =>
+                    selectService(product, data.description)
+                  }
                 />
               );
             })}

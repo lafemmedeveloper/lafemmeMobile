@@ -10,7 +10,7 @@ const ProductDetail = (props) => {
   const {route, navigation} = props;
   const {goBack} = navigation;
   const {params} = route;
-  const {product, authDispatch} = params;
+  const {product, generalDescription, authDispatch} = params;
 
   const {utilDispatch, state} = useContext(StoreContext);
   const {util} = state;
@@ -48,7 +48,11 @@ const ProductDetail = (props) => {
         </TouchableOpacity>
       </View>
       <View style={styles.container}>
-        <Cart product={product} dispatch={authDispatch} />
+        <Cart
+          product={product}
+          generalDescription={generalDescription}
+          dispatch={authDispatch}
+        />
       </View>
     </>
   );
