@@ -31,8 +31,7 @@
     "fastlane:build": "bundle exec fastlane bump_version",
     "fastlane:patch": "bundle exec fastlane bump_version type:patch",
     "fastlane:minor": "bundle exec fastlane bump_version type:minor",
-    "fastlane:major": "bundle exec fastlane bump_version type:major",
-    "postinstall": "./node_modules/react-native-maps/enable-google-maps REPLACE_ME_RELATIVE_PATH_TO_GOOGLE_MAPS_INSTALL"
+    "fastlane:major": "bundle exec fastlane bump_version type:major"
   },
   "fastlane:helper": {
     "build": "=> 3.40.1 (432) -> 3.40.1 (433)",
