@@ -24,7 +24,6 @@ import {
 import Loading from '../../components/Loading';
 import auth from '@react-native-firebase/auth';
 import ExpandOrderData from '../ExpandOrderData';
-import moment from 'moment';
 const Home = () => {
   const navigation = useNavigation();
   const {state, serviceDispatch, authDispatch, utilDispatch} = useContext(
