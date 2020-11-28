@@ -24,7 +24,7 @@ import ModalApp from '../../components/ModalApp';
 import EnableCoverage from './EnableCoverage';
 import NoEnableCoverage from './NoEnableCoverage';
 import {getCoverage} from '../../flux/util/actions';
-import ButtonCoordinates from '../../components/ButtonCoordinates';
+//import ButtonCoordinates from '../../components/ButtonCoordinates';
 import Config from 'react-native-config';
 
 const AddAddress = ({setAddAddress}) => {
@@ -61,7 +61,9 @@ const AddAddress = ({setAddAddress}) => {
   const [buildType, setBuildType] = useState(locationType.house);
   const [addressDetail, setAddressDetail] = useState('');
   const [notesAddress, setNotesAddress] = useState('');
-  const [currentLocationActive, setCurrentLocationActive] = useState(false);
+  const [
+    currentLocationActive, // setCurrentLocationActive
+  ] = useState(false);
   const [coverageNotification, setCoverageNotification] = useState([]);
   const [coordinate, setCoordinate] = useState({
     latitude: 6.2458077,
@@ -134,7 +136,8 @@ const AddAddress = ({setAddAddress}) => {
   console.log('Metrics.screenHeight ', Metrics.header);
   return (
     <>
-      <View
+      {/*   
+           <View
         style={{
           zIndex: 5,
           position: 'absolute',
@@ -142,7 +145,7 @@ const AddAddress = ({setAddAddress}) => {
           alignSelf: 'flex-end',
           right: 20,
         }}>
-        <ButtonCoordinates
+         <ButtonCoordinates
           setName={setName}
           setCoordinate={setCoordinate}
           APIKEY={APIKEY}
@@ -151,10 +154,12 @@ const AddAddress = ({setAddAddress}) => {
           setCurrentLocationActive={setCurrentLocationActive}
           setGoogleDetail={setGoogleDetail}
         />
-      </View>
+         </View>
+      */}
+
       <KeyboardAvoidingView
         behavior={Platform !== 'ios' && 'height'}
-        keyboardVerticalOffset={-Metrics.header}
+        keyboardVerticalOffset={-55}
         style={{maxHeight: Metrics.screenHeight - 60}}>
         <View
           style={{
