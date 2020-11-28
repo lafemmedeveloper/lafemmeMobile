@@ -296,9 +296,15 @@ const Cart = (props) => {
                 </Text>
                 <Text
                   style={[
-                    Fonts.style.regular(Colors.dark, Fonts.size.h6, 'right', 1),
+                    Fonts.style.regular(
+                      Colors.dark,
+                      Fonts.size.medium,
+                      'right',
+                      1,
+                    ),
                   ]}>
-                  {Utilities.formatCOP(product.price)}
+                  {Utilities.formatCOP(product.price)} /{' '}
+                  {minToHours(product.duration)}
                   <Text
                     style={Fonts.style.regular(
                       Colors.gray,
@@ -306,6 +312,7 @@ const Cart = (props) => {
                       'right',
                       1,
                     )}>
+                    {' '}
                     c/u
                   </Text>
                 </Text>

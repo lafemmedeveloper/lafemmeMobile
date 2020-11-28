@@ -731,10 +731,12 @@ const Content = (props) => {
           pickImage={pickImage}
           uploadImage={uploadImage}
           close={setModalImage}
+          setImgSource={setImgSource}
+          setImageUri={setImageUri}
         />
       </ModalApp>
       <ModalApp open={modalRef} setOpen={setModalRef}>
-        <ModalRef user={user} />
+        <ModalRef user={user} close={setModalRef} />
       </ModalApp>
     </>
   );

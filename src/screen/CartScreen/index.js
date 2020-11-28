@@ -230,7 +230,6 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
     calculeTotal(user.cart.coupon, orderServices, setOrderTotal);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orderServices]);
-
   return (
     <View style={{height: 650}}>
       <Loading type={'client'} />
@@ -357,7 +356,7 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
           </Text>
           <Text
             style={Fonts.style.bold(Colors.dark, Fonts.size.medium, 'left')}>
-            {1213}
+            {totalService}
           </Text>
         </View>
 
@@ -430,12 +429,28 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
                 isVisible={isDatePickerVisible}
                 isDarkModeEnabled={false}
                 mode="datetime"
-                maximumDate={new Date(moment(new Date()).add(15, 'days'))}
-                minimumDate={new Date()}
+                minuteInterval={config.timePickerInterval}
+                initialValue={new Date()}
+                maximumDate={
+                  new Date(
+                    moment(new Date()).add(
+                      config.maxPossibleDaysSchedule,
+                      'days',
+                    ),
+                  )
+                }
+                minimumDate={
+                  new Date(
+                    moment(new Date()).add(
+                      config.minPossibleMinutesSchedule,
+                      'minutes',
+                    ),
+                  )
+                }
                 onConfirm={handleConfirmDate}
                 onCancel={hideDatePicker}
                 is24Hour={false}
-                locale="es_ES"
+                locale="es-ES"
                 headerTextIOS="Elige una fecha de servicio"
                 cancelTextIOS="Cancelar"
                 confirmTextIOS="Confirmar"

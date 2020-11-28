@@ -91,9 +91,8 @@ const ModalCuopon = ({total, type, close}) => {
       Alert.alert(
         'Excelente',
         'Tu cupón fue agregado con éxito, veras reflejado el descuento en el en el total de tu carrito ',
+        [{text: 'OK', onPress: () => close(false)}],
       );
-
-      close(false);
     }
   };
 

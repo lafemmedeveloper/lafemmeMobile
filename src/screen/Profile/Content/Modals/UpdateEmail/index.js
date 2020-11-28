@@ -35,9 +35,11 @@ const UpdateEmail = (props) => {
         Keyboard.dismiss();
 
         await updateProfileItem({email}, user.uid, dispatch);
-        setModalEmail(false);
+
         setEmail('');
-        Alert.alert('Que bien', 'Se actualizo tu correo satisfactoriamente');
+        Alert.alert('Que bien', 'Se actualizo tu email satisfactoriamente', [
+          {text: 'OK', onPress: () => setModalEmail(false)},
+        ]);
       } catch (error) {
         console.log('error:register', error);
         if (

@@ -1,5 +1,12 @@
 import React from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Alert,
+} from 'react-native';
 import {
   Fonts,
   Images,
@@ -8,10 +15,23 @@ import {
   ApplicationStyles,
 } from '../../../../../themes';
 
-const UpdateImage = ({source, pickImage, uploadImage, close}) => {
+const UpdateImage = ({
+  source,
+  pickImage,
+  uploadImage,
+  close,
+  setImgSource,
+  setImageUri,
+}) => {
   const handleUploadImage = async () => {
     await uploadImage();
-    close(false);
+    setImgSource(null);
+    setImageUri(null);
+    Alert.alert(
+      'Que bien',
+      'Se actualizo tu imagen de perfil satisfactoriamente',
+      [{text: 'OK', onPress: () => close(false)}],
+    );
   };
 
   return (

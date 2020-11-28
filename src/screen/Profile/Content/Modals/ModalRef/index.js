@@ -12,8 +12,10 @@ import {StoreContext} from '../../../../../flux';
 import {updateProfile} from '../../../../../flux/auth/actions';
 import {ApplicationStyles, Colors, Fonts, Metrics} from '../../../../../themes';
 
-const ModalRef = ({user}) => {
-  const {authDispatch} = useContext(StoreContext);
+const ModalRef = ({user, close}) => {
+  const {authDispatch, state} = useContext(StoreContext);
+  const {util} = state;
+  const {config} = util;
 
   const [loading, setLoading] = useState(false);
 
@@ -43,7 +45,11 @@ const ModalRef = ({user}) => {
     await updateProfile(arrayRef, 'referrals', authDispatch);
     setLoading(false);
 
-    Alert.alert('Genial', 'Se realizo un 25% de descuento a tu orden');
+    Alert.alert(
+      'Genial',
+      `Se realizo un ${config.referrals}% de descuento a tu orden`,
+      [{text: 'OK', onPress: () => close(false)}],
+    );
   };
 
   return (

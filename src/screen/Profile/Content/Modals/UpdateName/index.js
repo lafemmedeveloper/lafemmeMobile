@@ -37,11 +37,14 @@ const UpdateName = (props) => {
       Alert.alert('Ups', 'Todos los campos son requeridos');
     } else {
       Keyboard.dismiss();
+
       await updateProfileItem({firstName, lastName}, user.uid, authDispatch);
-      setModalName(false);
+
       setFirstName('');
       setLastName('');
-      Alert.alert('Que bien', 'Se actualizo tu nombre satisfactoriamente');
+      Alert.alert('Que bien', 'Se actualizo tu nombre satisfactoriamente', [
+        {text: 'OK', onPress: () => setModalName(false)},
+      ]);
     }
   };
   return (

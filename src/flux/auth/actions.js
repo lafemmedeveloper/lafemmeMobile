@@ -134,6 +134,8 @@ export const updateProfileItem = async (newData, uid, dispatch) => {
     const ref = firestore().collection('users').doc(uid);
     await ref.set(newData, {merge: true});
     await setUser(uid, dispatch);
+    // Alert.alert('Que bien', 'Se actualizo tu nombre satisfactoriamente');
+
     setLoading(false, dispatch);
   } catch (error) {
     console.log('error updateProfileItem =>', error);

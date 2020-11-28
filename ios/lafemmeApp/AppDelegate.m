@@ -43,6 +43,12 @@ static void InitializeFlipper(UIApplication *application) {
 
  [GMSServices provideAPIKey:gCloudApiKey];
 
+
+// Force DatePicker locale to current language (for: 24h or 12h format, full day names etc...)
+NSString *currentLanguage = [[NSLocale preferredLanguages] firstObject];
+[[UIDatePicker appearance] setLocale:[[NSLocale alloc]initWithLocaleIdentifier:currentLanguage]];
+
+
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
   RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
                                                    moduleName:@"lafemmeApp"
