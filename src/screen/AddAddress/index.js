@@ -24,7 +24,7 @@ import ModalApp from '../../components/ModalApp';
 import EnableCoverage from './EnableCoverage';
 import NoEnableCoverage from './NoEnableCoverage';
 import {getCoverage} from '../../flux/util/actions';
-import ButtonCoordinates from '../../components/ButtonCoordinates';
+//import ButtonCoordinates from '../../components/ButtonCoordinates';
 import Config from 'react-native-config';
 
 const AddAddress = ({setAddAddress}) => {
@@ -61,7 +61,9 @@ const AddAddress = ({setAddAddress}) => {
   const [buildType, setBuildType] = useState(locationType.house);
   const [addressDetail, setAddressDetail] = useState('');
   const [notesAddress, setNotesAddress] = useState('');
-  const [currentLocationActive, setCurrentLocationActive] = useState(false);
+  const [
+    currentLocationActive, // setCurrentLocationActive
+  ] = useState(false);
   const [coverageNotification, setCoverageNotification] = useState([]);
   const [coordinate, setCoordinate] = useState({
     latitude: 6.2458077,
@@ -121,10 +123,6 @@ const AddAddress = ({setAddAddress}) => {
   const handleAddress = async (data, details) => {
     const result = await filterResultsByTypes(details.address_components);
 
-    console.log('handleAddress:data =>', data);
-    console.log('handleAddress:details =>', details);
-
-    console.log('filterResultsByTypes:result =>', result);
     setName(data.description);
     setGoogleAddress(data.description);
     setGoogleDetail({
@@ -135,29 +133,34 @@ const AddAddress = ({setAddAddress}) => {
       longitude: details.geometry.location.lng,
     });
   };
-
+  console.log('Metrics.screenHeight ', Metrics.header);
   return (
     <>
-      <View
+      {/*   
+           <View
         style={{
-          zIndex: 6,
+          zIndex: 5,
           position: 'absolute',
           bottom: 90,
           alignSelf: 'flex-end',
           right: 20,
         }}>
-        <ButtonCoordinates
+         <ButtonCoordinates
           setName={setName}
           setCoordinate={setCoordinate}
           APIKEY={APIKEY}
           checkCoverage={checkCoverage}
-          setGoogleDetail={setGoogleDetail}
           setGoogleAddress={setGoogleAddress}
           setCurrentLocationActive={setCurrentLocationActive}
+          setGoogleDetail={setGoogleDetail}
         />
-      </View>
+         </View>
+      */}
 
-      <View style={{maxHeight: Metrics.screenHeight - 60}}>
+      <KeyboardAvoidingView
+        behavior={Platform !== 'ios' && 'height'}
+        keyboardVerticalOffset={-55}
+        style={{maxHeight: Metrics.screenHeight - 60}}>
         <View
           style={{
             width: Metrics.screenWidth,
@@ -184,7 +187,7 @@ const AddAddress = ({setAddAddress}) => {
             />
             <Text
               style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
-              {'Agregar direccion'}
+              {'Agregar dirección'}
             </Text>
 
             <Text
@@ -199,8 +202,6 @@ const AddAddress = ({setAddAddress}) => {
 
           <View
             style={{
-              // backgroundColor: 'purple',
-
               flex: 4,
             }}>
             <View
@@ -209,7 +210,7 @@ const AddAddress = ({setAddAddress}) => {
                 position: 'absolute',
                 width: Metrics.screenWidth - 40,
 
-                zIndex: 5,
+                zIndex: 7,
                 marginVertical: 10,
                 justifyContent: 'space-between',
                 alignSelf: 'center',
@@ -286,12 +287,15 @@ const AddAddress = ({setAddAddress}) => {
                 }}
               />
             </View>
+
             <MapView
               provider={PROVIDER_GOOGLE} // remove if not using Google Maps
               style={{
                 width: Metrics.screenWidth,
                 height: '100%',
               }}
+              scrollEnabled={false}
+              zoomEnabled={false}
               customMapStyle={mapStyle}
               mapPadding={{
                 bottom: 10,
@@ -322,8 +326,9 @@ const AddAddress = ({setAddAddress}) => {
             </MapView>
           </View>
         </View>
+
         {/* <View opacity={0.0} style={ApplicationStyles.separatorLineMini} /> */}
-      </View>
+      </KeyboardAvoidingView>
 
       <TouchableOpacity
         disabled={!googleAddress}
