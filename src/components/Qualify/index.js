@@ -109,24 +109,23 @@ const Qualify = (props) => {
             showRating={true}
             reviewColor={Colors.dark}
           />
-          {rating < 5 && (
-            <TextInput
-              value={note}
-              onChangeText={(text) => setNote(text)}
-              placeholder={'Comentanos que tal fue tu experiencia'}
-              style={{
-                width: '90%',
-                padding: 20,
-                marginVertical: 20,
-                borderRadius: Metrics.borderRadius,
-                height: 100,
-                backgroundColor: Colors.textInputBg,
-                alignSelf: 'center',
-              }}
-              multiline
-              numberOfLines={20}
-            />
-          )}
+
+          <TextInput
+            value={note}
+            onChangeText={(text) => setNote(text)}
+            placeholder={'Comentanos que tal fue tu experiencia'}
+            style={{
+              width: '90%',
+              padding: 20,
+              marginVertical: 20,
+              borderRadius: Metrics.borderRadius,
+              height: 100,
+              backgroundColor: Colors.textInputBg,
+              alignSelf: 'center',
+            }}
+            multiline
+            numberOfLines={20}
+          />
 
           <TouchableOpacity
             onPress={() => calQuantity()}

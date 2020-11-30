@@ -145,7 +145,7 @@ const Home = () => {
                 <ExpandHome
                   key={data.id}
                   data={data}
-                  image={{uri: data.imageUrl.medium}}
+                  image={{uri: data.imageUrl.big}}
                   slug={data.slug}
                   selectService={(product) =>
                     selectService(product, data.description)

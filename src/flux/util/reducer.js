@@ -75,7 +75,8 @@ const getOrder = (state, action) => {
 
   orders = _.orderBy(orders, 'date', 'desc');
   history = _.orderBy(history, 'date', 'asc');
-  const ordersAll = _.orderBy(action.payload, 'date', 'desc');
+  const ordersAll = _.orderBy(orders, 'date', 'desc');
+
   let nextOrder = orders.length > 0 ? [ordersAll[0]] : [];
 
   return {

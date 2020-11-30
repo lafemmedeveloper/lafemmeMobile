@@ -17,19 +17,17 @@ import {signOff, setLoading, updateProfile} from '../../../flux/auth/actions';
 import UpdateName from './Modals/UpdateName';
 import UpdateEmail from './Modals/UpdateEmail';
 import ModalApp from '../../../components/ModalApp';
-
 import Address from '../../Address';
 import Share from 'react-native-share';
 import Rate, {AndroidMarket} from 'react-native-rate';
 import WebView from 'react-native-webview';
 import {firebase} from '@react-native-firebase/storage';
-
 import ImagePicker from 'react-native-image-picker';
 import ImageResizer from 'react-native-image-resizer';
 import utilities from '../../../utilities';
 import {resetReducer} from '../../../flux/util/actions';
 import {StoreContext} from '../../../flux';
-import Header from '../Header';
+import Header from '../../../components/Header';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import UpdateImage from './Modals/UpdateImage';
 import ModalRef from './Modals/ModalRef';

@@ -80,7 +80,11 @@ export default ({order, dispatch, user}) => {
       <>
         <View style={styles.cellContainer}>
           <View style={styles.contentContainer}>
-            <View style={{flexDirection: 'column'}}>
+            <View
+              style={{
+                flexDirection: 'column',
+                flex: 1,
+              }}>
               <Text
                 numberOfLines={1}
                 style={Fonts.style.regular(

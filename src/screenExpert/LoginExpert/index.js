@@ -14,6 +14,7 @@ import {
 import {Images, Colors, Fonts, Metrics} from '../../themes';
 import MyTextInput from '../../components/MyTextInput';
 import Loading from '../../components/Loading';
+
 import {StoreContext} from '../../flux';
 import {Login, setUser} from '../../flux/auth/actions';
 import auth from '@react-native-firebase/auth';
@@ -58,8 +59,9 @@ const LoginExpert = () => {
             resizeMode: 'contain',
             alignSelf: 'center',
             marginVertical: 20,
+            tintColor: Colors.expert.primaryColor,
           }}
-          source={Images.logoExpert}
+          source={Images.fullLogo}
         />
 
         <Text

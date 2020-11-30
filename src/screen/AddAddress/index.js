@@ -85,7 +85,7 @@ const AddAddress = ({setAddAddress}) => {
     if (notesAddress === '') {
       return Alert.alert(
         'Ups',
-        'Lo sentimos la nota de entrega es obligatoria',
+        'Lo sentimos la nota de servicio es obligatoria',
       );
     }
     let item = {

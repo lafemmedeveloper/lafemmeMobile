@@ -1,4 +1,9 @@
 const images = {
+  //Logo
+  fullLogo: require('../Images/fullLogo.png'),
+  iconLogo: require('../Images/iconLogo.png'),
+  textLogo: require('../Images/textLogo.png'),
+
   headerSmall: require('../Images/headerSmall.png'),
   headerBig: require('../Images/headerBig.png'),
   topHeader: require('../Images/topHeader.png'),

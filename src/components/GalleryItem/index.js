@@ -4,8 +4,7 @@ import {Metrics, Fonts, Colors} from '../../themes';
 import FastImage from 'react-native-fast-image';
 import moment from 'moment';
 
-export default (data) => {
-  const {item} = data;
+export function GalleryItem({item}) {
   return (
     <View
       style={{
@@ -62,4 +61,4 @@ export default (data) => {
       />
     </View>
   );
-};
+}

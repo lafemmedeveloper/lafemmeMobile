@@ -30,6 +30,7 @@ import Loading from '../../components/Loading';
 import ModalCuopon from './ModalCuopon';
 import utilities from '../../utilities';
 import {useKeyboard} from '../../hooks/useKeyboard';
+import {useCouponsDiscount} from '../../hooks/useCouponsDiscount';
 import {calculeTotal} from '../../helpers/CouponHelper';
 
 const CartScreen = ({setModalCart, setModalAddress}) => {
@@ -164,8 +165,8 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
     const serviceDelete = user.cart.services.filter((s) => s.id === id);
 
     if (
-      user.coupon ||
-      user.cart.services.length === 1 ||
+      user.coupon &&
+      user.cart.services.length === 1 &&
       user.cart.coupon.type.includes(serviceDelete[0]?.servicesType)
     ) {
       await updateProfile(
@@ -173,9 +174,10 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
         'cart',
         authDispatch,
       );
-    } else {
-      await updateProfile({services: filterService}, 'cart', authDispatch);
+      return;
     }
+
+    await updateProfile({services: filterService}, 'cart', authDispatch);
   };
 
   const handleConfirmDate = async (date) => {
@@ -226,38 +228,39 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user.cart.coupon]);
 
-  useEffect(() => {
-    calculeTotal(user.cart.coupon, orderServices, setOrderTotal);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [orderServices]);
+  const {disscounts, totalDiscount} = useCouponsDiscount(
+    user?.cart?.services ?? [],
+    user?.cart?.coupon,
+  );
+
   return (
-    <View style={{height: 650}}>
+    <View style={{height: Metrics.screenHeight * 0.8}}>
       <Loading type={'client'} />
 
-      <View style={styles.headerContainer}>
-        <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
-        <Image
-          source={Images.billResume}
-          style={{
-            width: 50,
-            height: 50,
-            resizeMode: 'contain',
-            alignSelf: 'center',
-            marginBottom: 10,
-            tintColor: Colors.client.primaryColor,
-          }}
-        />
-        <Text style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
-          {'Resumen del Servicio'}
-        </Text>
-
-        <Text
-          style={Fonts.style.light(Colors.data, Fonts.size.small, 'center')}>
-          {'Agrega los servicios según el orden que deseas recibirlos.'}
-        </Text>
-        <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
-      </View>
       <ScrollView>
+        <View style={styles.headerContainer}>
+          <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
+          <Image
+            source={Images.billResume}
+            style={{
+              width: 50,
+              height: 50,
+              resizeMode: 'contain',
+              alignSelf: 'center',
+              marginBottom: 10,
+              tintColor: Colors.client.primaryColor,
+            }}
+          />
+          <Text style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
+            {'Resumen del Servicio'}
+          </Text>
+
+          <Text
+            style={Fonts.style.light(Colors.data, Fonts.size.small, 'center')}>
+            {'Agrega los servicios según el orden que deseas recibirlos.'}
+          </Text>
+          <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
+        </View>
         {user &&
           user.cart &&
           user.cart.services &&
@@ -327,36 +330,113 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
           </Text>
         </View>
         {user.cart.coupon && (
-          <View style={styles.totalContainer}>
-            <Text
-              style={Fonts.style.regular(
-                Colors.client.primaryColor,
-                Fonts.size.medium,
-                'left',
-              )}>
-              Cupón:
-            </Text>
-            <Text style={Fonts.style.bold('red', Fonts.size.medium, 'left')}>
-              -{' '}
-              {user?.cart.coupon?.typeCoupon === 'percentage'
-                ? `${user?.cart.coupon?.percentage}%`
-                : utilities.formatCOP(user?.cart.coupon?.money)}
-            </Text>
-          </View>
+          <>
+            <View style={[styles.totalContainer, {marginTop: 20}]}>
+              <Text
+                style={Fonts.style.regular(
+                  Colors.client.primaryColor,
+                  Fonts.size.medium,
+                  'left',
+                )}>
+                Cupón:
+              </Text>
+              <Text
+                style={Fonts.style.bold(
+                  Colors.client.primaryColor,
+                  Fonts.size.medium,
+                  'right',
+                )}>
+                {user.cart.coupon.title}
+                {/* {user?.cart.coupon?.typeCoupon === 'percentage'
+                  ? `${user?.cart.coupon?.percentage}%`
+                  : utilities.formatCOP(user?.cart.coupon?.money)} */}
+              </Text>
+            </View>
+
+            <View
+              style={[
+                styles.totalContainer,
+                {marginTop: 5, flexDirection: 'column'},
+              ]}>
+              {disscounts.map((itemCoupon, index) => {
+                console.log(
+                  '🚀 ~ file: index.js ~ line 422 ~ {calculateCoupon ~ itemCoupon',
+                  itemCoupon,
+                );
+
+                return (
+                  <View key={index} style={[styles.totalContainer]}>
+                    <Text
+                      style={Fonts.style.regular(
+                        Colors.client.primaryColor,
+                        Fonts.size.medium,
+                        'right',
+                      )}>
+                      {itemCoupon.service}:
+                    </Text>
+                    <Text
+                      style={Fonts.style.bold(
+                        Colors.client.primaryColor,
+                        Fonts.size.medium,
+                        'right',
+                      )}>
+                      -{utilities.formatCOP(itemCoupon.disscount)}
+                    </Text>
+                  </View>
+                );
+              })}
+            </View>
+
+            <View style={[styles.totalContainer, {marginTop: 20}]}>
+              <Text
+                style={Fonts.style.regular(
+                  Colors.client.primaryColor,
+                  Fonts.size.medium,
+                  'left',
+                )}>
+                Total descuentos:
+              </Text>
+              <Text
+                style={Fonts.style.bold(
+                  Colors.client.primaryColor,
+                  Fonts.size.medium,
+                  'right',
+                )}>
+                {totalDiscount}
+              </Text>
+            </View>
+
+            <View style={styles.totalContainer}>
+              <Text
+                style={Fonts.style.regular(
+                  Colors.client.primaryColor,
+                  Fonts.size.medium,
+                  'left',
+                )}
+              />
+              <Text
+                style={[
+                  Fonts.style.light(
+                    Colors.client.primaryColor,
+                    Fonts.size.small,
+                    'right',
+                  ),
+                  {marginVertical: 10},
+                ]}>
+                {user?.cart.coupon?.description}
+              </Text>
+            </View>
+          </>
         )}
 
-        <View style={styles.totalContainer}>
+        <View style={[styles.totalContainer]}>
           <Text
-            style={Fonts.style.bold(
-              Colors.client.primaryColor,
-              Fonts.size.medium,
-              'left',
-            )}>
+            style={Fonts.style.bold(Colors.dark, Fonts.size.medium, 'left')}>
             {'Total:'}
           </Text>
           <Text
             style={Fonts.style.bold(Colors.dark, Fonts.size.medium, 'left')}>
-            {totalService}
+            {utilities.formatCOP(totalService - Math.abs(totalDiscount))}
           </Text>
         </View>
 
@@ -509,7 +589,7 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
                   ? activeCuopon()
                   : Alert.alert(
                       'Alerta',
-                      'Realmente desea eliminar este cupon de tu orden',
+                      'Realmente desea eliminar este cupón de tu orden',
                       [
                         {
                           text: 'Eliminar',

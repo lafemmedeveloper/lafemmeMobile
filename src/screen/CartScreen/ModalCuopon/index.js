@@ -26,11 +26,32 @@ import utilities from '../../../utilities';
 const ModalCuopon = ({total, type, close}) => {
   const {state, utilDispatch, authDispatch} = useContext(StoreContext);
   const [coupon, setCoupon] = useState('');
+
   const {util, auth} = state;
   const {user} = auth;
   const [keyboardHeight] = useKeyboard();
 
   let services = type;
+
+  const confirmCoupon = async (response) => {
+    //Active coupon|
+    await updateProfile({...user.cart, coupon: response}, 'cart', authDispatch);
+    const math = response.existence - 1;
+    await addCoupon(response.id, math, utilDispatch);
+
+    Alert.alert(
+      'Excelente',
+      'Tu cupón fue agregado con éxito, veras reflejado el descuento en el total de tu carrito ',
+      [
+        {
+          text: 'OK',
+          onPress: () => {
+            close(false);
+          },
+        },
+      ],
+    );
+  };
 
   const valdiateCoupon = async () => {
     Keyboard.dismiss();
@@ -59,6 +80,11 @@ const ModalCuopon = ({total, type, close}) => {
         return Alert.alert('Ups', 'Lo siento, tu cupón ya expiro');
       }
 
+      // console.log(
+      //   '🚀 ~ file: index.js ~ line 98 ~ valdiateCoupon ~ response.minValue',
+      //   response,
+      // );
+
       if (total < response.minValue) {
         //Validate min value
         return Alert.alert(
@@ -70,29 +96,52 @@ const ModalCuopon = ({total, type, close}) => {
         );
       }
 
+      let needsAlert = false;
+
       for (let index = 0; index < services.length; index++) {
-        if (!response.type.includes(services[index].servicesType)) {
-          Alert.alert(
-            'Hey',
-            'Este cupón no es valido para todos tus servicios',
-          );
+        console.log(
+          '🚀 ~ file: index.js ~ line 108 ~ valdiateCoupon ~ response',
+          response,
+        );
+
+        console.log(
+          '🚀 ~ file: index.js ~ line 108 ~ valdiateCoupon ~ services',
+          services[index],
+        );
+
+        console.log(
+          response.type.indexOf(services[index].servicesType) === -1,
+          response.type.indexOf(services[index].servicesType),
+        );
+
+        if (response.type.indexOf(services[index].servicesType) === -1) {
+          needsAlert = true;
         }
       }
 
-      //Active coupon|
-      await updateProfile(
-        {...user.cart, coupon: response},
-        'cart',
-        authDispatch,
+      console.log(
+        '🚀 ~ file: index.js ~ line 108 ~ valdiateCoupon ~ needsAlert',
+        needsAlert,
       );
-      const math = response.existence - 1;
-      await addCoupon(response.id, math, utilDispatch);
 
-      Alert.alert(
-        'Excelente',
-        'Tu cupón fue agregado con éxito, veras reflejado el descuento en el en el total de tu carrito ',
-        [{text: 'OK', onPress: () => close(false)}],
-      );
+      if (needsAlert) {
+        Alert.alert(
+          'Hey',
+          `Este cupón no es valido para todos tus servicios.\n\n${response.description}`,
+          [
+            {text: 'Continuar', onPress: () => confirmCoupon(response)},
+            {
+              text: 'Cancelar',
+              onPress: () => {
+                setCoupon('');
+                close(false);
+              },
+            },
+          ],
+        );
+      } else {
+        confirmCoupon(response);
+      }
     }
   };
 
@@ -126,7 +175,7 @@ const ModalCuopon = ({total, type, close}) => {
           onChangeText={(text) => setCoupon(text.trim())}
           secureText={false}
           textContent={'none'}
-          autoCapitalize={'none'}
+          autoCapitalize={'characters'}
         />
       </View>
 

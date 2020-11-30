@@ -332,7 +332,7 @@ const Detail = ({filterOrder, menuIndex, setMenuIndex}) => {
                         style={[
                           Fonts.style.regular(Colors.dark, Fonts.size.medium),
                         ]}>
-                        DURACION{' '}
+                        Duración{' '}
                       </Text>
                       <Text
                         style={[
@@ -351,7 +351,7 @@ const Detail = ({filterOrder, menuIndex, setMenuIndex}) => {
                         style={[
                           Fonts.style.regular(Colors.dark, Fonts.size.medium),
                         ]}>
-                        SUBTOTAL
+                        Subtotal
                       </Text>
                       <Text
                         style={[
@@ -371,7 +371,7 @@ const Detail = ({filterOrder, menuIndex, setMenuIndex}) => {
                         style={[
                           Fonts.style.regular(Colors.dark, Fonts.size.medium),
                         ]}>
-                        ADICIONES
+                        Adicionales
                       </Text>
                       <Text
                         style={[
@@ -396,7 +396,7 @@ const Detail = ({filterOrder, menuIndex, setMenuIndex}) => {
                                 Fonts.size.medium,
                               ),
                             ]}>
-                            DESCUENTO POR CUPÓN
+                            Descuentos por cupón
                           </Text>
                           <Text
                             style={[
@@ -419,7 +419,7 @@ const Detail = ({filterOrder, menuIndex, setMenuIndex}) => {
                         style={[
                           Fonts.style.bold(Colors.dark, Fonts.size.medium),
                         ]}>
-                        TOTAL DE SERVICIOS
+                        Total a pagar
                       </Text>
 
                       <Text

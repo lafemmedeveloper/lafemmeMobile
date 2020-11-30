@@ -14,7 +14,7 @@ import StepIndicator from 'react-native-step-indicator';
 import moment from 'moment';
 import {Colors, Metrics, Fonts} from '../../themes';
 import {StoreContext} from '../../flux';
-import MapView, {Marker} from 'react-native-maps';
+import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import ExpertCall from './Status/ExpertCall';
 import Loading from '../../components/Loading';
@@ -58,7 +58,7 @@ const OrderDetail = ({route, navigation}) => {
   const {goBack} = navigation;
 
   useEffect(() => {
-    const currentOrder = ordersAll.filter((item) => item.id === params.id)[0];
+    const currentOrder = ordersAll.filter((item) => item.id === params.id)[0] ? ordersAll.filter((item) => item.id === params.id)[0]: params ;
 
     setOrderUser(currentOrder);
     setCoordinate({
@@ -164,36 +164,23 @@ const OrderDetail = ({route, navigation}) => {
       <View style={styles.container}>
         {orderUser ? (
           <>
-            {orderUser.services[menuIndex].status < 2 && (
-              <View style={styles.contBtnC}>
-                <TouchableOpacity onPress={() => handleCancel()}>
-                  <Text
-                    style={Fonts.style.bold(
-                      Colors.client.primaryColor,
-                      Fonts.size.medium,
-                    )}>
-                    Cancelar
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            )}
             <View>
               {coordinate && (
                 <>
-                  <View style={styles.contBtn}>
+                  {/* <View style={styles.contBtn}>
                     <ButtonCoordinate activeCoor={activeCoor} />
-                  </View>
+                  </View> */}
 
                   <MapView
                     pointerEvents={'none'}
-                    // provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+                    provider={PROVIDER_GOOGLE} // remove if not using Google Maps
                     style={styles.mapView}
                     customMapStyle={mapStyle}
                     region={{
                       latitude: coordinate.latitude,
                       longitude: coordinate.longitude,
-                      latitudeDelta: 0.00002,
-                      longitudeDelta: 0.0002 * ASPECT_RATIO,
+                      latitudeDelta: 0.00005,
+                      longitudeDelta: 0.0005 * ASPECT_RATIO,
                     }}>
                     {orderUser.experts &&
                       orderUser.experts.length > 0 &&
@@ -265,6 +252,8 @@ const OrderDetail = ({route, navigation}) => {
                       <ExpertCall
                         experts={orderUser.experts}
                         uid={service.uid}
+                        handleCancel={handleCancel}
+                        status={orderUser.status}
                       />
                     )}
                   </Fragment>
@@ -299,6 +288,7 @@ const OrderDetail = ({route, navigation}) => {
                           'center',
                         )}>
                         {orderUser.cartId}
+                        {'\n'}
                       </Text>
                     </Text>
                     <Text
@@ -314,6 +304,21 @@ const OrderDetail = ({route, navigation}) => {
                       />{' '}
                       Dirección: {orderUser.address.name}
                     </Text>
+                    <Text
+                      style={Fonts.style.regular(
+                        Colors.dark,
+                        Fonts.size.medium,
+                        'left',
+                      )}>
+                      <Icon
+                        name={'sticky-note'}
+                        size={12}
+                        color={Colors.expert.primaryColor}
+                      />{' '}
+                      Nota de dirección: {orderUser.address.notesAddress.trim()}
+                      {'\n'}
+                    </Text>
+
                     {orderUser &&
                       orderUser.hoursServices.length > 0 &&
                       orderUser.hoursServices.map((hour, index) => {
@@ -357,6 +362,7 @@ const OrderDetail = ({route, navigation}) => {
                                     color={Colors.expert.primaryColor}
                                   />{' '}
                                   Duración del servicio: {service.duration} mins
+                                  {'\n'}
                                 </Text>
                                 <Text
                                   style={Fonts.style.regular(

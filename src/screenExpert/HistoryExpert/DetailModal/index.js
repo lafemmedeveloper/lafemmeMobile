@@ -39,7 +39,7 @@ const DetailModal = ({order, setModalDetail}) => {
   const {state, utilDispatch} = useContext(StoreContext);
   const {util, auth} = state;
   const {user} = auth;
-  const {ordersAll, loading} = util;
+  const {ordersAll, loading, config} = util;
 
   const mapStyle = require('../../../config/mapStyle.json');
 
@@ -98,8 +98,10 @@ const DetailModal = ({order, setModalDetail}) => {
                 );
                 currentOrder.services[indexService].status = 2;
                 await updateOrder(filterOrder, utilDispatch);
-                validateStatusGlobal(2);
-                if (currentOrder.services.length === 1) {
+
+                if (currentOrder.services.length > 1) {
+                  validateStatusGlobal(2);
+                } else {
                   currentOrder.status = 2;
                   await updateOrder(filterOrder, utilDispatch);
                 }
@@ -132,8 +134,6 @@ const DetailModal = ({order, setModalDetail}) => {
           {
             text: 'Si',
             onPress: async () => {
-              const status = 3;
-
               let currentOrder = filterOrder;
               let indexService = filterOrder.services.findIndex(
                 (s) => s.id === item.id,
@@ -141,8 +141,10 @@ const DetailModal = ({order, setModalDetail}) => {
               currentOrder.services[indexService].status = 3;
 
               await updateOrder(filterOrder, utilDispatch);
-              validateStatusGlobal(status);
-              if (currentOrder.services.length === 1) {
+
+              if (currentOrder.services.length > 1) {
+                validateStatusGlobal(3);
+              } else {
                 currentOrder.status = 3;
                 await updateOrder(filterOrder, utilDispatch);
               }
@@ -168,8 +170,6 @@ const DetailModal = ({order, setModalDetail}) => {
         {cancelable: true},
       );
     } else if (item.status === 3) {
-      const status = 4;
-
       Alert.alert(
         'Hola',
         'Estas seguro(a) que quieres cambiar de estado.',
@@ -182,13 +182,15 @@ const DetailModal = ({order, setModalDetail}) => {
                 (s) => s.id === item.id,
               );
               currentOrder.services[indexService].status = 4;
-
               await updateOrder(filterOrder, utilDispatch);
-              validateStatusGlobal(status);
-              if (currentOrder.services.length === 1) {
+
+              if (currentOrder.services.length > 1) {
+                validateStatusGlobal(4);
+              } else {
                 currentOrder.status = 4;
                 await updateOrder(filterOrder, utilDispatch);
               }
+
               let notification = {
                 title: 'Actualización de la orden',
                 body: `El experto  ${
@@ -232,20 +234,32 @@ const DetailModal = ({order, setModalDetail}) => {
   }
   const validateStatusGlobal = async (status) => {
     console.log('active global status');
-    let updateOrder = false;
+    let updateOrder = true;
 
     for (let i = 0; i < filterOrder.services.length; i++) {
-      if (filterOrder.services[i].status < 4) {
-        updateOrder = false;
-      } else if (filterOrder.services[i].status >= 4) {
+      if (filterOrder.services[i].status === status - 1) {
         updateOrder = true;
+      } else {
+        return (updateOrder = false);
       }
+
+      // if (filterOrder.services[i].status < 4) {
+      //   updateOrder = false;
+      // } else if (filterOrder.services[i].status >= 4) {
+      //   updateOrder = true;
+      // }
     }
+
+    console.log(
+      '🚀 ~ file: index.js ~ line 246 ~ validateStatusGlobal ~ updateOrder',
+      updateOrder,
+    );
 
     if (updateOrder) {
       await updateStatusDb(filterOrder, status, utilDispatch);
     }
   };
+
   const handleMaps = () => {
     const scheme = Platform.select({ios: 'maps:0,0?q=', android: 'geo:0,0?q='});
     const latLng = `${filterOrder.address.coordinates.latitude}, ${filterOrder.address.coordinates.longitude}`;
@@ -261,159 +275,78 @@ const DetailModal = ({order, setModalDetail}) => {
   return (
     <>
       <View style={styles.container}>
-        <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
-
-        <Image
-          source={Images.delivery}
-          style={{
-            width: 50,
-            height: 50,
-            resizeMode: 'contain',
-            alignSelf: 'center',
-            marginBottom: 10,
-            tintColor: Colors.expert.primaryColor,
-          }}
-        />
-        <Text style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
-          {'Resumen de tu servicio '}
-        </Text>
-
-        <Text
-          style={Fonts.style.light(Colors.data, Fonts.size.small, 'center')}>
-          {'Id de la orden'}{' '}
-          <Text
-            style={Fonts.style.bold(
-              Colors.expert.primaryColor,
-              Fonts.size.small,
-              'center',
-            )}>
-            {filterOrder && filterOrder.cartId}
-          </Text>
-        </Text>
-        <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
-
         <ScrollView style={{}}>
-          <TouchableOpacity onPress={() => console.log('ir map')}>
-            {false && (
-              <MapView
-                pointerEvents={'none'}
-                provider={__DEV__ ? null : PROVIDER_GOOGLE} // remove if not using Google Maps
-                style={styles.mapView}
-                customMapStyle={mapStyle}
-                region={{
-                  latitude: filterOrder.address.coordinates?.latitude,
-                  longitude: filterOrder.address.coordinates?.longitude,
-                  latitudeDelta: 0.00002,
-                  longitudeDelta: 0.0002 * ASPECT_RATIO,
-                }}>
-                <Marker.Animated
-                  coordinate={{
-                    latitude: filterOrder.address.coordinates?.latitude,
-                    longitude: filterOrder.address.coordinates?.longitude,
-                  }}>
-                  <Icon
-                    name={'map-marker-alt'}
-                    size={30}
-                    color={Colors.client.primaryColor}
-                  />
-                </Marker.Animated>
-                {filterOrder.experts &&
-                  filterOrder.experts.length > 0 &&
-                  filterOrder.experts.map((item) => {
-                    return (
-                      <Marker
-                        key={item.uid}
-                        coordinate={{
-                          latitude: item.coordinates?.latitude,
-                          longitude: item.coordinates?.longitude,
-                        }}>
-                        <Icon
-                          name={'map-marker-alt'}
-                          size={30}
-                          color={Colors.expert.primaryColor}
-                        />
-                      </Marker>
-                    );
-                  })}
-              </MapView>
-            )}
-          </TouchableOpacity>
+          <Image
+            source={Images.delivery}
+            style={{
+              width: 50,
+              height: 50,
+              resizeMode: 'contain',
+              alignSelf: 'center',
+              marginBottom: 10,
+              tintColor: Colors.expert.primaryColor,
+            }}
+          />
+          <Text style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
+            {'Resumen de tu servicio '}
+          </Text>
 
-          <View style={{marginTop: 20}}>
+          <Text
+            style={Fonts.style.light(Colors.data, Fonts.size.small, 'center')}>
+            {'Id de la orden'}{' '}
             <Text
-              style={[
-                Fonts.style.bold(
-                  Colors.expert.primaryColor,
-                  Fonts.size.medium,
-                  'center',
-                ),
-              ]}>
-              Cliente
+              style={Fonts.style.bold(
+                Colors.expert.primaryColor,
+                Fonts.size.small,
+                'center',
+              )}>
+              {filterOrder && filterOrder.cartId}
             </Text>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                marginHorizontal: 20,
+          </Text>
+          <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
+
+          <MapView
+            pointerEvents={'none'}
+            provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+            style={styles.mapView}
+            customMapStyle={mapStyle}
+            region={{
+              latitude: filterOrder.address.coordinates?.latitude,
+              longitude: filterOrder.address.coordinates?.longitude,
+              latitudeDelta: 0.00002,
+              longitudeDelta: 0.0002 * ASPECT_RATIO,
+            }}>
+            <Marker.Animated
+              coordinate={{
+                latitude: filterOrder.address.coordinates?.latitude,
+                longitude: filterOrder.address.coordinates?.longitude,
               }}>
-              <Text
-                style={[Fonts.style.regular(Colors.dark, Fonts.size.medium)]}>
-                Cliente
-              </Text>
-              <Text style={[Fonts.style.bold(Colors.dark, Fonts.size.medium)]}>
-                {filterOrder &&
-                  filterOrder.client &&
-                  `${filterOrder.client.firstName} ${filterOrder.client.lastName}`}
-              </Text>
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                marginHorizontal: 20,
-              }}>
-              <Text
-                style={[Fonts.style.regular(Colors.dark, Fonts.size.medium)]}>
-                Teléfono
-              </Text>
-              <Text style={[Fonts.style.bold(Colors.dark, Fonts.size.medium)]}>
-                {filterOrder.client && filterOrder.client.phone}
-              </Text>
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                marginHorizontal: 20,
-              }}>
-              <Text
-                style={[Fonts.style.regular(Colors.dark, Fonts.size.medium)]}>
-                Dirección
-              </Text>
-              <Text
-                style={[Fonts.style.regular(Colors.dark, Fonts.size.medium)]}>
-                {filterOrder && filterOrder.address && filterOrder.address.name}
-              </Text>
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                marginHorizontal: 20,
-              }}>
-              <Text
-                style={[
-                  Fonts.style.regular(Colors.dark, Fonts.size.medium, 'left'),
-                ]}>
-                Nota de entrega
-              </Text>
-              <Text
-                style={[
-                  Fonts.style.regular(Colors.dark, Fonts.size.medium, 'left'),
-                ]}>
-                {filterOrder && filterOrder.address.notesAddress}
-              </Text>
-            </View>
+              <Icon
+                name={'map-marker-alt'}
+                size={30}
+                color={Colors.client.primaryColor}
+              />
+            </Marker.Animated>
+            {filterOrder.experts &&
+              filterOrder.experts.length > 0 &&
+              filterOrder.experts.map((item) => {
+                return (
+                  <Marker
+                    key={item.uid}
+                    coordinate={{
+                      latitude: item.coordinates?.latitude,
+                      longitude: item.coordinates?.longitude,
+                    }}>
+                    <Icon
+                      name={'map-marker-alt'}
+                      size={30}
+                      color={Colors.expert.primaryColor}
+                    />
+                  </Marker>
+                );
+              })}
+          </MapView>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <TouchableOpacity
               onPress={() => handleMaps()}
               style={styles.btnMaps}>
@@ -426,9 +359,135 @@ const DetailModal = ({order, setModalDetail}) => {
                   Fonts.style.regular(Colors.dark, Fonts.size.medium),
                   {alignSelf: 'center'},
                 ]}>
-                Navegar usando Maps
+                Iniciar navagación
               </Text>
             </TouchableOpacity>
+            <View
+              style={{
+                alignSelf: 'center',
+                justifyContent: 'space-between',
+                flexDirection: 'row',
+                marginHorizontal: 20,
+              }}>
+              <TouchableOpacity
+                style={{
+                  backgroundColor: Colors.expert.primaryColor,
+                  height: 40,
+                  width: 40,
+                  borderRadius: 20,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginRight: 10,
+                  shadowColor: '#000',
+                  shadowOffset: {
+                    width: 0,
+                    height: 4,
+                  },
+                  shadowOpacity: 0.3,
+                  shadowRadius: 4.65,
+
+                  elevation: 8,
+                }}
+                onPress={() => Linking.openURL(`tel:${config.phone}`)}>
+                <Icon name={'phone-alt'} size={20} color={Colors.light} />
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <View style={{marginTop: 10}}>
+            <Text
+              style={[
+                Fonts.style.bold(
+                  Colors.expert.primaryColor,
+                  Fonts.size.medium,
+                  'center',
+                ),
+                {marginVertical: 5},
+              ]}>
+              Cliente
+            </Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                marginHorizontal: 20,
+                marginVertical: 2.5,
+              }}>
+              <Text
+                style={[
+                  Fonts.style.regular(Colors.dark, Fonts.size.medium),
+                  {flex: 1},
+                ]}>
+                Cliente:
+              </Text>
+              <Text
+                style={[
+                  Fonts.style.bold(Colors.dark, Fonts.size.medium),
+                  {flex: 2},
+                ]}>
+                {filterOrder &&
+                  filterOrder.client &&
+                  `${filterOrder.client.firstName} ${filterOrder.client.lastName}`}
+              </Text>
+            </View>
+            {/* <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                marginHorizontal: 20,
+              }}>
+              <Text
+                style={[Fonts.style.regular(Colors.dark, Fonts.size.medium)]}>
+                Teléfono:
+              </Text>
+              <Text style={[Fonts.style.bold(Colors.dark, Fonts.size.medium)]}>
+                {filterOrder.client && filterOrder.client.phone}
+              </Text>
+            </View> */}
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                marginHorizontal: 20,
+                marginVertical: 2.5,
+              }}>
+              <Text
+                style={[
+                  Fonts.style.regular(Colors.dark, Fonts.size.medium),
+                  {flex: 1},
+                ]}>
+                Dirección:
+              </Text>
+              <Text
+                style={[
+                  Fonts.style.regular(Colors.dark, Fonts.size.medium),
+                  {flex: 2},
+                ]}>
+                {filterOrder && filterOrder.address && filterOrder.address.name}
+              </Text>
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                marginHorizontal: 20,
+                marginVertical: 2.5,
+              }}>
+              <Text
+                style={[
+                  Fonts.style.regular(Colors.dark, Fonts.size.medium, 'left'),
+                  {flex: 1},
+                ]}>
+                Nota de{'\n'}servicio:
+              </Text>
+              <Text
+                style={[
+                  Fonts.style.regular(Colors.dark, Fonts.size.medium, 'left'),
+                  {flex: 2},
+                ]}>
+                {filterOrder && filterOrder.address.notesAddress}
+              </Text>
+            </View>
 
             <View opacity={0.25} style={ApplicationStyles.separatorLine} />
             {filterOrder && services && services.length > 1 && (
@@ -493,6 +552,7 @@ const DetailModal = ({order, setModalDetail}) => {
                             flexDirection: 'row',
                             justifyContent: 'space-between',
                             marginHorizontal: 20,
+                            marginVertical: 2.5,
                           }}>
                           <Text
                             style={[
@@ -500,12 +560,14 @@ const DetailModal = ({order, setModalDetail}) => {
                                 Colors.dark,
                                 Fonts.size.medium,
                               ),
+                              {flex: 1},
                             ]}>
-                            Producto
+                            Servicios:
                           </Text>
                           <Text
                             style={[
                               Fonts.style.bold(Colors.dark, Fonts.size.medium),
+                              {flex: 2},
                             ]}>
                             {name}
                           </Text>
@@ -515,6 +577,7 @@ const DetailModal = ({order, setModalDetail}) => {
                             flexDirection: 'row',
                             justifyContent: 'space-between',
                             marginHorizontal: 20,
+                            marginVertical: 2.5,
                           }}>
                           <Text
                             style={[
@@ -522,8 +585,9 @@ const DetailModal = ({order, setModalDetail}) => {
                                 Colors.dark,
                                 Fonts.size.medium,
                               ),
+                              {flex: 1},
                             ]}>
-                            Invitados
+                            Clientes:
                           </Text>
 
                           <Text
@@ -533,7 +597,7 @@ const DetailModal = ({order, setModalDetail}) => {
                                 Fonts.size.medium,
                                 'left',
                               ),
-                              {marginLeft: 20},
+                              {flex: 2},
                             ]}>
                             {clients.length === 0 ? 'Ninguno' : clients.length}
                           </Text>
@@ -606,6 +670,7 @@ const DetailModal = ({order, setModalDetail}) => {
                                     flexDirection: 'row',
                                     justifyContent: 'space-between',
                                     marginHorizontal: 20,
+                                    marginVertical: 2.5,
                                   }}>
                                   <Text
                                     style={[
@@ -683,6 +748,7 @@ const DetailModal = ({order, setModalDetail}) => {
                             flexDirection: 'row',
                             justifyContent: 'space-between',
                             marginHorizontal: 20,
+                            marginVertical: 2.5,
                           }}>
                           <Text
                             style={[
@@ -691,7 +757,7 @@ const DetailModal = ({order, setModalDetail}) => {
                                 Fonts.size.medium,
                               ),
                             ]}>
-                            DURACIÓN{' '}
+                            Duración{' '}
                           </Text>
                           <Text
                             style={[
@@ -708,6 +774,7 @@ const DetailModal = ({order, setModalDetail}) => {
                             flexDirection: 'row',
                             justifyContent: 'space-between',
                             marginHorizontal: 20,
+                            marginVertical: 2.5,
                           }}>
                           <Text
                             style={[
@@ -716,7 +783,7 @@ const DetailModal = ({order, setModalDetail}) => {
                                 Fonts.size.medium,
                               ),
                             ]}>
-                            SUBTOTAL
+                            Subtotal
                           </Text>
                           <Text
                             style={[
@@ -734,6 +801,7 @@ const DetailModal = ({order, setModalDetail}) => {
                             flexDirection: 'row',
                             justifyContent: 'space-between',
                             marginHorizontal: 20,
+                            marginVertical: 2.5,
                           }}>
                           <Text
                             style={[
@@ -742,7 +810,7 @@ const DetailModal = ({order, setModalDetail}) => {
                                 Fonts.size.medium,
                               ),
                             ]}>
-                            ADICIONES
+                            Adicionales
                           </Text>
                           <Text
                             style={[
@@ -764,6 +832,7 @@ const DetailModal = ({order, setModalDetail}) => {
                                 flexDirection: 'row',
                                 justifyContent: 'space-between',
                                 marginHorizontal: 20,
+                                marginVertical: 2.5,
                               }}>
                               <Text
                                 style={[
@@ -772,7 +841,7 @@ const DetailModal = ({order, setModalDetail}) => {
                                     Fonts.size.medium,
                                   ),
                                 ]}>
-                                DESCUENTO POR CUPÓN
+                                Descuento por cupón
                               </Text>
                               <Text
                                 style={[
@@ -792,12 +861,13 @@ const DetailModal = ({order, setModalDetail}) => {
                             flexDirection: 'row',
                             justifyContent: 'space-between',
                             marginHorizontal: 20,
+                            marginVertical: 2.5,
                           }}>
                           <Text
                             style={[
                               Fonts.style.bold(Colors.dark, Fonts.size.medium),
                             ]}>
-                            TOTAL DE SERVICIOS
+                            Total a cobrar
                           </Text>
 
                           <Text
@@ -866,7 +936,7 @@ const DetailModal = ({order, setModalDetail}) => {
                         onPress={() => activeModalEdit(item)}
                         style={{
                           width: Metrics.screenWidth * 0.5,
-                          marginVertical: 10,
+                          marginVertical: 5,
                           alignSelf: 'center',
                           borderRadius: Metrics.borderRadius,
                           justifyContent: 'center',
@@ -883,7 +953,7 @@ const DetailModal = ({order, setModalDetail}) => {
                         </Text>
                       </TouchableOpacity>
                     )}
-                    <View style={{height: Metrics.addFooter + 10}} />
+                    <View style={{height: Metrics.addFooter + 2.5}} />
                   </>
                 )}
               </Fragment>
@@ -914,7 +984,7 @@ const DetailModal = ({order, setModalDetail}) => {
 
 const styles = StyleSheet.create({
   container: {
-    height: Metrics.screenHeight - 80,
+    height: Metrics.screenHeight - 40,
     paddingTop: 40,
   },
   mapView: {
@@ -940,9 +1010,10 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   btnMaps: {
-    width: Metrics.screenWidth * 0.5,
+    flex: 1,
     height: 40,
     marginVertical: 10,
+    marginHorizontal: 10,
     alignSelf: 'center',
     borderRadius: Metrics.borderRadius,
     backgroundColor: Colors.light,

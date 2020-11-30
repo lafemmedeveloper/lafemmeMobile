@@ -11,7 +11,7 @@ import {
 import {Fonts, Colors, Images} from '../../../../themes';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
-const ExpertCall = ({experts, uid}) => {
+const ExpertCall = ({experts, uid, handleCancel, status}) => {
   const expert = experts.filter((e) => e.uid === uid)[0];
   return (
     <>
@@ -82,6 +82,17 @@ const ExpertCall = ({experts, uid}) => {
               color={Colors.expert.primaryColor}
             />
           </TouchableOpacity>
+          {status <= 2 && (
+            <TouchableOpacity
+              style={styles.buttonCall}
+              onPress={() => handleCancel()}>
+              <Icon
+                name={'times'}
+                size={20}
+                color={Colors.client.primaryColor}
+              />
+            </TouchableOpacity>
+          )}
         </View>
       </View>
     </>

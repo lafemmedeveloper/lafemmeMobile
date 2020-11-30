@@ -3,7 +3,6 @@ import {Text, TouchableOpacity, StyleSheet} from 'react-native';
 import {Colors, Fonts} from '../../themes';
 
 const ButonMenu = ({item, index, theme, setMenuIndex}) => {
-  console.log('index ==>', index);
   return (
     <>
       {item ? (

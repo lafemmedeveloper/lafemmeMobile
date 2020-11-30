@@ -14,6 +14,7 @@ import {
   getDeviceInfo,
   getExpertActiveOrders,
   activeNameSlug,
+  getConfig
 } from '../../flux/util/actions';
 
 import Geolocation from '@react-native-community/geolocation';
@@ -56,6 +57,8 @@ const HomeExpert = () => {
       //  getExpertHistoryOrders(state.auth.user, utilDispatch);
       activeNameSlug(state.auth.user.activity, utilDispatch);
       getExpertOpenOrders(state.auth.user.activity, utilDispatch);
+     getConfig(utilDispatch);
+
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -68,7 +68,7 @@ export default (service) => {
         <FastImage
           style={ApplicationStyles.itemImage}
           source={{
-            uri: data.imageUrl.medium,
+            uri: data.imageUrl.big,
             priority: FastImage.priority.normal,
           }}
           resizeMode={FastImage.resizeMode.cover}

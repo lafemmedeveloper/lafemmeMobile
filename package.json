@@ -10,6 +10,7 @@
     "iosE": "ENVFILE=.env react-native run-ios --scheme \"Expert\" --simulator=\"iPhone 8\"",
     "iosCs": "ENVFILE=.env.staging react-native run-ios --scheme \"ClientStaging\"",
     "iosEs": "ENVFILE=.env react-native run-ios --scheme \"ExpertStaging\" --simulator=\"iPhone 8\"",
+    "iosEs12": "ENVFILE=.env react-native run-ios --scheme \"ExpertStaging\" --simulator=\"iPhone 12\"",
     "androidWC": "SET ENVFILE=.env react-native run-android --variant=clientDebug --appIdSuffix client",
     "androidC": "ENVFILE=.env react-native run-android --variant=clientDebug --appIdSuffix client",
     "androidE": "ENVFILE=.env react-native run-android --variant=expertDebug --appIdSuffix expert",
@@ -89,6 +90,7 @@
     "react-native-share": "^3.7.0",
     "react-native-star-rating": "^1.1.0",
     "react-native-step-indicator": "^1.0.3",
+    "react-native-svg": "^12.1.0",
     "react-native-vector-icons": "^7.0.0",
     "react-native-webview": "^10.4.0"
   },
