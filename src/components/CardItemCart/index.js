@@ -15,19 +15,19 @@ export default ({
   down,
   up,
 }) => {
-  const {name, duration, clients, id} = data;
+  const {name, duration, clients, id, order} = data;
   return (
     <>
       <View style={[styles.container, ApplicationStyles.shadowsClient]}>
         <View style={styles.contBtns}>
-          <TouchableOpacity onPress={() => up(index)}>
+          <TouchableOpacity onPress={() => up(index, order)}>
             <Icon
               name="caret-up"
               size={25}
               color={Colors.client.primaryColor}
             />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => down(index)}>
+          <TouchableOpacity onPress={() => down(index, order)}>
             <Icon
               name="caret-down"
               size={25}

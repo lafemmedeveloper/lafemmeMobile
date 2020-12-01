@@ -31,7 +31,7 @@ import ModalCuopon from './ModalCuopon';
 import utilities from '../../utilities';
 import {useKeyboard} from '../../hooks/useKeyboard';
 import {useCouponsDiscount} from '../../hooks/useCouponsDiscount';
-import {calculeTotal} from '../../helpers/CouponHelper';
+import {useOrderBy} from '../../hooks/useOrderBy';
 
 const CartScreen = ({setModalCart, setModalAddress}) => {
   const {state, serviceDispatch, authDispatch, utilDispatch} = useContext(
@@ -45,10 +45,18 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
   const [modalNote, setModalNote] = useState(false);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [modalCoupon, setModalCoupon] = useState(false);
-  const [orderTotal, setOrderTotal] = useState(0);
-  const [orderServices, setOrderServices] = useState([]);
+  const [logicMove, setLogicMove] = useState(null);
+
+  //Hooks
 
   const [keyboardHeight] = useKeyboard();
+  const [servicesOrderBy] = useOrderBy(user?.cart?.services ?? [], logicMove);
+
+  const {disscounts, totalDiscount} = useCouponsDiscount(
+    user?.cart?.services ?? [],
+    user?.cart?.coupon,
+  );
+  console.log('orderServices =>', servicesOrderBy);
 
   useEffect(() => {
     getServices(serviceDispatch);
@@ -193,19 +201,21 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
     }
   };
 
-  const up = async (index) => {
-    const newOrder = move(user.cart?.services, index, -1);
-    if (newOrder) {
-      await updateProfile({services: newOrder}, 'cart', authDispatch);
-    }
+  const up = async (index, order) => {
+    console.log('servicesOrderBy', servicesOrderBy.length);
+    console.log('servicesOrderBy', index);
+    console.log('order', order);
+    setLogicMove({move: 'down', index});
+
+    await updateProfile({services: servicesOrderBy}, 'cart', authDispatch);
   };
 
-  const down = async (index) => {
-    const newOrder = move(user.cart?.services, index, 1);
-
-    if (newOrder) {
-      await updateProfile({services: newOrder}, 'cart', authDispatch);
-    }
+  const down = async (index, order) => {
+    console.log('servicesOrderBy', servicesOrderBy.length);
+    console.log('servicesOrderBy', index);
+    console.log('order', order);
+    setLogicMove({move: 'down', index});
+    await updateProfile({services: servicesOrderBy}, 'cart', authDispatch);
   };
 
   const move = (array, index, delta) => {
@@ -219,19 +229,6 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
 
   const totalService =
     user.cart?.services.length > 0 ? _.sumBy(user.cart.services, 'total') : 0;
-
-  useEffect(() => {
-    if (user.cart?.services.length > 0) {
-      setOrderServices(user.cart?.services);
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user.cart.coupon]);
-
-  const {disscounts, totalDiscount} = useCouponsDiscount(
-    user?.cart?.services ?? [],
-    user?.cart?.coupon,
-  );
 
   return (
     <View style={{height: Metrics.screenHeight * 0.8}}>
@@ -264,7 +261,7 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
         {user &&
           user.cart &&
           user.cart.services &&
-          user.cart?.services.map((item, index) => {
+          servicesOrderBy.map((item, index) => {
             return (
               <CardItemCart
                 key={index}
@@ -347,9 +344,6 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
                   'right',
                 )}>
                 {user.cart.coupon.title}
-                {/* {user?.cart.coupon?.typeCoupon === 'percentage'
-                  ? `${user?.cart.coupon?.percentage}%`
-                  : utilities.formatCOP(user?.cart.coupon?.money)} */}
               </Text>
             </View>
 
@@ -359,11 +353,6 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
                 {marginTop: 5, flexDirection: 'column'},
               ]}>
               {disscounts.map((itemCoupon, index) => {
-                console.log(
-                  '🚀 ~ file: index.js ~ line 422 ~ {calculateCoupon ~ itemCoupon',
-                  itemCoupon,
-                );
-
                 return (
                   <View key={index} style={[styles.totalContainer]}>
                     <Text
