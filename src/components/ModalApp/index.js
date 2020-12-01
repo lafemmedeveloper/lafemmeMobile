@@ -13,8 +13,8 @@ export default ({open, children, setOpen}) => {
   return (
     <>
       <Modal
-        onSwipeComplete={() => setOpen(false)}
-        swipeDirection={['down']}
+        //onSwipeComplete={() => setOpen(false)}
+        //swipeDirection={['down']}
         isVisible={open}
         onBackdropPress={() =>
           setOpen ? setOpen(false) : console.log('not close')
@@ -24,7 +24,11 @@ export default ({open, children, setOpen}) => {
             ? Colors.expert.primaryColor
             : Colors.pinkMask(0.75)
         }
-        style={styles.Modal}>
+        useNativeDriver={true}
+        style={styles.Modal}
+        onBackButtonPress={() => {
+          setOpen ? setOpen(false) : console.log('not close');
+        }}>
         <TouchableOpacity style={styles.musk} onPress={() => setOpen(false)} />
         <View style={styles.container}>{children}</View>
       </Modal>

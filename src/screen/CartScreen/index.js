@@ -11,6 +11,7 @@ import {
   TextInput,
   Keyboard,
   ActivityIndicator,
+  Platform,
 } from 'react-native';
 import Utilities from '../../utilities';
 import moment from 'moment';
@@ -31,7 +32,6 @@ import ModalCuopon from './ModalCuopon';
 import utilities from '../../utilities';
 import {useKeyboard} from '../../hooks/useKeyboard';
 import {useCouponsDiscount} from '../../hooks/useCouponsDiscount';
-import {useOrderBy} from '../../hooks/useOrderBy';
 
 const CartScreen = ({setModalCart, setModalAddress}) => {
   const {state, serviceDispatch, authDispatch, utilDispatch} = useContext(
@@ -45,18 +45,15 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
   const [modalNote, setModalNote] = useState(false);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [modalCoupon, setModalCoupon] = useState(false);
-  const [logicMove, setLogicMove] = useState(null);
 
   //Hooks
 
   const [keyboardHeight] = useKeyboard();
-  const [servicesOrderBy] = useOrderBy(user?.cart?.services ?? [], logicMove);
 
   const {disscounts, totalDiscount} = useCouponsDiscount(
     user?.cart?.services ?? [],
     user?.cart?.coupon,
   );
-  console.log('orderServices =>', servicesOrderBy);
 
   useEffect(() => {
     getServices(serviceDispatch);
@@ -201,21 +198,27 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
     }
   };
 
-  const up = async (index, order) => {
-    console.log('servicesOrderBy', servicesOrderBy.length);
-    console.log('servicesOrderBy', index);
-    console.log('order', order);
-    setLogicMove({move: 'down', index});
+  const up = async (i, order, id) => {
+    let arr = user.cart.services;
 
-    await updateProfile({services: servicesOrderBy}, 'cart', authDispatch);
+    let index = arr.findIndex((e) => e.id === id);
+    if (index !== -1 && index < arr.length - 1) {
+      let el = arr[index];
+      arr[index] = arr[index + 1];
+      arr[index + 1] = el;
+    }
+    await updateProfile({services: arr}, 'cart', authDispatch);
   };
 
-  const down = async (index, order) => {
-    console.log('servicesOrderBy', servicesOrderBy.length);
-    console.log('servicesOrderBy', index);
-    console.log('order', order);
-    setLogicMove({move: 'down', index});
-    await updateProfile({services: servicesOrderBy}, 'cart', authDispatch);
+  const down = async (i, order, id) => {
+    let arr = user.cart.services;
+    let index = arr.findIndex((e) => e.id === id);
+    if (index !== -1 && index < arr.length - 1) {
+      let el = arr[index];
+      arr[index] = arr[index + 1];
+      arr[index + 1] = el;
+    }
+    await updateProfile({services: arr}, 'cart', authDispatch);
   };
 
   const move = (array, index, delta) => {
@@ -231,387 +234,383 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
     user.cart?.services.length > 0 ? _.sumBy(user.cart.services, 'total') : 0;
 
   return (
-    <View style={{height: Metrics.screenHeight * 0.8}}>
+    <ScrollView style={{height: Metrics.screenHeight * 0.8}}>
       <Loading type={'client'} />
 
-      <ScrollView>
-        <View style={styles.headerContainer}>
-          <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
-          <Image
-            source={Images.billResume}
-            style={{
-              width: 50,
-              height: 50,
-              resizeMode: 'contain',
-              alignSelf: 'center',
-              marginBottom: 10,
-              tintColor: Colors.client.primaryColor,
-            }}
-          />
-          <Text style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
-            {'Resumen del Servicio'}
-          </Text>
-
-          <Text
-            style={Fonts.style.light(Colors.data, Fonts.size.small, 'center')}>
-            {'Agrega los servicios según el orden que deseas recibirlos.'}
-          </Text>
-          <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
-        </View>
-        {user &&
-          user.cart &&
-          user.cart.services &&
-          servicesOrderBy.map((item, index) => {
-            return (
-              <CardItemCart
-                key={index}
-                isCart={true}
-                showExperts={false}
-                data={item}
-                removeItem={removeItem}
-                index={index}
-                down={down}
-                up={up}
-              />
-            );
-          })}
-        {user &&
-          user.cart &&
-          user.cart.services &&
-          user.cart.services.length === 0 && (
-            <TouchableOpacity
-              onPress={() => setModalCart(false)}
-              style={[
-                styles.productContainer,
-                {backgroundColor: Colors.client.primaryColor},
-              ]}>
-              <Text
-                style={Fonts.style.bold(
-                  Colors.light,
-                  Fonts.size.medium,
-                  'center',
-                )}>
-                {'+ Agregar servicios'}
-              </Text>
-            </TouchableOpacity>
-          )}
-
+      <View style={styles.headerContainer}>
         <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
+        <Image
+          source={Images.billResume}
+          style={{
+            width: 50,
+            height: 50,
+            resizeMode: 'contain',
+            alignSelf: 'center',
+            marginBottom: 10,
+            tintColor: Colors.client.primaryColor,
+          }}
+        />
+        <Text style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
+          {'Resumen del Servicio'}
+        </Text>
 
-        <View style={styles.totalContainer}>
-          <Text
-            style={Fonts.style.regular(
-              Colors.client.primaryColor,
-              Fonts.size.medium,
-              'left',
-            )}>
-            {'Sub Total:'}
-          </Text>
-          <Text
-            style={Fonts.style.regular(Colors.gray, Fonts.size.medium, 'left')}>
-            {Utilities.formatCOP(_.sumBy(user.cart.services, 'totalServices'))}
-          </Text>
-        </View>
-        <View style={styles.totalContainer}>
-          <Text
-            style={Fonts.style.regular(
-              Colors.client.primaryColor,
-              Fonts.size.medium,
-              'left',
-            )}>
-            {'Total Adicionales:'}
-          </Text>
-          <Text
-            style={Fonts.style.regular(Colors.gray, Fonts.size.medium, 'left')}>
-            {Utilities.formatCOP(_.sumBy(user.cart.services, 'totalAddons'))}
-          </Text>
-        </View>
-        {user.cart.coupon && (
-          <>
-            <View style={[styles.totalContainer, {marginTop: 20}]}>
+        <Text
+          style={Fonts.style.light(Colors.data, Fonts.size.small, 'center')}>
+          {'Agrega los servicios según el orden que deseas recibirlos.'}
+        </Text>
+        <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
+      </View>
+      {user &&
+        user.cart &&
+        user.cart.services &&
+        user.cart.services.length > 0 &&
+        user.cart.services.map((item, index) => {
+          return (
+            <CardItemCart
+              key={index}
+              isCart={true}
+              showExperts={false}
+              data={item}
+              removeItem={removeItem}
+              index={index}
+              down={down}
+              up={up}
+            />
+          );
+        })}
+
+      {user &&
+        user.cart &&
+        user.cart.services &&
+        user.cart.services.length === 0 && (
+          <TouchableOpacity
+            onPress={() => setModalCart(false)}
+            style={[
+              styles.productContainer,
+              {backgroundColor: Colors.client.primaryColor},
+            ]}>
+            <Text
+              style={Fonts.style.bold(
+                Colors.light,
+                Fonts.size.medium,
+                'center',
+              )}>
+              {'+ Agregar servicios'}
+            </Text>
+          </TouchableOpacity>
+        )}
+
+      <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
+
+      <View style={styles.totalContainer}>
+        <Text
+          style={Fonts.style.regular(
+            Colors.client.primaryColor,
+            Fonts.size.medium,
+            'left',
+          )}>
+          {'Sub Total:'}
+        </Text>
+        <Text
+          style={Fonts.style.regular(Colors.gray, Fonts.size.medium, 'left')}>
+          {Utilities.formatCOP(_.sumBy(user.cart.services, 'totalServices'))}
+        </Text>
+      </View>
+      <View style={styles.totalContainer}>
+        <Text
+          style={Fonts.style.regular(
+            Colors.client.primaryColor,
+            Fonts.size.medium,
+            'left',
+          )}>
+          {'Total Adicionales:'}
+        </Text>
+        <Text
+          style={Fonts.style.regular(Colors.gray, Fonts.size.medium, 'left')}>
+          {Utilities.formatCOP(_.sumBy(user.cart.services, 'totalAddons'))}
+        </Text>
+      </View>
+      {user.cart.coupon && (
+        <>
+          <View style={[styles.totalContainer, {marginTop: 20}]}>
+            <Text
+              style={Fonts.style.regular(
+                Colors.client.primaryColor,
+                Fonts.size.medium,
+                'left',
+              )}>
+              Cupón:
+            </Text>
+            <Text
+              style={Fonts.style.bold(
+                Colors.client.primaryColor,
+                Fonts.size.medium,
+                'right',
+              )}>
+              {user.cart.coupon.title}
+            </Text>
+          </View>
+
+          <View
+            style={[
+              styles.totalContainer,
+              {marginTop: 5, flexDirection: 'column'},
+            ]}>
+            {disscounts.map((itemCoupon, index) => {
+              return (
+                <View key={index} style={[styles.totalContainer]}>
+                  <Text
+                    style={Fonts.style.regular(
+                      Colors.client.primaryColor,
+                      Fonts.size.medium,
+                      'right',
+                    )}>
+                    {itemCoupon.service}:
+                  </Text>
+                  <Text
+                    style={Fonts.style.bold(
+                      Colors.client.primaryColor,
+                      Fonts.size.medium,
+                      'right',
+                    )}>
+                    -{utilities.formatCOP(itemCoupon.disscount)}
+                  </Text>
+                </View>
+              );
+            })}
+          </View>
+
+          <View style={[styles.totalContainer, {marginTop: 20}]}>
+            <Text
+              style={Fonts.style.regular(
+                Colors.client.primaryColor,
+                Fonts.size.medium,
+                'left',
+              )}>
+              Total descuentos:
+            </Text>
+            <Text
+              style={Fonts.style.bold(
+                Colors.client.primaryColor,
+                Fonts.size.medium,
+                'right',
+              )}>
+              {totalDiscount}
+            </Text>
+          </View>
+
+          <View style={styles.totalContainer}>
+            <Text
+              style={Fonts.style.regular(
+                Colors.client.primaryColor,
+                Fonts.size.medium,
+                'left',
+              )}
+            />
+            <Text
+              style={[
+                Fonts.style.light(
+                  Colors.client.primaryColor,
+                  Fonts.size.small,
+                  'right',
+                ),
+                {marginVertical: 10},
+              ]}>
+              {user?.cart.coupon?.description}
+            </Text>
+          </View>
+        </>
+      )}
+
+      <View style={[styles.totalContainer]}>
+        <Text style={Fonts.style.bold(Colors.dark, Fonts.size.medium, 'left')}>
+          {'Total:'}
+        </Text>
+        <Text style={Fonts.style.bold(Colors.dark, Fonts.size.medium, 'left')}>
+          {utilities.formatCOP(totalService - Math.abs(totalDiscount))}
+        </Text>
+      </View>
+
+      <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
+      {user && user.cart && (
+        <>
+          <View style={styles.itemTitleContainer}>
+            <Text
+              style={Fonts.style.regular(
+                Colors.client.primaryColor,
+                Fonts.size.medium,
+                'left',
+              )}>
+              {'Ubicación del servicio'}
+            </Text>
+          </View>
+          <TouchableOpacity onPress={() => setModalAddress(true)}>
+            <FieldCartConfig
+              key={'address'}
+              value={user.cart.address ? user.cart.address : false}
+              textActive={
+                user.cart.address && `${user.cart.address.formattedAddress}`
+              }
+              textSecondary={
+                user.cart.address && user.cart.address.addressDetail
+                  ? `${user.cart.address.addressDetail}`
+                  : ''
+              }
+              textInactive={'+ Agregar una dirección'}
+              icon={
+                user.cart.address
+                  ? AppConfig.locationIcon[user.cart.address.type]
+                  : 'map-marker-alt'
+              }
+            />
+          </TouchableOpacity>
+          {/* date */}
+
+          <View style={styles.itemTitleContainer}>
+            <Text
+              style={Fonts.style.regular(
+                Colors.client.primaryColor,
+                Fonts.size.medium,
+                'left',
+              )}>
+              {'Fecha y hora del servicio'}
+              {'\n'}
               <Text
                 style={Fonts.style.regular(
-                  Colors.client.primaryColor,
-                  Fonts.size.medium,
+                  Colors.gray,
+                  Fonts.size.small,
                   'left',
                 )}>
-                Cupón:
+                {'Selecciona el dia que deseas el servicio.'}
               </Text>
-              <Text
-                style={Fonts.style.bold(
-                  Colors.client.primaryColor,
-                  Fonts.size.medium,
-                  'right',
-                )}>
-                {user.cart.coupon.title}
-              </Text>
-            </View>
+            </Text>
+          </View>
+          <TouchableOpacity onPress={() => setDatePickerVisibility(true)}>
+            <FieldCartConfig
+              key={'date'}
+              textSecondary={''}
+              value={user.cart.date ? user.cart.date : false}
+              textActive={`${formatDate(user.cart.date, 'dddd, LLL')}`}
+              textInactive={'+ Selecciona la fecha del servicio'}
+              icon={'calendar'}
+            />
+          </TouchableOpacity>
+          <View>
+            <DateTimePickerModal
+              isVisible={isDatePickerVisible}
+              isDarkModeEnabled={false}
+              mode="datetime"
+              minuteInterval={config.timePickerInterval}
+              initialValue={new Date()}
+              maximumDate={
+                new Date(
+                  moment(new Date()).add(
+                    config.maxPossibleDaysSchedule,
+                    'days',
+                  ),
+                )
+              }
+              minimumDate={
+                new Date(
+                  moment(new Date()).add(
+                    config.minPossibleMinutesSchedule,
+                    'minutes',
+                  ),
+                )
+              }
+              onConfirm={handleConfirmDate}
+              onCancel={hideDatePicker}
+              is24Hour={false}
+              locale="es-ES"
+              headerTextIOS="Elige una fecha de servicio"
+              cancelTextIOS="Cancelar"
+              confirmTextIOS="Confirmar"
+            />
 
             <View
-              style={[
-                styles.totalContainer,
-                {marginTop: 5, flexDirection: 'column'},
-              ]}>
-              {disscounts.map((itemCoupon, index) => {
-                return (
-                  <View key={index} style={[styles.totalContainer]}>
-                    <Text
-                      style={Fonts.style.regular(
-                        Colors.client.primaryColor,
-                        Fonts.size.medium,
-                        'right',
-                      )}>
-                      {itemCoupon.service}:
-                    </Text>
-                    <Text
-                      style={Fonts.style.bold(
-                        Colors.client.primaryColor,
-                        Fonts.size.medium,
-                        'right',
-                      )}>
-                      -{utilities.formatCOP(itemCoupon.disscount)}
-                    </Text>
-                  </View>
-                );
-              })}
-            </View>
+              opacity={0.0}
+              style={{
+                position: 'absolute',
 
-            <View style={[styles.totalContainer, {marginTop: 20}]}>
-              <Text
-                style={Fonts.style.regular(
-                  Colors.client.primaryColor,
-                  Fonts.size.medium,
-                  'left',
-                )}>
-                Total descuentos:
-              </Text>
-              <Text
-                style={Fonts.style.bold(
-                  Colors.client.primaryColor,
-                  Fonts.size.medium,
-                  'right',
-                )}>
-                {totalDiscount}
-              </Text>
-            </View>
+                width: '100%',
+                height: '100%',
+                flex: 1,
+                backgroundColor: 'green',
+              }}
+            />
+          </View>
 
-            <View style={styles.totalContainer}>
-              <Text
-                style={Fonts.style.regular(
-                  Colors.client.primaryColor,
-                  Fonts.size.medium,
-                  'left',
-                )}
-              />
-              <Text
-                style={[
-                  Fonts.style.light(
-                    Colors.client.primaryColor,
-                    Fonts.size.small,
-                    'right',
-                  ),
-                  {marginVertical: 10},
-                ]}>
-                {user?.cart.coupon?.description}
-              </Text>
-            </View>
-          </>
-        )}
+          {/* endDate */}
 
-        <View style={[styles.totalContainer]}>
-          <Text
-            style={Fonts.style.bold(Colors.dark, Fonts.size.medium, 'left')}>
-            {'Total:'}
-          </Text>
-          <Text
-            style={Fonts.style.bold(Colors.dark, Fonts.size.medium, 'left')}>
-            {utilities.formatCOP(totalService - Math.abs(totalDiscount))}
-          </Text>
-        </View>
-
-        <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
-        {user && user.cart && (
-          <>
-            <View style={styles.itemTitleContainer}>
-              <Text
-                style={Fonts.style.regular(
-                  Colors.client.primaryColor,
-                  Fonts.size.medium,
-                  'left',
-                )}>
-                {'Ubicación del servicio'}
-              </Text>
-            </View>
-            <TouchableOpacity onPress={() => setModalAddress(true)}>
-              <FieldCartConfig
-                key={'address'}
-                value={user.cart.address ? user.cart.address : false}
-                textActive={
-                  user.cart.address && `${user.cart.address.formattedAddress}`
-                }
-                textSecondary={
-                  user.cart.address && user.cart.address.addressDetail
-                    ? `${user.cart.address.addressDetail}`
-                    : ''
-                }
-                textInactive={'+ Agregar una dirección'}
-                icon={
-                  user.cart.address
-                    ? AppConfig.locationIcon[user.cart.address.type]
-                    : 'map-marker-alt'
-                }
-              />
-            </TouchableOpacity>
-            {/* date */}
-
-            <View style={styles.itemTitleContainer}>
-              <Text
-                style={Fonts.style.regular(
-                  Colors.client.primaryColor,
-                  Fonts.size.medium,
-                  'left',
-                )}>
-                {'Fecha y hora del servicio'}
-                {'\n'}
-                <Text
-                  style={Fonts.style.regular(
-                    Colors.gray,
-                    Fonts.size.small,
-                    'left',
-                  )}>
-                  {'Selecciona el dia que deseas el servicio.'}
-                </Text>
-              </Text>
-            </View>
-            <TouchableOpacity onPress={() => setDatePickerVisibility(true)}>
-              <FieldCartConfig
-                key={'date'}
-                textSecondary={''}
-                value={user.cart.date ? user.cart.date : false}
-                textActive={`${formatDate(user.cart.date, 'dddd, LLL')}`}
-                textInactive={'+ Selecciona la fecha del servicio'}
-                icon={'calendar'}
-              />
-            </TouchableOpacity>
-            <View>
-              <DateTimePickerModal
-                isVisible={isDatePickerVisible}
-                isDarkModeEnabled={false}
-                mode="datetime"
-                minuteInterval={config.timePickerInterval}
-                initialValue={new Date()}
-                maximumDate={
-                  new Date(
-                    moment(new Date()).add(
-                      config.maxPossibleDaysSchedule,
-                      'days',
-                    ),
-                  )
-                }
-                minimumDate={
-                  new Date(
-                    moment(new Date()).add(
-                      config.minPossibleMinutesSchedule,
-                      'minutes',
-                    ),
-                  )
-                }
-                onConfirm={handleConfirmDate}
-                onCancel={hideDatePicker}
-                is24Hour={false}
-                locale="es-ES"
-                headerTextIOS="Elige una fecha de servicio"
-                cancelTextIOS="Cancelar"
-                confirmTextIOS="Confirmar"
-              />
-
-              <View
-                opacity={0.0}
-                style={{
-                  position: 'absolute',
-
-                  width: '100%',
-                  height: '100%',
-                  flex: 1,
-                  backgroundColor: 'green',
-                }}
-              />
-            </View>
-
-            {/* endDate */}
-
-            <View style={styles.itemTitleContainer}>
-              <Text
-                style={Fonts.style.regular(
-                  Colors.client.primaryColor,
-                  Fonts.size.medium,
-                  'left',
-                )}>
-                {'Comentarios (Opcional)'}
-              </Text>
-            </View>
-            <TouchableOpacity onPress={() => setModalNote(true)}>
-              <FieldCartConfig
-                key={'comments'}
-                textSecondary={''}
-                value={user.cart.notes ? user.cart.notes : false}
-                textActive={user.cart.notes}
-                textInactive={'+ Agregar notas o comentarios'}
-                icon={'comment-alt'}
-              />
-            </TouchableOpacity>
-            <View style={styles.itemTitleContainer}>
-              <Text
-                style={Fonts.style.regular(
-                  Colors.client.primaryColor,
-                  Fonts.size.medium,
-                  'left',
-                )}>
-                {!user?.cart.coupon
-                  ? '¿Tienes algún cupón?'
-                  : 'Usaste el cupón'}
-              </Text>
-            </View>
-            <TouchableOpacity
-              onPress={() =>
-                !user?.cart.coupon
-                  ? activeCuopon()
-                  : Alert.alert(
-                      'Alerta',
-                      'Realmente desea eliminar este cupón de tu orden',
-                      [
-                        {
-                          text: 'Eliminar',
-                          onPress: async () => {
-                            await updateProfile(
-                              {...user.cart, coupon: null},
-                              'cart',
-                              authDispatch,
-                            );
-                          },
+          <View style={styles.itemTitleContainer}>
+            <Text
+              style={Fonts.style.regular(
+                Colors.client.primaryColor,
+                Fonts.size.medium,
+                'left',
+              )}>
+              {'Comentarios (Opcional)'}
+            </Text>
+          </View>
+          <TouchableOpacity onPress={() => setModalNote(true)}>
+            <FieldCartConfig
+              key={'comments'}
+              textSecondary={''}
+              value={user.cart.notes ? user.cart.notes : false}
+              textActive={user.cart.notes}
+              textInactive={'+ Agregar notas o comentarios'}
+              icon={'comment-alt'}
+            />
+          </TouchableOpacity>
+          <View style={styles.itemTitleContainer}>
+            <Text
+              style={Fonts.style.regular(
+                Colors.client.primaryColor,
+                Fonts.size.medium,
+                'left',
+              )}>
+              {!user?.cart.coupon ? '¿Tienes algún cupón?' : 'Usaste el cupón'}
+            </Text>
+          </View>
+          <TouchableOpacity
+            onPress={() =>
+              !user?.cart.coupon
+                ? activeCuopon()
+                : Alert.alert(
+                    'Alerta',
+                    'Realmente desea eliminar este cupón de tu orden',
+                    [
+                      {
+                        text: 'Eliminar',
+                        onPress: async () => {
+                          await updateProfile(
+                            {...user.cart, coupon: null},
+                            'cart',
+                            authDispatch,
+                          );
                         },
-                        {
-                          text: 'Cancelar',
-                          onPress: () => console.log('Cancel Pressed'),
-                          style: 'cancel',
-                        },
-                      ],
-                      {cancelable: true},
-                    )
-              }>
-              <FieldCartConfig
-                key={'cuopons'}
-                textSecondary={''}
-                value={user?.cart.coupon ? user?.cart.coupon.coupon : false}
-                textActive={user?.cart.coupon?.coupon}
-                textInactive={'+ Agrega un cupón'}
-                icon={'barcode'}
-              />
-            </TouchableOpacity>
-          </>
-        )}
-        <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
-      </ScrollView>
+                      },
+                      {
+                        text: 'Cancelar',
+                        onPress: () => console.log('Cancel Pressed'),
+                        style: 'cancel',
+                      },
+                    ],
+                    {cancelable: true},
+                  )
+            }>
+            <FieldCartConfig
+              key={'cuopons'}
+              textSecondary={''}
+              value={user?.cart.coupon ? user?.cart.coupon.coupon : false}
+              textActive={user?.cart.coupon?.coupon}
+              textInactive={'+ Agrega un cupón'}
+              icon={'barcode'}
+            />
+          </TouchableOpacity>
+        </>
+      )}
+      <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
       <View style={styles.footerContainer}>
         <TouchableOpacity
           onPress={() => activeSendOrder()}
@@ -709,7 +708,7 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
           close={setModalCoupon}
         />
       </ModalApp>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -799,6 +798,22 @@ const styles = StyleSheet.create({
     shadowRadius: 1,
 
     elevation: 5,
+  },
+  list: {
+    flex: 1,
+  },
+  contentContainer: {
+    width: window.width,
+
+    ...Platform.select({
+      ios: {
+        paddingHorizontal: 30,
+      },
+
+      android: {
+        paddingHorizontal: 0,
+      },
+    }),
   },
 });
 export default CartScreen;

@@ -43,6 +43,7 @@ const HandleResume = ({
   ];
 
   let data = {
+    productPrice: product.price,
     name: product.name,
     img: product.imageUrl.medium,
     servicesType: product.slug,

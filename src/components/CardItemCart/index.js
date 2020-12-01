@@ -20,7 +20,7 @@ export default ({
     <>
       <View style={[styles.container, ApplicationStyles.shadowsClient]}>
         <View style={styles.contBtns}>
-          <TouchableOpacity onPress={() => up(index, order)}>
+          <TouchableOpacity onPress={() => up(index, order, id)}>
             <Icon
               name="caret-up"
               size={25}
