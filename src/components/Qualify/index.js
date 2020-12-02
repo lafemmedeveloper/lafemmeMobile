@@ -37,9 +37,12 @@ const Qualify = ({type, userRef, close, ordersRef, menuIndex}) => {
     let currentOrder = ordersRef;
     currentOrder.experts[menuIndex].rating = result;
     currentOrder.services[menuIndex].status = 6;
-    currentOrder.commentClient = {note: noteSend, rating: result};
+    currentOrder.services[menuIndex].commentClient = {
+      note: noteSend,
+      rating: result,
+    };
     await updateOrder(currentOrder, utilDispatch);
-    await userRating(userRef.uid, result);
+    await userRating(userRef.uid, result, utilDispatch);
     let notification = {
       title: 'Actualización de la orden',
       body: `El cliente ${
@@ -80,7 +83,7 @@ const Qualify = ({type, userRef, close, ordersRef, menuIndex}) => {
     //Update order
     await updateOrder(currentOrder, utilDispatch);
     //update rating client
-    await userRating(currentOrder.client.uid, result);
+    await userRating(currentOrder.client.uid, result, utilDispatch);
     let notification = {
       title: 'Actualización de la orden',
       body: `El experto  ${
@@ -89,7 +92,7 @@ const Qualify = ({type, userRef, close, ordersRef, menuIndex}) => {
       content_available: true,
       priority: 'high',
     };
-    sendPushFcm(currentOrder.fcmClient, notification, null);
+    sendPushFcm(currentOrder.client.fcmClient, notification, null);
 
     Alert.alert(
       'Excelente',

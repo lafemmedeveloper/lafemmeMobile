@@ -126,7 +126,6 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
     if (isCompleted) {
       console.log('isCompleted');
       let data = {
-        commentClient: null,
         loquidedBy: null,
         timeLastCurrent: null,
         timeInit: Date.now(),
@@ -197,6 +196,14 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
       return Alert.alert(
         'Ups',
         `Debes agendar ${config.timeBetweenServices} minutos después de la hora actual, vuelve a intentarlo`,
+        [
+          {
+            text: 'OK',
+            onPress: () => {
+              setDatePickerVisibility(false);
+            },
+          },
+        ],
       );
     }
     const handleDate = moment(date).format('YYYY-MM-DD HH:mm');

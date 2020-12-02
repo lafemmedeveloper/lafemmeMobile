@@ -253,7 +253,7 @@ const OrderDetail = ({route, navigation}) => {
                         experts={orderUser.experts}
                         uid={service.uid}
                         handleCancel={handleCancel}
-                        status={orderUser.status}
+                        status={orderUser.services[menuIndex].status}
                       />
                     )}
                   </Fragment>
@@ -471,31 +471,65 @@ const OrderDetail = ({route, navigation}) => {
                       </ScrollView>
                     </>
                   )}
-                  <View style={styles.cont}>
-                    {orderUser.services &&
-                      orderUser.services.length > 0 &&
-                      orderUser.services.map((service, index) => {
-                        return (
-                          menuIndex === index && (
-                            <View style={styles.step} key={index}>
-                              <StepIndicator
-                                customStyles={customStyles}
-                                currentPosition={service.status}
-                                direction={'vertical'}
-                                stepCount={5}
-                                labels={[
-                                  'Buscando Experto',
-                                  'Preparando Orden',
-                                  'En ruta',
-                                  'En Servicio',
-                                  'Completado',
-                                ]}
-                              />
-                            </View>
-                          )
-                        );
-                      })}
-                  </View>
+                  {orderUser.services[menuIndex].status > 4 && (
+                    <View>
+                      {orderUser.services[menuIndex].status === 7 ? (
+                        <Text
+                          style={Fonts.style.regular(
+                            Colors.dark,
+                            Fonts.size.medium,
+                            'left',
+                          )}>
+                          Cancelado
+                        </Text>
+                      ) : (
+                        orderUser.services[menuIndex].commentClient && (
+                          <View>
+                            <Text
+                              style={Fonts.style.regular(
+                                Colors.dark,
+                                Fonts.size.medium,
+                                'left',
+                              )}>
+                              Tu calificación:{' '}
+                              {
+                                orderUser.services[menuIndex].commentClient
+                                  .rating
+                              }
+                            </Text>
+                            <Text
+                              style={Fonts.style.regular(
+                                Colors.dark,
+                                Fonts.size.medium,
+                                'left',
+                              )}>
+                              Tu nota:{' '}
+                              {orderUser.services[menuIndex].commentClient.note}
+                            </Text>
+                          </View>
+                        )
+                      )}
+                    </View>
+                  )}
+                  {orderUser.services[menuIndex].status < 4 && (
+                    <View style={styles.cont}>
+                      <View style={styles.step}>
+                        <StepIndicator
+                          customStyles={customStyles}
+                          currentPosition={orderUser.services[menuIndex].status}
+                          direction={'vertical'}
+                          stepCount={5}
+                          labels={[
+                            'Buscando Experto',
+                            'Preparando Orden',
+                            'En ruta',
+                            'En Servicio',
+                            'Completado',
+                          ]}
+                        />
+                      </View>
+                    </View>
+                  )}
                 </ScrollView>
               </>
             ) : (
@@ -525,7 +559,7 @@ const OrderDetail = ({route, navigation}) => {
       </View>
       <View style={{backgroundColor: Colors.light, width: '100%'}}>
         <View>
-          {orderUser && orderUser.status === 4 && (
+          {orderUser && orderUser.services[menuIndex].status === 4 && (
             <TouchableOpacity
               style={styles.btn}
               onPress={() =>
@@ -560,10 +594,10 @@ const OrderDetail = ({route, navigation}) => {
             </TouchableOpacity>
           )}
 
-          {orderUser && orderUser.status === 5 && (
+          {orderUser && orderUser.services[menuIndex].status === 5 && (
             <>
               <TouchableOpacity
-                style={styles.btn}
+                style={[styles.btn, {marginTop: 20}]}
                 onPress={() => setModalQual(true)}>
                 <Text
                   style={Fonts.style.bold(
@@ -587,7 +621,7 @@ const OrderDetail = ({route, navigation}) => {
               backgroundColor: Colors.light,
               zIndex: 2,
               height: 20,
-              marginTop: 30,
+              marginTop: 20,
             }}>
             <Text
               style={Fonts.style.underline(
