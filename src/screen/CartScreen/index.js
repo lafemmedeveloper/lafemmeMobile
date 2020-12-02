@@ -186,6 +186,19 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
   };
 
   const handleConfirmDate = async (date) => {
+    console.log(
+      'moment(new Date()).add(config.timeBetweenServices',
+      moment(new Date()).add(config.timeBetweenServices, 'minutes'),
+    );
+    if (
+      Date.parse(date) <
+      Date.parse(moment(new Date()).add(config.timeBetweenServices, 'minutes'))
+    ) {
+      return Alert.alert(
+        'Ups',
+        `Debes agendar ${config.timeBetweenServices} minutos después de la hora actual, vuelve a intentarlo`,
+      );
+    }
     const handleDate = moment(date).format('YYYY-MM-DD HH:mm');
     await updateProfile({...user.cart, date: handleDate}, 'cart', authDispatch);
     setDatePickerVisibility(false);
@@ -199,44 +212,40 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
   };
 
   const up = async (i, order, id) => {
-    let arr = user.cart.services;
-
-    let index = arr.findIndex((e) => e.id === id);
-    if (index !== -1 && index < arr.length - 1) {
-      let el = arr[index];
-      arr[index] = arr[index + 1];
-      arr[index + 1] = el;
-    }
-    await updateProfile({services: arr}, 'cart', authDispatch);
+    const arraOrder = move(user.cart.services, i, -1);
+    console.log(arraOrder);
   };
 
   const down = async (i, order, id) => {
-    let arr = user.cart.services;
-    let index = arr.findIndex((e) => e.id === id);
-    if (index !== -1 && index < arr.length - 1) {
-      let el = arr[index];
-      arr[index] = arr[index + 1];
-      arr[index + 1] = el;
-    }
-    await updateProfile({services: arr}, 'cart', authDispatch);
+    const arraOrder = move(user.cart.services, i, 1);
+    console.log(arraOrder);
+    //  await updateProfile({services: arr}, 'cart', authDispatch);
   };
 
   const move = (array, index, delta) => {
     let newIndex = index + delta;
+    console.log('newIndex', newIndex);
     if (newIndex < 0 || newIndex === array.length) {
-      return;
+      return array;
     }
-    let indexes = [index, newIndex].sort((a, b) => a - b);
-    return array.splice(indexes[0], 2, array[indexes[1]], array[indexes[0]]);
+    let indexes = [index, newIndex].sort((a, b) => a + b);
+    console.log('indexes', indexes);
+    const result = array.splice(
+      indexes[0],
+      2,
+      array[indexes[1]],
+      array[indexes[0]],
+    );
+    console.log('result =>', result);
+
+    return result;
   };
 
   const totalService =
     user.cart?.services.length > 0 ? _.sumBy(user.cart.services, 'total') : 0;
 
   return (
-    <ScrollView style={{height: Metrics.screenHeight * 0.8}}>
-      <Loading type={'client'} />
-
+    <>
       <View style={styles.headerContainer}>
         <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
         <Image
@@ -395,7 +404,7 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
                 Fonts.size.medium,
                 'right',
               )}>
-              {totalDiscount}
+              {utilities.formatCOP(totalDiscount)}
             </Text>
           </View>
 
@@ -708,7 +717,8 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
           close={setModalCoupon}
         />
       </ModalApp>
-    </ScrollView>
+      <Loading type={'client'} />
+    </>
   );
 };
 
@@ -798,22 +808,6 @@ const styles = StyleSheet.create({
     shadowRadius: 1,
 
     elevation: 5,
-  },
-  list: {
-    flex: 1,
-  },
-  contentContainer: {
-    width: window.width,
-
-    ...Platform.select({
-      ios: {
-        paddingHorizontal: 30,
-      },
-
-      android: {
-        paddingHorizontal: 0,
-      },
-    }),
   },
 });
 export default CartScreen;

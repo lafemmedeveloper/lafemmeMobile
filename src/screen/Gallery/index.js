@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef, useCallback} from 'react';
 import {
   Image,
   Text,
@@ -10,26 +10,18 @@ import {
 import _ from 'lodash';
 import firestore from '@react-native-firebase/firestore';
 import {GalleryItem} from '../../components/GalleryItem';
-//import {StoreContext} from '../../flux';
-//import {getGallery, setLoading} from '../../flux/util/actions';
 
-import {ApplicationStyles, Fonts, Images, Colors} from '../../themes';
+import {ApplicationStyles, Fonts, Images, Colors, Metrics} from '../../themes';
 
 const Gallery = () => {
-  // const {state} = useContext(StoreContext);
-
-  const [look, setLook] = useState(false);
+  let refFlatlistFeed = useRef(null);
 
   const [refreshing, setRefreshing] = useState(false);
   const [limit] = useState(5);
   const [loading, setLoading] = useState(false);
-  const [onlyPictures] = useState(false);
 
   const [documentData, setDocumentData] = useState([]);
   const [lastVisible, setLastVisible] = useState(null);
-  const [indexMenuFullWidth] = useState(0);
-
-  // const {util} = state;
 
   const renderFooter = () => {
     if (!loading) {
@@ -47,65 +39,60 @@ const Gallery = () => {
   };
 
   const retrieveMore = async () => {
-    console.log('retrieveMore');
     try {
-      setLook(true);
       setRefreshing(true);
+      console.log('Retrieving additional Data');
+      let additionalQuery;
 
-      const additionalQuery = await firestore()
+      additionalQuery = firestore()
         .collection('gallery')
         .where('isApproved', '==', true)
         .orderBy('date', 'desc')
         .startAfter(lastVisible)
-        .limit(limit)
-        .get();
+        .limit(limit);
 
-      const response = additionalQuery.docs.map((doc) => {
+      let documentSnapshots = await additionalQuery.get();
+
+      const response = documentSnapshots.docs.map((doc) => {
         const id = doc.id;
         return {
           id,
           ...doc.data(),
         };
       });
-      console.log('documentData =>', documentData);
-      Promise.all(response).then(function (values) {
-        let lastVisible = values;
-        console.log('lastVisible =>', lastVisible);
 
-        setDocumentData(values);
-        setLastVisible(lastVisible);
+      Promise.all(response).then((values) => {
+        let lastVisibleResponse = values[response.length - 1].id;
+        console.log('lastVisibleResponse', lastVisibleResponse);
+
+        let data = _.filter(
+          values,
+          (item) => item.isDeleted !== true && item.isModerated !== true,
+        );
+
+        setDocumentData([...documentData, ...data]);
+        setLastVisible(lastVisibleResponse);
         setRefreshing(false);
-        setLook(false);
       });
     } catch (error) {
       console.log(error);
     }
   };
-  const retrieveData = async () => {
+
+  const retrieveData = useCallback(async () => {
     console.log('retriveData');
     setLoading(true);
 
     try {
-      // Set State: Loading
-
       setLoading(true);
-      setLook(true);
       let initialQuery;
-      if (!onlyPictures) {
-        initialQuery = firestore()
-          .collection('gallery')
-          .where('isApproved', '==', true)
-          .orderBy('date', 'desc')
+      initialQuery = firestore()
+        .collection('gallery')
+        .where('isApproved', '==', true)
+        .orderBy('date', 'desc')
 
-          .limit(limit);
-      } else {
-        initialQuery = firestore()
-          .collection('postTraining')
-          .where('isApproved', '==', true)
-          .orderBy('date', 'desc')
-          .limit(limit);
-      }
-      // Cloud Firestore: Query Snapshot
+        .limit(limit);
+
       let documentSnapshots = await initialQuery.get();
 
       const response = documentSnapshots.docs.map((doc) => {
@@ -117,28 +104,30 @@ const Gallery = () => {
         };
       });
 
-      Promise.all(response).then(function (values) {
-        let lastVisible = values[response.length - 1].date;
-        console.log('lastVisible =>', lastVisible);
+      Promise.all(response).then((values) => {
+        let lastVisibleResponse = values[response.length - 1].id;
 
         setDocumentData(values);
-        setLastVisible(lastVisible);
+        setLastVisible(lastVisibleResponse);
         setRefreshing(false);
-        setLook(false);
+        setLoading(false);
       });
     } catch (error) {
       setLoading(false);
 
       console.log(error);
     }
-  };
+  }, [limit]);
 
   useEffect(() => {
     retrieveData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [retrieveData]);
+
+  console.log('documentData', documentData);
   return (
-    <View style={{flex: 0, height: '80%'}}>
+    <View style={{height: Metrics.screenHeight - 60}}>
+      <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
+
       <Image
         source={Images.inspo}
         style={{
@@ -161,15 +150,14 @@ const Gallery = () => {
       <FlatList
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
-        //ref={(ref) => (flatlistFeed = ref)}
+        ref={(ref) => (refFlatlistFeed.current = ref)}
         data={documentData}
         keyExtractor={(item, index) => String(index)}
         ListFooterComponent={() => renderFooter()}
-        onEndReached={() => retrieveData()}
-        // onScroll={onScroll}
-        onEndReachedThreshold={0}
+        onEndReached={() => retrieveMore()}
+        onEndReachedThreshold={1}
         refreshing={refreshing}
-        renderItem={({item, index}) => {
+        renderItem={({item}) => {
           return <GalleryItem item={item} />;
         }}
         refreshControl={

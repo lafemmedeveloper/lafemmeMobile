@@ -26,7 +26,7 @@ const colors = {
     '#ff7d6c',
     '#f24c88',
     '#FF0000',
-    '#FF0000',
+    '#a1e518',
   ],
   snow: 'rgb(255,255,255)',
   background: '#e8e8e8',

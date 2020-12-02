@@ -2,10 +2,6 @@ import {useEffect, useState} from 'react';
 import _ from 'lodash';
 
 export const useCouponsDiscount = (services, coupon) => {
-  console.log(
-    '🚀 ~ file: useCouponsDiscount.js ~ line 5 ~ useCouponsDiscount ~ coupon',
-    coupon,
-  );
   const [disscounts, setDisscounts] = useState([]);
   const [totalDiscount, setTotalDiscount] = useState(0);
 

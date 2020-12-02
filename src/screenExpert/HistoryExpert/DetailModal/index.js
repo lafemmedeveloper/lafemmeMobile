@@ -360,7 +360,7 @@ const DetailModal = ({order, setModalDetail}) => {
                   Fonts.style.regular(Colors.dark, Fonts.size.medium),
                   {alignSelf: 'center'},
                 ]}>
-                Iniciar navagación
+                Iniciar navegación
               </Text>
             </TouchableOpacity>
             <View
@@ -532,7 +532,7 @@ const DetailModal = ({order, setModalDetail}) => {
             {filterOrder &&
               services &&
               services.map((item, index) => {
-                const {name, clients, addOnsCount, addons} = item;
+                const {clients, addOnsCount, addons} = item;
 
                 return (
                   <Fragment key={index}>

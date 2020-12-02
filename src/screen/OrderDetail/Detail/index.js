@@ -1,5 +1,6 @@
 import React, {Fragment} from 'react';
 import {View, Text, StyleSheet, ScrollView} from 'react-native';
+import {minToHours} from '../../../helpers/MomentHelper';
 import {ApplicationStyles, Colors, Fonts, Metrics} from '../../../themes';
 import utilities from '../../../utilities';
 import ButonMenu from '../../ButonMenu';
@@ -8,7 +9,7 @@ const Detail = ({filterOrder, menuIndex, setMenuIndex}) => {
   const {services} = filterOrder;
   return (
     <ScrollView style={styles.container}>
-      <View style={{marginTop: 20}}>
+      <View style={{marginTop: 10}}>
         <Text
           style={[
             Fonts.style.bold(
@@ -16,47 +17,54 @@ const Detail = ({filterOrder, menuIndex, setMenuIndex}) => {
               Fonts.size.medium,
               'center',
             ),
+            {marginVertical: 5},
           ]}>
-          Clientes
+          Información general
         </Text>
         <View
           style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
             marginHorizontal: 20,
+            marginVertical: 2.5,
           }}>
-          <Text style={[Fonts.style.regular(Colors.dark, Fonts.size.medium)]}>
-            Cliente
+          <Text
+            style={[
+              Fonts.style.regular(Colors.dark, Fonts.size.medium),
+              {flex: 1},
+            ]}>
+            Cliente:
           </Text>
-          <Text style={[Fonts.style.bold(Colors.dark, Fonts.size.medium)]}>
+          <Text
+            style={[
+              Fonts.style.bold(Colors.dark, Fonts.size.medium),
+              {flex: 2},
+            ]}>
             {filterOrder &&
               filterOrder.client &&
               `${filterOrder.client.firstName} ${filterOrder.client.lastName}`}
           </Text>
         </View>
+
         <View
           style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
             marginHorizontal: 20,
+            marginVertical: 2.5,
           }}>
-          <Text style={[Fonts.style.regular(Colors.dark, Fonts.size.medium)]}>
-            Teléfono
+          <Text
+            style={[
+              Fonts.style.regular(Colors.dark, Fonts.size.medium),
+              {flex: 1},
+            ]}>
+            Dirección:
           </Text>
-          <Text style={[Fonts.style.bold(Colors.dark, Fonts.size.medium)]}>
-            {filterOrder.client && filterOrder.client.phone}
-          </Text>
-        </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            marginHorizontal: 20,
-          }}>
-          <Text style={[Fonts.style.regular(Colors.dark, Fonts.size.medium)]}>
-            Direccion
-          </Text>
-          <Text style={[Fonts.style.regular(Colors.dark, Fonts.size.medium)]}>
+          <Text
+            style={[
+              Fonts.style.regular(Colors.dark, Fonts.size.medium),
+              {flex: 2},
+            ]}>
             {filterOrder && filterOrder.address && filterOrder.address.name}
           </Text>
         </View>
@@ -65,39 +73,40 @@ const Detail = ({filterOrder, menuIndex, setMenuIndex}) => {
             flexDirection: 'row',
             justifyContent: 'space-between',
             marginHorizontal: 20,
+            marginVertical: 2.5,
           }}>
           <Text
             style={[
               Fonts.style.regular(Colors.dark, Fonts.size.medium, 'left'),
+              {flex: 1},
             ]}>
-            Nota de dirección
+            Nota de{'\n'}servicio:
           </Text>
           <Text
             style={[
               Fonts.style.regular(Colors.dark, Fonts.size.medium, 'left'),
+              {flex: 2},
             ]}>
-            {filterOrder && filterOrder.address.notesAddress
-              ? filterOrder.address.notesAddress
-              : 'No ahi nota disponible'}
+            {filterOrder && filterOrder.address.notesAddress}
           </Text>
         </View>
 
         <View opacity={0.25} style={ApplicationStyles.separatorLine} />
-        {services && services.length > 1 && (
+        {filterOrder && services && services.length > 1 && (
           <>
             <Text
               style={[
                 Fonts.style.bold(Colors.dark, Fonts.size.medium, 'left'),
                 {marginLeft: 20, marginBottom: 10},
               ]}>
-              Seleciona tus servicios para ver al informacion
+              Selecciona tus servicios para ver al información
             </Text>
             <ScrollView
               horizontal
               contentContainerStyle={{paddingBottom: 40, marginLeft: 20}}>
               {services.map((item, index) => {
                 return (
-                  <Fragment key={item.id}>
+                  <Fragment key={index}>
                     {menuIndex === index ? (
                       <ButonMenu
                         item={item}
@@ -121,9 +130,10 @@ const Detail = ({filterOrder, menuIndex, setMenuIndex}) => {
             </ScrollView>
           </>
         )}
-        {services &&
+        {filterOrder &&
+          services &&
           services.map((item, index) => {
-            const {name, clients, addOnsCount, addons} = item;
+            const {clients, addOnsCount, addons} = item;
 
             return (
               <Fragment key={index}>
@@ -137,52 +147,113 @@ const Detail = ({filterOrder, menuIndex, setMenuIndex}) => {
                           'center',
                         ),
                       ]}>
-                      Productos
+                      Servicios
                     </Text>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        marginHorizontal: 20,
-                      }}>
-                      <Text
-                        style={[
-                          Fonts.style.regular(Colors.dark, Fonts.size.medium),
-                        ]}>
-                        Producto
-                      </Text>
-                      <Text
-                        style={[
-                          Fonts.style.bold(Colors.dark, Fonts.size.medium),
-                        ]}>
-                        {name}
-                      </Text>
-                    </View>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        marginHorizontal: 20,
-                      }}>
-                      <Text
-                        style={[
-                          Fonts.style.regular(Colors.dark, Fonts.size.medium),
-                        ]}>
-                        Invitados
-                      </Text>
+                    <View>
+                      {clients.length > 0 &&
+                        clients.map((guest, index) => {
+                          const addonGuest = addons.filter(
+                            (a) => a.guestId === guest.id,
+                          );
 
-                      <Text
-                        style={[
-                          Fonts.style.bold(
-                            Colors.dark,
-                            Fonts.size.medium,
-                            'left',
-                          ),
-                          {marginLeft: 20},
-                        ]}>
-                        {clients.length === 0 ? 'Ninguno' : clients.length}
-                      </Text>
+                          return (
+                            <Fragment key={index}>
+                              <View>
+                                <Text
+                                  style={[
+                                    Fonts.style.bold(
+                                      Colors.dark,
+                                      Fonts.size.medium,
+                                      'left',
+                                    ),
+                                    {marginLeft: 20},
+                                  ]}>
+                                  {guest.firstName} {guest.lastName}
+                                </Text>
+                                <View
+                                  style={{
+                                    flexDirection: 'row',
+                                    justifyContent: 'space-between',
+                                  }}>
+                                  <Text
+                                    style={[
+                                      Fonts.style.regular(
+                                        Colors.dark,
+                                        Fonts.size.medium,
+                                        'left',
+                                      ),
+                                      {
+                                        marginLeft: 40,
+                                        marginVertical: 5,
+                                      },
+                                    ]}>
+                                    Servicio
+                                  </Text>
+                                  <Text
+                                    style={[
+                                      Fonts.style.regular(
+                                        Colors.dark,
+                                        Fonts.size.medium,
+                                        'left',
+                                      ),
+                                      {
+                                        marginRight: 20,
+                                        marginVertical: 5,
+                                      },
+                                    ]}>
+                                    {utilities.formatCOP(
+                                      services[menuIndex].productPrice,
+                                    )}
+                                  </Text>
+                                </View>
+
+                                <View
+                                  style={{
+                                    flexDirection: 'row',
+                                    justifyContent: 'space-between',
+                                  }}>
+                                  {addonGuest.length > 0 &&
+                                    addonGuest.map((item, index) => {
+                                      return (
+                                        <Fragment key={index}>
+                                          <Text
+                                            style={[
+                                              Fonts.style.regular(
+                                                Colors.dark,
+                                                Fonts.size.medium,
+                                                'left',
+                                              ),
+                                              {
+                                                marginLeft: 40,
+                                              },
+                                            ]}>
+                                            {item.addonName}
+                                          </Text>
+                                          <Text
+                                            style={[
+                                              Fonts.style.regular(
+                                                Colors.dark,
+                                                Fonts.size.medium,
+                                                'left',
+                                              ),
+                                              {
+                                                marginRight: 20,
+                                              },
+                                            ]}>
+                                            {utilities.formatCOP(
+                                              item.addOnPrice,
+                                            )}
+                                          </Text>
+                                        </Fragment>
+                                      );
+                                    })}
+                                </View>
+                              </View>
+                            </Fragment>
+                          );
+                        })}
                     </View>
+
                     <View
                       opacity={0.25}
                       style={ApplicationStyles.separatorLine}
@@ -195,25 +266,46 @@ const Detail = ({filterOrder, menuIndex, setMenuIndex}) => {
                           Fonts.size.medium,
                           'center',
                         ),
+
+                        {marginBottom: 10},
                       ]}>
                       Adicionales comunes
                     </Text>
-                    {addons && addons.length > 0 ? (
-                      addons.map((dataAddon, index) => {
-                        const {addonName} = dataAddon;
+
+                    {addOnsCount && addOnsCount.length > 0 ? (
+                      addOnsCount.map((dataAddon, index) => {
+                        const {name, count, addOnPrice} = dataAddon;
 
                         return (
                           <View key={index} style={styles.contAddons}>
                             <Text
-                              style={[
-                                Fonts.style.regular(
-                                  Colors.dark,
-                                  Fonts.size.medium,
-                                  'left',
-                                ),
-                                {marginLeft: 20},
-                              ]}>
-                              {addonName}{' '}
+                              style={
+                                ([
+                                  Fonts.style.regular(
+                                    Colors.dark,
+                                    Fonts.size.medium,
+                                    'left',
+                                  ),
+                                ],
+                                {flex: 2})
+                              }>
+                              {name} x{count}
+                            </Text>
+                            <Text
+                              style={
+                                ([
+                                  Fonts.style.regular(
+                                    Colors.dark,
+                                    Fonts.size.medium,
+                                  ),
+                                ],
+                                {
+                                  flex: 1,
+                                  textAlign: 'right',
+                                  marginRight: 10,
+                                })
+                              }>
+                              {utilities.formatCOP(addOnPrice)}
                             </Text>
                           </View>
                         );
@@ -227,74 +319,7 @@ const Detail = ({filterOrder, menuIndex, setMenuIndex}) => {
                             'center',
                           ),
                         ]}>
-                        No ahi adiciones comunes
-                      </Text>
-                    )}
-                    <View opacity={0.25} style={styles.separatorLineMini} />
-                    <Text
-                      style={[
-                        Fonts.style.bold(
-                          Colors.expert.primaryColor,
-                          Fonts.size.medium,
-                          'center',
-                        ),
-                      ]}>
-                      Adicionales contable
-                    </Text>
-                    {addOnsCount.length > 0 ? (
-                      addOnsCount.map((addonCount, index) => {
-                        const {name, count} = addonCount;
-                        return (
-                          <Fragment key={index}>
-                            <View
-                              style={{
-                                flexDirection: 'row',
-                                justifyContent: 'space-between',
-                                marginHorizontal: 20,
-                              }}>
-                              <Text
-                                style={[
-                                  Fonts.style.regular(
-                                    Colors.dark,
-                                    Fonts.size.medium,
-                                    'left',
-                                  ),
-                                  {marginLeft: 20},
-                                ]}>
-                                {name}
-                              </Text>
-                              <Text
-                                style={[
-                                  Fonts.style.bold(
-                                    Colors.dark,
-                                    Fonts.size.medium,
-                                  ),
-                                ]}>
-                                X{' '}
-                                <Text
-                                  style={[
-                                    Fonts.style.regular(
-                                      Colors.dark,
-                                      Fonts.size.medium,
-                                    ),
-                                  ]}>
-                                  {count}
-                                </Text>
-                              </Text>
-                            </View>
-                          </Fragment>
-                        );
-                      })
-                    ) : (
-                      <Text
-                        style={[
-                          Fonts.style.regular(
-                            Colors.dark,
-                            Fonts.size.medium,
-                            'center',
-                          ),
-                        ]}>
-                        No ahi adiciones Contables
+                        Sin adiciones
                       </Text>
                     )}
                   </>
@@ -312,11 +337,34 @@ const Detail = ({filterOrder, menuIndex, setMenuIndex}) => {
               'center',
             ),
           ]}>
+          Duración
+        </Text>
+        <Text
+          style={[
+            Fonts.style.regular(
+              Colors.expert.primaryColor,
+              Fonts.size.medium,
+              'center',
+            ),
+          ]}>
+          {minToHours(services[menuIndex].duration)}
+        </Text>
+        <View opacity={0.25} style={styles.separatorLineMini} />
+
+        <Text
+          style={[
+            Fonts.style.bold(
+              Colors.expert.primaryColor,
+              Fonts.size.medium,
+              'center',
+            ),
+          ]}>
           Resumen a pagar
         </Text>
-        {services &&
+        {filterOrder &&
+          services &&
           services.map((item, index) => {
-            const {duration, total, totalAddons, totalServices} = item;
+            const {total, totalAddons, totalServices} = item;
 
             return (
               <View key={index} style={styles.cont}>
@@ -327,25 +375,7 @@ const Detail = ({filterOrder, menuIndex, setMenuIndex}) => {
                         flexDirection: 'row',
                         justifyContent: 'space-between',
                         marginHorizontal: 20,
-                      }}>
-                      <Text
-                        style={[
-                          Fonts.style.regular(Colors.dark, Fonts.size.medium),
-                        ]}>
-                        Duración{' '}
-                      </Text>
-                      <Text
-                        style={[
-                          Fonts.style.regular(Colors.dark, Fonts.size.medium),
-                        ]}>
-                        {duration} mins
-                      </Text>
-                    </View>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        marginHorizontal: 20,
+                        marginVertical: 2.5,
                       }}>
                       <Text
                         style={[
@@ -366,6 +396,7 @@ const Detail = ({filterOrder, menuIndex, setMenuIndex}) => {
                         flexDirection: 'row',
                         justifyContent: 'space-between',
                         marginHorizontal: 20,
+                        marginVertical: 2.5,
                       }}>
                       <Text
                         style={[
@@ -388,6 +419,7 @@ const Detail = ({filterOrder, menuIndex, setMenuIndex}) => {
                             flexDirection: 'row',
                             justifyContent: 'space-between',
                             marginHorizontal: 20,
+                            marginVertical: 2.5,
                           }}>
                           <Text
                             style={[
@@ -396,7 +428,7 @@ const Detail = ({filterOrder, menuIndex, setMenuIndex}) => {
                                 Fonts.size.medium,
                               ),
                             ]}>
-                            Descuentos por cupón
+                            Descuento por cupón
                           </Text>
                           <Text
                             style={[
@@ -414,12 +446,13 @@ const Detail = ({filterOrder, menuIndex, setMenuIndex}) => {
                         flexDirection: 'row',
                         justifyContent: 'space-between',
                         marginHorizontal: 20,
+                        marginVertical: 2.5,
                       }}>
                       <Text
                         style={[
                           Fonts.style.bold(Colors.dark, Fonts.size.medium),
                         ]}>
-                        Total a pagar
+                        Total a cobrar
                       </Text>
 
                       <Text
@@ -455,6 +488,10 @@ const styles = StyleSheet.create({
     height: 0.5,
     backgroundColor: Colors.dark,
     marginVertical: 20,
+  },
+  contAddons: {
+    flexDirection: 'row',
+    marginHorizontal: 10,
   },
 });
 export default Detail;

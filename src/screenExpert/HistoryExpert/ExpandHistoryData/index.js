@@ -12,7 +12,7 @@ export default (dta) => {
   const {order, appType, activeDetailModal} = dta;
 
   const currentService = moment(order.date).format('dd,lll');
-
+  console.log('order.status ', order.status);
   return (
     <>
       <TouchableOpacity
@@ -82,11 +82,21 @@ export default (dta) => {
               borderRadius: 10,
               paddingHorizontal: 10,
             }}>
-            <Text
-              numberOfLines={1}
-              style={Fonts.style.bold(Colors.light, Fonts.size.tiny, 'left')}>
-              {AppConfig.orderStatusStr[order.status]}
-            </Text>
+            {appType === 'expert' ? (
+              <Text
+                numberOfLines={1}
+                style={Fonts.style.bold(Colors.light, Fonts.size.tiny, 'left')}>
+                {order.status < 8
+                  ? AppConfig.orderStatusStr[order.status]
+                  : 'Liquidado'}
+              </Text>
+            ) : (
+              <Text
+                numberOfLines={1}
+                style={Fonts.style.bold(Colors.light, Fonts.size.tiny, 'left')}>
+                {AppConfig.orderStatusStr[order.status]}
+              </Text>
+            )}
           </View>
         </View>
       </TouchableOpacity>

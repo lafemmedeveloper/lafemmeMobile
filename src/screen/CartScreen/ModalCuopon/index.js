@@ -172,10 +172,10 @@ const ModalCuopon = ({total, type, close}) => {
           pHolder={'Ingresa tu cupón'}
           text={coupon}
           multiLine={false}
-          onChangeText={(text) => setCoupon(text.trim())}
+          onChangeText={(text) => setCoupon(text.trim().toUpperCase())}
           secureText={false}
           textContent={'none'}
-          autoCapitalize={'characters'}
+          //autoCapitalize={'characters'}
         />
       </View>
 

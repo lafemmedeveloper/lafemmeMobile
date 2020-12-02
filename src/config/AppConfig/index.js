@@ -8,6 +8,7 @@ export default {
     5: 'Esperando Calificacion',
     6: 'Finalizado',
     7: 'Cancelado',
+    8: 'Finalizado',
   },
 
   gender: ['Mujer', 'Hombre'],
