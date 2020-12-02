@@ -13,67 +13,96 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import {Colors, Fonts, Metrics} from '../../themes';
 import {AirbnbRating} from 'react-native-ratings';
 import {StoreContext} from '../../flux';
-import {
-  userRating,
-  updateNote,
-  updateStatus,
-  sendPushFcm,
-} from '../../flux/util/actions';
+import {userRating, sendPushFcm, updateOrder} from '../../flux/util/actions';
 
-const Qualify = (props) => {
+const Qualify = ({type, userRef, close, ordersRef, menuIndex}) => {
   const {state, utilDispatch} = useContext(StoreContext);
 
-  const {type, userRef, close, typeQualification, ordersRef, menuIndex} = props;
   const [note, setNote] = useState('');
   const [rating, setRating] = useState(5);
-  console.log('rating ==>', userRef.rating);
 
-  const calQuantity = async () => {
-    try {
-      Keyboard.dismiss();
+  const calQuantity = () => {
+    Keyboard.dismiss();
 
-      const result = (parseFloat(rating) + parseFloat(userRef.rating)) / 2;
-
-      const noteSend = note === '' ? 'Perfecto' : note;
-      await updateNote(ordersRef.id, noteSend, typeQualification, utilDispatch);
-      await userRating(userRef.uid, result, utilDispatch);
-      if (type === 'expert') {
-        await updateStatus(5, ordersRef, utilDispatch);
-        let notification = {
-          title: 'Actualización de la orden',
-          body: `El experto  ${
-            state.auth.user.firstName + ' ' + state.auth.user.lastName
-          } esta esperando por tu calificación `,
-          content_available: true,
-          priority: 'high',
-        };
-        let dataPush = null;
-        sendPushFcm(ordersRef.fcmClient, notification, dataPush);
-        close(false);
-        return;
-      }
-      let notification = {
-        title: 'Actualización de la orden',
-        body: `El cliente ${
-          state.auth.user.firstName + ' ' + state.auth.user.lastName
-        } a finalizado la el servicio de ${ordersRef.services[
-          menuIndex
-        ].servicesType
-          .toUpperCase()
-          .split('-')
-          .join(' ')}`,
-        content_available: true,
-        priority: 'high',
-      };
-      let dataPush = null;
-      sendPushFcm(ordersRef.fcmExpert[menuIndex], notification, dataPush);
-      await updateStatus(6, ordersRef, utilDispatch);
-
-      close(false);
-      Alert.alert('Excelente', 'Gracias por calificar');
-    } catch (error) {
-      console.log('error calQuantity =>', error);
+    if (type === 'client') {
+      handleQualifyClient();
+    } else {
+      handleQualifyExpert();
     }
+  };
+
+  const handleQualifyClient = async () => {
+    const noteSend = note === '' ? 'Perfecto' : note;
+    const result = (parseFloat(rating) + parseFloat(userRef.rating)) / 2;
+    let currentOrder = ordersRef;
+    currentOrder.experts[menuIndex].rating = result;
+    currentOrder.services[menuIndex].status = 6;
+    currentOrder.commentClient = {note: noteSend, rating: result};
+    await updateOrder(currentOrder, utilDispatch);
+    await userRating(userRef.uid, result);
+    let notification = {
+      title: 'Actualización de la orden',
+      body: `El cliente ${
+        state.auth.user.firstName + ' ' + state.auth.user.lastName
+      } a finalizado la el servicio de ${ordersRef.services[
+        menuIndex
+      ].servicesType
+        .toUpperCase()
+        .split('-')
+        .join(' ')}`,
+      content_available: true,
+      priority: 'high',
+    };
+    sendPushFcm(ordersRef.fcmExpert[menuIndex], notification, null);
+
+    Alert.alert(
+      'Excelente',
+      'Gracias por calificar tu opinión es muy importante para nosotros',
+      [
+        {
+          text: 'OK',
+          onPress: () => {
+            close(false);
+          },
+        },
+      ],
+    );
+  };
+
+  const handleQualifyExpert = async () => {
+    const noteSend = note === '' ? 'Perfecto' : note;
+    const result = (parseFloat(rating) + parseFloat(userRef.rating)) / 2;
+
+    let currentOrder = ordersRef;
+    currentOrder.client.rating = result;
+    currentOrder.services[menuIndex].status = 5;
+    currentOrder.services[menuIndex].comment = {note: noteSend, rating: result};
+    //Update order
+    await updateOrder(currentOrder, utilDispatch);
+    //update rating client
+    await userRating(currentOrder.client.uid, result);
+    let notification = {
+      title: 'Actualización de la orden',
+      body: `El experto  ${
+        state.auth.user.firstName + ' ' + state.auth.user.lastName
+      } esta esperando por tu calificación `,
+      content_available: true,
+      priority: 'high',
+    };
+    sendPushFcm(currentOrder.fcmClient, notification, null);
+
+    Alert.alert(
+      'Excelente',
+      'Gracias por calificar tu opinión es muy importante para nosotros',
+      [
+        {
+          text: 'OK',
+          onPress: () => {
+            close(false);
+          },
+        },
+      ],
+    );
   };
 
   return (

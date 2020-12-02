@@ -58,16 +58,16 @@ const OrderDetail = ({route, navigation}) => {
   const {goBack} = navigation;
 
   useEffect(() => {
-    const currentOrder = ordersAll.filter((item) => item.id === params.id)[0] ? ordersAll.filter((item) => item.id === params.id)[0]: params ;
+    const currentOrder = ordersAll.filter((item) => item.id === params.id)[0]
+      ? ordersAll.filter((item) => item.id === params.id)[0]
+      : params;
 
     setOrderUser(currentOrder);
     setCoordinate({
       latitude: currentOrder.address.coordinates.latitude,
       longitude: currentOrder.address.coordinates.longitude,
     });
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ordersAll]);
+  }, [ordersAll, params]);
 
   const activeCoor = () => {
     Geolocation.getCurrentPosition((info) =>
@@ -184,10 +184,10 @@ const OrderDetail = ({route, navigation}) => {
                     }}>
                     {orderUser.experts &&
                       orderUser.experts.length > 0 &&
-                      orderUser.experts.map((expert) => {
+                      orderUser.experts.map((expert, index) => {
                         const {coordinates} = expert;
                         return (
-                          <Fragment key={expert.uid}>
+                          <Fragment key={index}>
                             {coordinates && (
                               <Marker.Animated
                                 coordinate={{
@@ -443,13 +443,11 @@ const OrderDetail = ({route, navigation}) => {
                       <ScrollView
                         horizontal
                         style={{
-                          marginBottom: 10,
                           marginHorizontal: 10,
-                          paddingVertical: 10,
                         }}>
                         {orderUser.services.map((item, index) => {
                           return (
-                            <Fragment key={item.id}>
+                            <Fragment key={index}>
                               {menuIndex === index ? (
                                 <ButonMenu
                                   item={item}
@@ -479,7 +477,7 @@ const OrderDetail = ({route, navigation}) => {
                       orderUser.services.map((service, index) => {
                         return (
                           menuIndex === index && (
-                            <View style={styles.step} key={service.id}>
+                            <View style={styles.step} key={index}>
                               <StepIndicator
                                 customStyles={customStyles}
                                 currentPosition={service.status}
@@ -516,7 +514,6 @@ const OrderDetail = ({route, navigation}) => {
                 userRef={orderUser.experts[menuIndex]}
                 ordersRef={orderUser}
                 close={setModalQual}
-                typeQualification={'qualtificationExpert'}
                 updateStatus={updateStatus}
                 menuIndex={menuIndex}
               />

@@ -59,6 +59,7 @@ const HandleResume = ({
     totalAddons: addOnPrice + addOnCountPrice,
     total:
       product.price * (guestList.length + 1) + addOnPrice + addOnCountPrice,
+    comment: null,
   };
 
   return (

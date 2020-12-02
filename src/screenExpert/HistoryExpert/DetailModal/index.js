@@ -22,11 +22,7 @@ import {
   Images,
 } from '../../../themes';
 import utilities from '../../../utilities';
-import {
-  sendPushFcm,
-  updateOrder,
-  updateStatusDb, // updateStatus
-} from '../../../flux/util/actions';
+import {sendPushFcm, updateOrder} from '../../../flux/util/actions';
 import Loading from '../../../components/Loading';
 import {StoreContext} from '../../../flux';
 import ModalApp from '../../../components/ModalApp';
@@ -34,6 +30,7 @@ import Qualify from '../../../components/Qualify';
 import ServiceModal from './ServiceModal';
 import ButonMenu from '../../../screen/ButonMenu';
 import {minToHours} from '../../../helpers/MomentHelper';
+import _ from 'lodash';
 
 const DetailModal = ({order, setModalDetail}) => {
   const screen = Dimensions.get('window');
@@ -85,7 +82,9 @@ const DetailModal = ({order, setModalDetail}) => {
           {
             text: 'Si',
             onPress: async () => {
-              let resulTime = utilities.counting(filterOrder.date);
+              let resulTime = utilities.counting(
+                filterOrder.hoursServices[menuIndex],
+              );
               console.log('time order expert', resulTime);
               if (resulTime.remainHours > 1) {
                 Alert.alert(
@@ -233,32 +232,15 @@ const DetailModal = ({order, setModalDetail}) => {
   if (!filterOrder) {
     return <Loading type={'expert'} loading={loading} />;
   }
-  const validateStatusGlobal = async (status) => {
-    console.log('active global status');
-    let updateOrder = true;
+  const validateStatusGlobal = async () => {
+    let currentServices = filterOrder.services;
+    let currentOrder = filterOrder;
 
-    for (let i = 0; i < filterOrder.services.length; i++) {
-      if (filterOrder.services[i].status === status - 1) {
-        updateOrder = true;
-      } else {
-        return (updateOrder = false);
-      }
+    let orderServices = _.orderBy(currentServices, 'status', 'asc');
 
-      // if (filterOrder.services[i].status < 4) {
-      //   updateOrder = false;
-      // } else if (filterOrder.services[i].status >= 4) {
-      //   updateOrder = true;
-      // }
-    }
+    currentOrder.status = orderServices[0].status;
 
-    console.log(
-      '🚀 ~ file: index.js ~ line 246 ~ validateStatusGlobal ~ updateOrder',
-      updateOrder,
-    );
-
-    if (updateOrder) {
-      await updateStatusDb(filterOrder, status, utilDispatch);
-    }
+    await updateOrder(currentOrder, utilDispatch);
   };
 
   const handleMaps = () => {
@@ -330,10 +312,10 @@ const DetailModal = ({order, setModalDetail}) => {
             </Marker.Animated>
             {filterOrder.experts &&
               filterOrder.experts.length > 0 &&
-              filterOrder.experts.map((item) => {
+              filterOrder.experts.map((item, index) => {
                 return (
                   <Marker
-                    key={item.uid}
+                    key={index}
                     coordinate={{
                       latitude: item.coordinates?.latitude,
                       longitude: item.coordinates?.longitude,
@@ -974,7 +956,6 @@ const DetailModal = ({order, setModalDetail}) => {
           userRef={filterOrder.client}
           ordersRef={filterOrder}
           close={setQualifyClient}
-          typeQualification={'qualtificationClient'}
           menuIndex={menuIndex}
         />
       </ModalApp>
