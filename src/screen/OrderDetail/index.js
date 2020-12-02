@@ -484,18 +484,26 @@ const OrderDetail = ({route, navigation}) => {
                         </Text>
                       ) : (
                         orderUser.services[menuIndex].commentClient && (
-                          <View>
+                          <View style={{marginLeft: 20, marginTop: 20}}>
                             <Text
                               style={Fonts.style.regular(
                                 Colors.dark,
                                 Fonts.size.medium,
                                 'left',
                               )}>
+                              Calificación exitosa
+                            </Text>
+                            <Text
+                              style={Fonts.style.bold(
+                                Colors.dark,
+                                Fonts.size.medium,
+                                'left',
+                              )}>
                               Tu calificación:{' '}
-                              {
+                              {parseFloat(
                                 orderUser.services[menuIndex].commentClient
-                                  .rating
-                              }
+                                  .rating,
+                              )}
                             </Text>
                             <Text
                               style={Fonts.style.regular(

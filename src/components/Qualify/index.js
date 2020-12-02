@@ -39,7 +39,7 @@ const Qualify = ({type, userRef, close, ordersRef, menuIndex}) => {
     currentOrder.services[menuIndex].status = 6;
     currentOrder.services[menuIndex].commentClient = {
       note: noteSend,
-      rating: result,
+      rating,
     };
     await updateOrder(currentOrder, utilDispatch);
     await userRating(userRef.uid, result, utilDispatch);
@@ -79,7 +79,7 @@ const Qualify = ({type, userRef, close, ordersRef, menuIndex}) => {
     let currentOrder = ordersRef;
     currentOrder.client.rating = result;
     currentOrder.services[menuIndex].status = 5;
-    currentOrder.services[menuIndex].comment = {note: noteSend, rating: result};
+    currentOrder.services[menuIndex].comment = {note: noteSend, rating};
     //Update order
     await updateOrder(currentOrder, utilDispatch);
     //update rating client
