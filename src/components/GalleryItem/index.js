@@ -5,6 +5,7 @@ import FastImage from 'react-native-fast-image';
 import moment from 'moment';
 
 export function GalleryItem({item}) {
+  // console.log('🚀 ~ file: index.js ~ line 8 ~ GalleryItem ~ item', item);
   return (
     <View
       style={{

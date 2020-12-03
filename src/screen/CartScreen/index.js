@@ -253,7 +253,7 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
 
   return (
     <>
-      <ScrollView style={{height: Metrics.screenHeight - 60}}>
+      <ScrollView style={{height: Metrics.screenHeight * 0.8}}>
         <View style={styles.headerContainer}>
           <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
           <Image
@@ -632,27 +632,7 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
           </>
         )}
         <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
-        <View style={styles.footerContainer}>
-          <TouchableOpacity
-            onPress={() => activeSendOrder()}
-            style={[
-              styles.btnContainer,
-              {
-                backgroundColor: isCompleted
-                  ? Colors.client.primaryColor
-                  : Colors.gray,
-              },
-            ]}>
-            <Text
-              style={Fonts.style.bold(
-                Colors.light,
-                Fonts.size.medium,
-                'center',
-              )}>
-              {'Reservar'}
-            </Text>
-          </TouchableOpacity>
-        </View>
+
         <ModalApp open={modalNote} setOpen={setModalNote}>
           <Loading type={'client'} />
 
@@ -738,6 +718,23 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
           />
         </ModalApp>
       </ScrollView>
+      <View style={styles.footerContainer}>
+        <TouchableOpacity
+          onPress={() => activeSendOrder()}
+          style={[
+            styles.btnContainer,
+            {
+              backgroundColor: isCompleted
+                ? Colors.client.primaryColor
+                : Colors.gray,
+            },
+          ]}>
+          <Text
+            style={Fonts.style.bold(Colors.light, Fonts.size.medium, 'center')}>
+            {'Reservar'}
+          </Text>
+        </TouchableOpacity>
+      </View>
       <Loading type={'client'} />
     </>
   );

@@ -17,7 +17,7 @@ const Gallery = () => {
   let refFlatlistFeed = useRef(null);
 
   const [refreshing, setRefreshing] = useState(false);
-  const [limit] = useState(5);
+  const [limit] = useState(3);
   const [loading, setLoading] = useState(false);
 
   const [documentData, setDocumentData] = useState([]);
@@ -38,50 +38,11 @@ const Gallery = () => {
     );
   };
 
-  const retrieveMore = async () => {
-    try {
-      setRefreshing(true);
-      console.log('Retrieving additional Data');
-      let additionalQuery;
-
-      additionalQuery = firestore()
-        .collection('gallery')
-        .where('isApproved', '==', true)
-        .orderBy('date', 'desc')
-        .startAfter(lastVisible)
-        .limit(limit);
-
-      let documentSnapshots = await additionalQuery.get();
-
-      const response = documentSnapshots.docs.map((doc) => {
-        const id = doc.id;
-        return {
-          id,
-          ...doc.data(),
-        };
-      });
-
-      Promise.all(response).then((values) => {
-        let lastVisibleResponse = values[response.length - 1].id;
-        console.log('lastVisibleResponse', lastVisibleResponse);
-
-        let data = _.filter(
-          values,
-          (item) => item.isDeleted !== true && item.isModerated !== true,
-        );
-
-        setDocumentData([...documentData, ...data]);
-        setLastVisible(lastVisibleResponse);
-        setRefreshing(false);
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const retrieveData = useCallback(async () => {
     console.log('retriveData');
     setLoading(true);
+
+    console.log('~ lastVisible', lastVisible);
 
     try {
       setLoading(true);
@@ -89,9 +50,9 @@ const Gallery = () => {
       initialQuery = firestore()
         .collection('gallery')
         .where('isApproved', '==', true)
-        .orderBy('date', 'desc')
+        .orderBy('date', 'desc');
 
-        .limit(limit);
+      // .limit(limit);
 
       let documentSnapshots = await initialQuery.get();
 
@@ -105,7 +66,15 @@ const Gallery = () => {
       });
 
       Promise.all(response).then((values) => {
-        let lastVisibleResponse = values[response.length - 1].id;
+        console.log(
+          '🚀 ~ file: index.js ~ line 107 ~ Promise.all ~ values',
+          values.length,
+        );
+        let lastVisibleResponse = values[values.length - 1];
+        console.log(
+          '🚀 ~ retrieveDatal ~ lastVisibleResponse',
+          lastVisibleResponse,
+        );
 
         setDocumentData(values);
         setLastVisible(lastVisibleResponse);
@@ -119,11 +88,61 @@ const Gallery = () => {
     }
   }, [limit]);
 
+  const retrieveMore = useCallback(async () => {
+    console.log('retrieveMore');
+    // try {
+
+    console.log(' ~ lastVisible', lastVisible);
+
+    setRefreshing(true);
+
+    let additionalQuery;
+
+    additionalQuery = firestore()
+      .collection('gallery')
+      // .where('isApproved', '==', true)
+      .orderBy('date', 'desc')
+      .startAfter(lastVisible)
+      .limit(limit);
+
+    let documentSnapshots = await additionalQuery.get();
+    console.log(
+      '🚀 ~ file: index.js ~ line 56 ~ retrieveMore ~ documentSnapshots',
+      documentSnapshots,
+    );
+
+    const response = documentSnapshots.docs.map((doc) => {
+      const id = doc.id;
+      return {
+        id,
+        ...doc.data(),
+      };
+    });
+
+    Promise.all(response).then((values) => {
+      console.log(
+        '🚀 ~ file: index.js ~ line 107 ~ Promise.all ~ values',
+        values.length,
+      );
+      let lastVisibleResponse = values[values.length - 1];
+      console.log(
+        '🚀 ~ retrieveMore ~ lastVisibleResponse',
+        lastVisibleResponse,
+      );
+      setDocumentData([documentData, ...values]);
+      setLastVisible(lastVisibleResponse);
+      setRefreshing(false);
+    });
+    // } catch (error) {
+    //   console.log(error);
+    // }
+  }, [limit]);
+
   useEffect(() => {
     retrieveData();
-  }, [retrieveData]);
+  }, []);
 
-  console.log('documentData', documentData);
+  console.log('documentData', documentData.length);
   return (
     <View style={{height: Metrics.screenHeight - 60}}>
       <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
@@ -148,14 +167,15 @@ const Gallery = () => {
       <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
 
       <FlatList
+        // pagingEnabled={true}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
         ref={(ref) => (refFlatlistFeed.current = ref)}
         data={documentData}
         keyExtractor={(item, index) => String(index)}
-        ListFooterComponent={() => renderFooter()}
-        onEndReached={() => retrieveMore()}
-        onEndReachedThreshold={1}
+        // ListFooterComponent={() => renderFooter()}
+        // onEndReached={() => retrieveMore()}
+        // onEndReachedThreshold={0}
         refreshing={refreshing}
         renderItem={({item}) => {
           return <GalleryItem item={item} />;

@@ -19,7 +19,7 @@ export default ({
   return (
     <>
       <View style={[styles.container, ApplicationStyles.shadowsClient]}>
-        <View style={styles.contBtns}>
+        {/* <View style={styles.contBtns}>
           <TouchableOpacity onPress={() => up(index, order, id)}>
             <Icon
               name="caret-up"
@@ -34,7 +34,7 @@ export default ({
               color={Colors.client.primaryColor}
             />
           </TouchableOpacity>
-        </View>
+        </View> */}
         <View style={styles.productContainer}>
           <Text
             style={Fonts.style.bold(Colors.dark, Fonts.size.medium, 'left')}>
