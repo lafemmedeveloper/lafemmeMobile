@@ -68,11 +68,20 @@ const DetailModal = ({order, setModalDetail}) => {
         return 'Calificar cliente';
       case 5:
         return 'Servicio finalizado';
+      case 6:
+        return 'Esperando calificación';
       case 7:
         return 'Servicio cancelado';
+      case 8:
+        return 'Liquidado';
+      default:
+        return 'Finalizado';
     }
   };
-
+  console.log(
+    'filterOrder.services[menuIndex].status',
+    filterOrder.services[menuIndex].status,
+  );
   const changeStatus = (item) => {
     if (item.status === 1) {
       Alert.alert(
@@ -757,13 +766,6 @@ const DetailModal = ({order, setModalDetail}) => {
                             justifyContent: 'space-between',
                             marginHorizontal: 20,
                             marginVertical: 2.5,
-                          }}></View>
-                        <View
-                          style={{
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            marginHorizontal: 20,
-                            marginVertical: 2.5,
                           }}>
                           <Text
                             style={[
@@ -886,14 +888,14 @@ const DetailModal = ({order, setModalDetail}) => {
         </ScrollView>
 
         {filterOrder &&
-          services &&
-          services.length > 0 &&
-          services.map((item, index) => {
+          filterOrder.services &&
+          filterOrder.services.length > 0 &&
+          filterOrder.services.map((item, index) => {
             return (
               <Fragment key={index}>
                 {menuIndex === index && (
                   <>
-                    {filterOrder && filterOrder.status <= 4 && (
+                    {filterOrder && filterOrder.status <= 4 && !item.comment && (
                       <TouchableOpacity
                         onPress={() => changeStatus(item)}
                         style={styles.btnContainer}>
@@ -948,6 +950,92 @@ const DetailModal = ({order, setModalDetail}) => {
               </Fragment>
             );
           })}
+        {filterOrder?.services.length > 0 &&
+          filterOrder.services[menuIndex].comment &&
+          filterOrder.services[menuIndex].status === 4 && (
+            <View
+              style={{
+                paddingVertical: 20,
+                backgroundColor: Colors.expert.primaryColor,
+              }}>
+              <Text
+                style={Fonts.style.bold(
+                  Colors.light,
+                  Fonts.size.medium,
+                  'center',
+                )}>
+                Esperando que el cliente finalice el servicio
+              </Text>
+            </View>
+          )}
+        {filterOrder?.services.length > 0 &&
+          filterOrder.services[menuIndex].status === 5 && (
+            <View
+              style={{
+                paddingVertical: 20,
+                backgroundColor: Colors.expert.primaryColor,
+              }}>
+              <Text
+                style={Fonts.style.bold(
+                  Colors.light,
+                  Fonts.size.medium,
+                  'center',
+                )}>
+                Esperando calificación
+              </Text>
+            </View>
+          )}
+        {filterOrder?.services.length > 0 &&
+          filterOrder.services[menuIndex].status === 6 && (
+            <View
+              style={{
+                paddingVertical: 20,
+                backgroundColor: Colors.expert.primaryColor,
+              }}>
+              <Text
+                style={Fonts.style.bold(
+                  Colors.light,
+                  Fonts.size.medium,
+                  'center',
+                )}>
+                Servicio finalizado
+              </Text>
+            </View>
+          )}
+        {filterOrder?.services.length > 0 &&
+          filterOrder.services[menuIndex].status === 7 && (
+            <View
+              style={{
+                paddingVertical: 20,
+                backgroundColor: Colors.expert.primaryColor,
+              }}>
+              <Text
+                style={Fonts.style.bold(
+                  Colors.light,
+                  Fonts.size.medium,
+                  'center',
+                )}>
+                Servicio cancelado
+              </Text>
+            </View>
+          )}
+        {filterOrder?.services.length > 0 &&
+          filterOrder.services[menuIndex].status === 8 && (
+            <View
+              style={{
+                paddingVertical: 20,
+                backgroundColor: Colors.expert.primaryColor,
+              }}>
+              <Text
+                style={Fonts.style.bold(
+                  Colors.light,
+                  Fonts.size.medium,
+                  'center',
+                )}>
+                Servicio liquidado
+              </Text>
+            </View>
+          )}
       </View>
 
       <ModalApp setOpen={setQualifyClient} open={qualifyClient}>
@@ -957,6 +1045,7 @@ const DetailModal = ({order, setModalDetail}) => {
           ordersRef={filterOrder}
           close={setQualifyClient}
           menuIndex={menuIndex}
+          validateStatusGlobal={validateStatusGlobal}
         />
       </ModalApp>
       <ModalApp setOpen={setModalEdit} open={modalEdit}>

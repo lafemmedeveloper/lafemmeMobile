@@ -34,6 +34,7 @@ import {customStyles} from './CustomStyles';
 import Detail from './Detail';
 import ModalCancel from './ModalCancel';
 import MenuTab from './MenuTab';
+import _ from 'lodash';
 
 const OrderDetail = ({route, navigation}) => {
   /* config map */
@@ -78,6 +79,9 @@ const OrderDetail = ({route, navigation}) => {
     );
   };
   const handleRef = async () => {
+    let currentOrder = orderUser;
+    currentOrder.services[menuIndex].status = 5;
+
     const guest = user.guestUser;
     if (guest && user.numberOfServices === 0) {
       const userGuest = await validateReferrals(guest.phone);
@@ -97,7 +101,8 @@ const OrderDetail = ({route, navigation}) => {
       authDispatch,
     );
 
-    await updateStatus(5, orderUser, utilDispatch);
+    await updateOrder(currentOrder, utilDispatch);
+    validateStatusGlobal();
   };
   const handleCancel = () => {
     if (orderUser.status >= 2) {
@@ -156,6 +161,20 @@ const OrderDetail = ({route, navigation}) => {
 
     setModalCancel(true);
   };
+  const validateStatusGlobal = async () => {
+    let currentServices = orderUser.services;
+    let currentOrder = orderUser;
+
+    let orderServices = _.orderBy(currentServices, 'status', 'asc');
+
+    currentOrder.status = orderServices[0].status;
+
+    await updateOrder(currentOrder, utilDispatch);
+  };
+
+  if (!orderUser) {
+    return null;
+  }
   return (
     <>
       <Loading type="client" />
@@ -342,6 +361,7 @@ const OrderDetail = ({route, navigation}) => {
                           </Fragment>
                         );
                       })}
+
                     {orderUser &&
                       orderUser.services &&
                       orderUser.services.length > 0 &&
@@ -364,6 +384,45 @@ const OrderDetail = ({route, navigation}) => {
                                   Duración del servicio: {service.duration} mins
                                   {'\n'}
                                 </Text>
+                                {orderUser.services[menuIndex]
+                                  .commentClient && (
+                                  <View>
+                                    <Text
+                                      style={Fonts.style.bold(
+                                        Colors.expert.primaryColor,
+                                        Fonts.size.medium,
+                                        'left',
+                                      )}>
+                                      Calificación exitosa
+                                    </Text>
+                                    <Text
+                                      style={Fonts.style.regular(
+                                        Colors.dark,
+                                        Fonts.size.medium,
+                                        'left',
+                                      )}>
+                                      Tu calificación:{' '}
+                                      {parseFloat(
+                                        orderUser.services[menuIndex]
+                                          .commentClient.rating,
+                                      )}
+                                    </Text>
+                                    <Text
+                                      style={Fonts.style.regular(
+                                        Colors.dark,
+                                        Fonts.size.medium,
+                                        'left',
+                                      )}>
+                                      Tu nota:{' '}
+                                      {
+                                        orderUser.services[menuIndex]
+                                          .commentClient.note
+                                      }
+                                      {'\n'}
+                                    </Text>
+                                  </View>
+                                )}
+
                                 <Text
                                   style={Fonts.style.regular(
                                     Colors.dark,
@@ -438,88 +497,77 @@ const OrderDetail = ({route, navigation}) => {
                         );
                       })}
                   </View>
-                  {orderUser.services && orderUser.services.length > 1 && (
-                    <>
-                      <ScrollView
-                        horizontal
-                        style={{
-                          marginHorizontal: 10,
-                        }}>
-                        {orderUser.services.map((item, index) => {
-                          return (
-                            <Fragment key={index}>
-                              {menuIndex === index ? (
-                                <ButonMenu
-                                  item={item}
-                                  index={index}
-                                  menuIndex={menuIndex}
-                                  theme={true}
-                                  setMenuIndex={setMenuIndex}
-                                />
-                              ) : (
-                                <ButonMenu
-                                  item={item}
-                                  index={index}
-                                  menuIndex={menuIndex}
-                                  theme={false}
-                                  setMenuIndex={setMenuIndex}
-                                />
-                              )}
-                            </Fragment>
-                          );
-                        })}
-                      </ScrollView>
-                    </>
-                  )}
-                  {orderUser.services[menuIndex].status > 4 && (
+                  {orderUser &&
+                    orderUser.services &&
+                    orderUser.services.length > 1 && (
+                      <>
+                        <ScrollView
+                          horizontal
+                          contentContainerStyle={{
+                            marginHorizontal: 10,
+                            paddingBottom: 20,
+                          }}>
+                          {orderUser.services.map((item, index) => {
+                            return (
+                              <Fragment key={index}>
+                                {menuIndex === index ? (
+                                  <ButonMenu
+                                    item={item}
+                                    index={index}
+                                    menuIndex={menuIndex}
+                                    theme={true}
+                                    setMenuIndex={setMenuIndex}
+                                  />
+                                ) : (
+                                  <ButonMenu
+                                    item={item}
+                                    index={index}
+                                    menuIndex={menuIndex}
+                                    theme={false}
+                                    setMenuIndex={setMenuIndex}
+                                  />
+                                )}
+                              </Fragment>
+                            );
+                          })}
+                        </ScrollView>
+                      </>
+                    )}
+                  {orderUser && orderUser.services[menuIndex].status > 4 && (
                     <View>
-                      {orderUser.services[menuIndex].status === 7 ? (
+                      {orderUser.services[menuIndex].status === 7 && (
                         <Text
-                          style={Fonts.style.regular(
+                          style={Fonts.style.bold(
                             Colors.dark,
                             Fonts.size.medium,
-                            'left',
+                            'center',
                           )}>
                           Cancelado
                         </Text>
-                      ) : (
-                        orderUser.services[menuIndex].commentClient && (
-                          <View style={{marginLeft: 20, marginTop: 20}}>
-                            <Text
-                              style={Fonts.style.regular(
-                                Colors.dark,
-                                Fonts.size.medium,
-                                'left',
-                              )}>
-                              Calificación exitosa
-                            </Text>
-                            <Text
-                              style={Fonts.style.bold(
-                                Colors.dark,
-                                Fonts.size.medium,
-                                'left',
-                              )}>
-                              Tu calificación:{' '}
-                              {parseFloat(
-                                orderUser.services[menuIndex].commentClient
-                                  .rating,
-                              )}
-                            </Text>
-                            <Text
-                              style={Fonts.style.regular(
-                                Colors.dark,
-                                Fonts.size.medium,
-                                'left',
-                              )}>
-                              Tu nota:{' '}
-                              {orderUser.services[menuIndex].commentClient.note}
-                            </Text>
-                          </View>
-                        )
+                      )}
+                      {orderUser.services[menuIndex].status === 6 && (
+                        <Text
+                          style={Fonts.style.bold(
+                            Colors.dark,
+                            Fonts.size.medium,
+                            'center',
+                          )}>
+                          Finalizado con éxito
+                        </Text>
+                      )}
+                      {orderUser.services[menuIndex].status === 8 && (
+                        <Text
+                          style={Fonts.style.bold(
+                            Colors.dark,
+                            Fonts.size.medium,
+                            'center',
+                          )}>
+                          Finalizado con éxito
+                        </Text>
                       )}
                     </View>
                   )}
-                  {orderUser.services[menuIndex].status < 4 && (
+                  {orderUser && orderUser.services[menuIndex].status < 4 && (
                     <View style={styles.cont}>
                       <View style={styles.step}>
                         <StepIndicator
@@ -558,6 +606,7 @@ const OrderDetail = ({route, navigation}) => {
                 close={setModalQual}
                 updateStatus={updateStatus}
                 menuIndex={menuIndex}
+                validateStatusGlobal={validateStatusGlobal}
               />
             </ModalApp>
           </>
@@ -565,7 +614,11 @@ const OrderDetail = ({route, navigation}) => {
           <Loading type={'client'} />
         )}
       </View>
-      <View style={{backgroundColor: Colors.light, width: '100%'}}>
+      <View
+        style={{
+          backgroundColor: Colors.light,
+          width: Metrics.screenWidth,
+        }}>
         <View>
           {orderUser && orderUser.services[menuIndex].status === 4 && (
             <TouchableOpacity
@@ -573,7 +626,7 @@ const OrderDetail = ({route, navigation}) => {
               onPress={() =>
                 Alert.alert(
                   'Hey',
-                  'Estas seguro(a) que deseas cambiar de estado ?',
+                  '¿Estas seguro(a) que deseas completar esta orden?',
                   [
                     {
                       text: 'SI',
@@ -597,7 +650,7 @@ const OrderDetail = ({route, navigation}) => {
                   Fonts.size.medium,
                   'center',
                 )}>
-                Completar orden
+                Finalizar servicio
               </Text>
             </TouchableOpacity>
           )}
@@ -605,7 +658,7 @@ const OrderDetail = ({route, navigation}) => {
           {orderUser && orderUser.services[menuIndex].status === 5 && (
             <>
               <TouchableOpacity
-                style={[styles.btn, {marginTop: 20}]}
+                style={[styles.btn]}
                 onPress={() => setModalQual(true)}>
                 <Text
                   style={Fonts.style.bold(

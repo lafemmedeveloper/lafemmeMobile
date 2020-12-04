@@ -86,7 +86,7 @@ export default (dta) => {
               <Text
                 numberOfLines={1}
                 style={Fonts.style.bold(Colors.light, Fonts.size.tiny, 'left')}>
-                {order.status < 8
+                {order.status !== 8
                   ? AppConfig.orderStatusStr[order.status]
                   : 'Liquidado'}
               </Text>

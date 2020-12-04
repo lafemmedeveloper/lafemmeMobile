@@ -15,7 +15,14 @@ import {AirbnbRating} from 'react-native-ratings';
 import {StoreContext} from '../../flux';
 import {userRating, sendPushFcm, updateOrder} from '../../flux/util/actions';
 
-const Qualify = ({type, userRef, close, ordersRef, menuIndex}) => {
+const Qualify = ({
+  type,
+  userRef,
+  close,
+  ordersRef,
+  menuIndex,
+  validateStatusGlobal,
+}) => {
   const {state, utilDispatch} = useContext(StoreContext);
 
   const [note, setNote] = useState('');
@@ -26,8 +33,10 @@ const Qualify = ({type, userRef, close, ordersRef, menuIndex}) => {
 
     if (type === 'client') {
       handleQualifyClient();
+      validateStatusGlobal();
     } else {
       handleQualifyExpert();
+      validateStatusGlobal();
     }
   };
 
@@ -37,6 +46,7 @@ const Qualify = ({type, userRef, close, ordersRef, menuIndex}) => {
     let currentOrder = ordersRef;
     currentOrder.experts[menuIndex].rating = result;
     currentOrder.services[menuIndex].status = 6;
+
     currentOrder.services[menuIndex].commentClient = {
       note: noteSend,
       rating,
@@ -78,7 +88,6 @@ const Qualify = ({type, userRef, close, ordersRef, menuIndex}) => {
 
     let currentOrder = ordersRef;
     currentOrder.client.rating = result;
-    currentOrder.services[menuIndex].status = 5;
     currentOrder.services[menuIndex].comment = {note: noteSend, rating};
     //Update order
     await updateOrder(currentOrder, utilDispatch);

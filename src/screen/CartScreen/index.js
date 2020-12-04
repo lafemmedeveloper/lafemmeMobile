@@ -529,14 +529,6 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
                     ),
                   )
                 }
-                minimumDate={
-                  new Date(
-                    moment(new Date()).add(
-                      config.minPossibleMinutesSchedule,
-                      'minutes',
-                    ),
-                  )
-                }
                 onConfirm={handleConfirmDate}
                 onCancel={hideDatePicker}
                 is24Hour={false}
