@@ -142,7 +142,7 @@ android {
         applicationId 'com.femme'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 51
+        versionCode 52
         versionName "1.0.7"
         multiDexEnabled true
         resValue 'string', 'build_config_package', 'com.femme'
