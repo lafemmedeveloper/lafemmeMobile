@@ -14,6 +14,7 @@ import {Colors, Fonts, Metrics} from '../../themes';
 import {AirbnbRating} from 'react-native-ratings';
 import {StoreContext} from '../../flux';
 import {userRating, sendPushFcm, updateOrder} from '../../flux/util/actions';
+import {useKeyboard} from '../../hooks/useKeyboard';
 
 const Qualify = ({
   type,
@@ -24,6 +25,7 @@ const Qualify = ({
   validateStatusGlobal,
 }) => {
   const {state, utilDispatch} = useContext(StoreContext);
+  const [keyboardHeight] = useKeyboard();
 
   const [note, setNote] = useState('');
   const [rating, setRating] = useState(5);
@@ -199,6 +201,7 @@ const Qualify = ({
               </Text>
             )}
           </TouchableOpacity>
+          <View style={{height: keyboardHeight}} />
         </View>
       </>
     </View>
