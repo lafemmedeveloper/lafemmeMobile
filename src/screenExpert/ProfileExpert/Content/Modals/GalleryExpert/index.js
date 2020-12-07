@@ -379,7 +379,7 @@ const GalleryExpert = (props) => {
       expertName: user.firstName,
       expertImage: user.imageUrl.small,
       rating: user.rating,
-      date: moment().format(),
+      date: Date.now(),
       imageUrl: images,
       isApproved: false,
       id: utilities.create_UUID(),
