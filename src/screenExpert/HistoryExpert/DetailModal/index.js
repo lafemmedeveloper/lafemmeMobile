@@ -31,6 +31,7 @@ import ServiceModal from './ServiceModal';
 import ButonMenu from '../../../screen/ButonMenu';
 import {minToHours} from '../../../helpers/MomentHelper';
 import _ from 'lodash';
+import moment from 'moment';
 
 const DetailModal = ({order, setModalDetail}) => {
   const screen = Dimensions.get('window');
@@ -248,6 +249,10 @@ const DetailModal = ({order, setModalDetail}) => {
     let orderServices = _.orderBy(currentServices, 'status', 'asc');
 
     currentOrder.status = orderServices[0].status;
+    if (orderServices[0].status === 6) {
+      currentOrder.timeLast = Date.now();
+      currentOrder.timeLastCurrent = moment().format('DD/MM/Y');
+    }
 
     await updateOrder(currentOrder, utilDispatch);
   };

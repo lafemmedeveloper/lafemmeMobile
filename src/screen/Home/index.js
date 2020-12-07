@@ -104,6 +104,7 @@ const Home = () => {
   const activeDetailModal = (order) => {
     navigation.navigate('OrderDetail', order);
   };
+  // console.log('date new', Date.parse(moment(new Date()).subtract(15, 'days')));
 
   return (
     <>

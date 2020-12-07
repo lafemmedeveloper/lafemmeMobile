@@ -19,8 +19,8 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import ExpertCall from './Status/ExpertCall';
 import Loading from '../../components/Loading';
 import ModalApp from '../../components/ModalApp';
-import ButtonCoordinate from '../../components/ButtonCoordinate';
-import Geolocation from '@react-native-community/geolocation';
+//import ButtonCoordinate from '../../components/ButtonCoordinate';
+//import Geolocation from '@react-native-community/geolocation';
 import {sendPushFcm, updateOrder, updateStatus} from '../../flux/util/actions';
 import Qualify from '../../components/Qualify';
 import {
@@ -70,14 +70,14 @@ const OrderDetail = ({route, navigation}) => {
     });
   }, [ordersAll, params]);
 
-  const activeCoor = () => {
-    Geolocation.getCurrentPosition((info) =>
-      setCoordinate({
-        latitude: info.coords.latitude,
-        longitude: info.coords.longitude,
-      }),
-    );
-  };
+  // const activeCoor = () => {
+  //Geolocation.getCurrentPosition((info) =>
+  //setCoordinate({
+  //latitude: info.coords.latitude,
+  //longitude: info.coords.longitude,
+  //}),
+  //);
+  //};
   const handleRef = async () => {
     let currentOrder = orderUser;
     currentOrder.services[menuIndex].status = 5;
@@ -168,6 +168,10 @@ const OrderDetail = ({route, navigation}) => {
     let orderServices = _.orderBy(currentServices, 'status', 'asc');
 
     currentOrder.status = orderServices[0].status;
+    if (orderServices[0].status === 6) {
+      currentOrder.timeLast = Date.now();
+      currentOrder.timeLastCurrent = moment().format('DD/MM/Y');
+    }
 
     await updateOrder(currentOrder, utilDispatch);
   };
