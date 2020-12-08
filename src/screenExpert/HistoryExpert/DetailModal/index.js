@@ -268,7 +268,21 @@ const DetailModal = ({order, setModalDetail}) => {
 
     Linking.openURL(url);
   };
+  const handleWhatsapp = () => {
+    let message = 'La Femme';
 
+    let URL = 'whatsapp://send?text=' + message + '&phone=' + config.phone;
+
+    Linking.openURL(URL)
+      .then((data) => {
+        console.log('WhatsApp Opened');
+      })
+      .catch(() => {
+        Alert.alert(
+          'Al parecer Whatsapp no esta instalado, por favor instalado',
+        );
+      });
+  };
   return (
     <>
       <View style={styles.container}>
@@ -385,7 +399,7 @@ const DetailModal = ({order, setModalDetail}) => {
 
                   elevation: 8,
                 }}
-                onPress={() => Linking.openURL(`tel:${config.phone}`)}>
+                onPress={() => handleWhatsapp()}>
                 <Icon name={'phone-alt'} size={20} color={Colors.light} />
               </TouchableOpacity>
             </View>

@@ -1,13 +1,37 @@
 import React, {useContext} from 'react';
-import {Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Alert,
+  Linking,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {Colors, Fonts, Metrics} from '../../themes';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {signOff} from '../../flux/auth/actions';
 import {StoreContext} from '../../flux';
 
 const NoEnabled = () => {
-  const {authDispatch, util} = useContext(StoreContext);
+  const {authDispatch, state} = useContext(StoreContext);
+  const {util} = state;
   const {config} = util;
+
+  const handleWhatsapp = () => {
+    let message = 'La Femme';
+
+    let URL = 'whatsapp://send?text=' + message + '&phone=' + config.phone;
+
+    Linking.openURL(URL)
+      .then((data) => {
+        console.log('WhatsApp Opened');
+      })
+      .catch(() => {
+        Alert.alert(
+          'Al parecer Whatsapp no esta instalado, por favor instalado',
+        );
+      });
+  };
 
   return (
     <View style={styles.container}>
@@ -51,7 +75,7 @@ const NoEnabled = () => {
         </View>
       </View>
       <TouchableOpacity
-        onPress={() => Linking.openURL(`tel:${config.phone}`)}
+        onPress={() => handleWhatsapp()}
         style={styles.btnContainer}>
         <Text
           style={Fonts.style.underline(

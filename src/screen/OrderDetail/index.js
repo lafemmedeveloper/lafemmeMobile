@@ -8,7 +8,6 @@ import {
   Alert,
   TouchableOpacity,
   ScrollView,
-  Linking,
 } from 'react-native';
 import StepIndicator from 'react-native-step-indicator';
 import moment from 'moment';
@@ -48,7 +47,7 @@ const OrderDetail = ({route, navigation}) => {
   const {util, auth} = state;
   const {user} = auth;
 
-  const {ordersAll, config} = util;
+  const {ordersAll} = util;
   const [orderUser, setOrderUser] = useState(null);
   const [modalQual, setModalQual] = useState(false);
   const [coordinate, setCoordinate] = useState(null);
@@ -675,28 +674,6 @@ const OrderDetail = ({route, navigation}) => {
               </TouchableOpacity>
             </>
           )}
-          <TouchableOpacity
-            onPress={() => Linking.openURL(`tel:${config.phone}`)}
-            style={{
-              width: Metrics.screenWidth,
-              paddingVertical: 20,
-              alignContent: 'center',
-              justifyContent: 'center',
-
-              backgroundColor: Colors.light,
-              zIndex: 2,
-              height: 20,
-              marginTop: 20,
-            }}>
-            <Text
-              style={Fonts.style.underline(
-                Colors.dark,
-                Fonts.size.medium,
-                'center',
-              )}>
-              Contactar a soporte
-            </Text>
-          </TouchableOpacity>
         </View>
       </View>
 
@@ -743,22 +720,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop: 20,
   },
-  contBtn: {
-    position: 'absolute',
-    width: '100%',
-    zIndex: 2,
-    bottom: 10,
-    right: 20,
-    alignItems: 'flex-end',
-  },
-  contBtnC: {
-    position: 'absolute',
-    width: '100%',
-    zIndex: 3,
-    top: 20,
-    right: 20,
-    alignItems: 'flex-end',
-  },
+
   btn: {
     backgroundColor: Colors.expert.primaryColor,
     width: Metrics.screenWidth - 40,

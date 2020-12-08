@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import FastImage from 'react-native-fast-image';
 import {
   TouchableOpacity,
@@ -7,12 +7,34 @@ import {
   StyleSheet,
   Linking,
   Image,
+  Alert,
 } from 'react-native';
 import {Fonts, Colors, Images} from '../../../../themes';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import {StoreContext} from '../../../../flux';
 
 const ExpertCall = ({experts, uid, handleCancel, status}) => {
+  const {state} = useContext(StoreContext);
+  const {util} = state;
+
+  const {config} = util;
   const expert = experts.filter((e) => e.uid === uid)[0];
+
+  let message = 'La Femme';
+
+  const handleWhatsapp = () => {
+    let URL = 'whatsapp://send?text=' + message + '&phone=' + config.phone;
+
+    Linking.openURL(URL)
+      .then((data) => {
+        console.log('WhatsApp Opened');
+      })
+      .catch(() => {
+        Alert.alert(
+          'Al parecer Whatsapp no esta instalado, por favor instalado',
+        );
+      });
+  };
   return (
     <>
       <View style={styles.contExpert}>
@@ -75,7 +97,7 @@ const ExpertCall = ({experts, uid, handleCancel, status}) => {
           }}>
           <TouchableOpacity
             style={styles.buttonCall}
-            onPress={() => Linking.openURL(`tel:${expert.phone}`)}>
+            onPress={() => handleWhatsapp()}>
             <Icon
               name={'phone-alt'}
               size={20}
