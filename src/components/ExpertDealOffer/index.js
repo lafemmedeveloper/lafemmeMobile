@@ -26,6 +26,12 @@ export default ({order, dispatch, user}) => {
   const isMountedRef = useRef(null);
 
   const assingService = async (item) => {
+    if (!user.coordinates) {
+      return Alert.alert(
+        'Ups',
+        'Lo siento, necesitas tener una ubicación para tomar este servicio',
+      );
+    }
     try {
       if (!user.activity.includes(item.servicesType)) {
         return Alert.alert(
