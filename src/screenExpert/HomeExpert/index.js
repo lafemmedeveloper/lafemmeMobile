@@ -1,5 +1,12 @@
 import React, {useContext, useState, useEffect, Fragment} from 'react';
-import {View, ScrollView, StyleSheet, Text, StatusBar} from 'react-native';
+import {
+  View,
+  ScrollView,
+  StyleSheet,
+  Text,
+  StatusBar,
+  Platform,
+} from 'react-native';
 import {Colors, Metrics, ApplicationStyles, Fonts} from '../../themes';
 import ExpertDealOffer from '../../components/ExpertDealOffer';
 import {StoreContext} from '../../flux';
@@ -66,6 +73,13 @@ const HomeExpert = () => {
   const [coordinate, setCoordinate] = useState(null);
 
   const currentCoordinate = () => {
+    const config = {
+      skipPermissionRequests: Platform.OS === 'ios' ? true : false,
+      authorizationLevel: 'auto',
+    };
+    Geolocation.requestAuthorization();
+
+    Geolocation.setRNConfiguration(config);
     Geolocation.getCurrentPosition((info) =>
       setCoordinate({
         latitude: info.coords.latitude,
