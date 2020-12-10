@@ -75,17 +75,22 @@ const HomeExpert = () => {
   const currentCoordinate = () => {
     const config = {
       skipPermissionRequests: Platform.OS === 'ios' ? true : false,
-      authorizationLevel: 'auto',
+      authorizationLevel: 'whenInUse',
     };
     Geolocation.requestAuthorization();
 
     Geolocation.setRNConfiguration(config);
-    Geolocation.getCurrentPosition((info) =>
+    Geolocation.getCurrentPosition((info) => {
+      console.log(
+        '🚀 ~ file: index.js ~ line 85 ~ currentCoordinate ~ info',
+        info,
+      );
+
       setCoordinate({
         latitude: info.coords.latitude,
         longitude: info.coords.longitude,
-      }),
-    );
+      });
+    });
   };
 
   useEffect(() => {
