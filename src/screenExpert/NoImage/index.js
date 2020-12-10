@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Alert,
   StatusBar,
+  Platform,
 } from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
 
@@ -362,6 +363,13 @@ const NoImage = () => {
     }
   };
   const currentCoordinate = () => {
+    const config = {
+      skipPermissionRequests: Platform.OS === 'ios' ? true : false,
+      authorizationLevel: 'auto',
+    };
+    //Geolocation.requestAuthorization();
+
+    Geolocation.setRNConfiguration(config);
     Geolocation.getCurrentPosition((info) =>
       setCoordinate({
         latitude: info.coords.latitude,

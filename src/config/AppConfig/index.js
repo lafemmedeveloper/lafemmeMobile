@@ -5,7 +5,7 @@ export default {
     2: 'En Ruta',
     3: 'En servicio',
     4: 'Servicio finalizado',
-    5: 'Esperando Calificacion',
+    5: 'Esperando Calificación',
     6: 'Finalizado',
     7: 'Cancelado',
     8: 'Finalizado',
