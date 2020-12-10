@@ -77,7 +77,7 @@ const HomeExpert = () => {
       skipPermissionRequests: Platform.OS === 'ios' ? true : false,
       authorizationLevel: 'auto',
     };
-    Geolocation.requestAuthorization();
+    //Geolocation.requestAuthorization();
 
     Geolocation.setRNConfiguration(config);
     Geolocation.getCurrentPosition((info) =>
@@ -90,7 +90,8 @@ const HomeExpert = () => {
 
   useEffect(() => {
     if (coordinate) {
-      return () => updateProfile(coordinate, 'coordinates', authDispatch);
+      return async () =>
+        await updateProfile(coordinate, 'coordinates', authDispatch);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [coordinate]);

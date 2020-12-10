@@ -32,10 +32,12 @@ import ButonMenu from '../../../screen/ButonMenu';
 import {minToHours} from '../../../helpers/MomentHelper';
 import _ from 'lodash';
 import moment from 'moment';
+import Geolocation from '@react-native-community/geolocation';
+import {updateProfile} from '../../../flux/auth/actions';
 
 const DetailModal = ({order, setModalDetail}) => {
   const screen = Dimensions.get('window');
-  const {state, utilDispatch} = useContext(StoreContext);
+  const {state, utilDispatch, authDispatch} = useContext(StoreContext);
   const {util, auth} = state;
   const {user} = auth;
   const {ordersAll, loading, config} = util;
@@ -245,6 +247,28 @@ const DetailModal = ({order, setModalDetail}) => {
   const validateStatusGlobal = async () => {
     let currentServices = filterOrder.services;
     let currentOrder = filterOrder;
+    const config = {
+      skipPermissionRequests: Platform.OS === 'ios' ? true : false,
+      authorizationLevel: 'auto',
+    };
+    Geolocation.requestAuthorization();
+
+    Geolocation.setRNConfiguration(config);
+    Geolocation.getCurrentPosition(async (info) => {
+      await updateProfile(
+        {
+          latitude: info.coords.latitude,
+          longitude: info.coords.longitude,
+        },
+        'coordinates',
+        authDispatch,
+      );
+      currentOrder.experts[menuIndex].coordinates = {
+        latitude: info.coords.latitude,
+        longitude: info.coords.longitude,
+      };
+      return;
+    });
 
     let orderServices = _.orderBy(currentServices, 'status', 'asc');
 
