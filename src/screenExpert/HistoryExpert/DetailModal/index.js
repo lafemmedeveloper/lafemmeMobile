@@ -291,6 +291,8 @@ const DetailModal = ({order, setModalDetail}) => {
     let orderServices = _.orderBy(currentServices, 'status', 'asc');
 
     currentOrder.status = orderServices[0].status;
+    currentOrder.updateLast = Date.now();
+
     if (orderServices[0].status === 6) {
       currentOrder.timeLast = Date.now();
       currentOrder.timeLastCurrent = moment().format('DD/MM/Y');
