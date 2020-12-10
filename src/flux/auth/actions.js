@@ -58,6 +58,7 @@ export const signOff = async (dispatch) => {
 };
 
 export const updateProfile = async (data, typeData, dispatch) => {
+  console.log('updateProfile');
   const currentUser = auth().currentUser;
   if (currentUser && currentUser.uid) {
     try {

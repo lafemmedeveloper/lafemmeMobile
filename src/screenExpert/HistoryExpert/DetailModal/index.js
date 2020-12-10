@@ -111,12 +111,8 @@ const DetailModal = ({order, setModalDetail}) => {
                 currentOrder.services[indexService].status = 2;
                 await updateOrder(filterOrder, utilDispatch);
 
-                if (currentOrder.services.length > 1) {
-                  validateStatusGlobal(2);
-                } else {
-                  currentOrder.status = 2;
-                  await updateOrder(filterOrder, utilDispatch);
-                }
+                await validateStatusGlobal(2);
+
                 let notification = {
                   title: 'Actualización de la orden',
                   body: `El experto  ${
@@ -154,12 +150,7 @@ const DetailModal = ({order, setModalDetail}) => {
 
               await updateOrder(filterOrder, utilDispatch);
 
-              if (currentOrder.services.length > 1) {
-                validateStatusGlobal(3);
-              } else {
-                currentOrder.status = 3;
-                await updateOrder(filterOrder, utilDispatch);
-              }
+              await validateStatusGlobal(3);
 
               let notification = {
                 title: 'Servicio cancelado',
@@ -196,12 +187,7 @@ const DetailModal = ({order, setModalDetail}) => {
               currentOrder.services[indexService].status = 4;
               await updateOrder(filterOrder, utilDispatch);
 
-              if (currentOrder.services.length > 1) {
-                validateStatusGlobal(4);
-              } else {
-                currentOrder.status = 4;
-                await updateOrder(filterOrder, utilDispatch);
-              }
+              await validateStatusGlobal(4);
 
               let notification = {
                 title: 'Actualización de la orden',
@@ -247,14 +233,15 @@ const DetailModal = ({order, setModalDetail}) => {
   const validateStatusGlobal = async () => {
     let currentServices = filterOrder.services;
     let currentOrder = filterOrder;
+
     const config = {
       skipPermissionRequests: Platform.OS === 'ios' ? true : false,
       authorizationLevel: 'auto',
     };
-    Geolocation.requestAuthorization();
 
     Geolocation.setRNConfiguration(config);
     Geolocation.getCurrentPosition(async (info) => {
+      console.log('info coordinates ==>', info);
       await updateProfile(
         {
           latitude: info.coords.latitude,
@@ -267,7 +254,6 @@ const DetailModal = ({order, setModalDetail}) => {
         latitude: info.coords.latitude,
         longitude: info.coords.longitude,
       };
-      return;
     });
 
     let orderServices = _.orderBy(currentServices, 'status', 'asc');

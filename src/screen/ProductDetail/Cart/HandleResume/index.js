@@ -48,7 +48,6 @@ const HandleResume = ({
     img: product.imageUrl.medium,
     servicesType: product.slug,
     clients: gList,
-    order: user.cart.services.length,
     status: 0,
     uid: null,
     id: Utilities.create_UUID(),

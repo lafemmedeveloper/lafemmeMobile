@@ -27,8 +27,9 @@ export default {
     return uuid;
   },
 
-  formatCOP: (num) => {
-    var p = num.toFixed(2).split('.');
+  formatCOP: (number) => {
+    let num = Number(number);
+    let p = num.toFixed(2).split('.');
     return (
       '$' +
       p[0]
