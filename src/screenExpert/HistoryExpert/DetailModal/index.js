@@ -1,4 +1,11 @@
-import React, {Fragment, useState, useContext} from 'react';
+import React, {
+  Fragment,
+  useState,
+  useContext,
+  useRef,
+  useEffect,
+  useCallback,
+} from 'react';
 import {
   Text,
   StyleSheet,
@@ -11,6 +18,7 @@ import {
   ActivityIndicator,
   Linking,
   Platform,
+  AppState,
 } from 'react-native';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import Icon from 'react-native-vector-icons/FontAwesome5';
@@ -23,7 +31,6 @@ import {
 } from '../../../themes';
 import utilities from '../../../utilities';
 import {sendPushFcm, updateOrder} from '../../../flux/util/actions';
-import Loading from '../../../components/Loading';
 import {StoreContext} from '../../../flux';
 import ModalApp from '../../../components/ModalApp';
 import Qualify from '../../../components/Qualify';
@@ -41,6 +48,7 @@ const DetailModal = ({order, setModalDetail}) => {
   const {util, auth} = state;
   const {user} = auth;
   const {ordersAll, loading, config} = util;
+  const appState = useRef(AppState.currentState);
 
   const mapStyle = require('../../../config/mapStyle.json');
 
@@ -81,10 +89,7 @@ const DetailModal = ({order, setModalDetail}) => {
         return 'Finalizado';
     }
   };
-  console.log(
-    'filterOrder.services[menuIndex].status',
-    filterOrder.services[menuIndex].status,
-  );
+
   const changeStatus = (item) => {
     if (item.status === 1) {
       Alert.alert(
@@ -227,48 +232,11 @@ const DetailModal = ({order, setModalDetail}) => {
     setItemService(item);
     setModalEdit(true);
   };
-  if (!filterOrder) {
-    return <Loading type={'expert'} loading={loading} />;
-  }
-  const validateStatusGlobal = async () => {
-    let currentServices = filterOrder.services;
-    let currentOrder = filterOrder;
-
-    const config = {
-      skipPermissionRequests: Platform.OS === 'ios' ? true : false,
-      authorizationLevel: 'auto',
-    };
-
-    Geolocation.setRNConfiguration(config);
-    Geolocation.getCurrentPosition(async (info) => {
-      console.log('info coordinates ==>', info);
-      await updateProfile(
-        {
-          latitude: info.coords.latitude,
-          longitude: info.coords.longitude,
-        },
-        'coordinates',
-        authDispatch,
-      );
-      currentOrder.experts[menuIndex].coordinates = {
-        latitude: info.coords.latitude,
-        longitude: info.coords.longitude,
-      };
-    });
-
-    let orderServices = _.orderBy(currentServices, 'status', 'asc');
-
-    currentOrder.status = orderServices[0].status;
-    if (orderServices[0].status === 6) {
-      currentOrder.timeLast = Date.now();
-      currentOrder.timeLastCurrent = moment().format('DD/MM/Y');
-    }
-
-    await updateOrder(currentOrder, utilDispatch);
-  };
-
   const handleMaps = () => {
-    const scheme = Platform.select({ios: 'maps:0,0?q=', android: 'geo:0,0?q='});
+    const scheme = Platform.select({
+      ios: 'maps:0,0?q=',
+      android: 'geo:0,0?q=',
+    });
     const latLng = `${filterOrder.address.coordinates.latitude}, ${filterOrder.address.coordinates.longitude}`;
     const label = filterOrder.address.name;
     const url = Platform.select({
@@ -293,6 +261,78 @@ const DetailModal = ({order, setModalDetail}) => {
         );
       });
   };
+
+  const validateStatusGlobal = useCallback(async () => {
+    console.log('validateStatusGlobal');
+    let currentServices = filterOrder.services;
+    let currentOrder = filterOrder;
+
+    const config = {
+      skipPermissionRequests: Platform.OS === 'ios' ? true : false,
+      authorizationLevel: 'auto',
+    };
+
+    Geolocation.setRNConfiguration(config);
+    Geolocation.getCurrentPosition(async (info) => {
+      await updateProfile(
+        {
+          latitude: info.coords.latitude,
+          longitude: info.coords.longitude,
+        },
+        'coordinates',
+        authDispatch,
+      );
+      currentOrder.experts[menuIndex].coordinates = {
+        latitude: info.coords.latitude,
+        longitude: info.coords.longitude,
+      };
+    });
+
+    let orderServices = _.orderBy(currentServices, 'status', 'asc');
+
+    currentOrder.status = orderServices[0].status;
+    if (orderServices[0].status === 6) {
+      currentOrder.timeLast = Date.now();
+      currentOrder.timeLastCurrent = moment().format('DD/MM/Y');
+    }
+
+    await updateOrder(currentOrder, utilDispatch);
+  }, [authDispatch, filterOrder, menuIndex, utilDispatch]);
+
+  useEffect(() => {
+    AppState.addEventListener('change', _handleAppStateChange);
+
+    return () => {
+      AppState.removeEventListener('change', _handleAppStateChange);
+    };
+  }, [_handleAppStateChange]);
+
+  const _handleAppStateChange = useCallback(
+    (nextAppState) => {
+      //active and background
+      appState.current = nextAppState;
+      console.log('nextAppState =>', nextAppState);
+
+      if (nextAppState === 'active') {
+        Geolocation.getCurrentPosition((info) => {
+          if (
+            info.coords.longitude !== user.coordinates.longitude ||
+            info.coords.latitude !== user.coordinates.latitude
+          ) {
+            validateStatusGlobal();
+          }
+        });
+      } else {
+        console.log('fondo');
+      }
+    },
+    [
+      user.coordinates.latitude,
+      user.coordinates.longitude,
+      validateStatusGlobal,
+    ],
+  );
+
   return (
     <>
       <View style={styles.container}>

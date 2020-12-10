@@ -35,7 +35,7 @@ const LoginExpert = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const [email, setEmail] = useState('jesusnomina@gmail.com');
+  const [email, setEmail] = useState('jb@expert.com');
   const [password, setPassword] = useState('123456');
 
   const handleLogin = async () => {
