@@ -20,7 +20,12 @@ import Loading from '../../components/Loading';
 import ModalApp from '../../components/ModalApp';
 //import ButtonCoordinate from '../../components/ButtonCoordinate';
 //import Geolocation from '@react-native-community/geolocation';
-import {sendPushFcm, updateOrder, updateStatus} from '../../flux/util/actions';
+import {
+  getOrders,
+  sendPushFcm,
+  updateOrder,
+  updateStatus,
+} from '../../flux/util/actions';
 import Qualify from '../../components/Qualify';
 import {
   adddReferralsUser,
@@ -175,9 +180,16 @@ const OrderDetail = ({route, navigation}) => {
     await updateOrder(currentOrder, utilDispatch);
   };
 
-  if (!orderUser) {
-    return null;
-  }
+  useEffect(() => {
+    if (orderUser && orderUser.services[menuIndex].status > 5) {
+      getOrders(utilDispatch);
+    }
+  }, [utilDispatch, orderUser, menuIndex]);
+  console.log(
+    'order status client',
+    orderUser && orderUser.services[menuIndex].status,
+  );
+
   return (
     <>
       <Loading type="client" />
@@ -730,6 +742,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     zIndex: 2,
     alignSelf: 'center',
+    marginVertical: 20,
   },
 });
 

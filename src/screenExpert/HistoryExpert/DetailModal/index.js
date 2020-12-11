@@ -335,6 +335,11 @@ const DetailModal = ({order, setModalDetail}) => {
     ],
   );
 
+  console.log(
+    'order status expert=>',
+    filterOrder && filterOrder.services[menuIndex].status,
+  );
+
   return (
     <>
       <View style={styles.container}>
@@ -966,7 +971,7 @@ const DetailModal = ({order, setModalDetail}) => {
               <Fragment key={index}>
                 {menuIndex === index && (
                   <>
-                    {filterOrder && filterOrder.status <= 4 && !item.comment && (
+                    {filterOrder && item.status <= 4 && (
                       <TouchableOpacity
                         onPress={() => changeStatus(item)}
                         style={styles.btnContainer}>
@@ -987,6 +992,32 @@ const DetailModal = ({order, setModalDetail}) => {
                                 {alignSelf: 'center'},
                               ]}>
                               {getServiceStatus(item.status)}
+                            </Text>
+                          )}
+                        </Text>
+                      </TouchableOpacity>
+                    )}
+                    {item.status > 4 && !item.comment && (
+                      <TouchableOpacity
+                        onPress={() => setQualifyClient(true)}
+                        style={styles.btnContainer}>
+                        <Text
+                          style={[
+                            Fonts.style.bold(Colors.light, Fonts.size.medium),
+                            {alignSelf: 'center'},
+                          ]}>
+                          {loading ? (
+                            <ActivityIndicator color={Colors.light} />
+                          ) : (
+                            <Text
+                              style={[
+                                Fonts.style.bold(
+                                  Colors.light,
+                                  Fonts.size.medium,
+                                ),
+                                {alignSelf: 'center'},
+                              ]}>
+                              Calificar cliente
                             </Text>
                           )}
                         </Text>
