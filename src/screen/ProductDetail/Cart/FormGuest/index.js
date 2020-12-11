@@ -80,6 +80,7 @@ const FormGuest = (props) => {
           secureText={false}
           textContent={'telephoneNumber'}
           autoCapitalize={'none'}
+          keyboardType={'numeric'}
         />
         <View style={{height: keyboardHeight}} />
       </View>

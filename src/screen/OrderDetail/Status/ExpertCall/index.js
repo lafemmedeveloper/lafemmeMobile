@@ -14,6 +14,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import {StoreContext} from '../../../../flux';
 
 const ExpertCall = ({experts, uid, handleCancel, status}) => {
+  console.log('status', status);
   const {state} = useContext(StoreContext);
   const {util} = state;
 
@@ -104,7 +105,7 @@ const ExpertCall = ({experts, uid, handleCancel, status}) => {
               color={Colors.expert.primaryColor}
             />
           </TouchableOpacity>
-          {status <= 2 && (
+          {status < 2 && (
             <TouchableOpacity
               style={styles.buttonCall}
               onPress={() => handleCancel()}>
