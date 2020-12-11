@@ -21,10 +21,9 @@ const ExpertCall = ({experts, uid, handleCancel, status}) => {
   const {config} = util;
   const expert = experts.filter((e) => e.uid === uid)[0];
 
-  let message = 'La Femme';
-
   const handleWhatsapp = () => {
-    let URL = 'whatsapp://send?text=' + message + '&phone=' + config.phone;
+    let URL = 'whatsapp://send?text=' + config.whatsappDefaultMessage;
+    +'&phone=' + config.phone;
 
     Linking.openURL(URL)
       .then((data) => {
