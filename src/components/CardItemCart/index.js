@@ -15,7 +15,12 @@ export default ({
   down,
   up,
 }) => {
-  const {name, duration, clients, id, order} = data;
+  const {
+    name,
+    duration,
+    clients,
+    id, // order
+  } = data;
   return (
     <>
       <View style={[styles.container, ApplicationStyles.shadowsClient]}>
