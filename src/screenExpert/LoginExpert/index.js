@@ -11,14 +11,19 @@ import {
   Linking,
   StatusBar,
 } from 'react-native';
-import {Images, Colors, Fonts, Metrics} from '../../themes';
-import MyTextInput from '../../components/MyTextInput';
-import Loading from '../../components/Loading';
 
-import {StoreContext} from '../../flux';
-import {Login, setUser} from '../../flux/auth/actions';
+//Modules
 import auth from '@react-native-firebase/auth';
 import Config from 'react-native-config';
+
+//Flux
+import {StoreContext} from '../../flux';
+import {Login, setLoading, setUser} from '../../flux/auth/actions';
+import {Images, Colors, Fonts, Metrics} from '../../themes';
+
+//Components
+import MyTextInput from '../../components/MyTextInput';
+import Loading from '../../components/Loading';
 
 const LoginExpert = () => {
   const {state, authDispatch} = useContext(StoreContext);
@@ -43,7 +48,9 @@ const LoginExpert = () => {
     if (email === '' || password === '') {
       Alert.alert('Ups', 'Todos los campos son necesarios');
     } else {
+      setLoading(true, authDispatch);
       await Login(email, password, authDispatch);
+      setLoading(false, authDispatch);
     }
   };
 

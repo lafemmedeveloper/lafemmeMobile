@@ -555,6 +555,31 @@ const DetailModal = ({order, setModalDetail}) => {
                 {filterOrder && filterOrder.address.notesAddress}
               </Text>
             </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                marginHorizontal: 20,
+                marginVertical: 2.5,
+              }}>
+              <Text
+                style={[
+                  Fonts.style.regular(Colors.dark, Fonts.size.medium, 'left'),
+                  {flex: 1},
+                ]}>
+                Hora de{'\n'}servicio:
+              </Text>
+              <Text
+                style={[
+                  Fonts.style.regular(Colors.dark, Fonts.size.medium, 'left'),
+                  {flex: 2},
+                ]}>
+                {filterOrder &&
+                  moment(filterOrder.hoursServices[menuIndex]).format(
+                    'hh:mm a',
+                  )}
+              </Text>
+            </View>
 
             <View opacity={0.25} style={ApplicationStyles.separatorLine} />
             {filterOrder && services && services.length > 1 && (
@@ -829,7 +854,7 @@ const DetailModal = ({order, setModalDetail}) => {
             {filterOrder &&
               services &&
               services.map((item, index) => {
-                const {total, totalAddons, totalServices} = item;
+                const {totalAddons, totalServices} = item;
 
                 return (
                   <View key={index} style={styles.cont}>
@@ -888,6 +913,40 @@ const DetailModal = ({order, setModalDetail}) => {
                             {utilities.formatCOP(totalAddons)}
                           </Text>
                         </View>
+                        {filterOrder &&
+                          filterOrder.specialDiscount &&
+                          filterOrder.specialDiscount.idServices.includes(
+                            filterOrder.services[menuIndex].id,
+                          ) && (
+                            <View
+                              style={{
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                marginHorizontal: 20,
+                                marginVertical: 2.5,
+                              }}>
+                              <Text
+                                style={[
+                                  Fonts.style.regular(
+                                    Colors.dark,
+                                    Fonts.size.medium,
+                                  ),
+                                ]}>
+                                Recargo nocturno
+                              </Text>
+                              <Text
+                                style={[
+                                  Fonts.style.regular(
+                                    Colors.dark,
+                                    Fonts.size.medium,
+                                  ),
+                                ]}>
+                                {utilities.formatCOP(
+                                  filterOrder.specialDiscount.discount,
+                                )}
+                              </Text>
+                            </View>
+                          )}
 
                         {filterOrder.coupon &&
                           filterOrder.coupon.type.includes(
@@ -940,18 +999,9 @@ const DetailModal = ({order, setModalDetail}) => {
                             style={[
                               Fonts.style.bold(Colors.dark, Fonts.size.medium),
                             ]}>
-                            {filterOrder.coupon &&
-                            filterOrder.coupon.type.includes(item.servicesType)
-                              ? filterOrder.coupon.typeCoupon !== 'money'
-                                ? utilities.formatCOP(
-                                    (filterOrder.coupon.percentage / 100) *
-                                      total -
-                                      total,
-                                  )
-                                : utilities.formatCOP(
-                                    total - filterOrder.coupon?.money,
-                                  )
-                              : utilities.formatCOP(total)}
+                            {utilities.formatCOP(
+                              utilities.calculateTotal(filterOrder, menuIndex),
+                            )}
                           </Text>
                         </View>
                       </>

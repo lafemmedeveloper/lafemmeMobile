@@ -76,4 +76,28 @@ export default {
     }
     return s.charAt(0).toUpperCase() + s.slice(1);
   },
+
+  calculateTotal: (filterOrder, menuIndex) => {
+    const {coupon, specialDiscount, services} = filterOrder;
+
+    const {total} = services[menuIndex];
+
+    let totalReturn = 0;
+
+    if (coupon) {
+      totalReturn = coupon.type.includes(services[menuIndex].servicesType)
+        ? filterOrder.coupon.typeCoupon !== 'money'
+          ? (filterOrder.coupon.percentage / 100) * total - total
+          : total - filterOrder.coupon?.money
+        : total;
+    } else {
+      totalReturn = total;
+    }
+
+    if (specialDiscount) {
+      return totalReturn + specialDiscount.discount;
+    } else {
+      totalReturn;
+    }
+  },
 };
