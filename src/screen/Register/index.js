@@ -9,26 +9,39 @@ import {
   Keyboard,
   Image,
 } from 'react-native';
-import {Colors, Metrics, Fonts, ApplicationStyles, Images} from '../../themes';
-import moment from 'moment';
+
+//Modules
 import auth from '@react-native-firebase/auth';
+import moment from 'moment';
+
+//Flux
 import {saveUser} from '../../flux/auth/actions';
-import Referrals from './Referrals';
+
+//Theme
+
+import {Colors, Metrics, Fonts, ApplicationStyles, Images} from '../../themes';
+
+//Components
 import ModalApp from '../../components/ModalApp';
 import Loading from '../../components/Loading';
+import Referrals from './Referrals';
+
+//Hooks
 import {useKeyboard} from '../../hooks/useKeyboard';
 
-const Register = (props) => {
-  const {dispatch, activityLoading, setActivityLoading, setModalAuth} = props;
-
+const Register = ({
+  dispatch,
+  activityLoading,
+  setActivityLoading,
+  setModalAuth,
+}) => {
   const [name, setName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [referrals, setReferrals] = useState(false);
-  const [userReferrals, setUserReferrals] = useState(null);
   const [keyboardHeight] = useKeyboard();
 
-  const handleRegister = async () => {
+  const handleRegister = async (guestUser = null) => {
     Keyboard.dismiss();
     if ((name.trim() !== '' || lastName.trim() !== '', email.trim() !== '')) {
       const currentUser = auth().currentUser;
@@ -65,8 +78,9 @@ const Register = (props) => {
           imageUrl: null,
           tokens: [],
           referrals: [],
-          guestUser: userReferrals,
+          guestUser,
         };
+        console.log('data ==>', guestUser);
         await setDb(data);
         setActivityLoading(false);
 
@@ -238,11 +252,7 @@ const Register = (props) => {
         <View style={{height: keyboardHeight}} />
       </View>
       <ModalApp open={referrals} setOpen={setReferrals}>
-        <Referrals
-          setUserReferrals={setUserReferrals}
-          handleRegister={handleRegister}
-          close={setReferrals}
-        />
+        <Referrals handleRegister={handleRegister} close={setReferrals} />
       </ModalApp>
     </>
   );

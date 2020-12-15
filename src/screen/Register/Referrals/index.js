@@ -7,6 +7,13 @@ import {
   Alert,
   Image,
 } from 'react-native';
+//Module
+import CountryPicker from 'react-native-country-picker-modal';
+
+//Flux
+import {validateReferrals} from '../../../flux/auth/actions';
+
+//Theme
 import {
   ApplicationStyles,
   Colors,
@@ -14,12 +21,14 @@ import {
   Images,
   Metrics,
 } from '../../../themes';
-import {validateReferrals} from '../../../flux/auth/actions';
+
+//Components
 import Loading from '../../../components/Loading';
-import CountryPicker from 'react-native-country-picker-modal';
+
+//Hooks
 import {useKeyboard} from '../../../hooks/useKeyboard';
 
-const Referrals = ({setUserReferrals, handleRegister, close}) => {
+const Referrals = ({handleRegister, close}) => {
   const initialState = {
     country: {
       cca2: 'CO',
@@ -40,6 +49,7 @@ const Referrals = ({setUserReferrals, handleRegister, close}) => {
       number = `+57${contact}`;
     }
     const guest = await validateReferrals(number);
+    console.log('guest ==>', guest);
     if (!guest) {
       return Alert.alert(
         'Lo siento',
@@ -47,14 +57,13 @@ const Referrals = ({setUserReferrals, handleRegister, close}) => {
       );
     }
 
-    setUserReferrals({
+    await handleRegister({
       firstName: guest.firstName,
       lastName: guest.lastName,
       email: guest.email,
       uid: guest.uid,
       phone: guest.phone,
     });
-    await handleRegister();
     close(false);
   };
   const _changeCountry = (country) => {

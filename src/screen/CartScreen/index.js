@@ -203,7 +203,7 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
         'cart',
         authDispatch,
       );
-      setRechargeView(false);
+      setRechargeView(true);
 
       return;
     }
@@ -215,7 +215,8 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
       'cart',
       authDispatch,
     );
-    setRechargeView(false);
+    setRechargeView(true);
+
     return;
   };
 
@@ -298,7 +299,7 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
       console.log('observeTime');
       let idServices = [];
       let recharge = false;
-      let hours = [];
+      //let hours = [];
 
       let specialDiscount = {
         discount: config && config.recharge,
@@ -306,7 +307,7 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
       };
 
       for (let index = 0; index < services.length; index++) {
-        hours.push(user.cart.services[index].duration);
+        // hours.push(user.cart.services[index].duration);
 
         let sumByhour = moment(user.cart.date, 'YYYY-MM-DD HH:mm')
           .add(
@@ -314,6 +315,7 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
             'minutes',
           )
           .format('HH:MM');
+        console.log('sumByhour =>', sumByhour);
 
         let response = openHour(sumByhour);
         /*        console.log(
@@ -334,6 +336,7 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
           recharge = false;
         }
       }
+      setRechargeView(true);
 
       if (recharge) {
         await updateProfile(
@@ -345,7 +348,6 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
           authDispatch,
         );
       }
-      console.log(' idServices ===>', idServices);
 
       if (idServices.length === 0) {
         await updateProfile(
@@ -357,8 +359,6 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
           authDispatch,
         );
       }
-
-      setRechargeView(true);
     },
     [authDispatch, config, openHour, user.cart],
   );
@@ -368,6 +368,11 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
       observeTime(user.cart.services);
     }
   }, [observeTime, rechargeView, user.cart.date, user.cart.services]);
+
+  let dataRecharge = user.cart.specialDiscount
+    ? config.recharge * user.cart.specialDiscount.idServices.length
+    : null;
+  console.log('dataRecharge ==>', dataRecharge);
 
   return (
     <>
@@ -477,9 +482,7 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
                 Fonts.size.medium,
                 'left',
               )}>
-              {Utilities.formatCOP(
-                config.recharge * user.cart.specialDiscount.idServices.length,
-              )}
+              {Utilities.formatCOP(dataRecharge)}
             </Text>
           </View>
         )}
@@ -600,7 +603,11 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
           </Text>
           <Text
             style={Fonts.style.bold(Colors.dark, Fonts.size.medium, 'left')}>
-            {Utilities.formatCOP(totalService - Math.abs(totalDiscount))}
+            {Utilities.formatCOP(
+              dataRecharge
+                ? totalService - Math.abs(totalDiscount) + dataRecharge
+                : totalService - Math.abs(totalDiscount),
+            )}
           </Text>
         </View>
 

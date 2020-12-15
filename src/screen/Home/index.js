@@ -56,8 +56,8 @@ const Home = () => {
   }, []);
 
   const {service, util} = state;
-  const {user} = state.auth;
   const {services} = service;
+  const {user} = state.auth;
 
   const {deviceInfo, orders, nextOrderClient} = util;
 
