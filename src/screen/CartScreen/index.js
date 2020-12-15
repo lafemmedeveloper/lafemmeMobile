@@ -100,6 +100,7 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
         notes: null,
         services: [],
         coupon: null,
+        specialDiscount: null,
       },
       'cart',
       authDispatch,
@@ -372,7 +373,7 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
   let dataRecharge = user.cart.specialDiscount
     ? config.recharge * user.cart.specialDiscount.idServices.length
     : null;
-  console.log('dataRecharge ==>', dataRecharge);
+  console.log('rechargeView ==>', rechargeView);
 
   return (
     <>
