@@ -1,29 +1,40 @@
 import React, {Fragment, useContext, useEffect, useRef, useState} from 'react';
 import {View, ScrollView, StyleSheet, StatusBar} from 'react-native';
-import ExpandHome from '../../components/ExpandHome';
-import {Metrics, Images, Colors} from '../../themes';
+
+//Modules
+import {useNavigation} from '@react-navigation/native';
+import auth from '@react-native-firebase/auth';
+import _ from 'lodash';
+
+//Flux
 import {StoreContext} from '../../flux';
 import {getServices} from '../../flux/services/actions';
-import {useNavigation} from '@react-navigation/native';
-import ModalApp from '../../components/ModalApp';
-import Login from '../Login';
 import {activeMessage, setLoading, setUser} from '../../flux/auth/actions';
-import BannerScroll from '../../components/BannerScroll';
-import Gallery from '../Gallery';
-import CartFooter from '../../components/CartFooter';
-import _ from 'lodash';
-import CartScreen from '../CartScreen';
-import Address from '../Address';
-import Header from '../../components/Header';
 import {
   getOrders,
   getDeviceInfo,
   getConfig,
   productViewAddress,
 } from '../../flux/util/actions';
+
+//Components
+import Header from '../../components/Header';
+import ExpandHome from '../../components/ExpandHome';
+import BannerScroll from '../../components/BannerScroll';
 import Loading from '../../components/Loading';
-import auth from '@react-native-firebase/auth';
+import ModalApp from '../../components/ModalApp';
+import CartFooter from '../../components/CartFooter';
+
+//Theme
+import {Metrics, Images, Colors} from '../../themes';
+
+//Pages
+import Login from '../Login';
+import Gallery from '../Gallery';
+import CartScreen from '../CartScreen';
+import Address from '../Address';
 import ExpandOrderData from '../ExpandOrderData';
+
 const Home = () => {
   const navigation = useNavigation();
   const {state, serviceDispatch, authDispatch, utilDispatch} = useContext(
@@ -104,7 +115,6 @@ const Home = () => {
   const activeDetailModal = (order) => {
     navigation.navigate('OrderDetail', order);
   };
-  // console.log('date new', Date.parse(moment(new Date()).subtract(15, 'days')));
 
   return (
     <>

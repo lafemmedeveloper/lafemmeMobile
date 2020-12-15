@@ -1,5 +1,4 @@
-import React, {useEffect, useContext, useState} from 'react';
-import {ApplicationStyles, Images, Fonts, Colors, Metrics} from '../../themes';
+import React, {memo, useEffect, useContext, useState, useCallback} from 'react';
 import {
   Text,
   View,
@@ -12,25 +11,36 @@ import {
   Keyboard,
   ActivityIndicator,
 } from 'react-native';
-import Utilities from '../../utilities';
 import moment from 'moment';
 
+//Module
+import _ from 'lodash';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
+
+//Flux
+import {StoreContext} from '../../flux';
 import {activeMessage, updateProfile} from '../../flux/auth/actions';
 import {getServices} from '../../flux/services/actions';
-import {StoreContext} from '../../flux';
+import {getCoverage, sendOrderService} from '../../flux/util/actions';
+
+//Components
+import ModalApp from '../../components/ModalApp';
 import CardItemCart from '../../components/CardItemCart';
 import FieldCartConfig from '../../components/FieldCartConfig';
-import {formatDate} from '../../helpers/MomentHelper';
-import _ from 'lodash';
-import ModalApp from '../../components/ModalApp';
-import AppConfig from '../../config/AppConfig';
-import {getCoverage, sendOrderService} from '../../flux/util/actions';
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import Loading from '../../components/Loading';
 import ModalCuopon from './ModalCuopon';
-import utilities from '../../utilities';
+
+//Helpers
+import Utilities from '../../utilities';
+import {formatDate, generateSchedule} from '../../helpers/MomentHelper';
+import AppConfig from '../../config/AppConfig';
+
+//Hooks
 import {useKeyboard} from '../../hooks/useKeyboard';
 import {useCouponsDiscount} from '../../hooks/useCouponsDiscount';
+
+//Theme
+import {ApplicationStyles, Images, Fonts, Colors, Metrics} from '../../themes';
 
 const CartScreen = ({setModalCart, setModalAddress}) => {
   const {state, serviceDispatch, authDispatch, utilDispatch} = useContext(
@@ -44,8 +54,12 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
   const [modalNote, setModalNote] = useState(false);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [modalCoupon, setModalCoupon] = useState(false);
+  const [rechargeView, setRechargeView] = useState(false);
 
-  //Hooks
+  let openHour = generateSchedule(
+    moment(config.openingTime).format('HH:MM'),
+    moment(config.closeTime).format('HH:MM'),
+  );
 
   const [keyboardHeight] = useKeyboard();
 
@@ -61,7 +75,14 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
   const updateNotes = async (notes) => {
     Keyboard.dismiss();
     try {
-      updateProfile({...user.cart, notes}, 'cart', authDispatch);
+      updateProfile(
+        {
+          ...user.cart,
+          notes,
+        },
+        'cart',
+        authDispatch,
+      );
       setModalNote(false);
     } catch (err) {
       console.log('updateNotes:error', err);
@@ -175,14 +196,27 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
       user.cart.coupon.type.includes(serviceDelete[0]?.servicesType)
     ) {
       await updateProfile(
-        {coupon: null, services: filterService},
+        {
+          coupon: null,
+          services: filterService,
+        },
         'cart',
         authDispatch,
       );
+      setRechargeView(false);
+
       return;
     }
 
-    await updateProfile({services: filterService}, 'cart', authDispatch);
+    await updateProfile(
+      {
+        services: filterService,
+      },
+      'cart',
+      authDispatch,
+    );
+    setRechargeView(false);
+    return;
   };
 
   const handleConfirmDate = async (date) => {
@@ -208,7 +242,14 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
       );
     }
     const handleDate = moment(date).format('YYYY-MM-DD HH:mm');
-    await updateProfile({...user.cart, date: handleDate}, 'cart', authDispatch);
+    await updateProfile(
+      {
+        ...user.cart,
+        date: handleDate,
+      },
+      'cart',
+      authDispatch,
+    );
     setDatePickerVisibility(false);
   };
   const activeCuopon = () => {
@@ -249,12 +290,91 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
     return result;
   };
 
-  const totalService =
+  let totalService =
     user.cart?.services.length > 0 ? _.sumBy(user.cart.services, 'total') : 0;
+
+  const observeTime = useCallback(
+    async (services) => {
+      console.log('observeTime');
+      let idServices = [];
+      let recharge = false;
+      let hours = [];
+
+      let specialDiscount = {
+        discount: config && config.recharge,
+        idServices,
+      };
+
+      for (let index = 0; index < services.length; index++) {
+        hours.push(user.cart.services[index].duration);
+
+        let sumByhour = moment(user.cart.date, 'YYYY-MM-DD HH:mm')
+          .add(
+            user.cart.services[index].duration + config.timeBetweenServices,
+            'minutes',
+          )
+          .format('HH:MM');
+
+        let response = openHour(sumByhour);
+        /*        console.log(
+          'service afect =>',
+
+          {
+            name: user.cart.services[index].name,
+            duration: user.cart.services[index].duration,
+            bool: response,
+            hour: sumByhoursRecargue,
+          },
+        ); */
+
+        if (response) {
+          idServices.push(user.cart.services[index].id);
+          recharge = true;
+        } else {
+          recharge = false;
+        }
+      }
+
+      if (recharge) {
+        await updateProfile(
+          {
+            ...user.cart,
+            specialDiscount,
+          },
+          'cart',
+          authDispatch,
+        );
+      }
+      console.log(' idServices ===>', idServices);
+
+      if (idServices.length === 0) {
+        await updateProfile(
+          {
+            ...user.cart,
+            specialDiscount: null,
+          },
+          'cart',
+          authDispatch,
+        );
+      }
+
+      setRechargeView(true);
+    },
+    [authDispatch, config, openHour, user.cart],
+  );
+
+  useEffect(() => {
+    if (user.cart.date && !rechargeView) {
+      observeTime(user.cart.services);
+    }
+  }, [observeTime, rechargeView, user.cart.date, user.cart.services]);
 
   return (
     <>
-      <ScrollView style={{height: Metrics.screenHeight * 0.8}}>
+      <ScrollView
+        style={{
+          height: Metrics.screenHeight * 0.8,
+        }}>
         <View style={styles.headerContainer}>
           <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
           <Image
@@ -297,26 +417,19 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
             );
           })}
 
-        {user &&
-          user.cart &&
-          user.cart.services &&
-          user.cart.services.length === 0 && (
-            <TouchableOpacity
-              onPress={() => setModalCart(false)}
-              style={[
-                styles.productContainer,
-                {backgroundColor: Colors.client.primaryColor},
-              ]}>
-              <Text
-                style={Fonts.style.bold(
-                  Colors.light,
-                  Fonts.size.medium,
-                  'center',
-                )}>
-                {'+ Agregar servicios'}
-              </Text>
-            </TouchableOpacity>
-          )}
+        <TouchableOpacity
+          onPress={() => setModalCart(false)}
+          style={[
+            styles.productContainer,
+            {
+              backgroundColor: Colors.client.primaryColor,
+            },
+          ]}>
+          <Text
+            style={Fonts.style.bold(Colors.light, Fonts.size.medium, 'center')}>
+            {'+ Agregar servicios'}
+          </Text>
+        </TouchableOpacity>
 
         <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
 
@@ -348,9 +461,38 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
             {Utilities.formatCOP(_.sumBy(user.cart.services, 'totalAddons'))}
           </Text>
         </View>
+        {user.cart.specialDiscount && (
+          <View style={styles.totalContainer}>
+            <Text
+              style={Fonts.style.regular(
+                Colors.client.primaryColor,
+                Fonts.size.medium,
+                'left',
+              )}>
+              {'Recargo nocturno:'}
+            </Text>
+            <Text
+              style={Fonts.style.regular(
+                Colors.gray,
+                Fonts.size.medium,
+                'left',
+              )}>
+              {Utilities.formatCOP(
+                config.recharge * user.cart.specialDiscount.idServices.length,
+              )}
+            </Text>
+          </View>
+        )}
+
         {user.cart.coupon && (
           <>
-            <View style={[styles.totalContainer, {marginTop: 20}]}>
+            <View
+              style={[
+                styles.totalContainer,
+                {
+                  marginTop: 20,
+                },
+              ]}>
               <Text
                 style={Fonts.style.regular(
                   Colors.client.primaryColor,
@@ -372,7 +514,10 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
             <View
               style={[
                 styles.totalContainer,
-                {marginTop: 5, flexDirection: 'column'},
+                {
+                  marginTop: 5,
+                  flexDirection: 'column',
+                },
               ]}>
               {disscounts.map((itemCoupon, index) => {
                 return (
@@ -391,14 +536,20 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
                         Fonts.size.medium,
                         'right',
                       )}>
-                      -{utilities.formatCOP(itemCoupon.disscount)}
+                      -{Utilities.formatCOP(itemCoupon.disscount)}
                     </Text>
                   </View>
                 );
               })}
             </View>
 
-            <View style={[styles.totalContainer, {marginTop: 20}]}>
+            <View
+              style={[
+                styles.totalContainer,
+                {
+                  marginTop: 20,
+                },
+              ]}>
               <Text
                 style={Fonts.style.regular(
                   Colors.client.primaryColor,
@@ -413,7 +564,7 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
                   Fonts.size.medium,
                   'right',
                 )}>
-                {utilities.formatCOP(totalDiscount)}
+                {Utilities.formatCOP(totalDiscount)}
               </Text>
             </View>
 
@@ -432,7 +583,9 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
                     Fonts.size.small,
                     'right',
                   ),
-                  {marginVertical: 10},
+                  {
+                    marginVertical: 10,
+                  },
                 ]}>
                 {user?.cart.coupon?.description}
               </Text>
@@ -447,7 +600,7 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
           </Text>
           <Text
             style={Fonts.style.bold(Colors.dark, Fonts.size.medium, 'left')}>
-            {utilities.formatCOP(totalService - Math.abs(totalDiscount))}
+            {Utilities.formatCOP(totalService - Math.abs(totalDiscount))}
           </Text>
         </View>
 
@@ -598,7 +751,10 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
                           text: 'Eliminar',
                           onPress: async () => {
                             await updateProfile(
-                              {...user.cart, coupon: null},
+                              {
+                                ...user.cart,
+                                coupon: null,
+                              },
                               'cart',
                               authDispatch,
                             );
@@ -610,7 +766,9 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
                           style: 'cancel',
                         },
                       ],
-                      {cancelable: true},
+                      {
+                        cancelable: true,
+                      },
                     )
               }>
               <FieldCartConfig
@@ -700,7 +858,11 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
               )}
             </Text>
           </TouchableOpacity>
-          <View style={{height: keyboardHeight}} />
+          <View
+            style={{
+              height: keyboardHeight,
+            }}
+          />
         </ModalApp>
 
         <ModalApp open={modalCoupon} setOpen={setModalCoupon}>
@@ -821,4 +983,5 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
 });
-export default CartScreen;
+
+export default memo(CartScreen);

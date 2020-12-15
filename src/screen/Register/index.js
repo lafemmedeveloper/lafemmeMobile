@@ -45,6 +45,7 @@ const Register = (props) => {
           notes: null,
           services: [],
           coupon: null,
+          specialDiscount: null,
         };
 
         const data = {
