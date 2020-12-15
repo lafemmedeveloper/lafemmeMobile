@@ -78,6 +78,7 @@ export default {
   },
 
   calculateTotal: (filterOrder, menuIndex) => {
+    console.log('calculateTotal');
     const {coupon, specialDiscount, services} = filterOrder;
 
     const {total} = services[menuIndex];
@@ -85,11 +86,12 @@ export default {
     let totalReturn = 0;
 
     if (coupon) {
-      totalReturn = coupon.type.includes(services[menuIndex].servicesType)
+      const result = coupon.type.includes(services[menuIndex].servicesType)
         ? filterOrder.coupon.typeCoupon !== 'money'
           ? (filterOrder.coupon.percentage / 100) * total - total
           : total - filterOrder.coupon?.money
         : total;
+      totalReturn = Math.abs(result);
     } else {
       totalReturn = total;
     }

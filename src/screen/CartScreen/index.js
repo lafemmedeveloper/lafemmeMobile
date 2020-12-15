@@ -129,17 +129,18 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
 
     let hoursServices = [];
 
+    let hours = [];
+
     for (let i = 0; i < user.cart.services.length; i++) {
       if (i === 0) {
         hoursServices = [...hoursServices, user.cart.date];
       } else {
+        hours.push(user.cart.services[i].duration + config.timeBetweenServices);
+        let minutesAdd = _.sumBy(hours);
         hoursServices = [
           ...hoursServices,
           moment(user.cart.date, 'YYYY-MM-DD HH:mm')
-            .add(
-              user.cart.services[i].duration + config.timeBetweenServices,
-              'minutes',
-            )
+            .add(minutesAdd, 'minutes')
             .format('YYYY-MM-DD HH:mm'),
         ];
       }
