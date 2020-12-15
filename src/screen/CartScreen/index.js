@@ -189,33 +189,36 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
   const removeItem = async (id) => {
     const filterService = user.cart.services.filter((s) => s.id !== id);
 
-    const serviceDelete = user.cart.services.filter((s) => s.id === id);
-
     if (
-      user.coupon &&
-      user.cart.services.length === 1 &&
-      user.cart.coupon.type.includes(serviceDelete[0]?.servicesType)
+      user.cart.specialDiscount &&
+      user.cart.specialDiscount.idServices.includes(id)
     ) {
+      console.log('Active reomoveItem discount');
+      let specialDiscount = user.cart.specialDiscount;
+      const filterId = user.cart.specialDiscount.idServices.filter(
+        (s) => s !== id,
+      );
+
+      specialDiscount.idServices = filterId;
+
       await updateProfile(
         {
-          coupon: null,
+          services: filterService,
+          specialDiscount,
+        },
+        'cart',
+        authDispatch,
+      );
+    } else {
+      await updateProfile(
+        {
           services: filterService,
         },
         'cart',
         authDispatch,
       );
-      setRechargeView(true);
-
-      return;
     }
 
-    await updateProfile(
-      {
-        services: filterService,
-      },
-      'cart',
-      authDispatch,
-    );
     setRechargeView(true);
 
     return;
@@ -300,7 +303,7 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
       console.log('observeTime');
       let idServices = [];
       let recharge = false;
-      //let hours = [];
+      let hours = [];
 
       let specialDiscount = {
         discount: config && config.recharge,
@@ -309,26 +312,27 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
 
       for (let index = 0; index < services.length; index++) {
         // hours.push(user.cart.services[index].duration);
+        hours.push(
+          user.cart.services[index].duration + config.timeBetweenServices,
+        );
+        let minutesAdd = _.sumBy(hours);
+        console.log('minutesAdd ==>', minutesAdd);
 
         let sumByhour = moment(user.cart.date, 'YYYY-MM-DD HH:mm')
-          .add(
-            user.cart.services[index].duration + config.timeBetweenServices,
-            'minutes',
-          )
+          .add(minutesAdd, 'minutes')
           .format('HH:MM');
-        console.log('sumByhour =>', sumByhour);
 
         let response = openHour(sumByhour);
-        /*        console.log(
-          'service afect =>',
+        console.log(
+          'service effect =>',
 
           {
             name: user.cart.services[index].name,
             duration: user.cart.services[index].duration,
             bool: response,
-            hour: sumByhoursRecargue,
+            hour: sumByhour,
           },
-        ); */
+        );
 
         if (response) {
           idServices.push(user.cart.services[index].id);
@@ -374,6 +378,7 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
     ? config.recharge * user.cart.specialDiscount.idServices.length
     : null;
   console.log('rechargeView ==>', rechargeView);
+  console.log('user.cart.specialDiscount ==>', user.cart.specialDiscount);
 
   return (
     <>
