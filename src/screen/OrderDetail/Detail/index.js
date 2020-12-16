@@ -364,7 +364,7 @@ const Detail = ({filterOrder, menuIndex, setMenuIndex}) => {
         {filterOrder &&
           services &&
           services.map((item, index) => {
-            const {total, totalAddons, totalServices} = item;
+            const {totalAddons, totalServices} = item;
 
             return (
               <View key={index} style={styles.cont}>
