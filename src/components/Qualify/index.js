@@ -9,11 +9,21 @@ import {
   ActivityIndicator,
   Keyboard,
 } from 'react-native';
+
+//Modules
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import {Colors, Fonts, Metrics} from '../../themes';
 import {AirbnbRating} from 'react-native-ratings';
+import {useNavigation} from '@react-navigation/native';
+
+//Flux
 import {StoreContext} from '../../flux';
 import {userRating, sendPushFcm, updateOrder} from '../../flux/util/actions';
+
+//Theme
+
+import {Colors, Fonts, Metrics} from '../../themes';
+
+//Hooks
 import {useKeyboard} from '../../hooks/useKeyboard';
 
 const Qualify = ({
@@ -29,6 +39,7 @@ const Qualify = ({
 
   const [note, setNote] = useState('');
   const [rating, setRating] = useState(5);
+  const navigation = useNavigation();
 
   const calQuantity = () => {
     Keyboard.dismiss();
@@ -53,8 +64,9 @@ const Qualify = ({
       note: noteSend,
       rating,
     };
-    await updateOrder(currentOrder, utilDispatch);
     await userRating(userRef.uid, result, utilDispatch);
+    await updateOrder(currentOrder, utilDispatch);
+
     let notification = {
       title: 'Actualización de la orden',
       body: `El cliente ${
@@ -68,7 +80,7 @@ const Qualify = ({
       content_available: true,
       priority: 'high',
     };
-    sendPushFcm(ordersRef.fcmExpert[menuIndex], notification, null);
+    await sendPushFcm(ordersRef.fcmExpert[menuIndex], notification, null);
 
     Alert.alert(
       'Excelente',
@@ -78,6 +90,7 @@ const Qualify = ({
           text: 'OK',
           onPress: () => {
             close(false);
+            navigation.goBack();
           },
         },
       ],
@@ -103,7 +116,7 @@ const Qualify = ({
       content_available: true,
       priority: 'high',
     };
-    sendPushFcm(currentOrder.client.fcmClient, notification, null);
+    await sendPushFcm(currentOrder.client.fcmClient, notification, null);
 
     Alert.alert(
       'Excelente',

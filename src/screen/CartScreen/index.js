@@ -378,8 +378,6 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
   let dataRecharge = user.cart.specialDiscount
     ? config.recharge * user.cart.specialDiscount.idServices.length
     : null;
-  console.log('rechargeView ==>', rechargeView);
-  console.log('user.cart.specialDiscount ==>', user.cart.specialDiscount);
 
   return (
     <>

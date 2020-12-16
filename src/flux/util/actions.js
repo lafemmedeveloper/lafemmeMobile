@@ -491,7 +491,7 @@ export const assingExpertService = async (order, expert, dispatch) => {
   } catch (error) {
     setLoading(false, dispatch);
 
-    console.lgo('error ==>', error);
+    console.log('error ==>', error);
     Alert.alert('Ups', 'ocurrio un error inesperado');
   }
 };

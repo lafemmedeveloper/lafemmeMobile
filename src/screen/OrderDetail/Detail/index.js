@@ -411,6 +411,39 @@ const Detail = ({filterOrder, menuIndex, setMenuIndex}) => {
                         {utilities.formatCOP(totalAddons)}
                       </Text>
                     </View>
+                    {filterOrder.specialDiscount &&
+                      filterOrder.specialDiscount.idServices.includes(
+                        item.id,
+                      ) && (
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            marginHorizontal: 20,
+                            marginVertical: 2.5,
+                          }}>
+                          <Text
+                            style={[
+                              Fonts.style.regular(
+                                Colors.dark,
+                                Fonts.size.medium,
+                              ),
+                            ]}>
+                            Recargo nocturno
+                          </Text>
+                          <Text
+                            style={[
+                              Fonts.style.regular(
+                                Colors.dark,
+                                Fonts.size.medium,
+                              ),
+                            ]}>
+                            {utilities.formatCOP(
+                              filterOrder.specialDiscount.discount,
+                            )}
+                          </Text>
+                        </View>
+                      )}
 
                     {filterOrder.coupon &&
                       filterOrder.coupon.type.includes(item.servicesType) && (
@@ -459,17 +492,9 @@ const Detail = ({filterOrder, menuIndex, setMenuIndex}) => {
                         style={[
                           Fonts.style.bold(Colors.dark, Fonts.size.medium),
                         ]}>
-                        {filterOrder.coupon &&
-                        filterOrder.coupon.type.includes(item.servicesType)
-                          ? filterOrder.coupon.typeCoupon !== 'money'
-                            ? utilities.formatCOP(
-                                (filterOrder.coupon.percentage / 100) * total -
-                                  total,
-                              )
-                            : utilities.formatCOP(
-                                total - filterOrder.coupon?.money,
-                              )
-                          : utilities.formatCOP(total)}
+                        {utilities.formatCOP(
+                          utilities.calculateTotal(filterOrder, menuIndex),
+                        )}
                       </Text>
                     </View>
                   </>

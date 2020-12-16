@@ -9,36 +9,47 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
+
+//Modules
 import StepIndicator from 'react-native-step-indicator';
 import moment from 'moment';
-import {Colors, Metrics, Fonts} from '../../themes';
-import {StoreContext} from '../../flux';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import ExpertCall from './Status/ExpertCall';
-import Loading from '../../components/Loading';
-import ModalApp from '../../components/ModalApp';
-//import ButtonCoordinate from '../../components/ButtonCoordinate';
-//import Geolocation from '@react-native-community/geolocation';
+import _ from 'lodash';
+
+//Flux
+import {StoreContext} from '../../flux';
 import {
   getOrders,
   sendPushFcm,
   updateOrder,
   updateStatus,
 } from '../../flux/util/actions';
-import Qualify from '../../components/Qualify';
+
 import {
   adddReferralsUser,
   updateProfile,
   validateReferrals,
 } from '../../flux/auth/actions';
+
+//Theme
+
+import {Colors, Metrics, Fonts} from '../../themes';
+
+//Components
+import ExpertCall from './Status/ExpertCall';
+import Loading from '../../components/Loading';
+import ModalApp from '../../components/ModalApp';
+import Qualify from '../../components/Qualify';
 import ButonMenu from '../ButonMenu';
 import utilities from '../../utilities';
 import {customStyles} from './CustomStyles';
 import Detail from './Detail';
 import ModalCancel from './ModalCancel';
 import MenuTab from './MenuTab';
-import _ from 'lodash';
+
+//import ButtonCoordinate from '../../components/ButtonCoordinate';
+//import Geolocation from '@react-native-community/geolocation';
 
 const OrderDetail = ({route, navigation}) => {
   /* config map */
@@ -466,6 +477,29 @@ const OrderDetail = ({route, navigation}) => {
                                   Total de adiciones:{' '}
                                   {utilities.formatCOP(service.totalAddons)}
                                 </Text>
+                                {orderUser.specialDiscount &&
+                                  orderUser.specialDiscount.idServices.includes(
+                                    service.id,
+                                  ) && (
+                                    <>
+                                      <Text
+                                        style={Fonts.style.regular(
+                                          Colors.dark,
+                                          Fonts.size.medium,
+                                          'left',
+                                        )}>
+                                        <Icon
+                                          name={'dollar-sign'}
+                                          size={12}
+                                          color={Colors.expert.primaryColor}
+                                        />{' '}
+                                        Recargo nocturno:{' '}
+                                        {utilities.formatCOP(
+                                          orderUser.specialDiscount.discount,
+                                        )}
+                                      </Text>
+                                    </>
+                                  )}
                                 {orderUser.coupon &&
                                   orderUser.coupon.type.includes(
                                     service.servicesType,
@@ -503,8 +537,13 @@ const OrderDetail = ({route, navigation}) => {
                                     size={12}
                                     color={Colors.expert.primaryColor}
                                   />{' '}
-                                  Total del a pagar:{' '}
-                                  {utilities.formatCOP(service.total)}
+                                  Total a pagar:{' '}
+                                  {utilities.formatCOP(
+                                    utilities.calculateTotal(
+                                      orderUser,
+                                      menuIndex,
+                                    ),
+                                  )}
                                 </Text>
                               </>
                             )}
