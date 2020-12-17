@@ -150,7 +150,6 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
       console.log('isCompleted');
       let data = {
         updateLast: Date.now(),
-        loquidedBy: null,
         timeLastCurrent: null,
         timeInit: Date.now(),
         timeLast: null,
