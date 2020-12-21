@@ -10,25 +10,32 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
+//Modules
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
-import {ApplicationStyles, Colors, Fonts, Images, Metrics} from '../../themes';
+import Config from 'react-native-config';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
-import {filterResultsByTypes, validateCoverage} from '../../helpers/GeoHelper';
-
-import Utilities from '../../utilities';
-import {updateProfile} from '../../flux/auth/actions';
+//Flux
 import {StoreContext} from '../../flux';
+import {updateProfile} from '../../flux/auth/actions';
+import {getCoverage} from '../../flux/util/actions';
+
+//Components
 import ModalApp from '../../components/ModalApp';
 import EnableCoverage from './EnableCoverage';
 import NoEnableCoverage from './NoEnableCoverage';
-import {getCoverage} from '../../flux/util/actions';
+
+//Theme
+import {ApplicationStyles, Colors, Fonts, Images, Metrics} from '../../themes';
+
+//Utilities
+import {filterResultsByTypes, validateCoverage} from '../../helpers/GeoHelper';
+import Utilities from '../../utilities';
+
 //import ButtonCoordinates from '../../components/ButtonCoordinates';
-import Config from 'react-native-config';
 
 const AddAddress = ({setAddAddress}) => {
-  //  const APIKEY = 'AIzaSyArVhfk_wHVACPwunlCi1VP9EUgYZcnFpQ';
   const APIKEY = Config.GOOGLE_APIKEY;
   const {state, authDispatch, utilDispatch} = useContext(StoreContext);
   const {auth, util} = state;

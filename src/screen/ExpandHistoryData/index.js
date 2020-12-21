@@ -1,15 +1,17 @@
 import React from 'react';
 import {View, Image, Text, StyleSheet} from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome5';
-import {formatDate} from '../../helpers/MomentHelper';
 
+//Modules
+import Icon from 'react-native-vector-icons/FontAwesome5';
+
+//Theme
 import {Colors, Fonts, Images} from '../../themes';
 
+//Utilities
 import AppConfig from '../../config/AppConfig';
+import {formatDate} from '../../helpers/MomentHelper';
 
-export default (dta) => {
-  const {order, appType} = dta;
-
+export default ({order, appType}) => {
   return (
     <View style={styles.contentContainer}>
       <View

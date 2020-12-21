@@ -1,6 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useEffect} from 'react';
 import {Text, View, TouchableOpacity, Image} from 'react-native';
+//Modules
+import Icon from 'react-native-vector-icons/FontAwesome5';
+
+//Theme
 import {
   Metrics,
   Colors,
@@ -8,19 +12,17 @@ import {
   ApplicationStyles,
   Images,
 } from '../../../themes';
-import Icon from 'react-native-vector-icons/FontAwesome5';
 
-const NoEnableCoverage = (props) => {
-  const {
-    notifyCoverage,
-    setIsCoverage,
-    setNotifyCoverage,
-    setGoogleAddress,
-  } = props;
-
+const NoEnableCoverage = ({
+  notifyCoverage,
+  setIsCoverage,
+  setNotifyCoverage,
+  setGoogleAddress,
+}) => {
   useEffect(() => {
     setGoogleAddress(null);
   }, []);
+
   return (
     <>
       <View

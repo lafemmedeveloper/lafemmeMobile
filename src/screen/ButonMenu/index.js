@@ -1,5 +1,7 @@
 import React from 'react';
 import {Text, TouchableOpacity, StyleSheet} from 'react-native';
+
+//Theme
 import {Colors, Fonts} from '../../themes';
 
 const ButonMenu = ({item, index, theme, setMenuIndex}) => {

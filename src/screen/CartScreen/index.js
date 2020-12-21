@@ -701,6 +701,7 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
                 headerTextIOS="Elige una fecha de servicio"
                 cancelTextIOS="Cancelar"
                 confirmTextIOS="Confirmar"
+                textColor={Colors.dark}
               />
 
               <View

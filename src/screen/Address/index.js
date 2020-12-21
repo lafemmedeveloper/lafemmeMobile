@@ -9,15 +9,25 @@ import {
   Image,
 } from 'react-native';
 
+//Modules
+import {useNavigation} from '@react-navigation/native';
+
+//Flux
 import {StoreContext} from '../../flux';
-import CardItemAddress from '../../components/CartItemAddress';
-import {Metrics, Fonts, ApplicationStyles, Colors, Images} from '../../themes';
 import {updateProfile} from '../../flux/auth/actions';
-import {validateCoverage} from '../../helpers/GeoHelper';
 import {getCoverage} from '../../flux/util/actions';
+
+//Components
+
+import CardItemAddress from '../../components/CartItemAddress';
 import Loading from '../../components/Loading';
 import AddAddress from '../AddAddress';
-import {useNavigation} from '@react-navigation/native';
+
+//Theme
+import {Metrics, Fonts, ApplicationStyles, Colors, Images} from '../../themes';
+
+//Utilities
+import {validateCoverage} from '../../helpers/GeoHelper';
 
 const Address = ({closeModal}) => {
   const isMountedRef = useRef(null);

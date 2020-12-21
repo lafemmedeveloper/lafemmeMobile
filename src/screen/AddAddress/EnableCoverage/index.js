@@ -14,11 +14,16 @@ import {
   Images,
   ApplicationStyles,
 } from '../../../themes';
+
+//Modules
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
+//Components
 import MyTextInput from '../../../components/MyTextInput';
 import Loading from '../../../components/Loading';
+
+//Hooks
 import {useKeyboard} from '../../../hooks/useKeyboard';
 
 const EnableCoverage = ({
