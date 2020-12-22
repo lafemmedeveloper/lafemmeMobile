@@ -83,7 +83,7 @@ export default {
 
     const {total} = services[menuIndex];
 
-    let totalReturn = 0;
+    let totalReturn = total;
 
     if (coupon) {
       const result = coupon.type.includes(services[menuIndex].servicesType)
@@ -92,14 +92,14 @@ export default {
           : total - filterOrder.coupon?.money
         : total;
       totalReturn = Math.abs(result);
-    } else {
-      totalReturn = total;
     }
 
     if (specialDiscount) {
-      return totalReturn + specialDiscount.discount;
-    } else {
-      totalReturn;
+      if (specialDiscount.idServices.includes(services[menuIndex].id)) {
+        totalReturn = specialDiscount.discount + totalReturn;
+      }
     }
+
+    return totalReturn;
   },
 };
