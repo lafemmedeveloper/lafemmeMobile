@@ -17,7 +17,12 @@ import {useNavigation} from '@react-navigation/native';
 
 //Flux
 import {StoreContext} from '../../flux';
-import {userRating, sendPushFcm, updateOrder} from '../../flux/util/actions';
+import {
+  userRating,
+  sendPushFcm,
+  updateOrder,
+  setLoading,
+} from '../../flux/util/actions';
 
 //Theme
 
@@ -54,6 +59,7 @@ const Qualify = ({
   };
 
   const handleQualifyClient = async () => {
+    setLoading(true, utilDispatch);
     const noteSend = note === '' ? 'Perfecto' : note;
     const result = (parseFloat(rating) + parseFloat(userRef.rating)) / 2;
     let currentOrder = ordersRef;
@@ -81,6 +87,7 @@ const Qualify = ({
       priority: 'high',
     };
     sendPushFcm(ordersRef.fcmExpert[menuIndex], notification, null);
+    setLoading(false, utilDispatch);
 
     Alert.alert(
       'Excelente',
