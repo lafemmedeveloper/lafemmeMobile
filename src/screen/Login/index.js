@@ -21,8 +21,7 @@ import {setUser} from '../../flux/auth/actions';
 import Loading from '../../components/Loading';
 import {useKeyboard} from '../../hooks/useKeyboard';
 
-const Login = (props) => {
-  const {setModalAuth} = props;
+const Login = ({setModalAuth}) => {
   const {authDispatch, state} = useContext(StoreContext);
 
   const initialState = {

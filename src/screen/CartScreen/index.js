@@ -57,8 +57,8 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
   const [rechargeView, setRechargeView] = useState(false);
 
   let openHour = generateSchedule(
-    moment(config.openingTime).format('HH:MM'),
-    moment(config.closeTime).format('HH:MM'),
+    moment(Date.parse(config.openingTime)).format('HH:MM'),
+    moment(Date.parse(config.closeTime)).format('HH:MM'),
   );
 
   const [keyboardHeight] = useKeyboard();
@@ -311,12 +311,10 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
       };
 
       for (let index = 0; index < services.length; index++) {
-        // hours.push(user.cart.services[index].duration);
         hours.push(
           user.cart.services[index].duration + config.timeBetweenServices,
         );
         let minutesAdd = _.sumBy(hours);
-        console.log('minutesAdd ==>', minutesAdd);
 
         let sumByhour = moment(user.cart.date, 'YYYY-MM-DD HH:mm')
           .add(minutesAdd, 'minutes')

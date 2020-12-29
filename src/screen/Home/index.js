@@ -1,4 +1,11 @@
-import React, {Fragment, useContext, useEffect, useRef, useState} from 'react';
+import React, {
+  Fragment,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  useCallback,
+} from 'react';
 import {View, ScrollView, StyleSheet, StatusBar} from 'react-native';
 
 //Modules
@@ -42,18 +49,20 @@ const Home = () => {
   );
   const isMountedRef = useRef(null);
 
-  function onAuthStateChanged(user) {
-    if (user) {
-      setUser(auth().currentUser?.uid, authDispatch);
-    }
-  }
+  const onAuthStateChanged = useCallback(
+    (user) => {
+      if (user) {
+        setUser(auth().currentUser?.uid, authDispatch);
+      }
+    },
+    [authDispatch],
+  );
 
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
 
     return subscriber; // unsubscribe on unmount
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [onAuthStateChanged]);
 
   const {service, util} = state;
   const {services} = service;
@@ -74,19 +83,17 @@ const Home = () => {
     return () => {
       return () => (isMountedRef.current = false);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [activeFunctionsFlux]);
 
-  const activeFunctionsFlux = async () => {
+  const activeFunctionsFlux = useCallback(async () => {
     setLoading(true, authDispatch);
     getDeviceInfo(utilDispatch);
     await getServices(serviceDispatch);
     await activeMessage('client', authDispatch);
     await getConfig(utilDispatch);
     getOrders(utilDispatch);
-
     setLoading(false, authDispatch);
-  };
+  }, [authDispatch, serviceDispatch, utilDispatch]);
 
   const selectService = (product, description) => {
     if (user !== null) {

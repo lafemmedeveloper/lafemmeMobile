@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useCallback} from 'react';
 import {
   SafeAreaView,
   Text,
@@ -10,6 +10,7 @@ import {
   Keyboard,
   Image,
 } from 'react-native';
+
 import {
   Colors,
   Metrics,
@@ -42,14 +43,14 @@ const InputCode = ({
   });
   const [keyboardHeight] = useKeyboard();
 
-  const inputVerifyCode = () => {
+  const inputVerifyCode = useCallback(() => {
     Keyboard.dismiss();
     if (value.length < 6) {
       Alert.alert('Ups', 'Es necesario el código');
     } else {
       handleVerifyCode();
     }
-  };
+  }, [handleVerifyCode, value.length]);
 
   const resetcode = async () => {
     setValue('');
@@ -60,8 +61,7 @@ const InputCode = ({
     if (value.length === 6) {
       inputVerifyCode();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value]);
+  }, [inputVerifyCode, value]);
   return (
     <>
       <SafeAreaView style={styles.root}>
