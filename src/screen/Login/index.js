@@ -85,7 +85,7 @@ const Login = ({setModalAuth}) => {
       await confirmResult.confirm(value);
       const currentUser = auth().currentUser;
       if (currentUser.email) {
-        setUser(currentUser.uid, authDispatch);
+        await setUser(currentUser.uid, authDispatch);
         setModalCode(false);
         setModalAuth(false);
       } else {

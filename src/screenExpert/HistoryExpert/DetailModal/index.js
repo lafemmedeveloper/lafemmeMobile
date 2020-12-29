@@ -240,8 +240,7 @@ const DetailModal = ({order, setModalDetail}) => {
     Linking.openURL(url);
   };
   const handleWhatsapp = () => {
-    let URL = 'whatsapp://send?text=' + config.whatsappDefaultMessage;
-    +'&phone=' + config.phone;
+    let URL = `whatsapp://send?text=${config.whatsappDefaultMessage}&phone=${config.phone}`;
 
     Linking.openURL(URL)
       .then((data) => {

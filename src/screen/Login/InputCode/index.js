@@ -43,14 +43,14 @@ const InputCode = ({
   });
   const [keyboardHeight] = useKeyboard();
 
-  const inputVerifyCode = useCallback(() => {
+  const inputVerifyCode = useCallback(async () => {
     Keyboard.dismiss();
     if (value.length < 6) {
       Alert.alert('Ups', 'Es necesario el código');
     } else {
-      handleVerifyCode();
+      await handleVerifyCode();
     }
-  }, [handleVerifyCode, value.length]);
+  }, [handleVerifyCode, value]);
 
   const resetcode = async () => {
     setValue('');
