@@ -15,7 +15,6 @@ import {
   ScrollView,
   Alert,
   Image,
-  ActivityIndicator,
   Linking,
   Platform,
   AppState,
@@ -41,6 +40,8 @@ import _ from 'lodash';
 import moment from 'moment';
 import Geolocation from '@react-native-community/geolocation';
 import {updateProfile} from '../../../flux/auth/actions';
+import ButtonQualfy from './ButtonQualfy';
+import ButtonStatus from './ButtonStatus';
 
 const DetailModal = ({order, setModalDetail}) => {
   const screen = Dimensions.get('window');
@@ -68,6 +69,7 @@ const DetailModal = ({order, setModalDetail}) => {
   const [itemService, setItemService] = useState(null);
 
   const getServiceStatus = (status) => {
+    console.log('status==>', status);
     switch (status) {
       case 1:
         return 'Colocarme en ruta';
@@ -75,16 +77,7 @@ const DetailModal = ({order, setModalDetail}) => {
         return 'Colocarme en servicio';
       case 3:
         return 'Finalizando servicio';
-      case 4:
-        return 'Calificar cliente';
-      case 5:
-        return 'Servicio finalizado';
-      case 6:
-        return 'Esperando calificación';
-      case 7:
-        return 'Servicio cancelado';
-      case 8:
-        return 'Liquidado';
+
       default:
         return 'Finalizado';
     }
@@ -334,10 +327,7 @@ const DetailModal = ({order, setModalDetail}) => {
     ],
   );
 
-  console.log(
-    'order status expert=>',
-    filterOrder && filterOrder.services[menuIndex].status,
-  );
+  console.log('order comment=>', filterOrder.services[menuIndex].comment);
 
   return (
     <>
@@ -1020,60 +1010,20 @@ const DetailModal = ({order, setModalDetail}) => {
               <Fragment key={index}>
                 {menuIndex === index && (
                   <>
-                    {filterOrder && item.status <= 4 && (
-                      <TouchableOpacity
-                        onPress={() => changeStatus(item)}
-                        style={styles.btnContainer}>
-                        <Text
-                          style={[
-                            Fonts.style.bold(Colors.light, Fonts.size.medium),
-                            {alignSelf: 'center'},
-                          ]}>
-                          {loading ? (
-                            <ActivityIndicator color={Colors.light} />
-                          ) : (
-                            <Text
-                              style={[
-                                Fonts.style.bold(
-                                  Colors.light,
-                                  Fonts.size.medium,
-                                ),
-                                {alignSelf: 'center'},
-                              ]}>
-                              {getServiceStatus(item.status)}
-                            </Text>
-                          )}
-                        </Text>
-                      </TouchableOpacity>
-                    )}
-                    {item.status > 4 && !item.comment && (
-                      <TouchableOpacity
-                        onPress={() => setQualifyClient(true)}
-                        style={styles.btnContainer}>
-                        <Text
-                          style={[
-                            Fonts.style.bold(Colors.light, Fonts.size.medium),
-                            {alignSelf: 'center'},
-                          ]}>
-                          {loading ? (
-                            <ActivityIndicator color={Colors.light} />
-                          ) : (
-                            <Text
-                              style={[
-                                Fonts.style.bold(
-                                  Colors.light,
-                                  Fonts.size.medium,
-                                ),
-                                {alignSelf: 'center'},
-                              ]}>
-                              Calificar cliente
-                            </Text>
-                          )}
-                        </Text>
-                      </TouchableOpacity>
-                    )}
+                    <ButtonStatus
+                      getServiceStatus={getServiceStatus}
+                      loading={loading}
+                      service={item}
+                      changeStatus={changeStatus}
+                    />
 
-                    {item.status < 4 && (
+                    <ButtonQualfy
+                      service={filterOrder && filterOrder.services[menuIndex]}
+                      setQualifyClient={setQualifyClient}
+                      loading={loading}
+                    />
+
+                    {item.status < 3 && (
                       <TouchableOpacity
                         onPress={() => activeModalEdit(item)}
                         style={{
@@ -1226,17 +1176,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.dark,
     marginVertical: 20,
   },
-  btnContainer: {
-    width: Metrics.screenWidth * 0.5,
-    height: 40,
-    marginVertical: 10,
-    alignSelf: 'center',
-    borderRadius: Metrics.borderRadius,
-    backgroundColor: Colors.expert.primaryColor,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: 10,
-  },
+
   btnMaps: {
     flex: 1,
     height: 40,

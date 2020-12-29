@@ -80,7 +80,7 @@ const Qualify = ({
       content_available: true,
       priority: 'high',
     };
-    await sendPushFcm(ordersRef.fcmExpert[menuIndex], notification, null);
+    sendPushFcm(ordersRef.fcmExpert[menuIndex], notification, null);
 
     Alert.alert(
       'Excelente',
@@ -104,6 +104,7 @@ const Qualify = ({
     let currentOrder = ordersRef;
     currentOrder.client.rating = result;
     currentOrder.services[menuIndex].comment = {note: noteSend, rating};
+    console.log('order a calficar =>', currentOrder.services[menuIndex]);
     //Update order
     await updateOrder(currentOrder, utilDispatch);
     //update rating client
@@ -116,7 +117,7 @@ const Qualify = ({
       content_available: true,
       priority: 'high',
     };
-    await sendPushFcm(currentOrder.client.fcmClient, notification, null);
+    sendPushFcm(currentOrder.client.fcmClient, notification, null);
 
     Alert.alert(
       'Excelente',

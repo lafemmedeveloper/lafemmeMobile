@@ -485,7 +485,7 @@ const Detail = ({filterOrder, menuIndex, setMenuIndex}) => {
                         style={[
                           Fonts.style.bold(Colors.dark, Fonts.size.medium),
                         ]}>
-                        Total a cobrar
+                        Total a pagar
                       </Text>
 
                       <Text

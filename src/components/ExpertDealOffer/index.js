@@ -16,6 +16,7 @@ import {
   assignExpert,
   assingExpertService,
   sendPushFcm,
+  setLoading,
   updateStatus,
 } from '../../flux/util/actions';
 import {StoreContext} from '../../flux';
@@ -61,9 +62,12 @@ export default ({order, dispatch, user}) => {
         priority: 'high',
       };
       let dataPush = null;
-      sendPushFcm(order.fcmClient, notification, dataPush);
+      order &&
+        order.fcmClient &&
+        sendPushFcm(order.fcmClient, notification, dataPush);
     } catch (error) {
-      console.log('errorassing expert ==>', error);
+      setLoading(false, utilDispatch);
+      console.log('error:AssignExpert ==>', error);
     }
   };
 
@@ -75,9 +79,7 @@ export default ({order, dispatch, user}) => {
         return () => (isMountedRef.current = false);
       };
     }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [order]);
+  }, [order, utilDispatch]);
 
   if (!order) {
     return null;

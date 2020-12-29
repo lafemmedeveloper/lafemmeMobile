@@ -129,7 +129,6 @@ const Gallery = () => {
     retrieveData();
   }, [retrieveData]);
 
-  console.log('documentData', documentData);
   return (
     <View style={{height: Metrics.screenHeight - 60}}>
       <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
