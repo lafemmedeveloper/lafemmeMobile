@@ -133,7 +133,7 @@ const OrderDetail = ({route, navigation}) => {
     }
     Alert.alert(
       'Confirmación',
-      '¿Realmente desea cancelar todos los servicios?',
+      '¿Realmente deseas cancelar este servicio?',
       [
         {
           text: 'SI',
