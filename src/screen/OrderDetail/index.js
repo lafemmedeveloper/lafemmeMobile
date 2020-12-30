@@ -22,6 +22,7 @@ import {StoreContext} from '../../flux';
 import {
   getOrders,
   sendPushFcm,
+  setLoading,
   updateOrder,
   updateStatus,
 } from '../../flux/util/actions';
@@ -45,7 +46,6 @@ import ButonMenu from '../ButonMenu';
 import utilities from '../../utilities';
 import {customStyles} from './CustomStyles';
 import Detail from './Detail';
-import ModalCancel from './ModalCancel';
 import MenuTab from './MenuTab';
 
 //import ButtonCoordinate from '../../components/ButtonCoordinate';
@@ -69,7 +69,6 @@ const OrderDetail = ({route, navigation}) => {
   const [coordinate, setCoordinate] = useState(null);
   const [menuIndex, setMenuIndex] = useState(0);
   const [detail, setDetail] = useState(false);
-  const [modalCancel, setModalCancel] = useState(false);
 
   const {goBack} = navigation;
 
@@ -142,7 +141,8 @@ const OrderDetail = ({route, navigation}) => {
             let handleOrder = orderUser;
             handleOrder.services[menuIndex].status = 7;
             await updateOrder(handleOrder, utilDispatch);
-            await updateStatus(7, orderUser, utilDispatch);
+            await validateStatusGlobal();
+
             let notification = {
               title: 'Servicio cancelado',
               body: `El client ${
@@ -171,9 +171,9 @@ const OrderDetail = ({route, navigation}) => {
       ],
       {cancelable: true},
     );
-    validateStatusGlobal();
   };
   const validateStatusGlobal = async () => {
+    setLoading(true, utilDispatch);
     let currentServices = orderUser.services;
     let currentOrder = orderUser;
 
@@ -186,6 +186,7 @@ const OrderDetail = ({route, navigation}) => {
     }
 
     await updateOrder(currentOrder, utilDispatch);
+    setLoading(false, utilDispatch);
   };
 
   useEffect(() => {
@@ -724,19 +725,6 @@ const OrderDetail = ({route, navigation}) => {
           )}
         </View>
       </View>
-
-      <ModalApp setOpen={setModalCancel} open={modalCancel}>
-        <ModalCancel
-          close={setModalCancel}
-          service={
-            orderUser && orderUser.services && orderUser.services[menuIndex]
-          }
-          order={orderUser}
-          dispatch={utilDispatch}
-          menuIndex={menuIndex}
-          user={user}
-        />
-      </ModalApp>
     </>
   );
 };

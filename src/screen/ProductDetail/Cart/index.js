@@ -56,14 +56,18 @@ const Cart = (props) => {
   const [addonsListCount, setAddonsListCount] = useState([]);
   const [experts, setExperts] = useState(modelExpert);
   const [showModalService, setShowModalService] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const addGuest = async () => {
+    Keyboard.dismiss();
+
+    setLoading(true);
     const guestUser = Object.assign(formGuest, {id: Utilities.create_UUID()});
 
     let data = [...guest, guestUser];
     await updateProfile(data, 'guest', authDispatch);
 
-    Keyboard.dismiss();
+    setLoading(false);
 
     setGuestModal(false);
     setFormGuest(initial_state);
@@ -203,6 +207,7 @@ const Cart = (props) => {
   };
 
   const sendItemCart = async (item) => {
+    setLoading(true);
     let old = user.cart.services ? user.cart.services : [];
 
     let services = [...old, item];
@@ -213,6 +218,8 @@ const Cart = (props) => {
 
     setShowModalService(false);
     setExperts({});
+    setLoading(false);
+
     navigation.navigate('Home');
   };
 
@@ -518,6 +525,7 @@ const Cart = (props) => {
           addonsGuest={addonsGuest}
           setShowModalService={setShowModalService}
           sendItemCart={sendItemCart}
+          loading={loading}
         />
       </ModalApp>
     </View>
