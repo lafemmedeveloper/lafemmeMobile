@@ -7,23 +7,30 @@ import {
   TouchableOpacity,
   Keyboard,
 } from 'react-native';
-import FastImage from 'react-native-fast-image';
-import {Metrics, Colors, Fonts, ApplicationStyles} from '../../../themes';
-import Utilities from '../../../utilities';
-import ModalApp from '../../../components/ModalApp';
-import FormGuest from './FormGuest';
-import _ from 'lodash';
-import {minToHours} from '../../../helpers/MomentHelper';
-import {useNavigation} from '@react-navigation/native';
 
+//Modules
+import FastImage from 'react-native-fast-image';
+import {useNavigation} from '@react-navigation/native';
+import _ from 'lodash';
+
+//Flux
 import {StoreContext} from '../../../flux';
+import {updateClient, updateOrder} from '../../../flux/services/actions';
+
+//Components
 import HandleGuest from './HandleGuest';
 import HandleAddOns from './HandleAddOns';
 import HandleResume from './HandleResume';
-import {updateClient, updateOrder} from '../../../flux/services/actions';
+import FormGuest from './FormGuest';
+import ModalApp from '../../../components/ModalApp';
+//Theme
+import {Metrics, Colors, Fonts, ApplicationStyles} from '../../../themes';
 
-const Cart = (props) => {
-  const {product, order, currentService} = props;
+//Util
+import Utilities from '../../../utilities';
+import {minToHours} from '../../../helpers/MomentHelper';
+
+const Cart = ({product, order, currentService}) => {
   const navigation = useNavigation();
 
   const initial_state = {
@@ -47,6 +54,9 @@ const Cart = (props) => {
 
   const [guestModal, setGuestModal] = useState(false);
   const [formGuest, setFormGuest] = useState(initial_state);
+  const [showModalService, setShowModalService] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   const [guestList, setGuestList] = useState(
     orderSnap.services[indexService].clients.filter((c) => c.id !== 'yo'),
   );
@@ -60,10 +70,8 @@ const Cart = (props) => {
     services[indexService].addons,
   );
 
-  const [showModalService, setShowModalService] = useState(false);
   const addGuest = async () => {
     Keyboard.dismiss();
-
     const guestUser = Object.assign(formGuest, {id: Utilities.create_UUID()});
     let currentService = orderSnap;
 
@@ -71,7 +79,12 @@ const Cart = (props) => {
       ...orderSnap.services[indexService].clients,
       guestUser,
     ];
-    await updateOrder(currentService, 'services', order.id, serviceDispatch);
+    await updateOrder(
+      currentService.services,
+      'services',
+      order.id,
+      serviceDispatch,
+    );
 
     await updateClient(
       [...orderSnap.client.guest, guestUser],
@@ -85,6 +98,7 @@ const Cart = (props) => {
   };
 
   const deleteGuest = async (guestId) => {
+    setLoading(true);
     let currentService = orderSnap;
 
     let delGuest = orderSnap.services[indexService].clients.filter(
@@ -92,7 +106,13 @@ const Cart = (props) => {
     );
     currentService.services[indexService].clients = delGuest;
 
-    await updateOrder(delGuest, 'services', order.id, serviceDispatch);
+    await updateOrder(
+      currentService.services,
+      'services',
+      order.id,
+      serviceDispatch,
+    );
+    setLoading(false);
   };
 
   const selectGuest = async (item) => {
@@ -200,12 +220,13 @@ const Cart = (props) => {
   };
 
   const sendItemCart = async (item) => {
+    setLoading(true);
     let currentService = orderSnap;
     currentService.services[indexService] = item;
     await updateOrder(services, 'services', order.id, serviceDispatch);
 
     setShowModalService(false);
-
+    setLoading(false);
     navigation.navigate('TabBottom');
   };
 
@@ -323,6 +344,7 @@ const Cart = (props) => {
               deleteGuest={deleteGuest}
               setGuestModal={setGuestModal}
               product={product}
+              loading={loading}
             />
 
             {/* Guest */}
@@ -465,6 +487,7 @@ const Cart = (props) => {
           lastTotal={services[indexService].total}
           order={orderSnap}
           currentService={currentService}
+          loading={loading}
         />
       </ModalApp>
     </View>

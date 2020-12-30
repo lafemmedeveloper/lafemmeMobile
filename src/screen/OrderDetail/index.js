@@ -119,7 +119,7 @@ const OrderDetail = ({route, navigation}) => {
     await updateOrder(currentOrder, utilDispatch);
     validateStatusGlobal();
   };
-  const handleCancel = () => {
+  const handleCancel = async () => {
     if (orderUser.status >= 2) {
       return Alert.alert(
         'Ups',
@@ -132,49 +132,46 @@ const OrderDetail = ({route, navigation}) => {
         'Lo siento no puedes cancelar mientras el experto va en camino, por favor comunicate con soporte',
       );
     }
-    if (orderUser.services.length === 1) {
-      return Alert.alert(
-        'Confirmación',
-        '¿Realmente desea cancelar todos los servicios?',
-        [
-          {
-            text: 'SI',
-            onPress: async () => {
-              let handleOrder = orderUser;
-              handleOrder.services[menuIndex].status = 7;
-              await updateOrder(handleOrder, utilDispatch);
-              await updateStatus(7, orderUser, utilDispatch);
-              let notification = {
-                title: 'Servicio cancelado',
-                body: `El client ${
-                  user.firstName + ' ' + user.lastName
-                } a cancelado el servicio de ${orderUser.services[
-                  menuIndex
-                ].servicesType
-                  .toUpperCase()
-                  .split('-')
-                  .join(' ')}`,
-                content_available: true,
-                priority: 'high',
-              };
-              let dataPush = null;
+    Alert.alert(
+      'Confirmación',
+      '¿Realmente desea cancelar todos los servicios?',
+      [
+        {
+          text: 'SI',
+          onPress: async () => {
+            let handleOrder = orderUser;
+            handleOrder.services[menuIndex].status = 7;
+            await updateOrder(handleOrder, utilDispatch);
+            await updateStatus(7, orderUser, utilDispatch);
+            let notification = {
+              title: 'Servicio cancelado',
+              body: `El client ${
+                user.firstName + ' ' + user.lastName
+              } a cancelado el servicio de ${orderUser.services[
+                menuIndex
+              ].servicesType
+                .toUpperCase()
+                .split('-')
+                .join(' ')}`,
+              content_available: true,
+              priority: 'high',
+            };
+            let dataPush = null;
 
-              for (let index = 0; index < orderUser.fcmExpert.length; index++) {
-                sendPushFcm(orderUser.fcmExpert[index], notification, dataPush);
-              }
-            },
+            for (let index = 0; index < orderUser.fcmExpert.length; index++) {
+              sendPushFcm(orderUser.fcmExpert[index], notification, dataPush);
+            }
           },
-          {
-            text: 'NO',
-            onPress: () => console.log('Cancel Pressed'),
-            style: 'cancel',
-          },
-        ],
-        {cancelable: true},
-      );
-    }
-
-    setModalCancel(true);
+        },
+        {
+          text: 'NO',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+      ],
+      {cancelable: true},
+    );
+    validateStatusGlobal();
   };
   const validateStatusGlobal = async () => {
     let currentServices = orderUser.services;

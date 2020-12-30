@@ -5,6 +5,7 @@ import {
   View,
   Image,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import {
   Metrics,
@@ -33,6 +34,7 @@ const HandleResume = ({
   sendItemCart,
   order,
   currentService,
+  loading,
 }) => {
   let gList = [
     {
@@ -445,7 +447,11 @@ const HandleResume = ({
                 'center',
                 1,
               )}>
-              Confirmar servicio
+              {loading ? (
+                <ActivityIndicator animating color={Colors.light} />
+              ) : (
+                'Confirmar servicio'
+              )}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity

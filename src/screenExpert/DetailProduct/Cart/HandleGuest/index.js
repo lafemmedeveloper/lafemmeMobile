@@ -1,18 +1,24 @@
 import React from 'react';
-import {View, Text, TouchableOpacity, Alert} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Alert,
+  ActivityIndicator,
+} from 'react-native';
 import {Metrics, Colors, Fonts} from '../../../../themes';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Utilities from '../../../../utilities';
 
-const HandleGuest = (props) => {
-  const {
-    guest,
-    guestList,
-    selectGuest,
-    deleteGuest,
-    setGuestModal,
-    product,
-  } = props;
+const HandleGuest = ({
+  guest,
+  guestList,
+  selectGuest,
+  deleteGuest,
+  setGuestModal,
+  product,
+  loading,
+}) => {
   return (
     <View>
       <Text
@@ -79,7 +85,14 @@ const HandleGuest = (props) => {
                   {cancelable: true},
                 );
               }}>
-              <Icon name="minus-circle" size={20} color={Colors.gray} />
+              {loading ? (
+                <ActivityIndicator
+                  animating
+                  color={Colors.expert.primaryColor}
+                />
+              ) : (
+                <Icon name="minus-circle" size={20} color={Colors.gray} />
+              )}
             </TouchableOpacity>
           </TouchableOpacity>
         );

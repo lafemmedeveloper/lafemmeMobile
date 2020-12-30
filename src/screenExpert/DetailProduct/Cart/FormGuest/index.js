@@ -1,17 +1,26 @@
-import React from 'react';
+import React, {useState} from 'react';
 import MyTextInput from '../../../../components/MyTextInput';
-import {View, Text, TouchableOpacity, Alert} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Alert,
+  ActivityIndicator,
+} from 'react-native';
 import {Fonts, Colors, Metrics} from '../../../../themes';
 
-const FormGuest = (props) => {
-  const {form, setForm, addGuest} = props;
+const FormGuest = ({form, setForm, addGuest}) => {
   const {firstName, lastName, email, phone} = form;
 
-  const handleOk = () => {
+  const [loading, setLoading] = useState(false);
+
+  const handleOk = async () => {
     if (firstName === '' || lastName === '' || email === '') {
       Alert.alert('Ups', 'Todos los campos son necesarios');
     } else {
-      addGuest();
+      setLoading(true);
+      await addGuest();
+      setLoading(false);
     }
   };
   return (
@@ -54,8 +63,9 @@ const FormGuest = (props) => {
           text={phone}
           onChangeText={(text) => setForm({...form, phone: text})}
           secureText={false}
-          textContent={'telephoneNumber'}
           autoCapitalize={'none'}
+          textContent={'name'}
+          keyboardType={'numeric'}
         />
       </View>
       <TouchableOpacity
@@ -77,7 +87,11 @@ const FormGuest = (props) => {
         ]}>
         <Text
           style={Fonts.style.bold(Colors.light, Fonts.size.medium, 'center')}>
-          Agregar Invitado
+          {loading ? (
+            <ActivityIndicator animating color={Colors.light} />
+          ) : (
+            'Agregar Invitado'
+          )}
         </Text>
       </TouchableOpacity>
     </View>
