@@ -194,10 +194,6 @@ const OrderDetail = ({route, navigation}) => {
       getOrders(utilDispatch);
     }
   }, [utilDispatch, orderUser, menuIndex]);
-  console.log(
-    'order status client',
-    orderUser && orderUser.services[menuIndex].status,
-  );
 
   return (
     <>
@@ -586,7 +582,7 @@ const OrderDetail = ({route, navigation}) => {
                       </>
                     )}
                   {orderUser && orderUser.services[menuIndex].status > 4 && (
-                    <View>
+                    <View style={{marginVertical: 20}}>
                       {orderUser.services[menuIndex].status === 7 && (
                         <Text
                           style={Fonts.style.bold(

@@ -11,7 +11,7 @@ import {Fonts, Colors, Metrics} from '../../../../themes';
 const ButtonQualfy = ({service, setQualifyClient, loading}) => {
   return (
     <>
-      {service.status >= 4 && service.comment === null ? (
+      {service.status >= 4 && service.status < 7 && service.comment === null ? (
         <TouchableOpacity
           onPress={() => setQualifyClient(true)}
           style={styles.btnContainer}>

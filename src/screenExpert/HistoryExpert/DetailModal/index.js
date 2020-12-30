@@ -69,7 +69,6 @@ const DetailModal = ({order, setModalDetail}) => {
   const [itemService, setItemService] = useState(null);
 
   const getServiceStatus = (status) => {
-    console.log('status==>', status);
     switch (status) {
       case 1:
         return 'Colocarme en ruta';
@@ -95,7 +94,6 @@ const DetailModal = ({order, setModalDetail}) => {
               let resulTime = utilities.counting(
                 filterOrder.hoursServices[menuIndex],
               );
-              console.log('time order expert', resulTime);
               if (resulTime.remainHours > 1) {
                 Alert.alert(
                   'Ups',
@@ -254,7 +252,6 @@ const DetailModal = ({order, setModalDetail}) => {
   };
 
   const validateStatusGlobal = useCallback(async () => {
-    console.log('validateStatusGlobal');
     let currentServices = filterOrder.services;
     let currentOrder = filterOrder;
 
@@ -304,7 +301,6 @@ const DetailModal = ({order, setModalDetail}) => {
     (nextAppState) => {
       //active and background
       appState.current = nextAppState;
-      console.log('nextAppState =>', nextAppState);
 
       if (nextAppState === 'active') {
         Geolocation.getCurrentPosition((info) => {
@@ -315,8 +311,6 @@ const DetailModal = ({order, setModalDetail}) => {
             validateStatusGlobal();
           }
         });
-      } else {
-        console.log('fondo');
       }
     },
     [
@@ -325,8 +319,6 @@ const DetailModal = ({order, setModalDetail}) => {
       validateStatusGlobal,
     ],
   );
-
-  console.log('order comment=>', filterOrder.services[menuIndex].comment);
 
   return (
     <>

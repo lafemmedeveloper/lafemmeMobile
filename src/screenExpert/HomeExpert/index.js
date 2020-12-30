@@ -1,4 +1,10 @@
-import React, {useContext, useState, useEffect, Fragment} from 'react';
+import React, {
+  useContext,
+  useState,
+  useEffect,
+  Fragment,
+  useCallback,
+} from 'react';
 import {
   View,
   ScrollView,
@@ -40,19 +46,20 @@ const HomeExpert = () => {
   const [modalDetail, setModalDetail] = useState(false);
   const [detailOrder, setDetailOrder] = useState(null);
 
-  function onAuthStateChanged(user) {
-    if (auth().currentUser && auth().currentUser.uid) {
-      console.log('onAuthStateChanged:user', user._user);
+  const onAuthStateChanged = useCallback(
+    (user) => {
+      if (auth().currentUser && auth().currentUser.uid) {
+        console.log('onAuthStateChanged:user', user._user);
 
-      setUser(auth().currentUser.uid, authDispatch);
-    }
-  }
-
+        setUser(auth().currentUser.uid, authDispatch);
+      }
+    },
+    [authDispatch],
+  );
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
     return subscriber; // unsubscribe on unmount
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [onAuthStateChanged]);
 
   useEffect(() => {
     getDeviceInfo(utilDispatch);
@@ -61,14 +68,11 @@ const HomeExpert = () => {
       activeMessage('expert');
       suscribeCoverage(state.auth.user.coverage);
       getExpertActiveOrders(state.auth.user, utilDispatch);
-      //  getExpertHistoryOrders(state.auth.user, utilDispatch);
       activeNameSlug(state.auth.user.activity, utilDispatch);
       getExpertOpenOrders(state.auth.user.activity, utilDispatch);
       getConfig(utilDispatch);
     }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [state.auth.user, utilDispatch]);
 
   const [coordinate, setCoordinate] = useState(null);
 
@@ -98,8 +102,7 @@ const HomeExpert = () => {
       return async () =>
         await updateProfile(coordinate, 'coordinates', authDispatch);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [coordinate]);
+  }, [authDispatch, coordinate]);
 
   const activeDetailModal = (order) => {
     setDetailOrder(order);

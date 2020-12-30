@@ -28,7 +28,7 @@ export default (dta) => {
           <Text
             numberOfLines={1}
             style={Fonts.style.bold(Colors.light, Fonts.size.small, 'left')}>
-            Proxima Orden:{' '}
+            Próxima Orden:{' '}
             <Text
               numberOfLines={1}
               style={Fonts.style.semiBold(
