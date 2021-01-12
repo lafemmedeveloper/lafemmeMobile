@@ -36,7 +36,7 @@ import Utilities from '../../utilities';
 //import ButtonCoordinates from '../../components/ButtonCoordinates';
 
 const AddAddress = ({setAddAddress}) => {
-  const APIKEY = Config.GOOGLE_APIKEY;
+  const APIKEY = Config.APIKEY;
   const {state, authDispatch, utilDispatch} = useContext(StoreContext);
   const {auth, util} = state;
   const {user} = auth;

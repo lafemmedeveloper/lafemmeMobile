@@ -26,7 +26,8 @@ const NoEnabled = () => {
       })
       .catch(() => {
         Alert.alert(
-          'Al parecer Whatsapp no esta instalado, por favor instalado',
+          'Ups...',
+          'Al parecer WhatsApp no esta instalado.',
         );
       });
   };

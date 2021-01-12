@@ -315,7 +315,7 @@ const HandleResume = ({
                   'left',
                   1,
                 )}>
-                TOTAL SERVICIOS
+                Total Servicios
               </Text>
               <Text
                 style={Fonts.style.regular(
@@ -345,7 +345,7 @@ const HandleResume = ({
                   'left',
                   1,
                 )}>
-                TOTAL ADICIONES
+                Total Adicionales
               </Text>
               <Text
                 style={Fonts.style.regular(
@@ -375,7 +375,7 @@ const HandleResume = ({
                   'center',
                   1,
                 )}>
-                TOTAL
+                Total
               </Text>
               <Text
                 style={Fonts.style.bold(
@@ -417,7 +417,7 @@ const HandleResume = ({
               {loading ? (
                 <ActivityIndicator animating color={Colors.light} />
               ) : (
-                'Confirmar servicio'
+                'Confirmar Servicio'
               )}
             </Text>
           </TouchableOpacity>

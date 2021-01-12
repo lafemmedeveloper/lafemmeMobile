@@ -130,7 +130,7 @@ const HistoryExpert = () => {
                         ),
                         {marginTop: 10},
                       ]}>
-                      Actualmente no cuentas con ordenes anteriores
+                      Actualmente no cuentas con ordenes en tu historial
                     </Text>
                   </View>
                 )}

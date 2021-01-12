@@ -467,7 +467,7 @@ const Cart = (props) => {
               'center',
               1,
             )}>
-            {'SUBTOTAL '}
+            {'Subtotal '}
             {Utilities.formatCOP(
               product.price * (guestList.length + 1) +
                 addOnPrice +
@@ -500,7 +500,7 @@ const Cart = (props) => {
           ]}>
           <Text
             style={Fonts.style.bold(Colors.light, Fonts.size.h6, 'center', 1)}>
-            {'AGREGAR SERVICIO'}
+            {'Agregar Servicio'}
           </Text>
         </TouchableOpacity>
       </View>

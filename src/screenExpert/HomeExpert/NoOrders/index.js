@@ -37,16 +37,15 @@ const NoOrders = (props) => {
                 Fonts.size.h6,
                 'center',
               )}>
-              {'No hay ordenes actualmente'}
+              {'No hay ordenes disponibles'}
             </Text>
             <Text
-              style={Fonts.style.regular(
-                Colors.dark,
-                Fonts.size.medium,
-                'center',
-              )}>
+              style={[
+                Fonts.style.regular(Colors.dark, Fonts.size.medium, 'center'),
+                {marginVertical: 10},
+              ]}>
               {
-                'Este pendiente de las notificaciones que te avisaremos cuando tengamos nuevos clientes'
+                'Te notificaremos cuando un cliente solicite un servicio de tus categorías disponibles'
               }
             </Text>
           </View>

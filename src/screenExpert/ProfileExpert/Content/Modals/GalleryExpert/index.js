@@ -420,7 +420,7 @@ const GalleryExpert = (props) => {
 
         <Text
           style={Fonts.style.light(Colors.data, Fonts.size.small, 'center')}>
-          {'Sube tus trabajos para que tus clientes puedas verlos'}
+          {'Sube tus trabajos para inspirar los clientes La Femme'}
         </Text>
         <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
         {galleryUid && galleryUid.length === 0 && (
@@ -437,52 +437,67 @@ const GalleryExpert = (props) => {
             galleryUid.length > 0 &&
             galleryUid.map((item) => {
               _.orderBy(item, item.date, 'desc');
+              console.log(
+                '🚀 ~ file: index.js ~ line 439 ~ galleryUid.map ~ item',
+                item,
+              );
               return (
                 <View key={item.id} style={styles.conCard}>
-                  <View>
+                  <View
+                    style={{
+                      flex: 1,
+                      alignItems: 'center',
+                    }}>
                     <FastImage
                       style={styles.img}
                       source={{
                         uri: item.imageUrl.medium,
                         priority: FastImage.priority.high,
                       }}
-                      resizeMode={FastImage.resizeMode.contain}
+                      resizeMode={FastImage.resizeMode.cover}
                     />
-                    <Text
-                      style={[
-                        Fonts.style.bold(
-                          Colors.expert.primaryColor,
-                          Fonts.size.medium,
-                        ),
-                        {marginLeft: 20},
-                      ]}>
-                      {utilities.capitalize(item.service)}
-                    </Text>
-                    <Text
-                      style={[
-                        Fonts.style.regular(Colors.dark, Fonts.size.medium),
-                        {marginLeft: 20},
-                      ]}>
-                      {moment(item.date).format('ll')}
-                    </Text>
+                    <View
+                      style={{
+                        alignItems: 'left',
+                        marginVertical: 10,
+                      }}>
+                      <Text
+                        style={[
+                          Fonts.style.bold(
+                            Colors.expert.primaryColor,
+                            Fonts.size.medium,
+                          ),
+                        ]}>
+                        {utilities.capitalize(
+                          item.service.split('-').join(' '),
+                        )}
+                      </Text>
+                      <Text
+                        style={[
+                          Fonts.style.regular(Colors.dark, Fonts.size.medium),
+                        ]}>
+                        {moment(item.date).format('ll')}
+                      </Text>
+                    </View>
                   </View>
                   <View style={styles.contD}>
-                    <View style={styles.contA}>
-                      <View
-                        style={
-                          item.isApproved ? styles.approved : styles.noApproved
-                        }>
-                        <Text
-                          style={[
-                            Fonts.style.regular(
-                              item.isApproved ? 'green' : 'red',
-                              Fonts.size.small,
-                            ),
-                          ]}>
-                          {item.isApproved ? 'Aprobado' : 'No Aprobado'}
-                        </Text>
-                      </View>
+                    {/* <View style={styles.contA}> */}
+                    <View
+                      style={
+                        item.isApproved ? styles.approved : styles.noApproved
+                      }>
+                      <Text
+                        style={[
+                          Fonts.style.regular(
+                            item.isApproved ? 'green' : 'red',
+                            Fonts.size.small,
+                          ),
+                          {marginHorizontal: 10},
+                        ]}>
+                        {item.isApproved ? 'Aprobado' : 'No Aprobado'}
+                      </Text>
                     </View>
+                    {/* </View> */}
                     <TouchableOpacity
                       style={styles.delete}
                       onPress={() =>
@@ -545,7 +560,7 @@ const GalleryExpert = (props) => {
 };
 const styles = StyleSheet.create({
   conatiner: {height: Metrics.screenHeight * 0.7},
-  img: {height: 100},
+  img: {width: 120, height: 120},
   sendImg: {
     backgroundColor: Colors.light,
     width: 50,
@@ -586,8 +601,8 @@ const styles = StyleSheet.create({
   },
 
   contGallery: {
-    marginVertical: 20,
-    marginHorizontal: 20,
+    // marginVertical: 20,
+    marginHorizontal: 10,
   },
   delete: {
     backgroundColor: Colors.light,
@@ -608,6 +623,9 @@ const styles = StyleSheet.create({
   },
   conCard: {
     padding: 5,
+    margin: 5,
+
+    alignItems: 'center',
   },
 });
 export default GalleryExpert;

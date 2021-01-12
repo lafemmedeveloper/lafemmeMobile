@@ -16,11 +16,11 @@ export default ({selectAddress, user, title, children}) => {
           {user && user.cart && user.cart.address && user.cart.address.name ? (
             <TouchableOpacity
               style={{alignItems: 'center', justifyContent: 'center'}}
-              onPress={() => selectAddress()}>
+              onPress={() => selectAddress && selectAddress()}>
               <Text
                 numberOfLines={2}
                 style={[
-                  Fonts.style.regular(
+                  Fonts.style.bold(
                     Colors.client.primaryColor,
                     Fonts.size.medium,
                     'center',
@@ -36,7 +36,7 @@ export default ({selectAddress, user, title, children}) => {
                   <Text
                     numberOfLines={2}
                     style={[
-                      Fonts.style.regular(
+                      Fonts.style.bold(
                         Colors.client.primaryColor,
                         Fonts.size.medium,
                         'center',
@@ -55,9 +55,11 @@ export default ({selectAddress, user, title, children}) => {
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}
-                onPress={() => selectAddress()}>
+                onPress={() => {
+                  selectAddress && selectAddress();
+                }}>
                 <Text
-                  style={Fonts.style.regular(
+                  style={Fonts.style.bold(
                     Colors.client.primaryColor,
                     Fonts.size.medium,
                     'center',

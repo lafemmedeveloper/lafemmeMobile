@@ -245,9 +245,7 @@ const DetailModal = ({order, setModalDetail}) => {
         console.log('WhatsApp Opened');
       })
       .catch(() => {
-        Alert.alert(
-          'Al parecer Whatsapp no esta instalado, por favor instalado',
-        );
+        Alert.alert('Ups...', 'Al parecer WhatsApp no esta instalado.');
       });
   };
 

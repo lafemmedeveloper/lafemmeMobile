@@ -1,11 +1,22 @@
 import React from 'react';
-import {Text, View, Switch, StyleSheet, Image} from 'react-native';
+import {
+  Text,
+  TouchableOpacity,
+  View,
+  Switch,
+  StyleSheet,
+  Image,
+} from 'react-native';
 import {Fonts, Colors} from '../../../themes';
 import firestore from '@react-native-firebase/firestore';
 import {setUser, setLoading} from '../../../flux/auth/actions';
 import {Images, Metrics} from '../../../themes';
 
+import {useNavigation} from '@react-navigation/native';
+
 const HeaderExpert = (props) => {
+  const navigation = useNavigation();
+
   const {user, dispatch} = props;
   const toggleSwitch = async () => {
     try {
@@ -28,11 +39,15 @@ const HeaderExpert = (props) => {
   return (
     <>
       <View style={styles.container}>
-        <View style={{alignSelf: 'center'}}>
+        <TouchableOpacity
+          style={{alignSelf: 'center'}}
+          onPress={() => {
+            navigation.navigate('Profile');
+          }}>
           {user && user.imageUrl && (
             <Image source={{uri: user.imageUrl.medium}} style={styles.image} />
           )}
-        </View>
+        </TouchableOpacity>
         <View>
           <Image
             style={{

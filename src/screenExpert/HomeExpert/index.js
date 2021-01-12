@@ -63,6 +63,7 @@ const HomeExpert = () => {
 
   useEffect(() => {
     getDeviceInfo(utilDispatch);
+
     if (state.auth.user) {
       currentCoordinate();
       activeMessage('expert');
@@ -72,7 +73,7 @@ const HomeExpert = () => {
       getExpertOpenOrders(state.auth.user.activity, utilDispatch);
       getConfig(utilDispatch);
     }
-  }, [state.auth.user, utilDispatch]);
+  }, [utilDispatch]); // TODO: revisar loop zonas de cobertura
 
   const [coordinate, setCoordinate] = useState(null);
 

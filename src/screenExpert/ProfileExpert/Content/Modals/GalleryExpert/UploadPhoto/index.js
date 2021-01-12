@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     paddingHorizontal: 20,
   },
-  img: {width: 100, height: 100, resizeMode: 'contain', alignSelf: 'center'},
+  img: {width: 100, height: 100, resizeMode: 'cover', alignSelf: 'center'},
   piker: {width: '90%', alignSelf: 'center'},
   button: {
     flex: 0,

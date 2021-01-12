@@ -55,13 +55,21 @@ const UpdatePassword = ({close}) => {
               Alert.alert(
                 'Que bien....',
                 'Contraseña actualizado satisfactoriamente',
+                [
+                  {
+                    text: 'Continuar',
+                    onPress: () => {
+                      setNewPassword('');
+                      setNewPasswordConfirm('');
+                      setPasswordCurrent('');
+                      setLoading(false);
+                      close(false);
+                    },
+                    style: 'cancel',
+                  },
+                ],
+                {cancelable: true},
               );
-
-              setNewPassword('');
-              setNewPasswordConfirm('');
-              setPasswordCurrent('');
-              setLoading(false);
-              close(false);
             })
             .catch((error) => {
               console.log('error ==>', error);
@@ -99,16 +107,16 @@ const UpdatePassword = ({close}) => {
         }}
       />
       <Text style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
-        {'Actualizar perfil'}
+        {'Actualizar contraseña'}
       </Text>
 
       <Text style={Fonts.style.light(Colors.data, Fonts.size.small, 'center')}>
-        {'Actualiza tu contraseña'}
+        {'Confirma tu contraseña acutal e ingresa una nueva'}
       </Text>
       <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
       <View style={{width: '90%', alignSelf: 'center', marginBottom: 20}}>
         <MyTextInput
-          pHolder={'Tu Contraseña actual'}
+          pHolder={'Contraseña actual'}
           text={passwordCurrent}
           multiLine={false}
           onChangeText={(text) => setPasswordCurrent(text)}
