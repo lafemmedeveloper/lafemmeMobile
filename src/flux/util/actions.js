@@ -276,12 +276,12 @@ export const updateStatus = async (status, order, dispatch) => {
   }
 };
 
-export const addImageGallery = async (data, id, dispatch) => {
+export const addImageGallery = async (data, dispatch) => {
+  console.log('date ==>', data);
   try {
     setLoading(true, dispatch);
-    const userRef = firestore().collection('gallery').doc(id);
+    const userRef = firestore().collection('gallery').doc(data.id);
     await userRef.set(data);
-    await getGallery(dispatch);
     setLoading(false, dispatch);
   } catch (error) {
     setLoading(false, dispatch);

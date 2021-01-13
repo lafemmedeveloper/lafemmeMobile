@@ -15,7 +15,7 @@ import {
   Images,
   Metrics,
 } from '../../../../../themes';
-import Icon from 'react-native-vector-icons/FontAwesome5';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {StoreContext} from '../../../../../flux';
 import {
   addImageGallery,
@@ -25,18 +25,17 @@ import {
 } from '../../../../../flux/util/actions';
 import FastImage from 'react-native-fast-image';
 import moment from 'moment';
-
 import {firebase} from '@react-native-firebase/storage';
+import ImageResizer from 'react-native-image-resizer';
 
 import ImagePicker from 'react-native-image-picker';
-import ImageResizer from 'react-native-image-resizer';
 import utilities from '../../../../../utilities';
 import Loading from '../../../../../components/Loading';
-import _ from 'lodash';
 import ModalApp from '../../../../../components/ModalApp';
 import UploadPhoto from './UploadPhoto';
 
-const GalleryExpert = (props) => {
+const GalleryExpert = ({user, services}) => {
+  let isComplete = false;
   const options = {
     title: 'Selecciona o toma una imagén',
     cancelButtonTitle: 'Cancelar',
@@ -48,30 +47,16 @@ const GalleryExpert = (props) => {
     },
   };
 
-  const initial_state = {
-    thumbnail: null,
-    small: null,
-    medium: null,
-    big: null,
-    giant: null,
-  };
-  const modelState = {
-    images: [],
-  };
-  const {user, services} = props;
   const {state, utilDispatch} = useContext(StoreContext);
   const {util} = state;
   const {gallery} = util;
 
   let [galleryUid, setGalleryUid] = useState([]);
 
-  const [value, setValue] = useState(modelState);
   const [imageUri, setImageUri] = useState(null);
   const [uploadModal, setUploadModal] = useState(false);
   const [imageSource, setImageSource] = useState(null);
   const [serviceName, setServiceName] = useState('');
-  const [isComplete, setIsComplete] = useState(false);
-  const [pictures, setPictures] = useState(initial_state);
 
   useEffect(() => {
     getGallery(utilDispatch);
@@ -100,290 +85,174 @@ const GalleryExpert = (props) => {
     const ext = imageUri.split('.').pop(); // Extract image extension
     const filename = `${utilities.create_UUID()}.${ext}`; // Generate unique name
 
-    setValue({...value, uploading: true});
-    setLoading(true, utilDispatch);
     await prepareImage(user.uid, filename);
-    setLoading(false, utilDispatch);
   };
+
   const prepareImage = async (uid, filename) => {
-    let x = imageUri;
+    setLoading(true, utilDispatch);
+
+    let picture = {
+      thumbnail: null,
+      small: null,
+      medium: null,
+      big: null,
+      giant: null,
+    };
     try {
-      ImageResizer.createResizedImage(x, 56, 56, 'JPEG', 30, 0)
-        .then((RES) => {
-          try {
-            firebase
+      console.log('inciiando prepare');
+      let x = imageUri;
+
+      const THUMBNAIL = await ImageResizer.createResizedImage(
+        x,
+        56,
+        56,
+        'JPEG',
+        30,
+        0,
+      );
+
+      await firebase
+        .storage()
+        .ref(`users/${uid}/thumbnail@${filename}`)
+        .putFile(THUMBNAIL.path)
+        .on(firebase.storage.TaskEvent.STATE_CHANGED, async (snapshot) => {
+          if (snapshot.state === firebase.storage.TaskState.SUCCESS) {
+            const url = await firebase
               .storage()
               .ref(`users/${uid}/thumbnail@${filename}`)
-              .putFile(RES.path)
-              .on(
-                firebase.storage.TaskEvent.STATE_CHANGED,
-                (snapshot) => {
-                  let state = {};
-                  state = {
-                    ...state,
-                    progress:
-                      (snapshot.bytesTransferred / snapshot.totalBytes) * 100, // Calculate progress percentage
-                  };
-                  if (snapshot.state === firebase.storage.TaskState.SUCCESS) {
-                    let allImages = value.images;
-                    allImages.push(snapshot.downloadURL);
-                    state = {
-                      ...state,
-                      uploading: false,
-                      progress: 0,
-                      images: allImages,
-                    };
-
-                    firebase
-                      .storage()
-                      .ref(`users/${uid}/thumbnail@${filename}`)
-                      .getDownloadURL()
-                      .then((url) => {
-                        picture = {...picture, thumbnail: url};
-                        updateUser(picture);
-                      });
-                  }
-                  setValue(state);
-                },
-                (error) => {
-                  setLoading(false, utilDispatch);
-                  Alert.alert('Sorry, Try again.', error);
-                },
-              );
-          } catch (error) {
-            setLoading(false, utilDispatch);
-            console.log('err', error);
+              .getDownloadURL();
+            picture = {...picture, thumbnail: url};
           }
-        })
-        .catch((error) => {
-          console.log('error', error);
         });
 
-      ImageResizer.createResizedImage(x, 128, 128, 'JPEG', 30, 0)
-        .then((RES) => {
-          try {
-            firebase
+      const SMALL = await ImageResizer.createResizedImage(
+        x,
+        128,
+        128,
+        'JPEG',
+        30,
+        0,
+      );
+      await firebase
+        .storage()
+        .ref(`users/${uid}/small@${filename}`)
+        .putFile(SMALL.path)
+        .on(firebase.storage.TaskEvent.STATE_CHANGED, async (snapshot) => {
+          if (snapshot.state === firebase.storage.TaskState.SUCCESS) {
+            const url = await firebase
               .storage()
               .ref(`users/${uid}/small@${filename}`)
-              .putFile(RES.path)
-              .on(
-                firebase.storage.TaskEvent.STATE_CHANGED,
-                (snapshot) => {
-                  let state = {};
-                  state = {
-                    ...state,
-                    progress:
-                      (snapshot.bytesTransferred / snapshot.totalBytes) * 100, // Calculate progress percentage
-                  };
-                  if (snapshot.state === firebase.storage.TaskState.SUCCESS) {
-                    let allImages = value.images;
-                    allImages.push(snapshot.downloadURL);
-                    state = {
-                      ...state,
-                      uploading: false,
-                      progress: 0,
-                      images: allImages,
-                    };
-
-                    firebase
-                      .storage()
-                      .ref(`users/${uid}/small@${filename}`)
-                      .getDownloadURL()
-                      .then((url) => {
-                        picture = {...picture, small: url};
-                        updateUser(picture);
-                      });
-                  }
-                  setValue(state);
-                },
-                (error) => {
-                  Alert.alert('Sorry, Try again.', error);
-                },
-              );
-          } catch (error) {
-            setLoading(false, utilDispatch);
-            console.log('err', error);
+              .getDownloadURL();
+            picture = {...picture, small: url};
           }
-        })
-        .catch((error) => {
-          console.log('error', error);
-          setLoading(false, utilDispatch);
         });
-      ImageResizer.createResizedImage(x, 256, 256, 'JPEG', 30, 0)
-        .then((RES) => {
-          try {
-            firebase
+
+      const MEDIUM = await ImageResizer.createResizedImage(
+        x,
+        256,
+        256,
+        'JPEG',
+        30,
+        0,
+      );
+      await firebase
+        .storage()
+        .ref(`users/${uid}/medium@${filename}`)
+        .putFile(MEDIUM.path)
+        .on(firebase.storage.TaskEvent.STATE_CHANGED, async (snapshot) => {
+          if (snapshot.state === firebase.storage.TaskState.SUCCESS) {
+            const url = await firebase
               .storage()
               .ref(`users/${uid}/medium@${filename}`)
-              .putFile(RES.path)
-              .on(
-                firebase.storage.TaskEvent.STATE_CHANGED,
-                (snapshot) => {
-                  let state = {};
-                  state = {
-                    ...state,
-                    progress:
-                      (snapshot.bytesTransferred / snapshot.totalBytes) * 100, // Calculate progress percentage
-                  };
-                  if (snapshot.state === firebase.storage.TaskState.SUCCESS) {
-                    let allImages = value.images;
-                    allImages.push(snapshot.downloadURL);
-                    state = {
-                      ...state,
-                      uploading: false,
-                      progress: 0,
-                      images: allImages,
-                    };
-
-                    firebase
-                      .storage()
-                      .ref(`users/${uid}/medium@${filename}`)
-                      .getDownloadURL()
-                      .then((url) => {
-                        picture = {...picture, medium: url};
-                        updateUser(picture);
-                      });
-                  }
-                  setValue(state);
-                },
-                (error) => {
-                  Alert.alert('Sorry, Try again.', error);
-                },
-              );
-          } catch (error) {
-            setLoading(false, utilDispatch);
-            console.log('err', error);
+              .getDownloadURL();
+            picture = {...picture, medium: url};
           }
-        })
-        .catch((error) => {
-          setLoading(false, utilDispatch);
-          console.log('error', error);
         });
-      ImageResizer.createResizedImage(x, 512, 512, 'JPEG', 30, 0)
-        .then((RES) => {
-          try {
-            firebase
+
+      const BIG = await ImageResizer.createResizedImage(
+        x,
+        512,
+        512,
+        'JPEG',
+        30,
+        0,
+      );
+      await firebase
+        .storage()
+        .ref(`users/${uid}/big@${filename}`)
+        .putFile(BIG.path)
+        .on(firebase.storage.TaskEvent.STATE_CHANGED, async (snapshot) => {
+          if (snapshot.state === firebase.storage.TaskState.SUCCESS) {
+            const url = await firebase
               .storage()
               .ref(`users/${uid}/big@${filename}`)
-              .putFile(RES.path)
-              .on(
-                firebase.storage.TaskEvent.STATE_CHANGED,
-                (snapshot) => {
-                  let state = {};
-                  state = {
-                    ...state,
-                    progress:
-                      (snapshot.bytesTransferred / snapshot.totalBytes) * 100, // Calculate progress percentage
-                  };
-                  if (snapshot.state === firebase.storage.TaskState.SUCCESS) {
-                    let allImages = value.images;
-                    allImages.push(snapshot.downloadURL);
-                    state = {
-                      ...state,
-                      uploading: false,
-                      progress: 0,
-                      images: allImages,
-                    };
+              .getDownloadURL();
 
-                    firebase
-                      .storage()
-                      .ref(`users/${uid}/big@${filename}`)
-                      .getDownloadURL()
-                      .then((url) => {
-                        picture = {...picture, big: url};
-                        updateUser(picture);
-                      });
-                  }
-                  setValue(state);
-                },
-                (error) => {
-                  Alert.alert('Sorry, Try again.', error);
-                },
-              );
-          } catch (error) {
-            console.log('err', error);
-            setLoading(false, utilDispatch);
+            picture = {...picture, big: url};
           }
-        })
-        .catch((error) => {
-          console.log('error', error);
-          setLoading(false, utilDispatch);
         });
-      ImageResizer.createResizedImage(x, 1024, 1024, 'JPEG', 30, 0)
-        .then((RES) => {
-          try {
-            firebase
+
+      const GIANT = await ImageResizer.createResizedImage(
+        x,
+        512,
+        512,
+        'JPEG',
+        30,
+        0,
+      );
+      await firebase
+        .storage()
+        .ref(`users/${uid}/giant@${filename}`)
+        .putFile(GIANT.path)
+        .on(firebase.storage.TaskEvent.STATE_CHANGED, async (snapshot) => {
+          if (snapshot.state === firebase.storage.TaskState.SUCCESS) {
+            const url = await firebase
               .storage()
               .ref(`users/${uid}/giant@${filename}`)
-              .putFile(RES.path)
-              .on(
-                firebase.storage.TaskEvent.STATE_CHANGED,
-                (snapshot) => {
-                  let state = {};
-                  state = {
-                    ...state,
-                    progress:
-                      (snapshot.bytesTransferred / snapshot.totalBytes) * 100, // Calculate progress percentage
-                  };
-                  if (snapshot.state === firebase.storage.TaskState.SUCCESS) {
-                    let allImages = value.images;
-                    allImages.push(snapshot.downloadURL);
-                    state = {
-                      ...state,
-                      uploading: false,
-                      progress: 0,
-                      images: allImages,
-                    };
+              .getDownloadURL();
+            picture = {...picture, giant: url};
 
-                    firebase
-                      .storage()
-                      .ref(`users/${uid}/giant@${filename}`)
-                      .getDownloadURL()
-                      .then((url) => {
-                        picture = {...picture, giant: url};
-                        updateUser(picture);
-                        return setIsComplete(true);
-                      });
-                  }
+            console.log('ultima img');
 
-                  setValue(state);
-                },
-                (error) => {
-                  Alert.alert('Sorry, Try again.', error);
-                },
-              );
-          } catch (error) {
-            console.log('err', error);
+            await updateUser(picture);
+
+            isComplete = true;
+            setLoading(false, utilDispatch);
           }
-        })
-        .catch((error) => {
-          console.log('error', error);
-          setLoading(false, utilDispatch);
         });
     } catch (error) {
-      console.log('error prepareImage => ', error);
+      console.log('error prepareImg =>', error);
       setLoading(false, utilDispatch);
     }
   };
-  const updateUser = async (picture) => {
-    let images = {...picture};
 
-    const dataExpert = {
-      expertUid: user.uid,
-      expertName: user.firstName,
-      expertImage: user.imageUrl.small,
-      rating: user.rating,
-      date: Date.now(),
-      imageUrl: images,
-      isApproved: false,
-      id: utilities.create_UUID(),
-      service: serviceName,
-    };
+  const updateUser = async (picture) => {
+    console.log('isComplete =>', isComplete);
     if (isComplete) {
-      await addImageGallery(dataExpert, dataExpert.id, utilDispatch);
-      setImageSource(null);
-      setServiceName('');
+      await addImageGallery(
+        {
+          expertUid: user.uid,
+          expertName: user.firstName,
+          expertImage: user.imageUrl.small,
+          rating: user.rating,
+          date: Date.now(),
+          imageUrl: {...picture},
+          isApproved: false,
+          id: utilities.create_UUID(),
+          service: serviceName,
+        },
+        utilDispatch,
+      );
+      await getGallery(utilDispatch);
+      setUploadModal(false);
     }
+  };
+
+  const handleModalUpload = () => {
+    setImageSource(null);
+    setServiceName('');
+    isComplete = false;
+    setUploadModal(true);
   };
 
   return (
@@ -426,48 +295,74 @@ const GalleryExpert = (props) => {
           {galleryUid &&
             galleryUid.length > 0 &&
             galleryUid.map((item) => {
-              _.orderBy(item, item.date, 'desc');
-
               return (
                 <View key={item.id} style={styles.conCard}>
-                  <TouchableOpacity
-                    onPressOut={() =>
-                      Alert.alert(
-                        'Confirmación',
-                        'realmente deseas eliminar esta imagen',
-                        [
-                          {
-                            text: 'ELIMINAR',
-                            onPress: async () => {
-                              await onDeleteGallery(item.id, utilDispatch);
-                            },
-                          },
-                          {
-                            text: 'NO',
-                          },
-                        ],
-                      )
-                    }>
+                  <TouchableOpacity>
                     <FastImage
                       style={styles.img}
                       source={{uri: item.imageUrl.giant}}
                     />
                   </TouchableOpacity>
-                  <View style={{marginLeft: 20, marginBottom: 40}}>
-                    <Text
-                      style={[
-                        styles.date,
-                        Fonts.style.bold(Colors.dark, Fonts.size.h6),
-                      ]}>
-                      {utilities.capitalize(item.service.split('-').join(' '))}
-                    </Text>
-                    <Text
-                      style={[
-                        styles.date,
-                        Fonts.style.regular(Colors.dark, Fonts.size.medium),
-                      ]}>
-                      Creado: {moment(item.date).format('L')}
-                    </Text>
+                  <View
+                    style={{
+                      marginLeft: 20,
+                      marginBottom: 40,
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                    }}>
+                    <View>
+                      <Text
+                        style={[
+                          styles.date,
+                          Fonts.style.bold(Colors.dark, Fonts.size.h6),
+                        ]}>
+                        {utilities.capitalize(
+                          item.service.split('-').join(' '),
+                        )}
+                      </Text>
+                      <Text
+                        style={[
+                          styles.date,
+                          Fonts.style.regular(Colors.dark, Fonts.size.medium),
+                        ]}>
+                        Creado: {moment(item.date).format('L')}
+                      </Text>
+                      <Text
+                        style={[
+                          styles.date,
+                          Fonts.style.regular(
+                            item.isApproved ? 'green' : Colors.dark,
+                            Fonts.size.medium,
+                          ),
+                        ]}>
+                        {item.isApproved ? 'Aprobado' : 'En espera'}
+                      </Text>
+                    </View>
+                    <TouchableOpacity
+                      onPress={() =>
+                        Alert.alert(
+                          'Confirmación',
+                          'realmente deseas eliminar esta imagen',
+                          [
+                            {
+                              text: 'ELIMINAR',
+                              onPress: async () => {
+                                await onDeleteGallery(item.id, utilDispatch);
+                              },
+                            },
+                            {
+                              text: 'NO',
+                            },
+                          ],
+                        )
+                      }
+                      style={{justifyContent: 'center', marginRight: 20}}>
+                      <Icon
+                        name="delete"
+                        size={25}
+                        color={Colors.client.primaryColor}
+                      />
+                    </TouchableOpacity>
                   </View>
                 </View>
               );
@@ -475,7 +370,7 @@ const GalleryExpert = (props) => {
         </ScrollView>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => setUploadModal(true)}>
+          onPress={() => handleModalUpload()}>
           <Text style={Fonts.style.bold(Colors.light, Fonts.size.medium)}>
             Cargar foto
           </Text>

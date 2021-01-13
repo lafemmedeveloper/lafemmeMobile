@@ -64,9 +64,7 @@ const NoImage = () => {
   };
 
   const uploadImage = async () => {
-    console.log('imageUri ==>', imageUri);
     const ext = imageUri.split('.').pop(); // Extract image extension
-    console.log('ext ==>', ext);
     const filename = `${Utilities.create_UUID()}.${ext}`; // Generate unique name
     setValue({...value, uploading: true});
     await prepareImage(user.uid, filename);

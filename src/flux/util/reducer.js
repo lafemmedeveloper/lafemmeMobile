@@ -58,9 +58,11 @@ const setError = (state, action) => {
 };
 
 const getGallery = (state, action) => {
+  let gallery = _.orderBy(action.payload, action.payload.date, 'desc');
+
   return {
     ...state,
-    gallery: action.payload,
+    gallery,
   };
 };
 const getCoverage = (state, action) => {

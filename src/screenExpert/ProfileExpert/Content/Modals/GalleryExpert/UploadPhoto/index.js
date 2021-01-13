@@ -25,14 +25,12 @@ const UploadPhoto = ({
   serviceName,
   setServiceName,
   uploadImage,
-  close,
 }) => {
   const activeUpload = async () => {
     if (serviceName === '' || source === null) {
       Alert.alert('Ups', 'Necesitas la foto y una categoria para continuar');
     } else {
-      await uploadImage();
-      close();
+      uploadImage();
     }
   };
   return (
@@ -116,7 +114,7 @@ const UploadPhoto = ({
           </TouchableOpacity>
         )}
       </View>
-      <Loading />
+      <Loading type="expert" />
     </>
   );
 };
