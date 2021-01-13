@@ -166,10 +166,6 @@ export const activeMessage = async (topic) => {
 export const suscribeCoverage = async (arrayTopics) => {
   try {
     for (let index = 0; index < arrayTopics.length; index++) {
-      console.log(
-        'arrayTopics[index] ===>',
-        arrayTopics[index].split(' ').join('').toLowerCase(),
-      );
       messaging()
         .subscribeToTopic(arrayTopics[index].split(' ').join('').toLowerCase())
         .then(() =>

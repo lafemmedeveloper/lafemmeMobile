@@ -25,10 +25,7 @@ const NoEnabled = () => {
         console.log('WhatsApp Opened');
       })
       .catch(() => {
-        Alert.alert(
-          'Ups...',
-          'Al parecer WhatsApp no esta instalado.',
-        );
+        Alert.alert('Ups...', 'Al parecer WhatsApp no esta instalado.');
       });
   };
 

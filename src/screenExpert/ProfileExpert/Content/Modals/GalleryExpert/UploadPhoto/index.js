@@ -16,18 +16,17 @@ import {
 } from '../../../../../../themes';
 import {Picker} from '@react-native-community/picker';
 import utilities from '../../../../../../utilities';
+import Loading from '../../../../../../components/Loading';
 
-const UploadPhoto = (props) => {
-  const {
-    services,
-    pickImage,
-    source,
-    serviceName,
-    setServiceName,
-    uploadImage,
-    close,
-  } = props;
-
+const UploadPhoto = ({
+  services,
+  pickImage,
+  source,
+  serviceName,
+  setServiceName,
+  uploadImage,
+  close,
+}) => {
   const activeUpload = async () => {
     if (serviceName === '' || source === null) {
       Alert.alert('Ups', 'Necesitas la foto y una categoria para continuar');
@@ -37,74 +36,88 @@ const UploadPhoto = (props) => {
     }
   };
   return (
-    <View style={styles.container}>
-      <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
+    <>
+      <View style={styles.container}>
+        <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
 
-      <Image
-        source={Images.inspo}
-        style={{
-          width: 50,
-          height: 50,
-          resizeMode: 'contain',
-          alignSelf: 'center',
-          marginBottom: 10,
-          tintColor: Colors.expert.primaryColor,
-        }}
-      />
-      <Text style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
-        {'Inspo'}
-      </Text>
-
-      <Text style={Fonts.style.light(Colors.data, Fonts.size.small, 'center')}>
-        {'Agrega una foto a tu gallearía Inspo'}
-      </Text>
-      <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
-      <View style={styles.contFunc}>
         <Image
-          source={source ? source : Images.logoExpertText}
-          style={styles.img}
+          source={Images.inspo}
+          style={{
+            width: 50,
+            height: 50,
+            resizeMode: 'contain',
+            alignSelf: 'center',
+            marginBottom: 10,
+            tintColor: Colors.expert.primaryColor,
+          }}
         />
-        <View style={styles.contPiker}>
-          <Text
-            style={Fonts.style.bold(Colors.dark, Fonts.size.medium, 'left')}>
-            {'Seleciona tu servicio'}
-          </Text>
-          <Picker
-            selectedValue={serviceName}
-            style={styles.piker}
-            onValueChange={(itemValue) => setServiceName(itemValue)}>
-            <Picker.Item label={'---Seleciona un servicio---'} value={''} />
-            {services &&
-              services.length > 0 &&
-              services.map((item, index) => {
-                return (
-                  <Picker.Item
-                    label={utilities.capitalize(item.split('-').join(' '))}
-                    value={item}
-                    key={index}
-                  />
-                );
-              })}
-          </Picker>
-        </View>
-      </View>
+        <Text style={Fonts.style.bold(Colors.dark, Fonts.size.h6, 'center')}>
+          {'Inspo'}
+        </Text>
 
-      {source ? (
-        <TouchableOpacity style={styles.button} onPress={() => activeUpload()}>
-          <Text
-            style={Fonts.style.bold(Colors.light, Fonts.size.medium, 'center')}>
-            Guardar foto
-          </Text>
-        </TouchableOpacity>
-      ) : (
-        <TouchableOpacity style={styles.button} onPress={() => pickImage()}>
-          <Text
-            style={Fonts.style.bold(Colors.light, Fonts.size.medium, 'center')}>
-            Abrir camara o galeria
-          </Text>
-        </TouchableOpacity>
-      )}
-    </View>
+        <Text
+          style={Fonts.style.light(Colors.data, Fonts.size.small, 'center')}>
+          {'Agrega una foto a tu gallearía Inspo'}
+        </Text>
+        <View opacity={0.0} style={ApplicationStyles.separatorLineMini} />
+        <View style={styles.contFunc}>
+          <Image
+            source={source ? source : Images.logoExpertText}
+            style={styles.img}
+          />
+          <View style={styles.contPiker}>
+            <Text
+              style={Fonts.style.bold(Colors.dark, Fonts.size.medium, 'left')}>
+              {'Seleciona tu servicio'}
+            </Text>
+            <Picker
+              selectedValue={serviceName}
+              style={styles.piker}
+              onValueChange={(itemValue) => setServiceName(itemValue)}>
+              <Picker.Item label={'---Seleciona un servicio---'} value={''} />
+              {services &&
+                services.length > 0 &&
+                services.map((item, index) => {
+                  return (
+                    <Picker.Item
+                      label={utilities.capitalize(item.split('-').join(' '))}
+                      value={item}
+                      key={index}
+                    />
+                  );
+                })}
+            </Picker>
+          </View>
+        </View>
+
+        {source ? (
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => activeUpload()}>
+            <Text
+              style={Fonts.style.bold(
+                Colors.light,
+                Fonts.size.medium,
+                'center',
+              )}>
+              Guardar foto
+            </Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity style={styles.button} onPress={() => pickImage()}>
+            <Text
+              style={Fonts.style.bold(
+                Colors.light,
+                Fonts.size.medium,
+                'center',
+              )}>
+              Abrir cámara o galería
+            </Text>
+          </TouchableOpacity>
+        )}
+      </View>
+      <Loading />
+    </>
   );
 };
 const styles = StyleSheet.create({
