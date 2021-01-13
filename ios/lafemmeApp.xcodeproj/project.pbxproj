@@ -981,7 +981,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconClient;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "lafemmeApp/La Femme.entitlements";
-				CURRENT_PROJECT_VERSION = 57;
+				CURRENT_PROJECT_VERSION = 58;
 				DEVELOPMENT_TEAM = CE49PKHAHF;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = lafemmeApp/InfoClient.plist;
@@ -1007,7 +1007,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconClient;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "lafemmeApp/La Femme.entitlements";
-				CURRENT_PROJECT_VERSION = 57;
+				CURRENT_PROJECT_VERSION = 58;
 				DEVELOPMENT_TEAM = CE49PKHAHF;
 				INFOPLIST_FILE = lafemmeApp/InfoClient.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1144,7 +1144,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconClientStaging;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "lafemmeApp/La Femme.entitlements";
-				CURRENT_PROJECT_VERSION = 57;
+				CURRENT_PROJECT_VERSION = 58;
 				DEVELOPMENT_TEAM = CE49PKHAHF;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = lafemmeApp/InfoClientStaging.plist;
@@ -1170,7 +1170,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconClientStaging;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "lafemmeApp/La Femme.entitlements";
-				CURRENT_PROJECT_VERSION = 57;
+				CURRENT_PROJECT_VERSION = 58;
 				DEVELOPMENT_TEAM = CE49PKHAHF;
 				INFOPLIST_FILE = lafemmeApp/InfoClientStaging.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1194,7 +1194,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconExpert;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "lafemmeApp/La Femme.entitlements";
-				CURRENT_PROJECT_VERSION = 57;
+				CURRENT_PROJECT_VERSION = 58;
 				DEVELOPMENT_TEAM = CE49PKHAHF;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = lafemmeApp/InfoExpert.plist;
@@ -1220,7 +1220,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconExpert;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "lafemmeApp/La Femme.entitlements";
-				CURRENT_PROJECT_VERSION = 57;
+				CURRENT_PROJECT_VERSION = 58;
 				DEVELOPMENT_TEAM = CE49PKHAHF;
 				INFOPLIST_FILE = lafemmeApp/InfoExpert.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1244,7 +1244,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconExpertStaging;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "lafemmeApp/La Femme.entitlements";
-				CURRENT_PROJECT_VERSION = 57;
+				CURRENT_PROJECT_VERSION = 58;
 				DEVELOPMENT_TEAM = CE49PKHAHF;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = lafemmeApp/InfoExpertStaging.plist;
@@ -1270,7 +1270,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconExpertStaging;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "lafemmeApp/La Femme.entitlements";
-				CURRENT_PROJECT_VERSION = 57;
+				CURRENT_PROJECT_VERSION = 58;
 				DEVELOPMENT_TEAM = CE49PKHAHF;
 				INFOPLIST_FILE = lafemmeApp/InfoExpertStaging.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
