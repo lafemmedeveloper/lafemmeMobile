@@ -508,8 +508,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 10,
     backgroundColor: Colors.expert.primaryColor,
-    marginBottom: Metrics.addFooter + 20,
-    marginTop: 20,
+    marginBottom: Metrics.addFooter + 10,
+    marginTop: 10,
   },
 
   contGallery: {
@@ -519,8 +519,8 @@ const styles = StyleSheet.create({
   conCard: {},
 
   img: {
-    width: Metrics.screenWidth * 0.9,
-    height: Metrics.screenWidth * 0.9,
+    width: Metrics.screenWidth * 0.8,
+    height: Metrics.screenWidth * 0.8,
     alignSelf: 'center',
     marginHorizontal: 20,
     borderRadius: Metrics.borderRadius,
