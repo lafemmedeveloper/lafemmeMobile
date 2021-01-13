@@ -3,6 +3,7 @@ import React, {
   useState,
   useEffect,
   Fragment,
+  useRef,
   useCallback,
 } from 'react';
 import {
@@ -21,6 +22,7 @@ import {
   setUser,
   suscribeCoverage,
   updateProfile,
+  setLoading,
 } from '../../flux/auth/actions';
 import {
   getExpertOpenOrders,
@@ -34,6 +36,7 @@ import Geolocation from '@react-native-community/geolocation';
 import NoOrders from './NoOrders';
 import HeaderExpert from './HeaderExpert';
 import ModalApp from '../../components/ModalApp';
+import Loading from '../../components/Loading';
 import DetailModal from '../HistoryExpert/DetailModal';
 import NextOrder from '../NextOrder';
 import auth from '@react-native-firebase/auth';
@@ -42,38 +45,55 @@ const HomeExpert = () => {
   const {state, authDispatch, utilDispatch} = useContext(StoreContext);
   const {util} = state;
   const {expertActiveOrders, nextOrder} = util;
+  const isMountedRef = useRef(null);
 
   const [modalDetail, setModalDetail] = useState(false);
   const [detailOrder, setDetailOrder] = useState(null);
+  const [updateUser, setUpdateUser] = useState(false);
 
   const onAuthStateChanged = useCallback(
-    (user) => {
+    (date) => {
       if (auth().currentUser && auth().currentUser.uid) {
-        console.log('onAuthStateChanged:user', user._user);
+        console.log('onAuthStateChanged:user', date._user);
 
         setUser(auth().currentUser.uid, authDispatch);
       }
     },
     [authDispatch],
   );
+
+  const activeFlux = useCallback(async () => {
+    isMountedRef.current = true;
+
+    getDeviceInfo(utilDispatch);
+    getConfig(utilDispatch);
+
+    if (state.auth.user) {
+      if (!updateUser) {
+        setLoading(true, authDispatch);
+        activeMessage('expert');
+        await suscribeCoverage(state.auth.user.coverage);
+        await activeNameSlug(state.auth.user.activity, utilDispatch);
+        getExpertActiveOrders(state.auth.user, utilDispatch);
+        getExpertOpenOrders(state.auth.user.activity, utilDispatch);
+        currentCoordinate();
+        setLoading(false, authDispatch);
+        setUpdateUser(true);
+      }
+    }
+  }, [authDispatch, state.auth.user, updateUser, utilDispatch]);
+
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
     return subscriber; // unsubscribe on unmount
   }, [onAuthStateChanged]);
 
   useEffect(() => {
-    getDeviceInfo(utilDispatch);
-
-    if (state.auth.user) {
-      currentCoordinate();
-      activeMessage('expert');
-      suscribeCoverage(state.auth.user.coverage);
-      getExpertActiveOrders(state.auth.user, utilDispatch);
-      activeNameSlug(state.auth.user.activity, utilDispatch);
-      getExpertOpenOrders(state.auth.user.activity, utilDispatch);
-      getConfig(utilDispatch);
-    }
-  }, [utilDispatch]); // TODO: revisar loop zonas de cobertura
+    activeFlux();
+    return () => {
+      return () => (isMountedRef.current = false);
+    };
+  }, [activeFlux, utilDispatch]); // TODO: revisar loop zonas de cobertura
 
   const [coordinate, setCoordinate] = useState(null);
 
@@ -86,11 +106,6 @@ const HomeExpert = () => {
 
     Geolocation.setRNConfiguration(config);
     Geolocation.getCurrentPosition((info) => {
-      console.log(
-        '🚀 ~ file: index.js ~ line 85 ~ currentCoordinate ~ info',
-        info,
-      );
-
       setCoordinate({
         latitude: info.coords.latitude,
         longitude: info.coords.longitude,
@@ -162,6 +177,8 @@ const HomeExpert = () => {
       <ModalApp open={modalDetail} setOpen={setModalDetail}>
         <DetailModal order={detailOrder} setModalDetail={setModalDetail} />
       </ModalApp>
+
+      <Loading />
     </>
   );
 };

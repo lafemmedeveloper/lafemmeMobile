@@ -29,6 +29,7 @@ export const setLoading = (loading, dispatch) => {
 };
 export const getGallery = async (dispatch) => {
   try {
+    setLoading(true, dispatch);
     const services = await firestore().collection('gallery').get();
     const data = services.docs.map((doc) => {
       const item = doc.data();
@@ -39,7 +40,10 @@ export const getGallery = async (dispatch) => {
     });
 
     dispatch({type: GET_GALLERY, payload: data});
+    setLoading(false, dispatch);
   } catch (error) {
+    setLoading(false, dispatch);
+
     console.log('error get service=>', error);
   }
 };
