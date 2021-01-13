@@ -11,8 +11,10 @@ import {
   StyleSheet,
   Text,
   StatusBar,
+  TouchableOpacity,
   Platform,
 } from 'react-native';
+import * as Sentry from '@sentry/react-native';
 import {Colors, Metrics, ApplicationStyles, Fonts} from '../../themes';
 import ExpertDealOffer from '../../components/ExpertDealOffer';
 import {StoreContext} from '../../flux';
@@ -72,6 +74,17 @@ const HomeExpert = () => {
       activeNameSlug(state.auth.user.activity, utilDispatch);
       getExpertOpenOrders(state.auth.user.activity, utilDispatch);
       getConfig(utilDispatch);
+
+      Sentry.setUser({
+        email: state.auth.user.email,
+        userID: state.auth.user.uid,
+        name: `${state.auth.user.firstName} ${state.auth.user.lastName}`,
+        phone: state.auth.user.phone,
+        extra: {
+          role: state.auth.user.role,
+          rating: state.auth.user.rating,
+        },
+      });
     }
   }, [utilDispatch]); // TODO: revisar loop zonas de cobertura
 
@@ -116,6 +129,14 @@ const HomeExpert = () => {
 
       <View style={styles.container}>
         <HeaderExpert user={state.auth.user} dispatch={authDispatch} />
+        {__DEV__ && (
+          <TouchableOpacity
+            onPress={() => {
+              throw new Error('My first Sentry error!');
+            }}>
+            <Text>SentryTest</Text>
+          </TouchableOpacity>
+        )}
         {nextOrder &&
           nextOrder.length > 0 &&
           nextOrder.map((item, index) => {

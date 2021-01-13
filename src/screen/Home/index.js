@@ -6,7 +6,15 @@ import React, {
   useState,
   useCallback,
 } from 'react';
-import {View, ScrollView, StyleSheet, StatusBar} from 'react-native';
+import {
+  View,
+  ScrollView,
+  StyleSheet,
+  StatusBar,
+  Text,
+  TouchableOpacity,
+} from 'react-native';
+import * as Sentry from '@sentry/react-native';
 
 //Modules
 import {useNavigation} from '@react-navigation/native';
@@ -93,7 +101,24 @@ const Home = () => {
     await getConfig(utilDispatch);
     getOrders(utilDispatch);
     setLoading(false, authDispatch);
-  }, [authDispatch, serviceDispatch, utilDispatch]);
+
+    if (user) {
+      console.log(
+        '🚀 ~ file: index.js ~ line 106 ~ activeFunctionsFlux ~ user',
+        user,
+      );
+      Sentry.setUser({
+        email: user.email,
+        userID: user.uid,
+        name: `${user.firstName} ${user.lastName}`,
+        phone: user.phone,
+        extra: {
+          role: user.role,
+          rating: user.rating,
+        },
+      });
+    }
+  }, [authDispatch, serviceDispatch, user, utilDispatch]);
 
   const selectService = (product, description) => {
     if (user !== null) {
@@ -143,6 +168,14 @@ const Home = () => {
           onActionR={() => {}}
         />
         <ScrollView style={[styles.scroll]} bounces={true}>
+          {__DEV__ && (
+            <TouchableOpacity
+              onPress={() => {
+                throw new Error('My first Sentry error!');
+              }}>
+              <Text>SentryTest</Text>
+            </TouchableOpacity>
+          )}
           {nextOrderClient &&
             nextOrderClient.length > 0 &&
             nextOrderClient.map((item, index) => {
