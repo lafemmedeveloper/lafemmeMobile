@@ -146,37 +146,56 @@ export const updateProfileItem = async (newData, uid, dispatch) => {
 
 export const activeMessage = async (topic) => {
   try {
-    messaging()
-      .subscribeToTopic(topic)
-      .then(() => console.log('Subscribed to topic!', topic));
-    messaging().onMessage(async (remoteMessage) => {
-      console.log('A new FCM message arrived!', JSON.stringify(remoteMessage));
-    });
-    messaging().setBackgroundMessageHandler(async (remoteMessage) => {
-      console.log('push notification backgraund', remoteMessage);
-    });
-    const userId = auth().currentUser;
-    if (userId) {
-      sendTokenUser();
+    const authStatus = await messaging().requestPermission();
+    const enabled =
+      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+    if (enabled) {
+      messaging()
+        .subscribeToTopic(topic)
+        .then(() => console.log('Subscribed to topic!', topic));
+      messaging().onMessage(async (remoteMessage) => {
+        console.log(
+          'A new FCM message arrived!',
+          JSON.stringify(remoteMessage),
+        );
+      });
+      messaging().setBackgroundMessageHandler(async (remoteMessage) => {
+        console.log('push notification backgraund', remoteMessage);
+      });
+      const userId = auth().currentUser;
+      if (userId) {
+        sendTokenUser();
+      }
     }
   } catch (error) {
     console.log('error activeMessage =>', error);
   }
 };
 export const suscribeCoverage = async (arrayTopics) => {
-  try {
-    for (let index = 0; index < arrayTopics.length; index++) {
-      messaging()
-        .subscribeToTopic(arrayTopics[index].split(' ').join('').toLowerCase())
-        .then(() =>
-          console.log(
-            'Subscribed to topic!',
+  const authStatus = await messaging().requestPermission();
+  const enabled =
+    authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+    authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+  if (enabled) {
+    try {
+      for (let index = 0; index < arrayTopics.length; index++) {
+        messaging()
+          .subscribeToTopic(
             arrayTopics[index].split(' ').join('').toLowerCase(),
-          ),
-        );
+          )
+          .then(() =>
+            console.log(
+              'Subscribed to topic!',
+              arrayTopics[index].split(' ').join('').toLowerCase(),
+            ),
+          );
+      }
+    } catch (error) {
+      console.log('error activeMessage =>', error);
     }
-  } catch (error) {
-    console.log('error activeMessage =>', error);
   }
 };
 
