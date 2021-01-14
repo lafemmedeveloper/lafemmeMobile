@@ -9,12 +9,12 @@ import {Alert} from 'react-native';
 import Config from 'react-native-config';
 import * as Sentry from '@sentry/react-native';
 
-if (Config.SENTRY && !__DEV__) {
+if (Config && Config.SENTRY && __DEV__) {
   Sentry.init({
     dsn: Config.SENTRY,
     react: true,
-    dist: buildVersion,
-    release: appVersion,
+    dist: buildVersion.toString(),
+    release: appVersion.toString(),
     environment: __DEV__ ? 'development' : 'production',
     enableAutoSessionTracking: true,
     sessionTrackingIntervalMillis: 10000,
