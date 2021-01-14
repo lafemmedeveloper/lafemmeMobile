@@ -46,13 +46,13 @@ const options = {
   },
 };
 
-const Content = (props) => {
+const Content = () => {
   const {utilDispatch} = useContext(StoreContext);
   const {state, authDispatch} = useContext(StoreContext);
 
   const {auth, util} = state;
   const {user} = auth;
-  const {deviceInfo} = util;
+  const {deviceInfo, config} = util;
   const [modalName, setModalName] = useState(false);
   const [modalEmail, setModalEmail] = useState(false);
   const [tyc, setTyc] = useState(false);
@@ -65,6 +65,7 @@ const Content = (props) => {
   const [imgSource, setImgSource] = useState(null);
   const [modalImage, setModalImage] = useState(false);
   const [modalRef, setModalRef] = useState(false);
+  const [help, setHelp] = useState(false);
 
   const shareRecipe = async (type, data) => {
     console.log('shareItem:', type, data);
@@ -76,7 +77,7 @@ const Content = (props) => {
         const url =
           'https://play.google.com/store/apps/details?id=co.net.lm.lafemmeclient';
 
-        const message = 'Oye te invito a que descargues La Femme';
+        const message = config.inviteProfileClient;
 
         shareOptions = Platform.select({
           ios: {
@@ -612,7 +613,7 @@ const Content = (props) => {
               title={'Ayuda'}
               icon={'question-circle'}
               action={() => {
-                setTyc(true);
+                setHelp(true);
               }}
               decorationLine={false}
             />
@@ -703,7 +704,6 @@ const Content = (props) => {
           setModalEmail={setModalEmail}
         />
       </ModalApp>
-
       <ModalApp
         open={modalAddress}
         setOpen={modalAddAddress ? setModalAddAddress : setModalAddress}>
@@ -713,7 +713,21 @@ const Content = (props) => {
         <View style={{height: '90%'}}>
           <WebView
             WebView={true}
-            source={{uri: 'https://lafemme.com.co/terminos-y-condiciones/'}}
+            source={{uri: config.urlTyC}}
+            startInLoadingState={true}
+            style={{
+              width: Metrics.screenWidth,
+              alignSelf: 'center',
+              flex: 1,
+            }}
+          />
+        </View>
+      </ModalApp>
+      <ModalApp open={help} setOpen={setHelp}>
+        <View style={{height: '90%'}}>
+          <WebView
+            WebView={true}
+            source={{uri: config.urlHelp}}
             startInLoadingState={true}
             style={{
               width: Metrics.screenWidth,

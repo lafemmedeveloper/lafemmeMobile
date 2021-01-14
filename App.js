@@ -9,7 +9,7 @@ import {Alert} from 'react-native';
 import Config from 'react-native-config';
 import * as Sentry from '@sentry/react-native';
 
-if (Config && Config.SENTRY && __DEV__) {
+if (Config && Config.SENTRY && !__DEV__) {
   Sentry.init({
     dsn: Config.SENTRY,
     react: true,

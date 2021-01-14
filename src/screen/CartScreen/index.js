@@ -41,8 +41,9 @@ import {useCouponsDiscount} from '../../hooks/useCouponsDiscount';
 
 //Theme
 import {ApplicationStyles, Images, Fonts, Colors, Metrics} from '../../themes';
+import Address from '../Address';
 
-const CartScreen = ({setModalCart, setModalAddress}) => {
+const CartScreen = ({setModalCart}) => {
   const {state, serviceDispatch, authDispatch, utilDispatch} = useContext(
     StoreContext,
   );
@@ -55,6 +56,7 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [modalCoupon, setModalCoupon] = useState(false);
   const [rechargeView, setRechargeView] = useState(false);
+  const [modalAddress, setModalAddress] = useState(false);
 
   let openHour = generateSchedule(
     moment(Date.parse(config.openingTime)).format('HH:MM'),
@@ -298,6 +300,9 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
   let totalService =
     user.cart?.services.length > 0 ? _.sumBy(user.cart.services, 'total') : 0;
 
+  const handleAddress = () => {
+    setModalAddress(true);
+  };
   const observeTime = useCallback(
     async (services) => {
       console.log('observeTime');
@@ -626,7 +631,7 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
                 {'Ubicación del servicio'}
               </Text>
             </View>
-            <TouchableOpacity onPress={() => setModalAddress(true)}>
+            <TouchableOpacity onPress={() => handleAddress()}>
               <FieldCartConfig
                 key={'address'}
                 value={user.cart.address ? user.cart.address : false}
@@ -881,6 +886,9 @@ const CartScreen = ({setModalCart, setModalAddress}) => {
             type={user.cart.services.length > 0 ? user.cart.services : []}
             close={setModalCoupon}
           />
+        </ModalApp>
+        <ModalApp open={modalAddress} setOpen={setModalAddress}>
+          <Address closeModal={setModalAddress} />
         </ModalApp>
       </ScrollView>
       <View style={styles.footerContainer}>

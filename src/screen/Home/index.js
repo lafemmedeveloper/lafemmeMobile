@@ -103,10 +103,6 @@ const Home = () => {
     setLoading(false, authDispatch);
 
     if (user) {
-      console.log(
-        '🚀 ~ file: index.js ~ line 106 ~ activeFunctionsFlux ~ user',
-        user,
-      );
       Sentry.setUser({
         email: user.email,
         userID: user.uid,
@@ -257,10 +253,7 @@ const Home = () => {
       </ModalApp>
 
       <ModalApp open={modalCart} setOpen={setModalCart}>
-        <CartScreen
-          setModalCart={setModalCart}
-          setModalAddress={setModalAddress}
-        />
+        <CartScreen setModalCart={setModalCart} />
       </ModalApp>
 
       <ModalApp open={modalAddress} setOpen={setModalAddress}>

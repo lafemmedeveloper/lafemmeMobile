@@ -35,8 +35,10 @@ import ModalComponent from '../../../screen/Profile/Content/ModalComponent';
 const Content = () => {
   const {state, authDispatch} = useContext(StoreContext);
   const {util, auth} = state;
-  const {deviceInfo} = util;
+  const {deviceInfo, config} = util;
   const {user} = auth;
+
+  console.log('config =>', config); //inviteProfileExpert
 
   const options = {
     title: 'Selecciona o toma una imagén',
@@ -59,6 +61,7 @@ const Content = () => {
   const [galleryModal, setGalleryModal] = useState(false);
   const [modalImage, setModalImage] = useState(false);
   const [imgSource, setImgSource] = useState(null);
+  const [help, setHelp] = useState(false);
 
   const logout = () => {
     Alert.alert(
@@ -396,7 +399,7 @@ const Content = () => {
         const url =
           'https://play.google.com/store/apps/details?id=co.net.lm.lafemmeclient';
 
-        const message = 'Oye te invito a que descargues La Femme';
+        const message = config.inviteProfileExpert;
 
         shareOptions = Platform.select({
           ios: {
@@ -642,7 +645,7 @@ const Content = () => {
                 title={'Ayuda'}
                 icon={'question-circle'}
                 action={() => {
-                  seTyc(true);
+                  setHelp(true);
                 }}
                 decorationLine={false}
               />
@@ -716,6 +719,20 @@ const Content = () => {
                 uri: 'https://lafemme.com.co/terminos-y-condiciones/',
               }}
               // renderLoading={this.renderLoadingView}
+              startInLoadingState={true}
+              style={{
+                width: Metrics.screenWidth,
+                alignSelf: 'center',
+                flex: 1,
+              }}
+            />
+          </View>
+        </ModalApp>
+        <ModalApp open={help} setOpen={setHelp}>
+          <View style={{height: '90%'}}>
+            <WebView
+              WebView={true}
+              source={{uri: config.urlHelp}}
               startInLoadingState={true}
               style={{
                 width: Metrics.screenWidth,
