@@ -29,7 +29,7 @@ import {
   getExpertOpenOrders,
   getDeviceInfo,
   getExpertActiveOrders,
-  activeNameSlug,
+  // activeNameSlug,
   getConfig,
   setLoading,
 } from '../../flux/util/actions';
@@ -65,18 +65,16 @@ const HomeExpert = () => {
   );
 
   const activeFlux = useCallback(async () => {
-    isMountedRef.current = true;
-
     getDeviceInfo(utilDispatch);
 
     if (state.auth.user) {
       if (!updateUser) {
         setLoading(true, utilDispatch);
         activeMessage('expert');
-        await currentCoordinate();
+        currentCoordinate();
         await getConfig(utilDispatch);
         await suscribeCoverage(state.auth.user.coverage);
-        await activeNameSlug(state.auth.user.activity, utilDispatch);
+        //  await activeNameSlug(state.auth.user.activity, utilDispatch);
         getExpertActiveOrders(state.auth.user, utilDispatch);
         getExpertOpenOrders(state.auth.user.activity, utilDispatch);
         setLoading(false, utilDispatch);
@@ -102,11 +100,13 @@ const HomeExpert = () => {
   }, [onAuthStateChanged]);
 
   useEffect(() => {
+    isMountedRef.current = true;
+
     activeFlux();
     return () => {
       return () => (isMountedRef.current = false);
     };
-  }, [activeFlux, utilDispatch]); // TODO: revisar loop zonas de cobertura
+  }, [activeFlux, utilDispatch]);
 
   const currentCoordinate = useCallback(async () => {
     const config = {
