@@ -24,7 +24,6 @@ import {
   setUser,
   suscribeCoverage,
   updateProfile,
-  setLoading,
 } from '../../flux/auth/actions';
 import {
   getExpertOpenOrders,
@@ -32,6 +31,7 @@ import {
   getExpertActiveOrders,
   activeNameSlug,
   getConfig,
+  setLoading,
 } from '../../flux/util/actions';
 
 import Geolocation from '@react-native-community/geolocation';
@@ -68,18 +68,18 @@ const HomeExpert = () => {
     isMountedRef.current = true;
 
     getDeviceInfo(utilDispatch);
-    getConfig(utilDispatch);
 
     if (state.auth.user) {
       if (!updateUser) {
-        setLoading(true, authDispatch);
+        setLoading(true, utilDispatch);
         activeMessage('expert');
+        await currentCoordinate();
+        await getConfig(utilDispatch);
         await suscribeCoverage(state.auth.user.coverage);
         await activeNameSlug(state.auth.user.activity, utilDispatch);
         getExpertActiveOrders(state.auth.user, utilDispatch);
         getExpertOpenOrders(state.auth.user.activity, utilDispatch);
-        currentCoordinate();
-        setLoading(false, authDispatch);
+        setLoading(false, utilDispatch);
         setUpdateUser(true);
       }
 
@@ -94,7 +94,7 @@ const HomeExpert = () => {
         },
       });
     }
-  }, [authDispatch, state.auth.user, updateUser, utilDispatch]);
+  }, [currentCoordinate, state.auth.user, updateUser, utilDispatch]);
 
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
@@ -108,9 +108,7 @@ const HomeExpert = () => {
     };
   }, [activeFlux, utilDispatch]); // TODO: revisar loop zonas de cobertura
 
-  const [coordinate, setCoordinate] = useState(null);
-
-  const currentCoordinate = () => {
+  const currentCoordinate = useCallback(async () => {
     const config = {
       skipPermissionRequests: Platform.OS === 'ios' ? true : false,
       authorizationLevel: 'whenInUse',
@@ -118,20 +116,17 @@ const HomeExpert = () => {
     //Geolocation.requestAuthorization();
 
     Geolocation.setRNConfiguration(config);
-    Geolocation.getCurrentPosition((info) => {
-      setCoordinate({
-        latitude: info.coords.latitude,
-        longitude: info.coords.longitude,
-      });
+    await Geolocation.getCurrentPosition(async (info) => {
+      await updateProfile(
+        {
+          latitude: info.coords.latitude,
+          longitude: info.coords.longitude,
+        },
+        'coordinates',
+        authDispatch,
+      );
     });
-  };
-
-  useEffect(() => {
-    if (coordinate) {
-      return async () =>
-        await updateProfile(coordinate, 'coordinates', authDispatch);
-    }
-  }, [authDispatch, coordinate]);
+  }, [authDispatch]);
 
   const activeDetailModal = (order) => {
     setDetailOrder(order);

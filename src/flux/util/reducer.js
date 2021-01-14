@@ -58,7 +58,7 @@ const setError = (state, action) => {
 };
 
 const getGallery = (state, action) => {
-  let gallery = _.orderBy(action.payload, action.payload.date, 'desc');
+  let gallery = _.orderBy(action.payload, 'date', 'desc');
 
   return {
     ...state,

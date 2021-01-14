@@ -528,13 +528,11 @@ export const updateStatusDb = async (order, status, dispatch) => {
 };
 export const getConfig = async (dispatch) => {
   try {
-    setLoading(true, dispatch);
     const ref = await firestore().collection('config').doc('globals').get();
     setLoading(false, dispatch);
     dispatch({type: GET_CONFIG, payload: ref.data()});
   } catch (error) {
     console.log('error ==>', error);
-    setLoading(false, dispatch);
   }
 };
 
