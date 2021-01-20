@@ -47,6 +47,7 @@ import utilities from '../../utilities';
 import {customStyles} from './CustomStyles';
 import Detail from './Detail';
 import MenuTab from './MenuTab';
+import {minToHours} from '../../helpers/MomentHelper';
 
 //import ButtonCoordinate from '../../components/ButtonCoordinate';
 //import Geolocation from '@react-native-community/geolocation';
@@ -116,7 +117,8 @@ const OrderDetail = ({route, navigation}) => {
     );
 
     await updateOrder(currentOrder, utilDispatch);
-    validateStatusGlobal();
+    await validateStatusGlobal();
+    setModalQual(true);
   };
   const handleCancel = async () => {
     if (orderUser.status >= 2) {
@@ -401,7 +403,8 @@ const OrderDetail = ({route, navigation}) => {
                                     size={12}
                                     color={Colors.expert.primaryColor}
                                   />{' '}
-                                  Duración del servicio: {service.duration} mins
+                                  Duración del servicio:{' '}
+                                  {minToHours(service.duration)} mins
                                   {'\n'}
                                 </Text>
                                 {orderUser.services[menuIndex]
@@ -698,7 +701,7 @@ const OrderDetail = ({route, navigation}) => {
                   Fonts.size.medium,
                   'center',
                 )}>
-                Finalizar servicio
+                Confirmar servicio finalizado
               </Text>
             </TouchableOpacity>
           )}
